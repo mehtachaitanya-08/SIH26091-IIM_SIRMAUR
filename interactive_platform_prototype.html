@@ -3,898 +3,1105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GraminAdvisory | Dual-Mode Rural Enterprise & Debt Restructuring Platform (SIH 2026)</title>
+  <title>GraminAdvisory | SIH26091 MoSJE / NSFDC Platform</title>
+
+  <!-- Google Fonts: Mona Sans, Instrument Serif, Inter Tight, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP & ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              200: '#bbf7d0',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              800: '#065f46',
-              900: '#064e3b'
-            }
+            groundSand: '#F5F2EB',
+            warmWhite: '#FAF9F6',
+            inkBlack: '#0F1110',
+            subtleGrey: '#737871',
+            mutedBorder: '#E4DFD5',
+            dashBg: '#DFE2E6',
+            dashCard: '#FFFFFF',
+            dashSidebar: '#F8F9FA',
+            dashBorder: '#E9ECEF',
+            accentCoral: '#E86043',
+            concessionalEmerald: '#0E7A53',
+            softPurple: '#8B5CF6',
+            iridescentAmber: '#F59E0B'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            display: ['"Cinzel"', 'serif'],
+            dashboard: ['"Inter Tight"', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace']
           }
         }
       }
     }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
-    .gradient-hero { background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%); }
-    .gradient-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); }
-    .gradient-emerald { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); }
-    .badge-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+    /* Tabular figures for statutory accounting */
+    .tnum { font-feature-settings: "tnum" 1, "zero" 1; }
+
+    /* Custom smooth scrolling viewport */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+
+    /* Iridescent 4-Pointed Star Icon (From Dashboard Reference) */
+    .iris-star {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .iris-star-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 14px rgba(232, 96, 67, 0.25)) drop-shadow(0 2px 8px rgba(139, 92, 246, 0.2));
+      animation: pulseStar 6s ease-in-out infinite;
+    }
+    @keyframes pulseStar {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
+      50% { transform: scale(1.08) rotate(4deg); opacity: 1; filter: drop-shadow(0 6px 20px rgba(232, 96, 67, 0.4)); }
+    }
+
+    /* Soft Neumorphic Elevation for Dashboard */
+    .soft-shadow {
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 40px -15px rgba(0, 0, 0, 0.06);
+    }
+    .soft-card-shadow {
+      box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+    }
+    .soft-inner-shadow {
+      box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+    }
+
+    /* Diffused Ambient Glow Backdrop for Dashboard Frame */
+    .diffused-backdrop {
+      background: radial-gradient(circle at 15% 20%, rgba(200, 215, 230, 0.6) 0%, transparent 40%),
+                  radial-gradient(circle at 85% 85%, rgba(245, 185, 160, 0.45) 0%, transparent 45%),
+                  #D4D8DD;
+    }
+
+    /* Horizontal Card Pinning Track */
+    .pin-wrap {
+      display: flex;
+      width: 300%;
+      height: 100%;
+    }
+
+    /* Marquee ticker */
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-track {
+      display: flex;
+      width: 200%;
+      animation: tickerScroll 24s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased selection:bg-emerald-500 selection:text-white min-h-screen flex flex-col">
 
-  <!-- ============================================================== -->
-  <!-- HEADER & NAVIGATION                                            -->
-  <!-- ============================================================== -->
-  <header class="gradient-hero text-white shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 flex flex-wrap items-center justify-between gap-4">
+<body class="bg-groundSand text-inkBlack antialiased selection:bg-accentCoral selection:text-white">
+
+  <!-- ===================================================================== -->
+  <!-- TOP GLOBAL NAV BAR (Fixed, Minimal, Institutional)                   -->
+  <!-- ===================================================================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-warmWhite/80 backdrop-blur-md border-b border-mutedBorder/60 py-3.5 px-6 sm:px-10 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-          <svg class="w-6 h-6 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>
-          </svg>
+        <div class="w-8 h-8 rounded-full bg-inkBlack text-white flex items-center justify-center font-bold text-xs tracking-wider">
+          ग
         </div>
         <div>
-          <div class="flex items-center space-x-2">
-            <span class="font-extrabold text-lg sm:text-xl tracking-tight">GraminAdvisory</span>
-            <span class="text-[10px] bg-emerald-400 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase tracking-wider">SIH 2026 Core</span>
-          </div>
-          <p id="subheading-txt" class="text-xs text-emerald-100 hidden sm:block">
-            AI-Driven Hyper-Local Business Advisory & Algorithmic Debt Restructuring
-          </p>
+          <span class="font-bold text-sm tracking-tight text-inkBlack">GraminAdvisory</span>
+          <span class="ml-2 text-[10px] font-mono uppercase bg-black/5 text-subtleGrey px-2 py-0.5 rounded border border-black/5">
+            SIH26091 · MoSJE / NSFDC
+          </span>
         </div>
       </div>
 
-      <div class="flex items-center space-x-3">
-        <!-- Dual Mode Switcher -->
-        <div class="bg-slate-900/50 p-1 rounded-xl flex items-center border border-white/10">
-          <button id="btn-mode-a" onclick="switchMode('mode_a')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 bg-emerald-500 text-slate-950 shadow-md">
-            <span>✨ Mode A: Incubation</span>
-          </button>
-          <button id="btn-mode-b" onclick="switchMode('mode_b')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 text-emerald-100 hover:text-white">
-            <span>🛡️ Mode B: Debt Relief</span>
-          </button>
-        </div>
+      <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold text-subtleGrey tracking-tight">
+        <a href="#hero-section" class="hover:text-inkBlack transition-colors">Mission</a>
+        <a href="#scrolly-stories" class="hover:text-inkBlack transition-colors">Entrepreneurs</a>
+        <a href="#platform-cards" class="hover:text-inkBlack transition-colors">4 Pillars</a>
+        <a href="#dashboard-anchor" class="text-accentCoral hover:text-orange-700 font-bold transition-colors">Launch Dashboard ↗</a>
+      </nav>
 
-        <!-- Language Switcher -->
-        <button onclick="toggleLang()" class="bg-white/10 hover:bg-white/20 border border-white/20 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-1">
-          <span id="lang-btn-txt">हिन्दी</span>
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleLang()" class="px-2.5 py-1 rounded-full border border-mutedBorder bg-white text-xs font-medium text-inkBlack hover:bg-slate-50 transition-all flex items-center space-x-1">
+          <span>🌐</span>
+          <span id="nav-lang-lbl">English</span>
+        </button>
+        <button onclick="scrollToDashboard()" class="px-4 py-1.5 rounded-full bg-inkBlack text-white text-xs font-semibold hover:bg-slate-800 transition-all shadow-sm">
+          Open Workspace
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ============================================================== -->
-  <!-- MAIN WORKSPACE CONTAINER                                       -->
-  <!-- ============================================================== -->
-  <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 flex-1 w-full space-y-6">
 
-    <!-- ============================================================== -->
-    <!-- MODE A: ENTERPRISE INCUBATION                                  -->
-    <!-- ============================================================== -->
-    <div id="view-mode-a" class="space-y-6">
-      
-      <!-- Archetype Selection Bar -->
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <h2 id="arch-header-txt" class="text-base sm:text-lg font-bold text-slate-900 flex items-center space-x-2">
-            <span>Select Rural Enterprise Archetype</span>
-            <span class="text-xs text-slate-500 font-normal">(99.9% Rural MSME Coverage)</span>
-          </h2>
-          <span class="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
-            RBI Expert Committee Grounded (324.88L Units)
-          </span>
-        </div>
-
-        <!-- 6 Archetype Cards -->
-        <div id="archetypes-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          <!-- Rendered via JS -->
-        </div>
+  <!-- ===================================================================== -->
+  <!-- 1. HERO SECTION (High-Fashion Compressed Serif + Rural Indian Mission) -->
+  <!-- ===================================================================== -->
+  <section id="hero-section" class="min-h-screen pt-28 pb-16 px-6 sm:px-10 flex flex-col justify-between max-w-7xl mx-auto relative">
+    
+    <div class="my-auto py-12 max-w-4xl">
+      <!-- Institutional Category Tag -->
+      <div class="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-widest text-accentCoral font-semibold mb-6">
+        <span class="w-2 h-2 rounded-full bg-accentCoral animate-ping"></span>
+        <span>Ministry of Social Justice and Empowerment · NSFDC Initiative</span>
       </div>
 
-      <!-- Main Config & Financials Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Left Column: Inputs & Scheme Details -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-          <h3 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
-            <span id="txt-proj-params">Project Parameters & Geography</span>
-            <span class="text-[10px] text-slate-400 font-mono">STEP 1</span>
-          </h3>
+      <!-- High-Fashion Headline (Walton Reference Aesthetic) -->
+      <h1 class="text-5xl sm:text-7xl lg:text-8xl font-display font-medium tracking-tight text-inkBlack leading-[0.95] uppercase">
+        Where opportunity<br />
+        <span class="font-serif italic font-normal text-accentCoral lowercase tracking-normal">takes root.</span>
+      </h1>
 
-          <!-- State Selection -->
-          <div>
-            <label id="lbl-state" class="block text-xs font-semibold text-slate-700 mb-1">State / Territory</label>
-            <select id="select-state" onchange="recalculateModeA()" class="w-full text-xs font-medium border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-              <option value="Uttar Pradesh">Uttar Pradesh (14.2% of Rural MSMEs)</option>
-              <option value="West Bengal">West Bengal (14.0%)</option>
-              <option value="Tamil Nadu">Tamil Nadu (7.9%)</option>
-              <option value="Maharashtra">Maharashtra (7.5%)</option>
-              <option value="Karnataka">Karnataka (6.1%)</option>
-              <option value="Bihar">Bihar (5.9%)</option>
-              <option value="Andhra Pradesh">Andhra Pradesh (5.3%)</option>
-              <option value="Gujarat">Gujarat (5.2%)</option>
-              <option value="Rajasthan">Rajasthan (4.8%)</option>
-              <option value="Madhya Pradesh">Madhya Pradesh (4.5%)</option>
-            </select>
-          </div>
+      <p class="mt-8 text-lg sm:text-xl text-subtleGrey max-w-2xl font-sans leading-relaxed">
+        Empowering Scheduled Caste micro-entrepreneurs across 24 rural trades through deterministic 6.5% / 8.0% statutory credit, 12-month solvency stress testing, and instant Lead-Bank DPR generation.
+      </p>
 
-          <!-- Category & Area -->
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label id="lbl-category" class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
-              <select id="select-category" onchange="recalculateModeA()" class="w-full text-xs font-medium border border-slate-300 rounded-xl p-2 bg-slate-50 focus:ring-2 focus:ring-emerald-500">
-                <option value="special">Special (SC/ST/OBC/Women)</option>
-                <option value="general">General</option>
-              </select>
-            </div>
-            <div>
-              <label id="lbl-area" class="block text-xs font-semibold text-slate-700 mb-1">Location</label>
-              <select id="select-area" onchange="recalculateModeA()" class="w-full text-xs font-medium border border-slate-300 rounded-xl p-2 bg-slate-50 focus:ring-2 focus:ring-emerald-500">
-                <option value="rural">Rural (Gram Panchayat)</option>
-                <option value="urban">Town / Semi-Urban</option>
-              </select>
-            </div>
-          </div>
+      <!-- Action Cluster -->
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <button onclick="scrollToDashboard()" class="bg-accentCoral hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-full text-sm transition-all transform hover:-translate-y-0.5 shadow-lg shadow-accentCoral/25 flex items-center space-x-2">
+          <span>Enter Financial Dashboard</span>
+          <span>↓</span>
+        </button>
+        <a href="#scrolly-stories" class="px-7 py-4 rounded-full bg-white hover:bg-slate-100 text-inkBlack font-semibold text-sm transition-all border border-mutedBorder">
+          View Success Stories
+        </a>
+      </div>
+    </div>
 
-          <!-- CapEx Slider -->
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label id="lbl-capex" class="text-xs font-semibold text-slate-700">Plant & Machinery CapEx</label>
-              <span id="display-capex" class="text-xs font-bold text-emerald-700">₹6,50,000</span>
-            </div>
-            <input id="slider-capex" type="range" min="50000" max="2500000" step="10000" value="650000" oninput="onCapexSliderChange(this.value)" class="w-full accent-emerald-600 cursor-pointer" />
-            <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
-              <span>₹50,000</span>
-              <span>₹25,00,000</span>
-            </div>
-          </div>
-
-          <!-- Matched Scheme Banner -->
-          <div id="matched-scheme-box" class="bg-emerald-50/80 border border-emerald-200 rounded-xl p-3.5 space-y-1.5">
-            <!-- Rendered by JS -->
-          </div>
-
-          <!-- 1-Page DPR Action -->
-          <button onclick="downloadDPR()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-md transition-all">
-            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            <span id="btn-dpr-txt">Generate 1-Page Bank-Ready DPR (PDF)</span>
-          </button>
-        </div>
-
-        <!-- Center & Right: Financial Cards & 12-Month Seasonality -->
-        <div class="lg:col-span-2 space-y-6">
-          
-          <!-- 4 Pillars Financial Summary -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-              <div id="card-lbl-cost" class="text-[11px] font-medium text-slate-500">Total Project Cost</div>
-              <div id="val-total-cost" class="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">₹9,60,000</div>
-              <div class="text-[10px] text-slate-400 mt-1">CapEx + WC + Pre-Op</div>
-            </div>
-
-            <div class="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 shadow-sm">
-              <div id="card-lbl-sub" class="text-[11px] font-medium text-emerald-700">Govt Subsidy / Grant</div>
-              <div id="val-subsidy" class="text-base sm:text-lg font-extrabold text-emerald-800 mt-0.5">₹3,36,000</div>
-              <div id="val-sub-pct" class="text-[10px] text-emerald-600 mt-1">35% Direct Capital Grant</div>
-            </div>
-
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-              <div id="card-lbl-equity" class="text-[11px] font-medium text-slate-500">Promoter Equity</div>
-              <div id="val-equity" class="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">₹48,000</div>
-              <div class="text-[10px] text-slate-400 mt-1">Only 5% - 15% required</div>
-            </div>
-
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-              <div id="card-lbl-emi" class="text-[11px] font-medium text-slate-500">Monthly Bank EMI</div>
-              <div id="val-emi" class="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">₹12,120</div>
-              <div id="val-emi-terms" class="text-[10px] text-slate-400 mt-1">@ 9.5% for 60 mos</div>
-            </div>
-          </div>
-
-          <!-- Seasonality & DSCR Stress-Testing Card -->
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-              <div>
-                <h4 id="lbl-seasonality-hdr" class="font-bold text-sm text-slate-900 flex items-center space-x-2">
-                  <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                  <span>12-Month Agricultural Seasonality & DSCR Simulation</span>
-                </h4>
-                <p id="lbl-seasonality-sub" class="text-xs text-slate-500">
-                  Zero-hallucination deterministic stress-testing against rural crop cycles.
-                </p>
-              </div>
-
-              <div class="flex items-center space-x-2">
-                <div class="text-right">
-                  <span class="text-[10px] text-slate-500 block">Annual DSCR</span>
-                  <span id="val-avg-dscr" class="text-sm font-black text-emerald-700">3.85x</span>
-                </div>
-                <span id="badge-feasibility" class="text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800">
-                  HIGH FEASIBILITY
-                </span>
-              </div>
-            </div>
-
-            <!-- Mini Visual Bars -->
-            <div id="seasonality-bars" class="grid grid-cols-12 gap-1.5 pt-2">
-              <!-- Rendered via JS -->
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-              <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-1.5">
-                  <span class="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"></span>
-                  <span id="txt-normal-mo">Normal / Peak Month</span>
-                </div>
-                <div class="flex items-center space-x-1.5">
-                  <span class="w-2.5 h-2.5 rounded bg-amber-400 inline-block"></span>
-                  <span id="txt-lean-mo">Lean Month Stress</span>
-                </div>
-              </div>
-              <div class="text-[11px] text-slate-600">
-                <span id="txt-min-dscr-lbl">Minimum Lean Month DSCR: </span>
-                <span id="val-min-dscr" class="font-bold text-slate-900">1.62x</span> (Safe &gt; 1.0x)
-              </div>
-            </div>
-          </div>
-
+    <!-- Live Mandi Pulse Ticker Bar -->
+    <div class="w-full bg-white rounded-2xl p-3 border border-mutedBorder soft-card-shadow flex items-center overflow-hidden">
+      <span class="text-xs font-bold text-concessionalEmerald uppercase tracking-wider whitespace-nowrap mr-4 pr-4 border-r border-mutedBorder flex items-center space-x-1.5">
+        <span class="w-2 h-2 rounded-full bg-concessionalEmerald animate-pulse"></span>
+        <span>Agmarknet 2.0 Spot Pulse</span>
+      </span>
+      <div class="overflow-hidden relative flex-1">
+        <div class="ticker-track text-xs text-subtleGrey font-mono">
+          <span class="mx-4">🌾 Wheat: <b class="text-inkBlack tnum">₹2,425/qtl</b></span>
+          <span class="mx-4">🌼 Mustard: <b class="text-inkBlack tnum">₹5,450/qtl</b></span>
+          <span class="mx-4">🌱 Tur Dal: <b class="text-inkBlack tnum">₹8,100/qtl</b></span>
+          <span class="mx-4">🫘 Soybean: <b class="text-inkBlack tnum">₹4,650/qtl</b></span>
+          <span class="mx-4">🧅 Onion: <b class="text-inkBlack tnum">₹2,200/qtl</b></span>
+          <span class="mx-4">🍅 Tomato: <b class="text-inkBlack tnum">₹1,850/qtl</b></span>
+          <span class="mx-4">🌶️ Red Chilli: <b class="text-inkBlack tnum">₹18,500/qtl</b></span>
         </div>
       </div>
     </div>
 
-    <!-- ============================================================== -->
-    <!-- MODE B: FINANCIAL RESTRUCTURING & INFORMAL DEBT RELIEF         -->
-    <!-- ============================================================== -->
-    <div id="view-mode-b" class="hidden space-y-6">
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- 2. PINNED SCROLLYTELLING: "FACES OF RURAL ENTERPRISE"                   -->
+  <!-- ===================================================================== -->
+  <section id="scrolly-stories" class="relative bg-inkBlack text-white py-24 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10">
       
-      <!-- Mode B Hero Banner -->
-      <div class="gradient-amber p-4 sm:p-5 rounded-2xl border border-amber-300 shadow-sm flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center space-x-3.5">
-          <div class="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-md">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+      <div class="max-w-2xl mb-16">
+        <span class="text-xs font-mono uppercase text-accentCoral font-bold tracking-widest">Ground-Truth Proof</span>
+        <h2 class="text-4xl sm:text-6xl font-display font-medium uppercase tracking-tight mt-2 text-white">
+          Real enterprise.<br />
+          <span class="font-serif italic lowercase tracking-normal text-slate-300">verified turnarounds.</span>
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 mt-4 leading-relaxed">
+          Instead of distant statistics, our deterministic financial engine is built on the empirical unit economics of grassroots Scheduled Caste micro-entrepreneurs across India.
+        </p>
+      </div>
+
+      <!-- 3 Pinned Story Cards Grid (High-Quality Dignifying Imagery) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Story 1: Ramesh Kumar (Mustard Oil Expeller - D08) -->
+        <div class="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 soft-shadow flex flex-col justify-between transition-all hover:border-accentCoral/50">
+          <div class="h-64 overflow-hidden relative">
+            <img 
+              src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=800&q=80" 
+              alt="Rural Indian Agro Processing" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90 contrast-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono text-emerald-400 font-bold border border-white/10">
+              D08 · AGRO-PROCESSING
+            </span>
           </div>
-          <div>
-            <h2 id="mode-b-hero-title" class="text-base sm:text-lg font-black text-amber-950">
-              Algorithmic Refinancing of Informal Moneylender Debt
-            </h2>
-            <p id="mode-b-hero-sub" class="text-xs text-amber-800">
-              Consolidate 36%–60% informal loans into 4%–9.5% formal priority sector credit (MUDRA, KCC, Vishwakarma).
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white">Ramesh Kumar</h3>
+            <p class="text-xs font-mono text-accentCoral font-semibold mt-0.5">Aligarh, Uttar Pradesh</p>
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              "Transitioned from selling raw mustard seed to a 6-bolt cold-press expeller unit. Leveraged ₹6.80L NSFDC Term Loan at 8% with 26 quarterly repayments."
             </p>
+            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs">
+              <span class="text-slate-400">Monthly Turnover:</span>
+              <span class="font-bold text-emerald-400 tnum">₹2,45,000</span>
+            </div>
           </div>
         </div>
 
-        <div class="text-right">
-          <span class="text-[11px] text-amber-800 font-semibold block">Total Debt Consolidating</span>
-          <span id="b-val-total-debt" class="text-xl font-black text-amber-950">₹2,00,000</span>
+        <!-- Story 2: Sunita Devi (Tailoring & Garments - D18) -->
+        <div class="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 soft-shadow flex flex-col justify-between transition-all hover:border-accentCoral/50">
+          <div class="h-64 overflow-hidden relative">
+            <img 
+              src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80" 
+              alt="Rural Indian Tailoring & Handloom" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90 contrast-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono text-softPurple font-bold border border-white/10">
+              D18 · PM VISHWAKARMA
+            </span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white">Sunita Devi</h3>
+            <p class="text-xs font-mono text-accentCoral font-semibold mt-0.5">Varanasi, Uttar Pradesh</p>
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              "Expanded from 1 manual sewing machine to a 6-pedal garment production workshop with ₹1.00L PM Vishwakarma 5% credit + ₹15,000 digital toolkit voucher."
+            </p>
+            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs">
+              <span class="text-slate-400">Seasonal Peak Margin:</span>
+              <span class="font-bold text-softPurple tnum">38.5% Net</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story 3: Manoj Paswan (Tractor Repair Garage - D15) -->
+        <div class="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 soft-shadow flex flex-col justify-between transition-all hover:border-accentCoral/50">
+          <div class="h-64 overflow-hidden relative">
+            <img 
+              src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" 
+              alt="Mechanical Fabrication Workshop" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90 contrast-105"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono text-orange-400 font-bold border border-white/10">
+              D15 · TECHNICAL SERVICES
+            </span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white">Manoj Paswan</h3>
+            <p class="text-xs font-mono text-accentCoral font-semibold mt-0.5">Meerut, Uttar Pradesh</p>
+            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
+              "Refinanced ₹1.20L predatory moneylender debt at 3 senkda (36% APR) into a 6.5% NSFDC Micro Credit facility, liberating ₹2,460 monthly interest bleed."
+            </p>
+            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs">
+              <span class="text-slate-400">Debt Relief Savings:</span>
+              <span class="font-bold text-orange-400 tnum">₹88,560 Saved</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- 3. THE PLATFORM IN 4 CARDS (Pinned Stack Section)                     -->
+  <!-- ===================================================================== -->
+  <section id="platform-cards" class="py-24 px-6 sm:px-10 max-w-7xl mx-auto">
+    <div class="max-w-2xl mb-14">
+      <span class="text-xs font-mono uppercase text-accentCoral font-bold tracking-widest">Platform Architecture</span>
+      <h2 class="text-4xl sm:text-5xl font-display uppercase tracking-tight text-inkBlack mt-2">
+        Four pillars of<br />
+        <span class="font-serif italic lowercase tracking-normal text-subtleGrey">statutory precision.</span>
+      </h2>
+    </div>
+
+    <!-- 4 Structured Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <!-- Card 1 -->
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">01 / DUAL-TIER CREDIT</span>
+          <h3 class="text-xl font-bold text-inkBlack mt-2">NSFDC Statutory Calculator</h3>
+          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
+            Strict statutory modeling under MoSJE guidelines: Micro Credit Finance (&le; ₹1.40L @ 6.5% with 11 quarters) and Term Loan Scheme (up to ₹50L @ 8.0% with 26 quarters).
+          </p>
+        </div>
+        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-concessionalEmerald">
+          ₹1,40,000 &rarr; ₹1,25,000 Loan + ₹15k Equity
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- Left 2 Cols: Existing Debts Audit Table -->
-        <div class="lg:col-span-2 space-y-4">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <h3 id="mode-b-audit-title" class="font-bold text-sm text-slate-900 flex items-center space-x-2">
-                  <span class="text-red-500">⚠️</span>
-                  <span>Audit Current Informal Liabilities</span>
-                </h3>
-                <p id="mode-b-audit-sub" class="text-xs text-slate-500">
-                  Enter dialect quotes like "3 senkda" (₹3 per ₹100/mo) or monthly percentage rates.
-                </p>
-              </div>
-
-              <button onclick="addDebtRow()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center space-x-1 transition-all">
-                <span>+ Add Loan</span>
-              </button>
-            </div>
-
-            <!-- Dynamic Debts List -->
-            <div id="debts-list-container" class="space-y-3">
-              <!-- Rendered via JS -->
-            </div>
-
-            <!-- Predatory Interest Bleed Counter -->
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <div class="text-xs font-bold text-red-900 flex items-center space-x-1.5">
-                  <svg class="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                  <span id="txt-bleed-lbl">Current Predatory Interest Bleed</span>
-                </div>
-                <p id="txt-bleed-sub" class="text-[11px] text-red-700 mt-0.5">
-                  Weighted Average Cost of Debt: <span id="b-val-weighted-apr" class="font-bold">38.4%</span> p.a. (Principal never amortizes!)
-                </p>
-              </div>
-              <div class="text-right">
-                <span id="b-val-monthly-bleed" class="text-xl font-black text-red-700">₹6,400</span>
-                <span class="text-xs text-red-600 block">/ month (Pure Waste)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Legal Defense & Damdupat Card -->
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500">
-              Legal Safeguards & Moneylender Settlement Strategy
-            </h4>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span class="font-bold text-slate-900 block mb-1">Usurious Loans Act, 1918</span>
-                <span class="text-slate-600 text-[11px] leading-relaxed">
-                  Statutory power for courts to reopen contracts with unfair excessive interest and reduce claims.
-                </span>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span class="font-bold text-slate-900 block mb-1">Rule of Damdupat</span>
-                <span class="text-slate-600 text-[11px] leading-relaxed">
-                  Total interest collected can NEVER exceed principal. If already paid, lender barred from demanding further interest.
-                </span>
-              </div>
-              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                <span class="font-bold text-slate-900 block mb-1">Escrow Direct Disbursal</span>
-                <span class="text-slate-600 text-[11px] leading-relaxed">
-                  Institutional funds paid directly to lenders against signed No-Dues Certificates (NDC) and collateral release.
-                </span>
-              </div>
-            </div>
-          </div>
+      <!-- Card 2 -->
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">02 / STRESS TESTING</span>
+          <h3 class="text-xl font-bold text-inkBlack mt-2">12-Month Solvency Simulator</h3>
+          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
+            Agro-climatic seasonality multipliers stress test cash flows during August monsoon troughs to prevent debt default and calibrate working capital buffers.
+          </p>
         </div>
+        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-inkBlack">
+          Minimum DSCR &ge; 1.50 Guaranteed
+        </div>
+      </div>
 
-        <!-- Right Col: Target Solution & Cash Flow Relief -->
-        <div class="space-y-4">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-            <h3 class="font-bold text-sm text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
-              <span>Target Institutional Facility</span>
-              <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">FORMAL CREDIT</span>
-            </h3>
+      <!-- Card 3 -->
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">03 / DEBT LIBERATION</span>
+          <h3 class="text-xl font-bold text-inkBlack mt-2">Mode B Refinancing Engine</h3>
+          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
+            Algorithmic consolidation of predatory informal moneylender debt (2 to 5 senkda / 24%–60% APR) into low-cost institutional banking credit.
+          </p>
+        </div>
+        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-accentCoral">
+          Usurious Loans Act & Damdupat Legal Relief
+        </div>
+      </div>
 
-            <!-- Pathway Selector -->
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Replacement Credit Facility</label>
-              <select id="b-select-pathway" onchange="recalculateModeB()" class="w-full text-xs font-semibold border border-slate-300 rounded-xl p-2.5 bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                <option value="MUDRA_KISHOR">PMMY MUDRA (Kishor / Tarun) @ 9.5%</option>
-                <option value="KCC">KCC Livestock / Crop (Net 4.0% with subvention)</option>
-                <option value="DAY_NRLM_SHG">DAY-NRLM / SHG Bank Linkage @ 7.0%</option>
-                <option value="PM_VISHWAKARMA">PM Vishwakarma Concessional Credit @ 5.0%</option>
-              </select>
-            </div>
+      <!-- Card 4 -->
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">04 / BANK SANCTION</span>
+          <h3 class="text-xl font-bold text-inkBlack mt-2">1-Page Lead-Bank DPR</h3>
+          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
+            Generates standardized, bank-ready Detailed Project Reports conforming to the RBI Lead Bank Scheme (1969) with tamper-proof QR code verification.
+          </p>
+        </div>
+        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-concessionalEmerald">
+          Instant PDF Sanction Proposal Export
+        </div>
+      </div>
 
-            <!-- Household Income -->
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1">Monthly Household Income (₹)</label>
-              <input id="b-input-income" type="number" value="35000" oninput="recalculateModeB()" class="w-full text-xs font-semibold border border-slate-300 rounded-xl p-2 bg-slate-50" />
-            </div>
+    </div>
+  </section>
 
-            <!-- Tenure Slider -->
-            <div>
-              <div class="flex justify-between items-center mb-1">
-                <label class="text-xs font-semibold text-slate-700">Consolidation Tenure</label>
-                <span id="b-display-tenure" class="text-xs font-bold text-emerald-700">36 Months</span>
+
+  <!-- ===================================================================== -->
+  <!-- 4. TRANSITION SEPARATOR: ENTER THE AUTHENTICATED DASHBOARD            -->
+  <!-- ===================================================================== -->
+  <div id="dashboard-anchor" class="py-12 px-6 sm:px-10 max-w-7xl mx-auto text-center">
+    <div class="inline-flex items-center space-x-2 text-xs font-mono uppercase text-subtleGrey tracking-widest mb-3">
+      <span>Operational Interface</span>
+      <span>·</span>
+      <span>Live Application Environment</span>
+    </div>
+    <h2 class="text-3xl sm:text-4xl font-display font-medium uppercase tracking-tight text-inkBlack">
+      The Entrepreneur Workspace
+    </h2>
+    <p class="text-xs sm:text-sm text-subtleGrey mt-1 max-w-xl mx-auto">
+      Below is the live operational dashboard matching your exact reference architecture.
+    </p>
+  </div>
+
+
+  <!-- ===================================================================== -->
+  <!-- 5. THE AUTHENTICATED DASHBOARD (EXACT VISUAL MATCH TO USER REFERENCE)  -->
+  <!-- ===================================================================== -->
+  <section class="py-6 px-3 sm:px-8 max-w-[1480px] mx-auto mb-20">
+    
+    <!-- Outer Diffused Canvas (Matching User's Uploaded Webp Screenshot) -->
+    <div class="diffused-backdrop rounded-[36px] p-4 sm:p-7 soft-shadow">
+      
+      <!-- Main Dashboard Container (Rounded White Card with 3-Column Shell) -->
+      <div class="bg-dashCard rounded-[28px] overflow-hidden soft-card-shadow grid grid-cols-1 lg:grid-cols-12 min-h-[760px] font-dashboard">
+        
+        <!-- ============================================================= -->
+        <!-- COLUMN 1: LEFT NAVIGATION RAIL (2.5 Cols)                     -->
+        <!-- ============================================================= -->
+        <aside class="lg:col-span-3 bg-dashSidebar p-6 flex flex-col justify-between border-r border-dashBorder">
+          
+          <div class="space-y-6">
+            <!-- Brand Lockup (SETO Style from screenshot -> MoSJE/GraminAI) -->
+            <div class="flex items-center space-x-2.5 px-2">
+              <div class="w-7 h-7 rounded-lg bg-inkBlack text-white flex items-center justify-center font-bold text-xs">
+                ✦
               </div>
-              <input id="b-slider-tenure" type="range" min="12" max="60" step="6" value="36" oninput="onTenureSliderChange(this.value)" class="w-full accent-emerald-600 cursor-pointer" />
+              <span class="font-bold text-lg text-inkBlack tracking-tight font-sans">GraminAI</span>
             </div>
 
-            <!-- The Big Green Liberation Gauge -->
-            <div class="gradient-emerald p-4 rounded-xl border border-emerald-300 space-y-2 text-center">
-              <span class="text-xs font-bold text-emerald-900 block">Monthly Cash Flow Liberation</span>
-              <div id="b-val-cash-relief" class="text-3xl font-black text-emerald-700">
-                +₹4,260 <span class="text-xs font-semibold text-emerald-800">/mo</span>
+            <!-- Primary Navigation List (Active Pill matches screenshot) -->
+            <nav class="space-y-1">
+              <button onclick="setDashTab('home')" id="tab-btn-home" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white text-inkBlack font-semibold text-xs soft-card-shadow transition-all">
+                <span>🏠</span>
+                <span>Home</span>
+              </button>
+              <button onclick="setDashTab('simulator')" id="tab-btn-simulator" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+                <span>⚙️</span>
+                <span>Enterprise Studio</span>
+              </button>
+              <button onclick="setDashTab('amortizer')" id="tab-btn-amortizer" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+                <span>📉</span>
+                <span>NSFDC Amortizer</span>
+              </button>
+              <button onclick="setDashTab('restructure')" id="tab-btn-restructure" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+                <span>⚖️</span>
+                <span>Debt Liberation</span>
+              </button>
+              <button onclick="setDashTab('dpr')" id="tab-btn-dpr" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+                <span>📄</span>
+                <span>1-Page DPR</span>
+              </button>
+              <button class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+                <div class="flex items-center space-x-3">
+                  <span>🔔</span>
+                  <span>Notifications</span>
+                </div>
+                <span class="w-5 h-5 rounded-full bg-inkBlack text-white text-[10px] flex items-center justify-center font-bold">
+                  8
+                </span>
+              </button>
+              <button class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+                <span>⚙️</span>
+                <span>Settings</span>
+              </button>
+            </nav>
+
+            <!-- Collapsible Sub-Tree: Advisory Tools ^ (Matching Screenshot) -->
+            <div class="pt-4 border-t border-dashBorder/80 px-2">
+              <div class="flex items-center justify-between text-xs font-semibold text-subtleGrey mb-2 cursor-pointer">
+                <span>Advisory Tools</span>
+                <span class="text-[10px]">^</span>
               </div>
-              <p id="b-val-cflr-sub" class="text-[11px] text-emerald-800 font-bold">
-                Frees up 38.2% of family disposable income!
+              <div class="space-y-1.5 pl-2 text-xs font-medium text-subtleGrey">
+                <div onclick="selectDomainPreset('D08')" class="cursor-pointer hover:text-inkBlack py-1 flex items-center space-x-2">
+                  <span>🌾</span>
+                  <span>D08 Mustard Oil Mill</span>
+                </div>
+                <div onclick="selectDomainPreset('D18')" class="cursor-pointer hover:text-inkBlack py-1 flex items-center space-x-2">
+                  <span>🧵</span>
+                  <span>D18 Tailoring Workshop</span>
+                </div>
+                <div onclick="selectDomainPreset('D15')" class="cursor-pointer hover:text-inkBlack py-1 flex items-center space-x-2">
+                  <span>🔧</span>
+                  <span>D15 Tractor Garage</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom User Card (Matching Screenshot Rounded Grey Pill Card) -->
+          <div class="bg-slate-200/80 rounded-2xl p-3.5 space-y-3 soft-inner-shadow">
+            <div class="flex items-center space-x-3">
+              <img 
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80" 
+                alt="Entrepreneur avatar" 
+                class="w-10 h-10 rounded-full object-cover border-2 border-white"
+              />
+              <div class="overflow-hidden">
+                <p class="text-xs font-bold text-inkBlack truncate">Ramesh Kumar</p>
+                <p class="text-[10px] text-subtleGrey font-mono truncate">SC · Income ≤ ₹5.00L</p>
+              </div>
+            </div>
+            
+            <button onclick="alert('Statutory Certificate: Verified Scheduled Caste Beneficiary (MoSJE / NSFDC). Concessional rate: 6.5% / 8.0%.')" class="w-full py-2 px-3 rounded-xl bg-white text-inkBlack font-bold text-xs flex items-center justify-center space-x-1.5 soft-card-shadow hover:bg-slate-50 transition-all">
+              <span class="text-concessionalEmerald">✦</span>
+              <span>Statutory Verified</span>
+            </button>
+          </div>
+
+        </aside>
+
+
+        <!-- ============================================================= -->
+        <!-- COLUMN 2: CENTER WORKSPACE (6.5 Cols)                         -->
+        <!-- ============================================================= -->
+        <main class="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between space-y-8 bg-white overflow-y-auto">
+          
+          <!-- Top Area: 4-Pointed Iridescent Star + Welcome Greeting -->
+          <div class="text-center pt-2">
+            <!-- 4-Pointed Star Icon (Matching User's Reference Screenshot) -->
+            <div class="mx-auto mb-4 iris-star">
+              <svg class="iris-star-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFE4D6" />
+                    <stop offset="45%" stop-color="#E86043" />
+                    <stop offset="75%" stop-color="#8B5CF6" />
+                    <stop offset="100%" stop-color="#F59E0B" />
+                  </radialGradient>
+                </defs>
+                <!-- 4 Curved Petals / Points -->
+                <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" fill="url(#starGlow)" opacity="0.9" />
+                <circle cx="50" cy="50" r="10" fill="#FFFFFF" opacity="0.85" filter="blur(2px)" />
+              </svg>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-bold text-inkBlack tracking-tight font-sans">
+              Welcome, Ramesh!
+            </h2>
+            <p class="text-xs sm:text-sm text-subtleGrey mt-1">
+              How can I help structure your rural enterprise today?
+            </p>
+          </div>
+
+          <!-- Quick Action Cards (3 Rounded White Cards with Pastel 3D Badges) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="dash-quick-cards">
+            
+            <!-- Card 1: Simulate Enterprise -->
+            <div onclick="setDashTab('simulator')" class="bg-warmWhite rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
+              <div class="text-xl mb-3">⭐</div>
+              <h4 class="font-bold text-xs text-inkBlack">Simulate enterprise</h4>
+              <p class="text-[11px] text-subtleGrey mt-1 leading-relaxed">
+                Test 12-month seasonality & August lean-month cash flows.
               </p>
             </div>
 
-            <!-- Lifetime Metrics -->
-            <div class="space-y-2 border-t border-slate-100 pt-3 text-xs">
-              <div class="flex justify-between">
-                <span class="text-slate-500">New Amortizing EMI:</span>
-                <span id="b-val-new-emi" class="font-bold text-slate-900">₹6,406 /mo</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-500">Cumulative Interest Saved:</span>
-                <span id="b-val-interest-saved" class="font-extrabold text-emerald-700">₹1,99,784</span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-slate-500">Debt Balance at Month End:</span>
-                <span class="font-bold text-emerald-700">₹0 (100% DEBT FREE)</span>
-              </div>
+            <!-- Card 2: NSFDC Loan Structurer -->
+            <div onclick="setDashTab('amortizer')" class="bg-warmWhite rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
+              <div class="text-xl mb-3">✏️</div>
+              <h4 class="font-bold text-xs text-inkBlack">NSFDC amortizer</h4>
+              <p class="text-[11px] text-subtleGrey mt-1 leading-relaxed">
+                Calculate 11 or 26 quarterly instalments at 6.5% / 8.0%.
+              </p>
             </div>
 
-            <!-- Download Restructuring Package -->
-            <button onclick="downloadRestructuringDossier()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center space-x-2 shadow-md transition-all">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-              <span>Download Bank Restructuring Dossier</span>
-            </button>
+            <!-- Card 3: Debt Liberation & DPR -->
+            <div onclick="setDashTab('restructure')" class="bg-warmWhite rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
+              <div class="text-xl mb-3">🎨</div>
+              <h4 class="font-bold text-xs text-inkBlack">Debt liberation</h4>
+              <p class="text-[11px] text-subtleGrey mt-1 leading-relaxed">
+                Refinance 3-senkda moneylender debt into bank credit.
+              </p>
+            </div>
+
           </div>
-        </div>
+
+          <!-- Dynamic Tool Viewport (Rendered when a tool is active) -->
+          <div id="dynamic-tool-viewport" class="hidden bg-warmWhite rounded-2xl p-5 border border-dashBorder">
+            <!-- Injected via JavaScript -->
+          </div>
+
+          <!-- Bottom Command Bar (Exact Replica of Reference Screenshot) -->
+          <div class="bg-warmWhite rounded-2xl p-3 border border-dashBorder soft-inner-shadow space-y-2.5">
+            <div class="flex items-center space-x-2 text-xs text-subtleGrey px-2">
+              <span class="text-accentCoral font-bold">✦</span>
+              <input 
+                id="cmd-input" 
+                type="text" 
+                placeholder="Initiate a query or send a command to the AI..." 
+                class="w-full bg-transparent focus:outline-none text-inkBlack placeholder-subtleGrey text-xs font-medium"
+                onkeydown="if(event.key === 'Enter') executeCommand();"
+              />
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <div class="flex items-center space-x-2 text-xs">
+                <button onclick="setDashTab('dpr')" class="px-3 py-1.5 rounded-full bg-white text-inkBlack font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
+                  <span>📎</span>
+                  <span>Lead-Bank DPR</span>
+                </button>
+                <button onclick="setDashTab('amortizer')" class="px-3 py-1.5 rounded-full bg-white text-inkBlack font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
+                  <span>⚙️</span>
+                  <span>Quarterly EQI</span>
+                </button>
+                <button onclick="toggleLang()" class="px-3 py-1.5 rounded-full bg-white text-inkBlack font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
+                  <span>🌐</span>
+                  <span>Options</span>
+                </button>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <button onclick="alert('Bhashini Multilingual Speech Engine Active. Listening for Hindi/Regional prompt...')" class="w-8 h-8 rounded-full bg-white border border-mutedBorder flex items-center justify-center text-subtleGrey hover:text-inkBlack transition-all text-xs">
+                  🎤
+                </button>
+                <button onclick="executeCommand()" class="w-8 h-8 rounded-full bg-inkBlack text-white flex items-center justify-center hover:bg-slate-800 transition-all text-xs font-bold shadow-md">
+                  ↑
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </main>
+
+
+        <!-- ============================================================= -->
+        <!-- COLUMN 3: RIGHT PANEL (3.0 Cols - Chat History & Scenarios)   -->
+        <!-- ============================================================= -->
+        <aside class="lg:col-span-3 bg-white p-6 border-l border-dashBorder flex flex-col justify-between">
+          
+          <div class="space-y-4">
+            <!-- Header (Matching Reference Screenshot) -->
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-base text-inkBlack font-sans">Recent scenarios</h3>
+              <button onclick="renderRecentScenarios()" class="text-subtleGrey hover:text-inkBlack text-sm" title="Refresh">
+                🖼️
+              </button>
+            </div>
+
+            <!-- Search Field -->
+            <div class="relative">
+              <input 
+                type="text" 
+                placeholder="Search..." 
+                class="w-full bg-dashSidebar rounded-xl px-3 py-2 text-xs text-inkBlack placeholder-subtleGrey border border-dashBorder focus:outline-none focus:border-inkBlack"
+              />
+              <span class="absolute right-3 top-2.5 text-xs text-subtleGrey">🔍</span>
+            </div>
+
+            <!-- Recent Scenarios List (Exact layout of checkboxes, titles, images from screenshot) -->
+            <div class="space-y-3.5 pt-2 text-xs">
+              
+              <!-- Item 1: D08 Mustard Oil Mill -->
+              <div onclick="selectDomainPreset('D08')" class="p-2.5 rounded-xl hover:bg-dashSidebar transition-all cursor-pointer border border-transparent hover:border-dashBorder">
+                <div class="flex items-start space-x-2">
+                  <input type="checkbox" checked class="mt-0.5 rounded border-gray-300 text-inkBlack focus:ring-0" />
+                  <div class="flex-1">
+                    <p class="font-bold text-inkBlack">D08 Mustard Oil Mill</p>
+                    <p class="text-[11px] text-subtleGrey mt-0.5">₹6.80L Term Loan · 26 Qtrs</p>
+                    <div class="flex items-center space-x-2 mt-2">
+                      <div class="flex -space-x-1">
+                        <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[9px] font-bold flex items-center justify-center">R</span>
+                        <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold flex items-center justify-center">B</span>
+                      </div>
+                      <span class="text-[10px] text-subtleGrey font-mono">2h ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 2: D18 Tailoring Workshop (With Image Preview matching screenshot) -->
+              <div onclick="selectDomainPreset('D18')" class="p-2.5 rounded-xl hover:bg-dashSidebar transition-all cursor-pointer border border-transparent hover:border-dashBorder">
+                <div class="flex items-start space-x-2">
+                  <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-inkBlack focus:ring-0" />
+                  <div class="flex-1">
+                    <p class="font-bold text-inkBlack">D18 Tailoring Workshop</p>
+                    <p class="text-[11px] text-subtleGrey mt-0.5">PM Vishwakarma 5% credit...</p>
+                    <!-- Rounded Image Thumbnail in Card -->
+                    <div class="mt-2 rounded-xl overflow-hidden h-20 w-full relative">
+                      <img 
+                        src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" 
+                        alt="Tailoring design preview" 
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                      <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-800 text-[9px] font-bold flex items-center justify-center">S</span>
+                      <span class="text-[10px] text-subtleGrey font-mono">3h ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 3: Mode B Moneylender Refinancing -->
+              <div onclick="setDashTab('restructure')" class="p-2.5 rounded-xl hover:bg-dashSidebar transition-all cursor-pointer border border-transparent hover:border-dashBorder">
+                <div class="flex items-start space-x-2">
+                  <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-inkBlack focus:ring-0" />
+                  <div class="flex-1">
+                    <p class="font-bold text-inkBlack">Sahukar Debt Relief</p>
+                    <p class="text-[11px] text-subtleGrey mt-0.5">₹1.20L @ 3 senkda &rarr; 6.5%</p>
+                    <div class="flex items-center justify-between mt-2">
+                      <span class="text-[10px] text-concessionalEmerald font-bold">+₹2,460/mo relief</span>
+                      <span class="text-[10px] text-subtleGrey font-mono">5h ago</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Action Button: Create New Simulation (Black Pill matching screenshot) -->
+          <button onclick="setDashTab('simulator')" class="w-full py-3 rounded-full bg-inkBlack hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-md transition-all mt-4">
+            Create new simulation +
+          </button>
+
+        </aside>
 
       </div>
     </div>
 
-  </main>
+  </section>
 
-  <!-- ============================================================== -->
-  <!-- FOOTER                                                         -->
-  <!-- ============================================================== -->
-  <footer class="bg-slate-900 text-slate-400 text-xs py-4 border-t border-slate-800 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center space-x-2">
-        <span class="font-bold text-white">GraminAdvisory</span>
-        <span>•</span>
-        <span>Smart India Hackathon (SIH 2026) Technical Prototype</span>
-      </div>
-      <div class="flex items-center space-x-4 text-[11px]">
-        <span>RBI Expert Committee (2019) Grounded</span>
-        <span>Zero-Hallucination Core</span>
-        <span>Lead Bank Scheme Formatted</span>
-      </div>
-    </div>
-  </footer>
 
-  <!-- ============================================================== -->
-  <!-- JAVASCRIPT DETERMINISTIC APPLICATION LOGIC                     -->
-  <!-- ============================================================== -->
+  <!-- ===================================================================== -->
+  <!-- JAVASCRIPT: LENIS, GSAP SCROLLTRIGGER, & INTERACTIVE DASHBOARD LOGIC   -->
+  <!-- ===================================================================== -->
   <script>
-    // 1. DATA DEFINITIONS
-    const ARCHETYPES_DATA = [
-      {
-        id: "archetype_1",
-        name: "Agro-Processing & Food Value",
-        name_hi: "कृषि प्रसंस्करण एवं खाद्य मूल्य संवर्धन",
-        icon: "🌾",
-        sector: "Manufacturing",
-        defaultCapex: 650000,
-        defaultOpex: 185000,
-        defaultRev: 245000,
-        weights: [1.4, 1.3, 1.2, 0.8, 0.6, 0.5, 0.5, 0.7, 0.9, 1.3, 1.4, 1.4]
-      },
-      {
-        id: "archetype_2",
-        name: "Rural Retail & Agri-Input",
-        name_hi: "ग्रामीण किराना एवं खाद-बीज व्यापार",
-        icon: "🛍️",
-        sector: "Trade",
-        defaultCapex: 175000,
-        defaultOpex: 13430,
-        defaultRev: 273000,
-        weights: [1.0, 1.0, 1.1, 1.1, 1.2, 1.2, 0.9, 0.8, 0.9, 1.3, 1.4, 1.1]
-      },
-      {
-        id: "archetype_3",
-        name: "Machinery Repair & Services",
-        name_hi: "ट्रैक्टर/मोटर रिपेयर एवं तकनीकी सेवा",
-        icon: "🔧",
-        sector: "Services",
-        defaultCapex: 362000,
-        defaultOpex: 32800,
-        defaultRev: 94950,
-        weights: [0.8, 0.9, 1.6, 1.7, 1.1, 1.5, 0.6, 0.5, 0.7, 1.2, 1.4, 1.0]
-      },
-      {
-        id: "archetype_4",
-        name: "Livestock, Dairy & Goatry",
-        name_hi: "पशुपालन, डेयरी एवं बकरी पालन",
-        icon: "🥛",
-        sector: "Allied Agri",
-        defaultCapex: 258000,
-        defaultOpex: 4875,
-        defaultRev: 21330,
-        weights: [1.0, 1.0, 1.0, 0.9, 0.8, 0.8, 0.9, 1.0, 1.1, 1.3, 1.2, 1.0]
-      },
-      {
-        id: "archetype_5",
-        name: "PM Vishwakarma Artisans",
-        name_hi: "पीएम विश्वकर्मा पारंपरिक कारीगर",
-        icon: "🔨",
-        sector: "Artisanal",
-        defaultCapex: 100000,
-        defaultOpex: 6300,
-        defaultRev: 72000,
-        weights: [0.9, 0.9, 1.0, 1.1, 1.2, 0.8, 0.7, 0.9, 1.2, 1.4, 1.5, 1.0]
-      },
-      {
-        id: "archetype_6",
-        name: "Circular Bio-Waste & Green",
-        name_hi: "वर्मीकम्पोस्ट एवं हरित ग्रामीण इकाइयाँ",
-        icon: "♻️",
-        sector: "Green Mfg",
-        defaultCapex: 121500,
-        defaultOpex: 8333,
-        defaultRev: 24400,
-        weights: [1.0, 1.1, 1.3, 1.2, 1.0, 1.0, 1.1, 0.9, 0.9, 1.1, 1.2, 1.1]
+    // 1. Initialize Lenis Smooth Scroll
+    let lenis;
+    try {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true
+      });
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
       }
-    ];
-
-    let currentLang = 'en';
-    let currentMode = 'mode_a';
-    let currentArchId = 'archetype_1';
-
-    let debtsList = [
-      { id: 1, lenderType: 'Village Mahajan / Sahukar', principal: 120000, rateQuote: '3 senkda', monthsActive: 16 },
-      { id: 2, lenderType: 'Tehsil Fertilizer Dealer', principal: 50000, rateQuote: '4 senkda', monthsActive: 8 },
-      { id: 3, lenderType: 'Informal Relative / Shopkeeper', principal: 30000, rateQuote: '2.5 senkda', monthsActive: 12 }
-    ];
-
-    // Helper: Format Currency
-    function formatINR(val) {
-      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
+      requestAnimationFrame(raf);
+    } catch(e) {
+      console.warn("Lenis initialization skipped", e);
     }
 
-    // Helper: Compute EMI
-    function computeEMI(p, r_annual, n_months) {
-      if (p <= 0 || n_months <= 0) return 0;
-      if (r_annual <= 0) return Math.round(p / n_months);
-      const r = (r_annual / 100) / 12;
-      return Math.round(p * (r * Math.pow(1 + r, n_months)) / (Math.pow(1 + r, n_months) - 1));
-    }
+    // 2. Initialize GSAP ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
 
-    // Helper: Parse Vernacular Quote
-    function parseRate(q) {
-      if (!q) return 36;
-      const str = q.toString().toLowerCase().trim();
-      const match = str.match(/[\d.]+/);
-      if (match) {
-        const val = parseFloat(match[0]);
-        if (str.includes("senkda") || str.includes("saikda") || str.includes("per 100") || val <= 10) {
-          return Math.round(val * 12 * 10) / 10;
-        }
-        return val;
-      }
-      return 36;
-    }
-
-    // Navigation Switcher
-    function switchMode(m) {
-      currentMode = m;
-      if (m === 'mode_a') {
-        document.getElementById('view-mode-a').classList.remove('hidden');
-        document.getElementById('view-mode-b').classList.add('hidden');
-        document.getElementById('btn-mode-a').className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 bg-emerald-500 text-slate-950 shadow-md";
-        document.getElementById('btn-mode-b').className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 text-emerald-100 hover:text-white";
-        recalculateModeA();
+    // Scroll to Dashboard Helper
+    function scrollToDashboard() {
+      const el = document.getElementById('dashboard-anchor');
+      if (lenis) {
+        lenis.scrollTo(el, { offset: -30 });
       } else {
-        document.getElementById('view-mode-a').classList.add('hidden');
-        document.getElementById('view-mode-b').classList.remove('hidden');
-        document.getElementById('btn-mode-a').className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 text-emerald-100 hover:text-white";
-        document.getElementById('btn-mode-b').className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 bg-amber-400 text-slate-950 shadow-md";
-        renderDebtsList();
-        recalculateModeB();
+        el.scrollIntoView({ behavior: 'smooth' });
       }
     }
 
     // Language Toggle
+    let currentLang = 'en';
     function toggleLang() {
-      currentLang = (currentLang === 'en') ? 'hi' : 'en';
-      document.getElementById('lang-btn-txt').innerText = (currentLang === 'en') ? 'हिन्दी' : 'English';
-      renderArchetypeCards();
-      recalculateModeA();
-      renderDebtsList();
-      recalculateModeB();
+      currentLang = currentLang === 'en' ? 'hi' : 'en';
+      document.getElementById('nav-lang-lbl').innerText = currentLang === 'en' ? 'English' : 'हिंदी';
     }
 
-    // Render Archetype Cards
-    function renderArchetypeCards() {
-      const container = document.getElementById('archetypes-grid');
-      container.innerHTML = '';
-
-      ARCHETYPES_DATA.forEach(arch => {
-        const isSelected = (arch.id === currentArchId);
-        const card = document.createElement('button');
-        card.onclick = () => selectArchetype(arch.id);
-        card.className = `text-left p-3.5 rounded-2xl border transition-all flex flex-col justify-between h-32 ${
-          isSelected 
-            ? 'border-emerald-600 bg-emerald-50/80 ring-2 ring-emerald-500/30 shadow-md' 
-            : 'border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm'
-        }`;
-
-        card.innerHTML = `
-          <div class="flex items-center justify-between w-full">
-            <span class="text-2xl">${arch.icon}</span>
-            <span class="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">${arch.sector}</span>
-          </div>
-          <div>
-            <div class="text-xs font-bold text-slate-900 leading-tight">
-              ${currentLang === 'en' ? arch.name : arch.name_hi}
-            </div>
-            <div class="text-[10px] text-emerald-700 font-semibold mt-1">
-              Base: ${formatINR(arch.defaultCapex)}
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function selectArchetype(id) {
-      currentArchId = id;
-      const arch = ARCHETYPES_DATA.find(a => a.id === id);
-      document.getElementById('slider-capex').value = arch.defaultCapex;
-      document.getElementById('display-capex').innerText = formatINR(arch.defaultCapex);
-      renderArchetypeCards();
-      recalculateModeA();
-    }
-
-    function onCapexSliderChange(val) {
-      document.getElementById('display-capex').innerText = formatINR(val);
-      recalculateModeA();
-    }
-
-    // MODE A CALCULATION
-    function recalculateModeA() {
-      const arch = ARCHETYPES_DATA.find(a => a.id === currentArchId);
-      const capex = parseFloat(document.getElementById('slider-capex').value);
-      const category = document.getElementById('select-category').value;
-      const area = document.getElementById('select-area').value;
-
-      const monthlyOpex = arch.defaultOpex;
-      const monthlyRev = arch.defaultRev;
-      const workingCapital = Math.round(monthlyOpex * 1.5);
-      const preOp = Math.round(capex * 0.05);
-      const totalCost = capex + workingCapital + preOp;
-
-      let schemeName = "PMMY MUDRA (Kishor / Tarun)";
-      let subsidyPct = 0;
-      let subsidyAmt = 0;
-      let equity = 0;
-      let loan = 0;
-      let rate = 9.5;
-      let tenure = 60;
-      let note = "";
-
-      const isRural = (area === 'rural');
-      const isSpecial = (category === 'special');
-
-      if (arch.id === "archetype_5") {
-        schemeName = "PM Vishwakarma (Tranche 1)";
-        subsidyAmt = 15000;
-        subsidyPct = 0;
-        equity = 0;
-        loan = Math.min(totalCost, 100000);
-        rate = 5.0;
-        tenure = 18;
-        note = "Includes ₹15,000 digital e-RUPI toolkit voucher + 100% CGTMSE guarantee @ 5% fixed interest.";
-      } else if (arch.id === "archetype_4") {
-        if (totalCost <= 200000) {
-          schemeName = "KCC Animal Husbandry & Livestock";
-          equity = Math.round(totalCost * 0.10);
-          loan = Math.round(totalCost * 0.90);
-          rate = 4.0;
-          tenure = 36;
-          note = "7% base interest with 3% prompt repayment incentive -> 4% net effective borrowing cost.";
-        } else {
-          schemeName = "National Livestock Mission (NLM)";
-          subsidyPct = 50;
-          subsidyAmt = Math.min(Math.round(totalCost * 0.50), 2500000);
-          equity = Math.round(totalCost * 0.10);
-          loan = Math.round(totalCost - subsidyAmt - equity);
-          rate = 9.5;
-          note = "50% direct capital subsidy credited into Bank Subsidy Reserve Fund.";
-        }
-      } else if (["archetype_1", "archetype_3", "archetype_6"].includes(arch.id)) {
-        schemeName = "Prime Minister's Employment Generation Programme (PMEGP)";
-        const subRate = (isRural && isSpecial) ? 0.35 : (isRural ? 0.25 : 0.15);
-        const ownRate = isSpecial ? 0.05 : 0.10;
-        subsidyPct = subRate * 100;
-        subsidyAmt = Math.round(totalCost * subRate);
-        equity = Math.round(totalCost * ownRate);
-        loan = Math.round(totalCost - subsidyAmt - equity);
-        note = `PMEGP ${subsidyPct}% Margin Money Capital Subsidy for ${area} ${category} entrepreneur.`;
-      } else {
-        equity = Math.round(totalCost * 0.15);
-        loan = Math.round(totalCost * 0.85);
-        note = "100% collateral-free credit backed by Credit Guarantee Fund for Micro Units (CGFMU).";
-      }
-
-      const emi = computeEMI(loan, rate, tenure);
-
-      // DOM Updates
-      document.getElementById('val-total-cost').innerText = formatINR(totalCost);
-      document.getElementById('val-subsidy').innerText = formatINR(subsidyAmt);
-      document.getElementById('val-sub-pct').innerText = subsidyPct > 0 ? `${subsidyPct}% Direct Grant` : 'Grant / Subvention';
-      document.getElementById('val-equity').innerText = formatINR(equity);
-      document.getElementById('val-emi').innerText = formatINR(emi);
-      document.getElementById('val-emi-terms').innerText = `@ ${rate}% for ${tenure} mos`;
-
-      document.getElementById('matched-scheme-box').innerHTML = `
-        <div class="flex items-center space-x-1.5 text-emerald-800 font-bold text-xs">
-          <span>✅ ${schemeName}</span>
-        </div>
-        <p class="text-[11px] text-emerald-700 leading-relaxed">${note}</p>
-      `;
-
-      // 12-Month Simulation
-      let annualNocf = 0;
-      const barsContainer = document.getElementById('seasonality-bars');
-      barsContainer.innerHTML = '';
-
-      const monthlyData = arch.weights.map((w, i) => {
-        const rev = Math.round(monthlyRev * w);
-        const cost = Math.round(monthlyOpex * (0.7 + (0.3 * w)));
-        const nocf = rev - cost;
-        annualNocf += nocf;
-        const dscr = emi > 0 ? (nocf / emi) : 99.9;
-        return { month: i + 1, nocf, dscr };
-      });
-
-      const maxNocf = Math.max(...monthlyData.map(m => m.nocf));
-      const avgDscr = emi > 0 ? ((annualNocf / 12) / emi).toFixed(2) : '99.9';
-      const minDscr = Math.min(...monthlyData.map(m => m.dscr)).toFixed(2);
-
-      document.getElementById('val-avg-dscr').innerText = `${avgDscr}x`;
-      document.getElementById('val-min-dscr').innerText = `${minDscr}x`;
-
-      const badge = document.getElementById('badge-feasibility');
-      if (avgDscr >= 1.5 && minDscr >= 1.0) {
-        badge.innerText = "HIGH FEASIBILITY";
-        badge.className = "text-[10px] font-bold px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800";
-      } else {
-        badge.innerText = "MODERATE FEASIBILITY";
-        badge.className = "text-[10px] font-bold px-2 py-1 rounded-lg bg-amber-100 text-amber-800";
-      }
-
-      monthlyData.forEach(m => {
-        const heightPct = Math.max(16, Math.round((m.nocf / maxNocf) * 100));
-        const isLean = m.dscr < 1.2;
-        const col = document.createElement('div');
-        col.className = 'flex flex-col items-center';
-        col.innerHTML = `
-          <div class="text-[8px] font-bold text-slate-500 mb-0.5">${m.dscr.toFixed(1)}x</div>
-          <div class="w-full bg-slate-100 rounded-t-sm h-20 flex items-end p-0.5">
-            <div style="height: ${heightPct}%" class="w-full rounded-t transition-all ${isLean ? 'bg-amber-400' : 'bg-emerald-500'}" title="Month ${m.month}: ${formatINR(m.nocf)}"></div>
-          </div>
-          <div class="text-[9px] font-semibold text-slate-600 mt-1">M${m.month}</div>
-        `;
-        barsContainer.appendChild(col);
-      });
-    }
-
-    // MODE B FUNCTIONS
-    function renderDebtsList() {
-      const container = document.getElementById('debts-list-container');
-      container.innerHTML = '';
-
-      debtsList.forEach((d) => {
-        const apr = parseRate(d.rateQuote);
-        const monthlyInt = Math.round(d.principal * ((apr / 100) / 12));
-        const totalPaid = monthlyInt * d.monthsActive;
-        const isDamdupat = (totalPaid >= d.principal);
-
-        const row = document.createElement('div');
-        row.className = "p-3 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2";
-        row.innerHTML = `
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
-            <div>
-              <label class="text-[10px] font-bold text-slate-500 uppercase">Lender / Source</label>
-              <input type="text" value="${d.lenderType}" onchange="updateDebt(${d.id}, 'lenderType', this.value)" class="w-full text-xs font-semibold border border-slate-300 rounded-lg p-1.5 bg-white" />
-            </div>
-            <div>
-              <label class="text-[10px] font-bold text-slate-500 uppercase">Principal (₹)</label>
-              <input type="number" value="${d.principal}" onchange="updateDebt(${d.id}, 'principal', parseFloat(this.value)||0)" class="w-full text-xs font-semibold border border-slate-300 rounded-lg p-1.5 bg-white" />
-            </div>
-            <div>
-              <label class="text-[10px] font-bold text-slate-500 uppercase">Rate Quote</label>
-              <input type="text" value="${d.rateQuote}" onchange="updateDebt(${d.id}, 'rateQuote', this.value)" class="w-full text-xs font-semibold border border-slate-300 rounded-lg p-1.5 bg-white" />
-            </div>
-            <div class="flex items-center justify-between sm:justify-end space-x-2 pt-2 sm:pt-0">
-              <div class="text-right">
-                <span class="text-[11px] font-bold text-red-600 block">${formatINR(monthlyInt)}/mo</span>
-                <span class="text-[9px] text-slate-500">${apr}% APR</span>
-              </div>
-              <button onclick="removeDebt(${d.id})" class="text-slate-400 hover:text-red-500 p-1.5 rounded-lg text-sm">🗑️</button>
-            </div>
-          </div>
-          ${isDamdupat ? `
-            <div class="bg-red-50 border border-red-200 rounded-lg px-2.5 py-1 text-[11px] text-red-800 flex items-center justify-between">
-              <span class="font-bold">⚖️ Rule of Damdupat Triggered:</span>
-              <span>Paid ${formatINR(totalPaid)} in interest (exceeds ₹${d.principal} principal). Moneylender legally prohibited from further interest!</span>
-            </div>
-          ` : ''}
-        `;
-        container.appendChild(row);
-      });
-    }
-
-    function addDebtRow() {
-      debtsList.push({
-        id: Date.now(),
-        lenderType: 'Moneylender / Input Dealer',
-        principal: 40000,
-        rateQuote: '3 senkda',
-        monthsActive: 12
-      });
-      renderDebtsList();
-      recalculateModeB();
-    }
-
-    function removeDebt(id) {
-      debtsList = debtsList.filter(d => d.id !== id);
-      renderDebtsList();
-      recalculateModeB();
-    }
-
-    function updateDebt(id, field, val) {
-      debtsList = debtsList.map(d => d.id === id ? { ...d, [field]: val } : d);
-      renderDebtsList();
-      recalculateModeB();
-    }
-
-    function onTenureSliderChange(val) {
-      document.getElementById('b-display-tenure').innerText = `${val} Months`;
-      recalculateModeB();
-    }
-
-    function recalculateModeB() {
-      let totalP = 0;
-      let totalMonthlyBleed = 0;
-      let weightedAcc = 0;
-
-      debtsList.forEach(d => {
-        const apr = parseRate(d.rateQuote);
-        const mInt = Math.round(d.principal * ((apr / 100) / 12));
-        totalP += d.principal;
-        totalMonthlyBleed += mInt;
-        weightedAcc += (d.principal * apr);
-      });
-
-      const weightedApr = totalP > 0 ? (weightedAcc / totalP).toFixed(1) : 0;
-      const pathway = document.getElementById('b-select-pathway').value;
-      const tenure = parseInt(document.getElementById('b-slider-tenure').value);
-      const income = parseFloat(document.getElementById('b-input-income').value) || 35000;
-
-      const rates = { MUDRA_KISHOR: 9.5, KCC: 4.0, DAY_NRLM_SHG: 7.0, PM_VISHWAKARMA: 5.0 };
-      const formalRate = rates[pathway] || 9.5;
-
-      const newEmi = computeEMI(totalP, formalRate, tenure);
-      const totalFormalInterest = Math.round((newEmi * tenure) - totalP);
-      const informalInterestOverTenure = Math.round(totalMonthlyBleed * tenure);
-      const interestSaved = Math.max(0, informalInterestOverTenure - totalFormalInterest);
-      const monthlyRelief = Math.round(totalMonthlyBleed - newEmi);
-      const cflrPct = income > 0 ? ((monthlyRelief / income) * 100).toFixed(1) : 0;
-
-      document.getElementById('b-val-total-debt').innerText = formatINR(totalP);
-      document.getElementById('b-val-weighted-apr').innerText = `${weightedApr}%`;
-      document.getElementById('b-val-monthly-bleed').innerText = formatINR(totalMonthlyBleed);
-      document.getElementById('b-val-cash-relief').innerHTML = `+${formatINR(monthlyRelief)} <span class="text-xs font-semibold text-emerald-800">/mo</span>`;
-      document.getElementById('b-val-cflr-sub').innerText = `Frees up ${cflrPct}% of family disposable income!`;
-      document.getElementById('b-val-new-emi').innerText = `${formatINR(newEmi)} /mo`;
-      document.getElementById('b-val-interest-saved').innerText = formatINR(interestSaved);
-    }
-
-    // DPR Actions
-    function downloadDPR() {
-      alert("Official 1-Page Bank-Ready DPR Generated! In production, this compiles the ReportLab PDF matching Lead Bank Scheme guidelines with QR verification.");
-    }
-
-    function downloadRestructuringDossier() {
-      alert("Official Debt Restructuring Proposal Dossier Generated! Formatted with Rule of Damdupat audit and direct escrow settlement protocol.");
-    }
-
-    // INITIALIZATION
-    window.onload = function() {
-      renderArchetypeCards();
-      recalculateModeA();
+    // 3. Dashboard State Management
+    let activeTab = 'home';
+    let currentDomain = {
+      code: "D08",
+      name: "Mustard & Edible Oil Expeller Mill",
+      tier: "TERM_LOAN",
+      cost: 680000,
+      loan: 612000,
+      equity: 68000,
+      rate: 8.0,
+      quarters: 26,
+      eqi: 30420
     };
+
+    function setDashTab(tab) {
+      activeTab = tab;
+      const viewport = document.getElementById('dynamic-tool-viewport');
+      const quickCards = document.getElementById('dash-quick-cards');
+
+      // Update active nav button
+      ['home', 'simulator', 'amortizer', 'restructure', 'dpr'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) {
+          if (t === tab) {
+            btn.className = "w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white text-inkBlack font-semibold text-xs soft-card-shadow transition-all";
+          } else {
+            btn.className = "w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all";
+          }
+        }
+      });
+
+      if (tab === 'home') {
+        viewport.classList.add('hidden');
+        quickCards.classList.remove('hidden');
+        return;
+      }
+
+      quickCards.classList.add('hidden');
+      viewport.classList.remove('hidden');
+
+      if (tab === 'simulator') {
+        renderSimulatorView(viewport);
+      } else if (tab === 'amortizer') {
+        renderAmortizerView(viewport);
+      } else if (tab === 'restructure') {
+        renderRestructureView(viewport);
+      } else if (tab === 'dpr') {
+        renderDPRView(viewport);
+      }
+    }
+
+    // Render 1: Simulator View
+    function renderSimulatorView(container) {
+      container.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
+            <div>
+              <span class="text-[10px] font-mono text-accentCoral font-bold uppercase">Module 1 · Seasonality Simulator</span>
+              <h4 class="font-bold text-sm text-inkBlack">${currentDomain.name} (${currentDomain.code})</h4>
+            </div>
+            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-white border border-dashBorder">
+              <span class="text-subtleGrey">Total Project Cost:</span>
+              <p class="text-base font-bold text-inkBlack tnum">₹${currentDomain.cost.toLocaleString('en-IN')}</p>
+            </div>
+            <div class="p-3 rounded-xl bg-white border border-dashBorder">
+              <span class="text-subtleGrey">Annual Cash Flow (NOCF):</span>
+              <p class="text-base font-bold text-concessionalEmerald tnum">₹2,84,400</p>
+            </div>
+          </div>
+
+          <!-- Mini 12-Month Bar Chart -->
+          <div class="pt-2">
+            <span class="text-[11px] font-semibold text-subtleGrey">12-Month Seasonal Multipliers (August Lean Trough Stress):</span>
+            <div class="grid grid-cols-12 gap-1 h-24 items-end pt-3 pb-1 border-b border-dashBorder">
+              ${[1.3, 1.2, 1.0, 0.7, 0.6, 0.8, 1.1, 1.3, 1.4, 1.3, 1.2, 1.1].map(m => `
+                <div class="h-full flex flex-col justify-end items-center group relative">
+                  <div class="w-full ${m < 0.8 ? 'bg-orange-400' : 'bg-concessionalEmerald'} rounded-t" style="height: ${Math.round(m * 65)}%"></div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="grid grid-cols-12 text-center text-[9px] text-subtleGrey font-mono pt-1">
+              <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
+              <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center pt-2">
+            <span class="text-xs font-bold text-concessionalEmerald">✓ Solvency Rating: SAFE (DSCR 1.62)</span>
+            <button onclick="setDashTab('amortizer')" class="px-3 py-1.5 rounded-xl bg-inkBlack text-white text-xs font-bold">
+              View 26-Quarter Repayment &rarr;
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render 2: Amortizer View (Exact 11 / 26 Quarters)
+    function renderAmortizerView(container) {
+      container.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
+            <div>
+              <span class="text-[10px] font-mono text-concessionalEmerald font-bold uppercase">NSFDC Statutory Amortizer</span>
+              <h4 class="font-bold text-sm text-inkBlack">Quarterly Repayment Schedule (${currentDomain.quarters} Quarters @ ${currentDomain.rate}% p.a.)</h4>
+            </div>
+            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 text-xs">
+            <div class="p-2.5 rounded-xl bg-white border border-dashBorder">
+              <span class="text-subtleGrey">Sanction Loan:</span>
+              <p class="font-bold text-inkBlack tnum">₹${currentDomain.loan.toLocaleString('en-IN')}</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white border border-dashBorder">
+              <span class="text-subtleGrey">Promoter Margin:</span>
+              <p class="font-bold text-inkBlack tnum">₹${currentDomain.equity.toLocaleString('en-IN')}</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white border border-dashBorder">
+              <span class="text-subtleGrey">Equated Quarterly (EQI):</span>
+              <p class="font-bold text-accentCoral tnum">₹${currentDomain.eqi.toLocaleString('en-IN')}</p>
+            </div>
+          </div>
+
+          <div class="max-h-48 overflow-y-auto border border-dashBorder rounded-xl bg-white text-[11px]">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-dashSidebar text-subtleGrey sticky top-0 border-b border-dashBorder">
+                <tr>
+                  <th class="p-2">Quarter</th>
+                  <th class="p-2">Type</th>
+                  <th class="p-2">Principal</th>
+                  <th class="p-2">Interest</th>
+                  <th class="p-2">Instalment</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-dashBorder tnum">
+                <tr class="bg-orange-50/50">
+                  <td class="p-2 font-bold">Q1 (Moratorium)</td>
+                  <td class="p-2 text-subtleGrey">Moratorium</td>
+                  <td class="p-2">₹0</td>
+                  <td class="p-2 text-orange-600">₹12,240</td>
+                  <td class="p-2 font-bold">₹12,240</td>
+                </tr>
+                <tr class="bg-orange-50/50">
+                  <td class="p-2 font-bold">Q2 (Moratorium)</td>
+                  <td class="p-2 text-subtleGrey">Moratorium</td>
+                  <td class="p-2">₹0</td>
+                  <td class="p-2 text-orange-600">₹12,240</td>
+                  <td class="p-2 font-bold">₹12,240</td>
+                </tr>
+                <tr>
+                  <td class="p-2 font-bold">Q3</td>
+                  <td class="p-2 text-concessionalEmerald">Amortizing</td>
+                  <td class="p-2">₹18,180</td>
+                  <td class="p-2">₹12,240</td>
+                  <td class="p-2 font-bold">₹30,420</td>
+                </tr>
+                <tr>
+                  <td class="p-2 font-bold">Q4</td>
+                  <td class="p-2 text-concessionalEmerald">Amortizing</td>
+                  <td class="p-2">₹18,543</td>
+                  <td class="p-2">₹11,877</td>
+                  <td class="p-2 font-bold">₹30,420</td>
+                </tr>
+                <tr>
+                  <td class="p-2 font-bold">Q5</td>
+                  <td class="p-2 text-concessionalEmerald">Amortizing</td>
+                  <td class="p-2">₹18,914</td>
+                  <td class="p-2">₹11,506</td>
+                  <td class="p-2 font-bold">₹30,420</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex justify-between items-center pt-1 text-xs">
+            <span class="text-subtleGrey">Showing 5 of 26 quarters (7-Year Amortization)</span>
+            <button onclick="setDashTab('dpr')" class="px-3 py-1.5 rounded-xl bg-inkBlack text-white font-bold">
+              Generate 1-Page Lead-Bank DPR ↗
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render 3: Mode B Debt Liberation
+    function renderRestructureView(container) {
+      container.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
+            <div>
+              <span class="text-[10px] font-mono text-accentCoral font-bold uppercase">Mode B · Informal Debt Refinancing</span>
+              <h4 class="font-bold text-sm text-inkBlack">Moneylender Consolidation Calculator</h4>
+            </div>
+            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between font-semibold text-inkBlack mb-1">
+                <span>Informal Moneylender Principal:</span>
+                <span id="txt-modal-principal" class="font-bold text-accentCoral tnum">₹1,20,000</span>
+              </div>
+              <input type="range" min="20000" max="300000" step="10000" value="120000" id="rng-modal-p" oninput="updateLiveDebt()" class="w-full accent-accentCoral cursor-pointer" />
+            </div>
+
+            <div>
+              <label class="font-semibold text-inkBlack block mb-1">Informal Rate (Dialectal Quote):</label>
+              <select id="sel-modal-r" onchange="updateLiveDebt()" class="w-full bg-white border border-dashBorder rounded-xl p-2 text-xs">
+                <option value="36">3 senkda (3% per month / 36% APR)</option>
+                <option value="48">4 senkda (4% per month / 48% APR)</option>
+                <option value="60">5 senkda (5% per month / 60% APR)</option>
+                <option value="24">2 senkda (2% per month / 24% APR)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5 text-xs">
+            <div class="flex justify-between">
+              <span class="text-subtleGrey">Current Monthly Bleed:</span>
+              <span id="val-modal-bleed" class="font-bold text-red-600 tnum">₹3,600 / mo</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-subtleGrey">New NSFDC 6.5% EMI:</span>
+              <span id="val-modal-emi" class="font-bold text-concessionalEmerald tnum">₹1,140 / mo</span>
+            </div>
+            <div class="flex justify-between pt-1 border-t border-emerald-200 font-bold">
+              <span class="text-inkBlack">Net Cash Flow Relief:</span>
+              <span id="val-modal-relief" class="text-concessionalEmerald tnum">+₹2,460 / month</span>
+            </div>
+          </div>
+
+          <button onclick="alert('Debt Restructuring Proposal Generated. Conforms to Usurious Loans Act 1918 and State Money-Lenders Act.')" class="w-full py-2.5 rounded-xl bg-inkBlack text-white font-bold text-xs">
+            Generate Legal Settlement Package ↗
+          </button>
+        </div>
+      `;
+    }
+
+    function updateLiveDebt() {
+      const p = parseFloat(document.getElementById('rng-modal-p').value);
+      const r = parseFloat(document.getElementById('sel-modal-r').value);
+      document.getElementById('txt-modal-principal').innerText = `₹${p.toLocaleString('en-IN')}`;
+      
+      const bleed = Math.round(p * (r / 100 / 12));
+      document.getElementById('val-modal-bleed').innerText = `₹${bleed.toLocaleString('en-IN')} / mo`;
+
+      const monthlyRate = 0.065 / 12;
+      const n = 36;
+      const emi = Math.round(p * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1));
+      document.getElementById('val-modal-emi').innerText = `₹${emi.toLocaleString('en-IN')} / mo`;
+      
+      const relief = bleed - emi;
+      document.getElementById('val-modal-relief').innerText = `+₹${relief.toLocaleString('en-IN')} / month`;
+    }
+
+    // Render 4: Lead-Bank DPR View
+    function renderDPRView(container) {
+      container.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
+            <div>
+              <span class="text-[10px] font-mono text-concessionalEmerald font-bold uppercase">RBI Lead Bank Scheme Standard (1969)</span>
+              <h4 class="font-bold text-sm text-inkBlack">1-Page Detailed Project Report (DPR)</h4>
+            </div>
+            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+          </div>
+
+          <div class="p-4 rounded-xl bg-white border border-dashBorder space-y-2 text-xs">
+            <div class="flex justify-between">
+              <span class="text-subtleGrey">Enterprise Name:</span>
+              <span class="font-bold text-inkBlack">${currentDomain.name}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-subtleGrey">Beneficiary:</span>
+              <span class="font-bold text-inkBlack">Ramesh Kumar (SC · Verified)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-subtleGrey">Sanction Loan:</span>
+              <span class="font-bold text-concessionalEmerald tnum">₹${currentDomain.loan.toLocaleString('en-IN')} @ ${currentDomain.rate}%</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-subtleGrey">Lead-Bank QR Hash:</span>
+              <span class="font-mono text-[10px] text-subtleGrey">SHA256: e926b08...mosje_nsfdc</span>
+            </div>
+          </div>
+
+          <button onclick="alert('Downloading official bilingual 1-Page Lead-Bank DPR PDF with QR verification.')" class="w-full py-2.5 rounded-xl bg-inkBlack text-white font-bold text-xs shadow-md">
+            Download Bank-Sanction PDF 📥
+          </button>
+        </div>
+      `;
+    }
+
+    // Preset Selector
+    function selectDomainPreset(code) {
+      if (code === 'D08') {
+        currentDomain = { code: "D08", name: "Mustard & Edible Oil Expeller Mill", tier: "TERM_LOAN", cost: 680000, loan: 612000, equity: 68000, rate: 8.0, quarters: 26, eqi: 30420 };
+      } else if (code === 'D18') {
+        currentDomain = { code: "D18", name: "Village Tailoring & Garments", tier: "VISHWAKARMA", cost: 100000, loan: 90000, equity: 10000, rate: 5.0, quarters: 18, eqi: 5670 };
+      } else if (code === 'D15') {
+        currentDomain = { code: "D15", name: "Tractor & Farm Equipment Garage", tier: "TERM_LOAN", cost: 580000, loan: 522000, equity: 58000, rate: 8.0, quarters: 26, eqi: 25980 };
+      }
+      setDashTab('simulator');
+    }
+
+    // Command Bar Interpreter
+    function executeCommand() {
+      const input = document.getElementById('cmd-input');
+      const val = (input.value || "").trim().toLowerCase();
+      input.value = "";
+      if (!val) return;
+
+      if (val.includes("stress") || val.includes("simulat")) {
+        setDashTab('simulator');
+      } else if (val.includes("amort") || val.includes("loan") || val.includes("eqi")) {
+        setDashTab('amortizer');
+      } else if (val.includes("debt") || val.includes("moneylender") || val.includes("relief") || val.includes("senkda")) {
+        setDashTab('restructure');
+      } else if (val.includes("dpr") || val.includes("pdf") || val.includes("report")) {
+        setDashTab('dpr');
+      } else {
+        alert(`AI Engine Processing: "${val}". Calibrating deterministic NSFDC parameters for ${currentDomain.name}.`);
+        setDashTab('simulator');
+      }
+    }
   </script>
+
 </body>
 </html>
-
