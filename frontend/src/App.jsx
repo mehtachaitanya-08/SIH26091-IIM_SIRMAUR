@@ -44,9 +44,11 @@ export default function App() {
   // Mode A States
   const [selectedArchId, setSelectedArchId] = useState('archetype_1');
   const [selectedState, setSelectedState] = useState('Uttar Pradesh');
-  const [promoterCat, setPromoterCat] = useState('special'); // 'special' | 'general'
+  const [promoterCat, setPromoterCat] = useState('sc'); // 'sc' | 'obc' | 'st' | 'general'
+  const [familyIncome, setFamilyIncome] = useState(250000);
   const [locationType, setLocationType] = useState('rural');
   const [customCapex, setCustomCapex] = useState(null);
+  const [showAmortizationTable, setShowAmortizationTable] = useState(false);
 
   // Mode B States
   const [householdIncome, setHouseholdIncome] = useState(35000);
@@ -65,9 +67,10 @@ export default function App() {
       state: selectedState,
       capex: customCapex,
       promoterCategory: promoterCat,
-      locationType: locationType
+      locationType: locationType,
+      annualFamilyIncome: familyIncome
     });
-  }, [selectedArchId, selectedState, customCapex, promoterCat, locationType]);
+  }, [selectedArchId, selectedState, customCapex, promoterCat, locationType, familyIncome]);
 
   const restructuringResult = useMemo(() => {
     return evaluateRestructuring({
@@ -253,14 +256,16 @@ export default function App() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      {lang === 'en' ? 'Category' : 'श्रेणी'}
+                      {lang === 'en' ? 'Caste Category' : 'जाति श्रेणी'}
                     </label>
                     <select
                       value={promoterCat}
                       onChange={(e) => setPromoterCat(e.target.value)}
                       className="w-full text-xs font-medium border border-slate-300 rounded-xl p-2 bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                     >
-                      <option value="special">{lang === 'en' ? 'Special (SC/ST/OBC/Women)' : 'विशेष (महिला/SC/ST/OBC)'}</option>
+                      <option value="sc">{lang === 'en' ? 'Scheduled Caste (SC) — NSFDC' : 'अनुसूचित जाति (SC) — NSFDC'}</option>
+                      <option value="obc">{lang === 'en' ? 'Other Backward Class (OBC)' : 'अन्य पिछड़ा वर्ग (OBC)'}</option>
+                      <option value="st">{lang === 'en' ? 'Scheduled Tribe (ST)' : 'अनुसूचित जनजाति (ST)'}</option>
                       <option value="general">{lang === 'en' ? 'General' : 'सामान्य'}</option>
                     </select>
                   </div>
@@ -276,6 +281,36 @@ export default function App() {
                       <option value="rural">{lang === 'en' ? 'Rural (Gram Panchayat)' : 'ग्रामीण (ग्राम पंचायत)'}</option>
                       <option value="urban">{lang === 'en' ? 'Semi-Urban / Town' : 'कस्बा / अर्ध-शहरी'}</option>
                     </select>
+                  </div>
+                </div>
+
+                {/* Annual Family Income Slider (Statutory Gate) */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-xs font-semibold text-slate-700">
+                      {lang === 'en' ? 'Annual Family Income' : 'वार्षिक पारिवारिक आय'}
+                    </label>
+                    <span className="text-xs font-bold text-slate-800">
+                      {formatINR(familyIncome)}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={50000}
+                    max={1000000}
+                    step={10000}
+                    value={familyIncome}
+                    onChange={(e) => setFamilyIncome(parseFloat(e.target.value))}
+                    className="w-full accent-emerald-600 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                    <span>₹50,000</span>
+                    {familyIncome > 500000 ? (
+                      <span className="text-red-600 font-bold">⚠ Exceeds ₹5L NSFDC Ceiling</span>
+                    ) : (
+                      <span className="text-emerald-600 font-medium">✓ Within ₹5L MoSJE Ceiling</span>
+                    )}
+                    <span>₹10,00,000</span>
                   </div>
                 </div>
 
@@ -305,14 +340,28 @@ export default function App() {
                 </div>
 
                 {/* Matched Government Scheme Callout */}
-                <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 space-y-1.5">
-                  <div className="flex items-center space-x-1.5 text-emerald-800 font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <div className={`border rounded-xl p-3.5 space-y-1.5 ${
+                  incubationResult.nsfdcDetails?.isEligible 
+                    ? 'bg-emerald-50/70 border-emerald-200' 
+                    : 'bg-amber-50/70 border-amber-200'
+                }`}>
+                  <div className="flex items-center space-x-1.5 text-slate-900 font-bold text-xs">
+                    {incubationResult.nsfdcDetails?.isEligible ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                    ) : (
+                      <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                    )}
                     <span>{incubationResult.schemeName}</span>
                   </div>
-                  <p className="text-[11px] text-emerald-700 leading-relaxed">
+                  <p className="text-[11px] text-slate-700 leading-relaxed">
                     {incubationResult.statutoryNotes}
                   </p>
+                  {!incubationResult.nsfdcDetails?.isEligible && incubationResult.nsfdcDetails?.rejectionReasons?.length > 0 && (
+                    <div className="text-[10px] text-amber-800 bg-amber-100/60 p-2 rounded-lg mt-1 border border-amber-200">
+                      <div className="font-bold">NSFDC Statutory Gate:</div>
+                      <div>{incubationResult.nsfdcDetails.rejectionReasons[0]}</div>
+                    </div>
+                  )}
                 </div>
 
                 {/* 1-Page DPR Action */}
@@ -338,32 +387,128 @@ export default function App() {
                     <div className="text-[10px] text-slate-400 mt-1">CapEx + WC + Pre-Op</div>
                   </div>
 
-                  <div className="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 shadow-sm">
-                    <div className="text-[11px] font-medium text-emerald-700">{lang === 'en' ? 'Govt Subsidy / Grant' : 'सरकारी अनुदान (सब्सिडी)'}</div>
-                    <div className="text-base sm:text-lg font-extrabold text-emerald-800 mt-0.5">
-                      {formatINR(incubationResult.subsidyAmount)}
+                  {incubationResult.nsfdcDetails?.isEligible ? (
+                    <div className="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 shadow-sm">
+                      <div className="text-[11px] font-medium text-emerald-700">{lang === 'en' ? 'NSFDC Loan (Concessional)' : 'NSFDC रियायती ऋण'}</div>
+                      <div className="text-base sm:text-lg font-extrabold text-emerald-800 mt-0.5">
+                        {formatINR(incubationResult.loanAmount)}
+                      </div>
+                      <div className="text-[10px] text-emerald-600 mt-1">
+                        @ {incubationResult.interestRate}% p.a. ({incubationResult.nsfdcDetails.tier === 'MCF' ? 'MCF Cap ₹1.25L' : 'Term Loan 90%'})
+                      </div>
                     </div>
-                    <div className="text-[10px] text-emerald-600 mt-1">
-                      {incubationResult.subsidyPct > 0 ? `${incubationResult.subsidyPct}% Direct Grant` : 'Grant / Subvention'}
+                  ) : (
+                    <div className="bg-emerald-50 p-3.5 rounded-2xl border border-emerald-200 shadow-sm">
+                      <div className="text-[11px] font-medium text-emerald-700">{lang === 'en' ? 'Govt Subsidy / Grant' : 'सरकारी अनुदान (सब्सिडी)'}</div>
+                      <div className="text-base sm:text-lg font-extrabold text-emerald-800 mt-0.5">
+                        {formatINR(incubationResult.subsidyAmount)}
+                      </div>
+                      <div className="text-[10px] text-emerald-600 mt-1">
+                        {incubationResult.subsidyPct > 0 ? `${incubationResult.subsidyPct}% Direct Grant` : 'Grant / Subvention'}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
                     <div className="text-[11px] font-medium text-slate-500">{lang === 'en' ? 'Promoter Equity' : 'स्वयं की पूँजी (मार्जिन)'}</div>
                     <div className="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">
                       {formatINR(incubationResult.promoterEquity)}
                     </div>
-                    <div className="text-[10px] text-slate-400 mt-1">Only 5% - 15% required</div>
+                    <div className="text-[10px] text-slate-400 mt-1">
+                      {incubationResult.nsfdcDetails?.isEligible 
+                        ? `${incubationResult.nsfdcDetails.promoterEquityPct}% Statutory Margin`
+                        : 'Only 5% - 15% required'}
+                    </div>
                   </div>
 
-                  <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
-                    <div className="text-[11px] font-medium text-slate-500">{lang === 'en' ? 'Monthly Bank EMI' : 'मासिक बैंक किश्त (EMI)'}</div>
-                    <div className="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">
-                      {formatINR(incubationResult.monthlyEMI)}
+                  {incubationResult.nsfdcDetails?.isEligible ? (
+                    <div className="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 shadow-sm">
+                      <div className="text-[11px] font-medium text-indigo-700">{lang === 'en' ? 'Quarterly Service (EQI)' : 'त्रैमासिक किश्त (EQI)'}</div>
+                      <div className="text-base sm:text-lg font-extrabold text-indigo-950 mt-0.5">
+                        {formatINR(incubationResult.nsfdcDetails.equatedQuarterlyInstallment)}
+                      </div>
+                      <div className="text-[10px] text-indigo-700 mt-1">
+                        {incubationResult.nsfdcDetails.repaymentQuarters} Qtrs (Moratorium: {formatINR(incubationResult.nsfdcDetails.moratoriumInterestPerQuarter)}/Q)
+                      </div>
                     </div>
-                    <div className="text-[10px] text-slate-400 mt-1">@ {incubationResult.interestRate}% for {incubationResult.tenureMonths}m</div>
-                  </div>
+                  ) : (
+                    <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm">
+                      <div className="text-[11px] font-medium text-slate-500">{lang === 'en' ? 'Monthly Bank EMI' : 'मासिक बैंक किश्त (EMI)'}</div>
+                      <div className="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">
+                        {formatINR(incubationResult.monthlyEMI)}
+                      </div>
+                      <div className="text-[10px] text-slate-400 mt-1">@ {incubationResult.interestRate}% for {incubationResult.tenureMonths}m</div>
+                    </div>
+                  )}
                 </div>
+
+                {/* NSFDC Amortization Schedule Toggle Button & Panel */}
+                {incubationResult.nsfdcDetails?.isEligible && (
+                  <div className="bg-white border border-indigo-100 rounded-2xl p-4 shadow-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <div className="text-xs font-bold text-slate-900 flex items-center space-x-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                          <span>{incubationResult.nsfdcDetails.schemeName}</span>
+                          <span className="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full">
+                            {incubationResult.nsfdcDetails.totalQuarters} Quarters Schedule
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 mt-0.5">
+                          {incubationResult.nsfdcDetails.tier === 'MCF'
+                            ? 'Micro Credit Finance: 1 Quarter Moratorium (Interest-only ₹' + incubationResult.nsfdcDetails.moratoriumInterestPerQuarter.toLocaleString('en-IN') + ') followed by 11 Equated Quarterly Instalments.'
+                            : 'Term Loan Scheme: 2 Quarters Moratorium (Interest-only ₹' + incubationResult.nsfdcDetails.moratoriumInterestPerQuarter.toLocaleString('en-IN') + '/Q) followed by 26 Equated Quarterly Instalments.'}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => setShowAmortizationTable(!showAmortizationTable)}
+                        className="text-xs font-bold text-indigo-700 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-xl border border-indigo-200 transition-all"
+                      >
+                        {showAmortizationTable 
+                          ? (lang === 'en' ? 'Hide Quarterly Schedule ▲' : 'तालिका छुपाएं ▲')
+                          : (lang === 'en' ? 'View Quarterly Schedule (' + incubationResult.nsfdcDetails.totalQuarters + ' Quarters) ▼' : 'त्रैमासिक तालिका देखें ▼')}
+                      </button>
+                    </div>
+
+                    {showAmortizationTable && (
+                      <div className="mt-4 border-t border-slate-100 pt-3 overflow-x-auto">
+                        <table className="w-full text-left text-[11px]">
+                          <thead>
+                            <tr className="border-b border-slate-200 text-slate-500">
+                              <th className="py-1.5 px-2">Quarter</th>
+                              <th className="py-1.5 px-2">Type</th>
+                              <th className="py-1.5 px-2">Opening Bal</th>
+                              <th className="py-1.5 px-2">Interest</th>
+                              <th className="py-1.5 px-2">Principal</th>
+                              <th className="py-1.5 px-2">Instalment</th>
+                              <th className="py-1.5 px-2">Closing Bal</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 text-slate-700">
+                            {incubationResult.nsfdcDetails.quarters.map((q) => (
+                              <tr key={q.quarter} className={q.isMoratorium ? 'bg-amber-50/50' : ''}>
+                                <td className="py-1.5 px-2 font-bold">Q{q.quarter}</td>
+                                <td className="py-1.5 px-2">
+                                  {q.isMoratorium ? (
+                                    <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">Moratorium (Interest)</span>
+                                  ) : (
+                                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-medium">EQI Repayment</span>
+                                  )}
+                                </td>
+                                <td className="py-1.5 px-2">{formatINR(q.openingBalance)}</td>
+                                <td className="py-1.5 px-2 text-rose-600">{formatINR(q.interestPayment)}</td>
+                                <td className="py-1.5 px-2 text-emerald-600">{formatINR(q.principalPayment)}</td>
+                                <td className="py-1.5 px-2 font-bold text-slate-900">{formatINR(q.totalInstallment)}</td>
+                                <td className="py-1.5 px-2">{formatINR(q.closingBalance)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* DSCR & Seasonality Graph Container */}
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
@@ -441,6 +586,7 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
         )}
 
         {/* ============================================================== */}
