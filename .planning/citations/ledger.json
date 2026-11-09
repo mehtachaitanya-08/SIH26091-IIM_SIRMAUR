@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://arxiv.org/abs/2603.18421",
+      "title": "Farmers Digital Financial Behavior and AI Exclusion (arXiv:2603.18421)",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 2,
+      "url": "https://arxiv.org/abs/2511.09690",
+      "title": "Omnilingual ASR: Multilingual Speech Recognition (arXiv:2511.09690)",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 3,
+      "url": "https://arxiv.org/abs/2407.06567",
+      "title": "FinCon: LLM Multi-Agent System for Financial Decision Making (arXiv:2407.06567)",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 4,
+      "url": "https://arxiv.org/abs/2102.04721",
+      "title": "Classification of Imbalanced Credit Scoring Datasets (arXiv:2102.04721)",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 5,
+      "url": "https://www.dbs.com/newsroom/DBS_Foundation_partners_with_Haqdarshak",
+      "title": "DBS Foundation & Haqdarshak SGD 5.1M Financial Inclusion Initiative",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 6,
+      "url": "https://www.ficciflo.com",
+      "title": "FICCI FLO & Haqdarshak Strategic Partnership for Women Entitlements",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 7,
+      "url": "https://www.entrepreneur.com/en-in/news-and-trends/kaleidofin-secures-53-mn-from-idh-farmfit-fund/474149",
+      "title": "Kaleidofin IDH Farmfit Fund Investment & KiScore",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 8,
+      "url": "https://www.indiaratings.co.in",
+      "title": "Aye Finance Micro-Enterprise Lending Capital Issuances",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 9,
+      "url": "https://niti.gov.in/responsible-ai-all",
+      "title": "NITI Aayog: Responsible AI for All Principles",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 10,
+      "url": "https://www.rbi.org.in",
+      "title": "Reserve Bank of India Guidelines on Digital Lending & Model Risk",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 11,
+      "url": "https://agmarknet.gov.in",
+      "title": "Agmarknet: Agricultural Marketing Information Network Mandi Price Portal",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 12,
+      "url": "https://data.gov.in",
+      "title": "Open Government Data (OGD) Platform India - APMC Price Feeds",
+      "accessed": "2026-11-07"
+    }
+  ]
+}

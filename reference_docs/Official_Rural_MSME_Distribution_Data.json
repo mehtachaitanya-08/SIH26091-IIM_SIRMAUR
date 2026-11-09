@@ -1,0 +1,79 @@
+{
+  "source": "Ministry of MSME Annual Report / NSSO 73rd Round / RBI UK Sinha Committee Report",
+  "total_msmes": 633.88,
+  "rural_msmes": 324.88,
+  "urban_msmes": 309.0,
+  "rural_percentage": 51.25,
+  "rural_micro_enterprises": 324.09,
+  "rural_micro_percentage": 99.76,
+  "rural_sectoral_distribution": {
+    "Manufacturing": {
+      "count_lakh": 114.14,
+      "percentage": 35.13
+    },
+    "Trade": {
+      "count_lakh": 108.71,
+      "percentage": 33.46
+    },
+    "Other_Services": {
+      "count_lakh": 102.0,
+      "percentage": 31.39
+    },
+    "Electricity": {
+      "count_lakh": 0.03,
+      "percentage": 0.02
+    }
+  },
+  "top_states_rural_msme_share": [
+    {
+      "state": "Uttar Pradesh",
+      "share_percentage": 14.2,
+      "rural_count_lakh": 46.13
+    },
+    {
+      "state": "West Bengal",
+      "share_percentage": 13.99,
+      "rural_count_lakh": 45.45
+    },
+    {
+      "state": "Tamil Nadu",
+      "share_percentage": 7.91,
+      "rural_count_lakh": 25.7
+    },
+    {
+      "state": "Maharashtra",
+      "share_percentage": 7.52,
+      "rural_count_lakh": 24.43
+    },
+    {
+      "state": "Karnataka",
+      "share_percentage": 6.07,
+      "rural_count_lakh": 19.72
+    },
+    {
+      "state": "Bihar",
+      "share_percentage": 5.86,
+      "rural_count_lakh": 19.04
+    },
+    {
+      "state": "Andhra Pradesh",
+      "share_percentage": 5.27,
+      "rural_count_lakh": 17.12
+    },
+    {
+      "state": "Gujarat",
+      "share_percentage": 5.21,
+      "rural_count_lakh": 16.93
+    },
+    {
+      "state": "Rajasthan",
+      "share_percentage": 4.79,
+      "rural_count_lakh": 15.56
+    },
+    {
+      "state": "Madhya Pradesh",
+      "share_percentage": 4.54,
+      "rural_count_lakh": 14.75
+    }
+  ]
+}

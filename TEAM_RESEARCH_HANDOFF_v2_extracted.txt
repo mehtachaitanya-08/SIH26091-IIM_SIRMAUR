@@ -1,0 +1,569 @@
+Team Research Handoff & Agent Framework — v2
+Sector research across rural and semi-urban India for SIH26091
+Problem statement: SIH26091, "AI-Driven Hyper-Local Business Advisory and Financial Structuring Assistant for Rural Micro-Entrepreneurs", Ministry of Social Justice and Empowerment (MoSJE). Source: https://sih.gov.in/sih2026PS (opened 8 Nov 2026).
+Document ref: SIH-2026-TEAM-HANDOFF-V2 (replaces V1; reviewed once by an independent checker, 15 fixes applied).
+Golden rule: every number in a dossier carries an official source: a link, the exact words, and the date opened. A number with no source is labelled ESTIMATE (showing its tagged inputs and the calculation) or NOT FOUND. Nothing comes from an AI's memory, blogs or news.
+0. What changed from V1, and why
+V1 said
+Problem
+V2 does
+Debt restructuring (Mode B) is half the product
+The official statement never mentions moneylenders, debt or restructuring
+Core = the two official modules; debt is an optional add-on (§1.4)
+Users = all rural micro-entrepreneurs
+The loan tiers in the brief are NSFDC's, and NSFDC lends to Scheduled Caste applicants with family income up to ₹5 lakh
+Users and eligibility stated (§1.2)
+Prompt asks the AI for prices, margins and rules with no sources
+Invented numbers pass straight into the engine
+Source tags, no-browsing rule, no AI-written quotes or vendors (§5)
+FSSAI State Licence above 100 kg/L a day
+That 2011 test was replaced on 01.04.2026 by turnover tiers, with exceptions
+Gate G3 + register
+GST ₹40L goods / ₹20L services everywhere
+Not in 10 States/UTs; ₹10L in 4 States; ice cream, pan masala, tobacco excluded
+Gate G4 + register
+PM SVANidhi for village haat vendors
+Towns, census towns and peri-urban areas only
+Conditional (§3)
+NLM goat unit "20+1"
+NLM-EDP starts at 100 females + 5 males
+Corrected (verify first)
+GOBAR-dhan for vermicompost
+Now a compressed-biogas plant scheme
+Removed
+Damdupat applies across India
+Only where a State law enacts it (e.g. Rajasthan s.27)
+State check (§1.4)
+Fly-ash bricks: Green
+Green without a boiler, Orange with one (verify first)
+Corrected
+PMEGP "margin money 5–15%"
+Confuses own contribution with subsidy
+Corrected (verify first)
+"68% owe moneylenders", "324+ lakh enterprises", 3–5% a month, 40–70% of surplus, 10–25% dalal cut, 35–55% income freed
+No official source; official data differs
+Removed or replaced (§7.3)
+NIC 2008 10401 for oil
+10401 is vanaspati; oil pressing is 10402; NIC 2025 exists
+Both codes asked for
+Checklist had no source gate
+It passed unsourced numbers
+Gates G1–G2 are about sources
+7 members
+Team is 3 researchers + 1 sources-and-checks lead
+§2.1
+Kept from V1:
+Hindi basket names
+unit size per domain
+key risk per domain
+electricity load and 3-phase
+AGMARK/BIS
+machine-making hubs (now with a source)
+lean-month stress factor
+Dropped from V1: nothing else, beyond the corrections above.
+1. What we are building (from the official statement)
+1.1 The official brief, in short
+The money rule: the beneficiary puts in 10% of project cost; the loan covers 90%, through State Channelizing Agencies (SCAs, the state bodies that pass central loans to beneficiaries).
+The two loan tiers:
+Tier
+Project cost
+Loan
+Interest
+Repayment
+Micro Finance
+up to ₹1.40 lakh
+up to 90%, max ₹1.25 lakh
+6.5% a year
+3 years incl. 3-month moratorium (a starting period with no repayment)
+Term Loan
+₹1.40 lakh – ₹50.00 lakh
+up to 90%, max ₹45 lakh
+8% a year
+7 years incl. 6-month moratorium (12 months for plantation and construction, per the MoSJE page)
+The calculator must apply both the 90% rule and the cap. Example: a ₹1.40 lakh project gets a loan of ₹1.25 lakh, not ₹1.26 lakh.
+Inputs: location (village/block/district), available margin capital, and business category.
+Who it is for: "rural and semi-urban geographies".
+Module 1, Hyper-local feasibility report:
+Market reach within 5–10 km, and distribution channels.
+Unserved or underserved niches.
+SWOT.
+Threats: supply bottlenecks, seasonal demand, dependence on a single buyer.
+Competitor density in the block.
+Pricing strategy and local market value, based on regional purchasing power.
+Module 2, Smart financial calculator and scheme router:
+Project cost = margin ÷ 10%.
+Loan = 90%, within the cap.
+Choose the tier.
+Produce the quarterly EMI and moratorium schedule, operating costs and working capital.
+The app must be NLP-powered and multilingual.
+1.2 Who the users are
+The tiers above match NSFDC (National Scheduled Castes Finance and Development Corporation, under MoSJE).
+Its page says an applicant "must belong to the Scheduled Caste (SC) community and possess a valid caste certificate".
+Family income must not exceed ₹5.00 lakh a year, rural or urban, effective 7 January 2026.
+Source: https://devmosje.negd.in/?p=15629 (opened 7 Nov 2026). This is a MoSJE development-site copy; confirm it on nsfdc.nic.in.
+So the dossiers are written for SC entrepreneurs at the ₹1.40 lakh and up-to-₹50 lakh project sizes.
+1.3 Our solution
+Core = Module 1 + Module 2 exactly as above. Judges will score against these.
+Our edge comes from two things:
+The dossiers (§4) give both modules real, sourced numbers for each business type.
+A compliance layer: for each rule, an official link, the exact quote and a last-verified date (the pattern from our compliance matrix).
+1.4 Optional add-on: existing-loans check (was "Mode B")
+This is beyond the brief. It comes second and is labelled as an extra.
+What it does: if a user already has informal loans, it shows what those cost against the scheme's 6.5% or 8%.
+Moneylender interest caps are State law. One example is the "Damdupat" rule, under which total interest may not exceed the loan amount. Rajasthan's Money-Lenders Act s.27 has it. Check the user's own State's Act before saying anything.
+RBI (Reserve Bank of India): under its Digital Lending Directions 2025, an app becomes a Lending Service Provider only when it works as an agent of a bank or NBFC (a non-bank lender licensed by RBI), doing lending work for it, e.g. customer acquisition. Our default is information only, with no lender partnership.
+SEBI (the market regulator): its definition of investment advice "shall include financial planning". Get the lawyer's view before adding any personal advice feature.
+Source: https://www.sebi.gov.in/sebi_data/attachdocs/aug-2026/1785912187595.pdf
+Numbers: no headline statistics without an official source (§7.3).
+2. Team workflow
+D: shared sources ready  →  A/B/C: run V2 prompt with those PDFs attached  →  A/B/C: click every source, fix or label   →  D: link check (G2) + spreadsheet check (G11)  →  save dossier + sources  →  pull request  →  merge
+2.1 Who does what
+Person
+Role
+Business types (8 each)
+Why grouped
+A
+Researcher: Food & farm inputs
+D04 Seeds & fertiliser · D05 Animal feed & vet OTC · D06 Farm hardware & drip · D07 Grain/dal milling · D08 Oil expellers · D09 Spice grinding & packing · D10 Horticultural dehydration · D23 Vermicompost
+Same FSSAI and fertiliser rules, PMFME, crop prices
+B
+Researcher: Livestock & trade
+D01 Kirana/FMCG · D02 Haat & mobile trade · D03 Electronics & recharge · D11 Dairy · D12 Goat & sheep · D13 Poultry · D14 Inland fisheries · D24 Freight & custom hiring
+Same MUDRA, KCC and NLM rules, and the same seasons
+C
+Researcher: Trades & repairs
+D15 Tractor garage · D16 Motor rewinding · D17 Auto & EV workshop · D18 Tailoring · D19 Carpentry · D20 Metal smithy · D21 Pottery · D22 Fly-ash bricks
+Same PM Vishwakarma and PMEGP rules, and the same pollution categories
+D
+Sources & Checks lead
+No business types; supports A, B and C
+Does the manual, no-AI work so the researchers' AI credits go only on research
+D's jobs, in order:
+Day 1–2, before A/B/C start: download every shared official PDF into research_dossiers/sources/_shared/:
+the FSSAI order (13 Mar 2026) and the eligibility list (2 Apr 2026)
+GST Notifications 10/2019 and 34/2023
+the CPCB category list
+scheme guidelines: PMEGP, NLM, MUDRA, PMFME, PM Vishwakarma, AIF, PMMSY, KCC/MISS, NSFDC
+the NIC 2025 code list
+the ASUSE fact sheet
+A/B/C attach these to their AI instead of making it search the web.
+Day 1–2: open every ⚠ link in §7 in a normal browser. Mark it ✅ by pasting the exact sentence and the deep link, or write down what the page actually says. Include the CPCB list's exact web address.
+Day 2–3: download Agmarknet (the government's crop-price site) monthly prices for the main commodities: wheat, pulses, mustard, turmeric and chilli. Save them to _shared/.
+Day 2–3: build the spreadsheet check file (§6, G11).
+As dossiers come in: run G2 (click every link and confirm the quote is on the page) and G11 (recompute every total in the spreadsheet). Send each failure back to its owner.
+Throughout: keep the tracker below up to date and file the dossiers.
+Tracker:
+Code
+Owner
+Status (Available / In progress / In review / Merged)
+D01–D03, D11–D14, D24
+B
+Available
+D04–D10, D23
+A
+Available
+D15–D22
+C
+Available
+2.2 Files and names
+Dossier file name: D{XX}_{Short_Name}_Dossier.md, using the short name from the §3 table, words joined by _.
+Example: D08_Oil_Expellers_Dossier.md.
+Sources: research_dossiers/sources/D{XX}/ holds a saved PDF or page for every [S#] tag. Shared PDFs go in sources/_shared/.
+2.3 Git (or Drive)
+git pull origin maingit checkout -b research/D08-oil-expellersgit add research_dossiers/D08_Oil_Expellers_Dossier.md research_dossiers/sources/D08/git commit -m "Add D08 oil expellers dossier with sources"git push origin research/D08-oil-expellers
+Then, on GitHub:
+Open the repository and click Compare & pull request.
+Title it with the domain code, and add D as reviewer.
+D merges it once G2 and G11 pass.
+No Git? Upload the .md file and its sources/D{XX}/ folder to the shared Drive, then tag D in the group.
+3. Taxonomy and mapping (corrected)
+Geography: sector research across rural and semi-urban India. Where a rule or scheme differs by State, give the all-India rule and list the State differences. Example States: UP, Bihar, MP, Rajasthan, Maharashtra.
+Scheme order for every domain:
+The NSFDC tier comes first (Micro Finance up to ₹1.40 lakh / Term Loan ₹1.40–50 lakh).
+Then the other schemes, each with a status: ✅ verified, or ⚠ verify first (see §7).
+Frontend baskets (Hindi names kept for the multilingual app):
+Code
+Basket
+Hindi
+B1
+Kirana, General Retail & Consumer Goods
+किराना एवं खुदरा व्यापार
+B2
+Agri-Inputs, Seeds & Farm Machinery Trading
+खाद, बीज एवं कृषि यंत्र व्यापार
+B3
+Food Milling, Processing & Local Packaging
+अनाज पिसाई, तेल एवं खाद्य उद्योग
+B4
+Dairy, Livestock & Allied Animal Husbandry
+डेयरी, पशुपालन एवं पोल्ट्री
+B5
+Machinery Workshop, Vehicle & Pump Repair
+गैराज, मोटर वाइंडिंग एवं वेल्डिंग
+B6
+Apparel, Tailoring & Handcrafted Goods
+कपड़ा सिलाई, बुनाई एवं शिल्प
+B7
+Rural Construction, Materials & Green Units
+ईंट, सीमेंट एवं कम्पोस्ट निर्माण
+B8
+Rural Mobility, Transport & Logistics Fleet
+लोडर वाहन, ट्रैक्टर एवं परिवहन
+Domain map. The "unit to study" column gives the sizes the team chose to model; they are not official limits. The risks are starting points for Section 8.
+Code
+Short name
+Unit to study
+Regulators
+Other scheme fits
+Key risk
+D01
+Kirana_FMCG
+Village store
+FSSAI if selling food; GST: tobacco and pan masala sellers can't use the ₹40L limit
+MUDRA ✅
+Bad debts from credit (udhaar)
+D02
+Haat_Mobile_Trade
+Weekly-market stall, cart
+Panchayat
+MUDRA Shishu ✅; SVANidhi only if in a town, census town or peri-urban area ✅
+Weather, eviction
+D03
+Electronics_Recharge
+Recharge and accessories
+State Shops & Establishments
+MUDRA ✅
+Stock going out of date
+D04
+Seeds_Fertiliser
+Dealer shop
+Seed dealer licence (Seeds (Control) Order 1983) ⚠; fertiliser dealer authorisation (FCO 1985 cl. 8) ⚠
+MUDRA ✅; AIF ⚠
+Monsoon failure; inspection
+D05
+Animal_Feed
+Feed and supplement trader
+State animal husbandry dept ⚠
+MUDRA ✅
+Raw material price spikes
+D06
+Farm_Hardware
+Pipes, sprayers, tools
+BIS where the product is notified ⚠
+MUDRA ✅
+Seasonal working-capital lag
+D07
+Grain_Dal_Milling
+Atta chakki, mini dal mill (job work)
+FSSAI State Licence at any turnover (₹5,000 a year) ✅; CPCB Green ⚠; 3-phase power
+PMFME ✅ (period ⚠); PMEGP ⚠
+Power cuts, motor burn-out
+D08
+Oil_Expellers
+Small expeller or kachhi ghani
+FSSAI by turnover ✅; AGMARK (optional grading) ⚠; CPCB White up to 500 kg/day ⚠; 3-phase power
+PMFME ✅ (period ⚠); PMEGP ⚠
+Mustard price swings
+D09
+Spice_Grinding
+Grinding and packing
+FSSAI by turnover ✅; Legal Metrology packer registration ⚠; CPCB Green ⚠
+PMFME ✅ (period ⚠); PMEGP ⚠
+Moisture, adulteration loss
+D10
+Horticultural_Dehydration
+Small dryer unit
+FSSAI by turnover ✅
+PMFME ✅ (period ⚠); AIF ⚠
+Raw produce spoilage
+D11
+Dairy
+5–15 cattle
+FSSAI: Registration for petty milkmen and milk vendors ✅; CPCB Orange at 15–500 animals ⚠
+KCC-AH 4% ⚠
+Cash gap in the dry period
+D12
+Goat_Sheep
+Small flock
+State animal husbandry dept
+NLM-EDP needs at least 100 females + 5 males ⚠; KCC ⚠
+No meat sales in year 1
+D13
+Poultry
+1,000–5,000 birds
+CPCB Green ⚠
+NLM (at least 1,000 parent layers) ⚠; MUDRA ✅
+Disease deaths
+D14
+Inland_Fisheries
+Farm/panchayat pond
+Dept of Fisheries
+PMMSY ⚠; KCC ⚠
+Water quality, oxygen crash
+D15
+Tractor_Garage
+Repair and welding shop
+CPCB category ⚠
+PMEGP ⚠
+Harvest-time overload
+D16
+Motor_Rewinding
+3–15 HP pump motors
+Electricity load (DISCOM) ⚠
+PMEGP ⚠; MUDRA ✅
+Lull in the monsoon
+D17
+Auto_EV_Workshop
+2W/3W, e-rickshaw battery
+CPCB Orange ⚠; battery waste rules ⚠
+PMEGP ⚠
+Battery fire
+D18
+Tailoring
+Stitching, uniforms
+—
+PM Vishwakarma ✅ (new registrations ⚠)
+Ready-made competition
+D19
+Carpentry
+Furniture, frames
+—
+PM Vishwakarma ✅ (new registrations ⚠)
+Timber cost, dust
+D20
+Metal_Smithy
+Gates, farm tools
+—
+PM Vishwakarma ✅ (new registrations ⚠)
+Heat, eye strain
+D21
+Pottery
+Pots, tiles
+—
+PM Vishwakarma ✅ (new registrations ⚠)
+Breakage in the kiln
+D22
+Fly_Ash_Bricks
+Semi-automatic press
+CPCB Green without a boiler, Orange with one ⚠
+PMEGP ⚠
+Curing time ties up cash
+D23
+Vermicompost
+Bed units
+FCO Schedule IV (packaged sale for farming) ⚠; CPCB category ⚠
+AIF ⚠; not GOBAR-dhan
+Worms dying in summer heat
+D24
+Freight_Custom_Hiring
+Small goods vehicle, tractor
+RTO
+MUDRA ✅; AIF (custom hiring centres) ⚠
+Fuel prices, bad roads
+4. The dossier contract (8 sections + source log)
+§
+Section
+Feeds
+1
+Classification & market: NIC 2008 + NIC 2025 codes; sector; demand within 5–10 km; channels; underserved niches
+Module 1 items 1–2
+2
+CapEx bill of materials, incl. connected load (HP/kW), 1- or 3-phase, and where machines are made (sourced)
+Module 2 project cost
+3
+Monthly OpEx & working-capital cycle (days)
+Module 2 operating cost and working capital
+4
+Unit economics, pricing strategy and regional purchasing power, break-even
+Module 1 item 6; Module 2
+5
+12-month seasonality array (M1 = April) + lean-month stress factor
+Module 2 EMI stress test; Module 1 item 4
+6
+Compliance: rule, trigger, fee, link, last verified, State differences
+Compliance layer
+7
+Scheme fit: NSFDC tier first, then others; can schemes be combined?
+Module 2 scheme router
+8
+Risks (incl. single-buyer dependence), SWOT, competitor density
+Module 1 items 3–5
+—
+Source log
+Audit
+5. Master prompt (V2): copy and paste, fill the brackets, attach the _shared PDFs
+# TASK: Sourced rural MSME sector dossier for SIH26091Domain code: [D08]Short name: [Oil_Expellers]Domain: [Small oil expellers / kachhi ghani]Basket: [B3 Food Milling, Processing & Local Packaging]Unit to study: [from the team's domain table]Today's date: [DD Mon YYYY]Attached: [list the PDFs you attached from sources/_shared and sources/D08]Geography: rural and semi-urban India, sector-wide. Where rules or schemesdiffer by State, give the all-India rule and list differences forUP, Bihar, MP, Rajasthan, Maharashtra.## CONTEXTThis feeds an app for SIH26091 (MoSJE). Users are Scheduled Casteentrepreneurs (family income up to Rs 5 lakh) borrowing through NSFDC'sState Channelizing Agencies. They pay 10% of project cost; the loan is 90%,capped. Tiers: Micro Finance - project cost up to Rs 1.40 lakh, loan maxRs 1.25 lakh, 6.5%, 3 years incl. 3-month moratorium. Term Loan - Rs 1.40to 50 lakh, loan max Rs 45 lakh, 8%, 7 years incl. 6-month moratorium.Study the business at BOTH sizes. A wrong number gives a real person wrongadvice.## SOURCE RULES (most important)0. If you cannot open web pages or the attached files, say so at the top   and write NOT FOUND for every figure you cannot read. Never write a   link, quote or date you did not read yourself in this session.1. Every number and every rule gets a tag [S1], [S2] ... pointing to the   Source log at the end.2. Allowed sources, in order: the attached PDFs; the law, notification or   gazette; the regulator's or ministry's own site or guideline (.gov.in,   .nic.in, rbi.org.in, sebi.gov.in, nabard.org, mudra.org.in);   official surveys (MoSPI ASUSE, AIDIS, NABARD NAFIS); official model   project profiles (KVIC/PMEGP, MSME-DFO, NABARD model schemes);   Agmarknet for crop prices; GeM (the government's purchase portal)   for listed machine prices.3. NOT allowed: blogs, news, consultancy sites, bank marketing pages,   your memory. Do not name a vendor or quote a vendor price; write   "VENDOR QUOTE NEEDED" and the team will add one.4. An ESTIMATE must show its tagged inputs and the calculation, e.g.   "ESTIMATE: 2,400 households [S3] x 6 kg/month [S7] = 14,400 kg".   An estimate with no tagged inputs is NOT FOUND.5. Rules and schemes change. For each, look for the newest amendment or   extension. If a scheme's period ended on 31 March 2026 and you find no   extension notice, write "status after March 2026: NOT FOUND".6. Show every calculation step by step. The team recomputes every total   in a spreadsheet, so a hidden or rounded step will be caught.## SECTIONS (all eight, then the source log)1. CLASSIFICATION & MARKET: NIC 2008 5-digit and NIC 2025 6-digit codes;   sector (manufacturing/service/trade); rural count from ASUSE (say which   year); demand drivers, rural vs semi-urban; population or farm area   within 5-10 km one unit needs; sales channels; UNSERVED OR UNDERSERVED   NICHES in this sector and how a user could spot them in their block.2. CAPEX: table of item | spec (HP, phase, capacity) | price | source tag.   Connected load (HP/kW) and whether 3-phase is needed. Where the machines   are made (sourced). Pre-operative costs: licence fees, power connection   deposit. Separate tables for the Micro Finance size and a Term Loan size.3. OPEX & WORKING CAPITAL: monthly cost table with tags; cycle in days for   raw material, process, finished goods and customer credit (udhaar);   working capital = formula shown with inputs.4. UNIT ECONOMICS & PRICING: throughput; input vs output price (Agmarknet   or other official series); by-products; margin; break-even utilisation;   PRICING STRATEGY and how regional purchasing power (official income or   consumption data) changes it.5. SEASONALITY: 12 multipliers [M1=April ... M12=March], average close to   1.0, a reason for each month, the basis (tagged data or ESTIMATE with   inputs), and the lean-month stress factor (lowest month / average).6. COMPLIANCE: table of rule | law & section | trigger | threshold | govt   fee | enforcer | link | exact quote | date opened | State differences.   Cover: FSSAI (turnover tiers from 01.04.2026 and the any-turnover   exceptions), GST (goods/services limits, excluded States and goods,   e-commerce), CPCB/SPCB category (capacity/boiler conditions), Udyam,   Shops & Establishments / panchayat, electricity connection, AGMARK/BIS   if relevant, and any sector licence (Legal Metrology, FCO, Seeds).7. SCHEME FIT: first the NSFDC tier. Then other schemes, each with who   qualifies, minimum unit size, subsidy or interest benefit, own   contribution, scheme period, open now?, negative list, tag. Say when the   business does NOT fit. State whether each scheme can be combined with   an NSFDC loan for the same unit, with source, or NOT FOUND.8. RISKS, SWOT & COMPETITION: risk | severity | early warning sign | app   rule (plain if-then). Include dependence on a single buyer or supplier.   SWOT at both loan sizes. How to estimate competitor density in a block   (name the data source).## SOURCE LOG (required)| Tag | Title | Issuer | URL (deep link) | Exact words used | Date opened |OUTPUT: GitHub-flavoured Markdown. No filler.
+6. Quality gates (all 12 before a pull request)
+The researcher (A/B/C) runs:
+☐ G1 Every number tagged. [S#], ESTIMATE with tagged inputs, NOT FOUND, or VENDOR QUOTE NEEDED.
+☐ G3 FSSAI. From 01.04.2026:
+Registration up to ₹1.5 crore turnover (₹100 a year); State Licence ₹1.5–50 crore (₹5,000 a year); Central above ₹50 crore (₹7,500 a year).
+Grain, cereal and pulse milling: State Licence at any turnover.
+E-commerce food business: Central Licence at any turnover.
+Petty milkmen and milk vendors: Registration.
+Caterers: check the list (⚠).
+There is no kg-per-day test any more.
+☐ G4 GST.
+₹40L applies only to goods-only suppliers, and not in Arunachal Pradesh, Manipur, Meghalaya, Mizoram, Nagaland, Puducherry, Sikkim, Telangana, Tripura or Uttarakhand.
+It never applies to ice cream, pan masala or tobacco.
+Otherwise the limit is ₹20L; ₹10L in Manipur, Mizoram, Nagaland and Tripura.
+A sale to another State forces registration.
+Selling goods through an online marketplace is exempt only if all these hold: no inter-State sales, marketplace sales in one State only, a PAN, a declaration on the GST portal before selling, and turnover within the limit in both the previous and the current year (Notification 34/2023).
+☐ G5 Pollution category from CPCB's current list, with any capacity or boiler condition. White category = no Air Act consent, but you must still inform the State board in writing. Water Act: ⚠.
+☐ G6 Scheme still open. Period checked; anything that ended in 2025-26 needs an extension notice.
+☐ G7 Scheme fits. Urban vs rural; minimum unit size; the negative list read from the guideline; whether it can be combined with an NSFDC loan.
+☐ G8 NSFDC tier first, with the 90% rule and the caps (₹1.25 lakh / ₹45 lakh).
+☐ G9 Seasonality. 12 values, average about 1.0, basis and stress factor given.
+☐ G10 Working capital from cycle days, formula shown.
+☐ G12 Biology (livestock). First-year no-sale period for goats, dry period for dairy: each with a source (e.g. NLM or state animal husbandry guidance), or NOT FOUND.
+D runs:
+☐ G2 Sources open. Every link opens, the quoted words are on the page, and the file is saved in sources/.
+☐ G11 Spreadsheet check. D's check file has one tab per dossier, with columns Item | Qty | Unit price | Line total (formula) | Dossier's total | Match?. Separate blocks:
+CapEx total
+monthly OpEx total
+working capital = (sum of cycle days ÷ 30) × monthly operating cost, or the dossier's own stated formula
+seasonality average and minimum
+loan = MIN(90% of project cost, cap)
+Any "No" goes back to the researcher.
+7. Facts register
+What the marks mean:
+✅ = during our research run (7–8 Nov 2026), the official page was opened at the deep link shown and the words were found on it. Still click it before citing.
+⚠ = not yet. Either it was seen only in a search summary, only a home page is known, or the scheme period is unclear. D opens these first.
+7.1 Rules
+Fact
+Source (deep link)
+Status
+NSFDC: SC only; family income ≤ ₹5.00 lakh from 7 Jan 2026; tiers and caps as in §1.1
+https://devmosje.negd.in/?p=15629
+✅ (dev-site copy; confirm on nsfdc.nic.in)
+FSSAI: Registration up to ₹1.5 crore from 01.04.2026
+https://www.fssai.gov.in/upload/advisories/2026/03/69b4054bb6cd6Order%20dated%2013thMarch2026_Revised%20Turnover%20threshold.pdf
+✅
+FSSAI: milling = State Licence at any turnover; e-commerce = Central at any turnover; petty milkman = Registration; fees ₹100 / ₹5,000 / ₹7,500
+https://foscos.fssai.gov.in/assets/docs/Revised_2ndApril2026KindofBusinessEligibility.pdf
+✅; caterers ⚠
+GST ₹40L: goods only; the 10 excluded States/UTs; ice cream, pan masala, tobacco excluded
+https://www.gstcouncil.gov.in/sites/default/files/2024-05/notfctn-10-central-tax-english-2019.pdf
+✅
+GST s.22 limits; s.22 removes Arunachal, Assam, HP, Meghalaya, Sikkim, Uttarakhand from the ₹10L group; s.24 compulsory registration
+https://cbic-gst.gov.in/pdf/CGST-Act-Updated-31082021.pdf
+✅ (2021 copy; later amendments ⚠)
+GST online-marketplace exemption and its conditions
+https://gstcouncil.gov.in/sites/default/files/2024-05/gst-ct-34-2023.pdf
+✅
+CPCB categories (flour/dal/spice Green; ghani up to 500 kg/day White; auto workshops Orange; dairy 15–500 animals Orange; poultry Green; fly-ash bricks Green/Orange by boiler)
+cpcb.gov.in, "List of Sectors Classified by CPCB (as on 24 Aug 2026)"
+⚠ exact link and quote needed
+White category: Air Act exemption, with written intimation
+MoEFCC G.S.R. 702(E) 12.11.2024, amended by G.S.R. 512(E) 28.07.2025
+⚠ deep link needed; Water Act ⚠
+Damdupat is State law (Rajasthan Money-Lenders Act 1963 s.27)
+landrevenue.rajasthan.gov.in
+⚠ deep link needed; Maharashtra ⚠
+Lending Service Provider = agent of a bank/NBFC doing its lending work
+https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=12848
+✅
+"Investment advice … shall include financial planning"
+https://www.sebi.gov.in/sebi_data/attachdocs/aug-2026/1785912187595.pdf
+✅
+Fertiliser dealer authorisation (FCO 1985 cl. 8); vermicompost (Schedule IV) only for packaged farm sale; producers under 50 t exempt
+State copy, odishaagrilicense.nic.in
+⚠ deep link and latest amendments needed
+Seed dealer licence (Seeds (Control) Order 1983 cl. 3)
+odishaseedsportal.nic.in
+⚠ deep link needed
+Legal Metrology packer registration, ₹500 fee (Rule 27)
+consumeraffairs.gov.in, Packaged Commodities Rules 2011
+⚠ deep link needed
+7.2 Schemes
+Fact
+Source (deep link)
+Status
+MUDRA: Shishu up to ₹50,000; Kishor above ₹50,000 up to ₹5 lakh; Tarun above ₹5 lakh up to ₹10 lakh; Tarun Plus above ₹10 lakh up to ₹20 lakh
+https://www.mudra.org.in/
+✅
+PMFME: 35% of eligible cost, max ₹10 lakh per unit
+https://pmfme.mofpi.gov.in/newsletters/enews2.html
+✅; period after 2025-26 ⚠
+PM Vishwakarma: ₹15,000 toolkit e-voucher; ₹1 lakh (18 months) + ₹2 lakh (30 months) at 5%; 18 trades incl. tailor, carpenter, blacksmith, potter; FY 2023-24 to 2027-28
+https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/sep/doc2025916638501.pdf
+✅; new registrations ⚠
+PM SVANidhi: ₹15k / ₹25k / ₹50k; lending until 31 Mar 2030; towns, census towns, peri-urban
+https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/dec/doc20251220739401.pdf
+✅
+AIF: 3% interest subvention, up to ₹2 crore per project per location
+agriinfra.dac.gov.in
+⚠ deep link needed; eligibility for custom hiring and vermicompost ⚠
+PMEGP: subsidy 35%/25% (special category rural/urban), 25%/15% (general); own share 5%/10%; negative list
+kviconline.gov.in, Revised PMEGP Guidelines 07.12.2023 (site unreachable 8 Nov)
+⚠
+NLM-EDP: 50% subsidy; goat/sheep 100–500 F + 5–25 M (up to ₹50L); poultry at least 1,000 parent layers (up to ₹25L)
+dahd.gov.in, NLM Guidelines Jan 2025
+⚠
+KCC (animal husbandry/fisheries): 7% minus 3% prompt-repayment incentive = 4%; benefit up to ₹2 lakh
+PIB (MISS FY 2025-26)
+⚠; FY 2026-27 ⚠
+AHIDF: 3% subvention for 8 years
+PIB
+⚠; after Mar 2026 ⚠
+PMMSY: 40% general, 60% SC/ST/women
+dof.gov.in
+⚠; after Mar 2026 ⚠
+GOBAR-dhan (2026-27 to 2035-36): compressed-biogas plants, not vermicompost
+PIB, Aug 2026
+⚠
+7.3 Statistics we may cite
+Use this
+Source (deep link)
+Status
+10.2% of rural households owe only informal lenders (30 Jun 2018). Add those owing both kinds from the same report
+https://mospi.gov.in/sites/default/files/press_release/press_note-AIDIS-240821.pdf
+✅
+Agri-households borrowing only from informal sources fell from 30.3% to 23.4% (NAFIS 2021-22)
+https://www.nabard.org/PressReleases-article.aspx?id=25&cid=554&EID=91
+✅
+Rural unincorporated non-farm establishments: 397.5 lakh (ASUSE 2023-24); 424.1 lakh (ASUSE 2025)
+mospi.gov.in ASUSE fact sheets
+⚠ deep links needed
+NIC 2008: 10611 flour milling; 10402 vegetable oils. NIC 2025: 106102 wheat milling; 104002 cold-pressed (kachhi ghaani)
+https://mospi.gov.in/sites/default/files/main_menu/national_industrial_classification/nic_2008_17apr09.pdf and https://mospi.gov.in/uploads/publications_reports/publications_reports1763457214315_c3e5d4f3-8e25-4775-85e3-ad42d571652f_NIC_2025_Final.pdf
+✅
+Do not use (no official source found):
+"68% owe moneylenders"
+"3–5% a month"
+"40–70% of surplus on interest"
+"10–25% dalal cut"
+"35–55% income freed"
+"4–9.5% formal credit" (the brief's rates are 6.5% and 8%)
+Our own field interviews can supply some of these, labelled as "our survey" with the sample size.
+8. Glossary (plain words)
+Term
+Meaning
+NSFDC / SCA
+National Scheduled Castes Finance and Development Corporation; it lends through State Channelizing Agencies (state bodies that pass the loan to the beneficiary)
+Moratorium
+Months at the start of a loan when no repayment is due
+Working-capital cycle
+Days money is stuck in stock and customer credit before it comes back as cash
+NIC code
+Government code for a type of business activity (NIC 2008 old, NIC 2025 new)
+CPCB / SPCB; White / Green / Orange / Red
+Central and State pollution boards; categories from least to most polluting, deciding which permissions are needed
+ASUSE / AIDIS / NAFIS
+Official surveys: small non-farm businesses; household debt; rural financial inclusion
+Damdupat
+Old rule, in some State laws, that total interest can't exceed the loan amount
+Negative list
+Activities a scheme refuses to fund
+GeM
+Government e-Marketplace, the official purchase portal with listed prices
+LSP
+Lending Service Provider: an agent doing lending work for a bank or NBFC, regulated through that lender
+Deep link
+The exact page or PDF address, not a site's home page
+9. Onboarding (5 steps)
+Send everyone this V2 file and the group message. V1 is withdrawn.
+D builds sources/_shared/ and clears the ⚠ list first.
+A, B and C paste the §5 prompt with the shared PDFs attached, then click every source.
+A, B and C run their gates. D runs G2 and G11.
+Pull request (or Drive upload), D checks, merge.

@@ -1,0 +1,41 @@
+# Environment and Secrets (CRITICAL: NEVER COMMIT)
+.env
+.env.*
+!.env.example
+*.env
+*.key
+*.pem
+*.cert
+secrets/
+credentials/
+
+# Dependencies & Build Artefacts
+node_modules/
+dist/
+build/
+.cache/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.zip
+
+# IDE & OS Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs & Temporary Data
+*.log
+.tempmediaStorage/
+tmp/
+temp/
+

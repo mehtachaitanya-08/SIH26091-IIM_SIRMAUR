@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "title": "Person A Agricultural & Micro-Enterprise Empirical Market Dataset",
+    "project": "SIH26091 - AI-Driven Hyper-Local Business Advisory & Financial Restructuring Platform",
+    "target_beneficiaries": "Scheduled Caste (SC) Micro-Entrepreneurs under NSFDC Guidelines",
+    "version": "2.0.0",
+    "last_updated": "2026-11-09",
+    "data_source_verification": "Primary Source Agmarknet 2.0 Live Daily Spot Mandi Bulletins captured directly by team on 09-11-2026",
+    "target_geographies": ["Uttar Pradesh (UP)", "Madhya Pradesh (MP)", "Rajasthan (RJ)", "Bihar (BR)", "Maharashtra (MH)", "Andhra Pradesh (AP)", "West Bengal (WB)"],
+    "sources": [
+      "Agmarknet 2.0 Live Daily Price and Arrival Report (Report Date: 09-11-2026)",
+      "Department of Fertilizers, Ministry of Chemicals & Fertilizers (fert.gov.in/en/urea)",
+      "Ministry of Food Processing Industries (MoFPI) PMFME Model DPR Guidelines",
+      "Sub-Mission on Agricultural Mechanization (SMAM) Cost Norms",
+      "National Scheduled Castes Finance & Development Corporation (NSFDC)"
+    ]
+  },
+  "domains": {
+    "D04_Seeds_Fertiliser": {
+      "name": "Agri-Inputs: Seeds, Fertilizers & Pesticides Retail",
+      "statutory_pricing_and_margins": {
+        "neem_coated_urea": {
+          "base_mrp_statutory_inr_per_45kg_bag": 242.00,
+          "statutory_farmer_retail_price_with_gst_and_coating": 266.50,
+          "dealer_margin_statutory_inr_per_mt": 354.00,
+          "dbt_handling_reimbursement_inr_per_mt": 50.00,
+          "net_dealer_margin_pct": 6.8,
+          "source": "Department of Fertilizers (fert.gov.in/en/urea, verified 09-11-2026)"
+        },
+        "di_ammonium_phosphate_dap": {
+          "indicative_mrp_inr_per_50kg_bag": 1350.00,
+          "dealer_margin_range_inr_per_mt": [450.00, 600.00],
+          "net_margin_percentage_range": [1.67, 2.22]
+        },
+        "muriate_of_potash_mop": {
+          "indicative_mrp_inr_per_50kg_bag": 1675.00,
+          "dealer_margin_range_inr_per_mt": [400.00, 550.00]
+        }
+      },
+      "commercial_agri_inputs": {
+        "certified_wheat_seed_inr_per_kg": {"wholesale": 34.00, "retail": 42.00, "margin_pct": 19.0},
+        "hybrid_mustard_seed_inr_per_kg": {"wholesale": 480.00, "retail": 650.00, "margin_pct": 26.2},
+        "crop_protection_chemicals_margin_pct_range": [18.0, 30.0],
+        "bio_fertilizers_margin_pct_range": [25.0, 40.0]
+      },
+      "regulatory_capex_statutory": {
+        "pos_machine_biometric_scanner_inr": 12500,
+        "fertilizer_retail_license_fee_inr": 1500,
+        "seed_dealer_license_fee_inr": 1000,
+        "insecticide_license_fee_inr": 2000,
+        "mandated_storage_godown_min_sqft": 300
+      }
+    },
+    "D05_Animal_Feed": {
+      "name": "Custom Animal Feed Blending & Distribution",
+      "raw_material_benchmarks_inr_per_mt": {
+        "de_oiled_rice_bran_dorb": {"min": 13500, "max": 16500, "benchmark": 14800},
+        "mustard_de_oiled_cake_doc": {"min": 21000, "max": 25500, "benchmark": 23200},
+        "feed_grade_maize": {"min": 20500, "max": 24000, "benchmark": 22100},
+        "wheat_bran_chokar": {"min": 18000, "max": 21500, "benchmark": 19500},
+        "mineral_mixture_feed_grade": {"min": 55000, "max": 75000, "benchmark": 62000}
+      },
+      "finished_goods_realizations_inr_per_50kg_bag": {
+        "bis_type_ii_dairy_cattle_feed": {"ex_mill": 1050.00, "retail": 1220.00},
+        "broiler_finisher_mash": {"ex_mill": 1850.00, "retail": 2100.00}
+      },
+      "processing_loss_percentage": 1.5,
+      "blending_power_consumption_kwh_per_mt": 28.5
+    },
+    "D06_Farm_Hardware_Drip": {
+      "name": "Micro-Irrigation Hardware & Farm Implements Retail",
+      "smam_indicative_procurement_costs_inr": {
+        "inline_drip_lateral_16mm_per_meter": {"trade_cost": 7.80, "retail_price": 10.50},
+        "screen_filter_2_inch_30m3_hr": {"trade_cost": 2800, "retail_price": 3800},
+        "venturi_injector_assembly_2_inch": {"trade_cost": 1400, "retail_price": 2200},
+        "chaff_cutter_3hp_motor_smam_spec": {"trade_cost": 21500, "retail_price": 27000}
+      },
+      "average_gross_margin_hardware_pct": 22.5
+    },
+    "D07_Grain_Dal_Milling": {
+      "name": "Mini Dal Mill & Multi-Grain Atta Chakkis",
+      "live_agmarknet_spot_prices_09_11_2026": {
+        "wheat_faq_inr_per_quintal": {
+          "Bihar_Aurangabad": {"min": 2450.00, "max": 2850.00, "modal": 2650.00},
+          "MP_Mundi_Khandwa": {"min": 2885.00, "max": 2910.00, "modal": 2910.00},
+          "MP_Khargone": {"min": 3015.00, "max": 3015.00, "modal": 3015.00},
+          "UP_Hasanpur_Amroha": {"min": 2600.00, "max": 2600.00, "modal": 2600.00},
+          "UP_Azamgarh": {"min": 2585.00, "max": 2585.00, "modal": 2585.00},
+          "UP_Babrala_Badaun": {"min": 2430.00, "max": 2450.00, "modal": 2440.00},
+          "UP_Safdarganj_Barabanki": {"min": 2700.00, "max": 2700.00, "modal": 2700.00},
+          "UP_Deoriya": {"min": 2751.11, "max": 2790.00, "modal": 2783.18},
+          "UP_Sehjanwa_Gorakhpur": {"min": 2750.00, "max": 2750.00, "modal": 2750.00},
+          "UP_Konch_Jalaun": {"min": 2459.00, "max": 2459.00, "modal": 2459.00},
+          "UP_Golagokarnath_Lakhimpur": {"min": 2400.00, "max": 2400.00, "modal": 2400.00},
+          "UP_Pratapgarh": {"min": 2500.00, "max": 2500.00, "modal": 2500.00},
+          "UP_Salon_Raebareli": {"min": 2520.00, "max": 2520.00, "modal": 2520.00},
+          "UP_Muradabad_Sambhal": {"min": 2520.00, "max": 2520.00, "modal": 2520.00},
+          "WB_Jangipur_Murshidabad": {"min": 2600.00, "max": 2700.00, "modal": 2650.00},
+          "WB_Asansol": {"min": 2625.00, "max": 2850.00, "modal": 2765.00}
+        },
+        "arhar_tur_whole_inr_per_quintal": {
+          "AP_Gooti_Ananthapuramu": {"min": 5700.00, "max": 8900.00, "modal": 7800.00},
+          "AP_Guntakal": {"min": 8000.00, "max": 9500.00, "modal": 8500.00},
+          "AP_Tadipatri": {"min": 5850.00, "max": 6000.00, "modal": 5950.00},
+          "AP_Kanigiri_Markapuram": {"min": 8600.00, "max": 8800.00, "modal": 8700.00},
+          "AP_Podili": {"min": 8400.00, "max": 8700.00, "modal": 8500.00},
+          "AP_Macharla_Palnadu": {"min": 8450.00, "max": 8450.00, "modal": 8450.00},
+          "AP_Narasaraopet": {"min": 10000.00, "max": 10000.00, "modal": 10000.00},
+          "AP_Dharmavaram": {"min": 8100.00, "max": 8400.00, "modal": 8300.00},
+          "Kerala_Palakkad_Milled_Dal": {"min": 14000.00, "max": 15500.00, "modal": 14800.00},
+          "TN_Hosur_Sandhai": {"min": 6000.00, "max": 7000.00, "modal": 6500.00}
+        }
+      },
+      "technical_recovery_ratios_pct": {
+        "wheat_chakki_milling": {"atta": 96.5, "bran_chokar": 3.0, "cleaning_loss": 0.5},
+        "tur_dal_splitting": {"tur_dal_phatka": 70.0, "broken_tur": 4.0, "husk_chuni": 21.0, "cleaning_loss": 5.0}
+      }
+    },
+    "D08_Oil_Expellers": {
+      "name": "Small-Scale Mustard & Groundnut Oil Expelling",
+      "live_agmarknet_spot_prices_09_11_2026": {
+        "mustard_seed_inr_per_quintal": {
+          "MP_Barad_Shivpuri": {"min": 8635.00, "max": 8635.00, "modal": 8635.00},
+          "WB_Asansol": {"min": 6325.00, "max": 6550.00, "modal": 6450.00}
+        }
+      },
+      "oil_yield_and_cake_recovery_ratios_pct": {
+        "mustard_cold_press_expeller": {
+          "filtered_mustard_oil": 35.0,
+          "mustard_oil_cake_khal": 63.5,
+          "moisture_sediment_loss": 1.5
+        }
+      },
+      "byproduct_and_oil_realizations_inr": {
+        "mustard_oil_loose_inr_per_kg": 132.00,
+        "mustard_oil_packaged_inr_per_liter": 142.00,
+        "mustard_cake_khal_inr_per_quintal": 2850.00
+      }
+    },
+    "D09_Spice_Grinding": {
+      "name": "Micro Spice Pulverization & Packaging",
+      "live_agmarknet_spot_prices_09_11_2026": {
+        "turmeric_inr_per_quintal": {
+          "AP_Araku_Valley_Finger": {"min": 19320.00, "max": 19320.00, "modal": 19320.00},
+          "AP_Paderu_Local": {"min": 12800.00, "max": 12800.00, "modal": 12800.00},
+          "KA_Gundlupet_Chamarajnagar": {"min": 16000.00, "max": 16000.00, "modal": 16000.00}
+        },
+        "chilli_red_dry_inr_per_quintal": {
+          "AP_Parchur_Bapatla": {"min": 18000.00, "max": 25000.00, "modal": 20000.00},
+          "AP_Gurazala_Palnadu": {"min": 16000.00, "max": 28500.00, "modal": 26500.00},
+          "MP_Khargone_FAQ": {"min": 11500.00, "max": 13000.00, "modal": 13000.00},
+          "MP_Khargone_Non_FAQ": {"min": 9200.00, "max": 10300.00, "modal": 9200.00},
+          "Kerala_Palakkad": {"min": 26000.00, "max": 28000.00, "modal": 27100.00},
+          "TN_Anna_Nagar_Madurai": {"min": 20000.00, "max": 20000.00, "modal": 20000.00},
+          "TN_KKNagar_Tiruchirappalli": {"min": 28000.00, "max": 28000.00, "modal": 28000.00}
+        }
+      },
+      "grinding_recovery_and_wastage_ratios_pct": {
+        "turmeric": {"powder_recovery": 97.0, "loss": 3.0},
+        "red_chilli": {"powder_recovery_destemmed": 93.5, "stem_loss": 6.5}
+      }
+    },
+    "D10_Horticultural_Dehydration": {
+      "name": "Solar & Heat-Pump Fruit & Vegetable Dehydration",
+      "live_agmarknet_spot_prices_09_11_2026": {
+        "onion_inr_per_quintal": {
+          "Bihar_Balliah_Begusarai": {"min": 4800.00, "max": 5000.00, "modal": 4900.00},
+          "Bihar_Aarah_Bhojpur": {"min": 4100.00, "max": 4100.00, "modal": 4100.00},
+          "Bihar_Madhuban_Motihari": {"min": 4000.00, "max": 4400.00, "modal": 4200.00},
+          "Bihar_Motihari": {"min": 4200.00, "max": 4400.00, "modal": 4300.00},
+          "Bihar_Raxaul": {"min": 4100.00, "max": 4300.00, "modal": 4200.00},
+          "Bihar_Benipatti_Madhubani": {"min": 4800.00, "max": 5000.00, "modal": 4900.00},
+          "Bihar_Madhubani_Nasik_Variety": {"min": 4500.00, "max": 4700.00, "modal": 4600.00},
+          "Bihar_Harnaut_Nalanda": {"min": 5000.00, "max": 5000.00, "modal": 5000.00},
+          "Bihar_Sitamarhi": {"min": 4300.00, "max": 4300.00, "modal": 4300.00},
+          "GJ_Dahod": {"min": 4000.00, "max": 5000.00, "modal": 4500.00},
+          "AP_Yerraguntla_YSR_Kadapa": {"min": 2900.00, "max": 3300.00, "modal": 3100.00},
+          "Assam_Pamohi_Kamrup": {"min": 5500.00, "max": 6500.00, "modal": 6000.00}
+        },
+        "tomato_inr_per_quintal": {
+          "AP_B_Kothakota": {"min": 1300.00, "max": 1900.00, "modal": 1600.00},
+          "AP_Guramkonda": {"min": 1000.00, "max": 1300.00, "modal": 1200.00},
+          "AP_Kalikiri": {"min": 1200.00, "max": 1900.00, "modal": 1600.00},
+          "AP_Madanapalli": {"min": 1400.00, "max": 2000.00, "modal": 1700.00},
+          "AP_Mulakalacheruvu": {"min": 900.00, "max": 1600.00, "modal": 1200.00},
+          "AP_Punganur": {"min": 1070.00, "max": 1600.00, "modal": 1340.00},
+          "AP_Valmikipuram": {"min": 1000.00, "max": 1600.00, "modal": 1300.00},
+          "AP_Kuppam": {"min": 900.00, "max": 1212.00, "modal": 1212.00},
+          "AP_Palamaner": {"min": 1200.00, "max": 1900.00, "modal": 1500.00},
+          "AP_V_Kota": {"min": 1100.00, "max": 1800.00, "modal": 1400.00},
+          "AP_Pattikonda": {"min": 1000.00, "max": 2000.00, "modal": 1500.00},
+          "Assam_Balugaon": {"min": 1300.00, "max": 1700.00, "modal": 1500.00}
+        }
+      },
+      "dehydration_ratios_raw_to_dry": {
+        "tomato_fresh_to_powder": {"ratio": "18:1", "moisture_reduction_pct": 94.4},
+        "onion_fresh_to_kibbled_flake": {"ratio": "9:1", "moisture_reduction_pct": 88.9}
+      }
+    },
+    "D23_Vermicompost": {
+      "name": "Organic Vermicomposting & Bio-Enriched Manure",
+      "raw_material_costs_inr": {
+        "fresh_cow_dung_trolley_3_tons": 2200.00,
+        "crop_biomass_straw_inr_per_ton": 1200.00,
+        "earthworms_eisenia_fetida_inr_per_kg": 280.00
+      },
+      "bioconversion_efficiency_ratios": {
+        "dung_and_straw_to_vermicompost_pct": 55.0,
+        "cycle_duration_days": 60,
+        "cycles_per_annum": 5
+      },
+      "finished_vermicompost_realizations_inr": {
+        "bulk_loose_pithead_per_mt": 4200.00,
+        "packaged_50kg_poly_bag_per_mt": 7200.00,
+        "retail_nursery_5kg_pouch_per_kg": 12.00
+      }
+    }
+  }
+}

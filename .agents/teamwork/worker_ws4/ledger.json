@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://pib.gov.in/PressReleasePage.aspx?PRID=1941655",
+      "title": "PIB Press Release: Central Sector Scheme for Formation and Promotion of 10,000 FPOs",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 2,
+      "url": "https://agriwelfare.gov.in/en/CentralSectorSchemes",
+      "title": "Ministry of Agriculture & Farmers Welfare: Operational Guidelines for Formation and Promotion of 10,000 FPOs",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 3,
+      "url": "https://sfacindia.com/Equity-Grant-Credit-Guarantee-Funds.aspx",
+      "title": "SFAC: Operational Guidelines for Equity Grant Scheme and Credit Guarantee Fund Scheme",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 4,
+      "url": "https://azimpremjiuniversity.edu.in/publications/farmer-producer-companies",
+      "title": "Azim Premji University: State of Farmer Producer Companies in India Report",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 5,
+      "url": "https://nabkisan.org/fpo-financing",
+      "title": "NABKISAN Finance: Credit Guarantee and Term Loan Products for FPOs",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 6,
+      "url": "https://samunnati.com/fpo-solutions",
+      "title": "Samunnati: Agri-Commerce and Working Capital Financing Architecture for FPOs",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 7,
+      "url": "https://sahyadrifarms.com/about-us",
+      "title": "Sahyadri Farmers Producer Company: Horticulture Processing, Cold Chain and Post-Harvest Model",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 8,
+      "url": "https://mahafpc.org/about-us",
+      "title": "MAHA-FPC: State Apex Federation of Producer Companies & MSP Procurement Consortia",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 9,
+      "url": "https://nddb.coop/about/anand-pattern",
+      "title": "National Dairy Development Board: The Anand Pattern Three-Tier Cooperative Dairy Model",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 10,
+      "url": "https://kasamorganic.com/about",
+      "title": "KASAM Kandhamal: Organic Spices Processing, GI Tagging and Tribal Farmer Value Chain",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 11,
+      "url": "https://enam.gov.in/web/fpo",
+      "title": "Small Farmers Agribusiness Consortium: e-NAM Guidelines for Farmer Producer Organisations",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 12,
+      "url": "https://fossanalytics.com/en/news-articles/agriculture/portable-nir-grain-oilseeds",
+      "title": "FOSS Analytics & AgNext: Rapid NIR Spectroscopy and Digital Moisture Analysis in Farmgate Quality Testing",
+      "accessed": "2026-11-07"
+    },
+    {
+      "id": 13,
+      "url": "https://farmerp.com/fpo-management-software",
+      "title": "FarmERP & Kalgudi: Cloud ERP, Automated Bookkeeping and Supply Chain Digitalization for FPOs",
+      "accessed": "2026-11-07"
+    }
+  ]
+}

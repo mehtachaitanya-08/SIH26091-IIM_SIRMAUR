@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "skills": {
+    "arxiv": {
+      "source": "NousResearch/hermes-agent",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "skills/research/arxiv/SKILL.md",
+      "computedHash": "1169b475f91036091746b5c8142688eedb9f414ec4b4578f368301acd7d5066c"
+    },
+    "competitor-news-monitor": {
+      "source": "NousResearch/hermes-agent",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "skills/research/competitor-news-monitor/SKILL.md",
+      "computedHash": "0202defa5e25d8ecffd4e48a63b1ae3533ae2df8d644a01c7cd7c588f4763c5d"
+    },
+    "grounded-citations": {
+      "source": "NousResearch/hermes-agent",
+      "ref": "main",
+      "sourceType": "github",
+      "skillPath": "skills/research/grounded-citations/SKILL.md",
+      "computedHash": "d240a84c4001cd661977ed1c1df11137214466a8cbcccd10f83aadb90278ba76"
+    }
+  }
+}

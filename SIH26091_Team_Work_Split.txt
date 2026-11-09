@@ -1,0 +1,77 @@
+*SIH26091 – Research work split (Framework v2)*
+
+Hi all. We're researching 24 rural business types. Each one becomes a "dossier" (a research file) that feeds our app's feasibility report and loan calculator. The full rules and the AI prompt are in the attached file *TEAM_RESEARCH_HANDOFF_AND_AGENT_FRAMEWORK_v2.md*.
+
+*Golden rule:* every number needs an official source: link + exact words + date opened. No source? Write ESTIMATE (show the inputs) or NOT FOUND. Nothing from AI memory, blogs or news.
+
+Our users: Scheduled Caste entrepreneurs borrowing through NSFDC.
+• Up to ₹1.40 lakh project: loan max ₹1.25 lakh at 6.5%
+• ₹1.40 lakh – ₹50 lakh project: loan max ₹45 lakh at 8%
+
+━━━━━━━━━━━━━━━━━━
+
+*Person A – Food & farm inputs* (8 dossiers)
+[Name]
+• D04 Seeds & fertiliser shop
+• D05 Animal feed & vet supplies
+• D06 Farm hardware & drip irrigation
+• D07 Grain / dal milling (atta chakki)
+• D08 Oil expellers / kachhi ghani
+• D09 Spice grinding & packing
+• D10 Fruit & vegetable drying
+• D23 Vermicompost
+
+*Person B – Livestock & trade* (8 dossiers)
+[Name]
+• D01 Kirana / village store
+• D02 Haat stall & cart vendor
+• D03 Mobile recharge & electronics
+• D11 Dairy (5–15 cattle)
+• D12 Goat & sheep
+• D13 Poultry
+• D14 Fish farming in ponds
+• D24 Goods transport & tractor hiring
+
+*Person C – Trades & repairs* (8 dossiers)
+[Name]
+• D15 Tractor & implement garage
+• D16 Pump motor rewinding
+• D17 Auto & e-rickshaw workshop
+• D18 Tailoring
+• D19 Carpentry
+• D20 Metal smithy (lohar)
+• D21 Pottery (kumhar)
+• D22 Fly-ash bricks
+
+*What A, B and C do for each dossier:*
+1. Copy the prompt in Section 5 of the framework file. Fill in the brackets.
+2. Attach the PDFs from the shared folder (D sets this up). This saves your AI credits.
+3. Click every source link in the answer. Fix anything wrong, or mark it NOT FOUND.
+4. Tick your quality checks (Section 6).
+5. Save it as D08_Oil_Expellers_Dossier.md (code + short name), with its sources folder.
+6. Upload to GitHub or Drive and tag D.
+
+━━━━━━━━━━━━━━━━━━
+
+*Person D – Sources & Checks lead* (no dossiers, no AI needed)
+[Name]
+Your work makes the other three faster and saves their AI credits.
+
+*Day 1–2 (before A, B and C start):*
+1. Make a shared folder: research_dossiers/sources/_shared/
+   Download into it: the FSSAI order (13 Mar 2026) and eligibility list (2 Apr 2026), GST Notifications 10/2019 and 34/2023, the CPCB pollution category list, and the guidelines for PMEGP, NLM, MUDRA, PMFME, PM Vishwakarma, AIF, PMMSY, KCC and NSFDC. Also the NIC 2025 code list and the ASUSE fact sheet.
+2. Open every ⚠ link in Section 7 of the framework file in your normal browser. If the page confirms the fact, copy the exact sentence and the full page link and change ⚠ to ✅. If not, write what the page actually says.
+
+*Day 2–3:*
+3. Download monthly prices from Agmarknet (agmarknet.gov.in) for wheat, pulses, mustard, turmeric and chilli. Save them in _shared.
+4. Make an Excel check sheet (one tab per dossier): Item | Qty | Unit price | Line total | Dossier's total | Match?
+
+*As dossiers arrive:*
+5. Click every link and check the quoted words are really on the page.
+6. Re-add every total in your Excel sheet (costs, working capital, loan = 90% but not above the cap). Send any mismatch back to the owner.
+7. Keep the tracker updated: Available → In progress → In review → Done.
+
+━━━━━━━━━━━━━━━━━━
+
+*Order:* D first (shared folder + ⚠ links), then A, B and C start. D checks each dossier as it comes in.
+Questions → ask in the group before guessing.

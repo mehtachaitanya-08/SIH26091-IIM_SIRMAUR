@@ -1,0 +1,17 @@
+{
+  "short_name": "GraminAdvisory",
+  "name": "AI Rural Business Advisory & Debt Restructuring Platform",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "display": "standalone",
+  "orientation": "portrait-primary"
+}
+
