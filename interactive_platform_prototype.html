@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GraminAdvisory | SIH26091 MoSJE / NSFDC Platform</title>
+  <title>GraminAdvisory | Where Opportunity Takes Root (SIH26091 MoSJE / NSFDC)</title>
 
-  <!-- Google Fonts: Mona Sans, Instrument Serif, Inter Tight, Plus Jakarta Sans -->
+  <!-- Google Fonts: High-Fashion Compressed Serif, Editorial Italic, Mona Sans, Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- GSAP & ScrollTrigger CDN -->
+  <!-- GSAP & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
@@ -25,25 +25,25 @@
       theme: {
         extend: {
           colors: {
-            groundSand: '#F5F2EB',
-            warmWhite: '#FAF9F6',
-            inkBlack: '#0F1110',
-            subtleGrey: '#737871',
-            mutedBorder: '#E4DFD5',
-            dashBg: '#DFE2E6',
+            waltonGround: '#F4F1EA',
+            waltonWarm: '#F8F6F0',
+            waltonInk: '#111311',
+            waltonMuted: '#686D65',
+            dashBg: '#D2D6DC',
             dashCard: '#FFFFFF',
             dashSidebar: '#F8F9FA',
             dashBorder: '#E9ECEF',
             accentCoral: '#E86043',
             concessionalEmerald: '#0E7A53',
-            softPurple: '#8B5CF6',
-            iridescentAmber: '#F59E0B'
+            oliveChip: '#5A7352',
+            ochreChip: '#D49B5A',
+            slateChip: '#4A6274'
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Cinzel"', 'Georgia', 'serif'],
             serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-            display: ['"Cinzel"', 'serif'],
-            dashboard: ['"Inter Tight"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            dashboard: ['"Inter Tight"', 'system-ui', 'sans-serif'],
             mono: ['"Space Grotesk"', 'monospace']
           }
         }
@@ -52,38 +52,70 @@
   </script>
 
   <style>
-    /* Tabular figures for statutory accounting */
+    /* Tabular numbers */
     .tnum { font-feature-settings: "tnum" 1, "zero" 1; }
 
-    /* Custom smooth scrolling viewport */
+    /* Lenis Smooth Scroll setup */
     html.lenis, html.lenis body { height: auto; }
     .lenis.lenis-smooth { scroll-behavior: auto !important; }
     .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
     .lenis.lenis-stopped { overflow: hidden; }
 
-    /* Iridescent 4-Pointed Star Icon (From Dashboard Reference) */
-    .iris-star {
-      position: relative;
-      width: 64px;
-      height: 64px;
+    /* Persistent Right Navigation Capsule (Matching Walton Video) */
+    .walton-nav-capsule {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 60;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 9999px;
+      padding: 12px 7px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
     }
+    .capsule-pill-indicator {
+      width: 5px;
+      height: 18px;
+      border-radius: 9999px;
+      background: #111311;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .capsule-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 9999px;
+      background: #A0A59D;
+      transition: all 0.3s ease;
+    }
+
+    /* Giant condensed serif headline styling */
+    .hero-big-title {
+      font-size: clamp(3.2rem, 11.5vw, 12rem);
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+    }
+
+    /* 4-Pointed Iridescent Star (Exact match to SETO Dashboard screenshot) */
     .iris-star-svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 4px 14px rgba(232, 96, 67, 0.25)) drop-shadow(0 2px 8px rgba(139, 92, 246, 0.2));
-      animation: pulseStar 6s ease-in-out infinite;
+      width: 58px;
+      height: 58px;
+      filter: drop-shadow(0 4px 14px rgba(232, 96, 67, 0.3)) drop-shadow(0 2px 8px rgba(139, 92, 246, 0.25));
+      animation: pulseStar 5s ease-in-out infinite;
     }
     @keyframes pulseStar {
       0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.95; }
-      50% { transform: scale(1.08) rotate(4deg); opacity: 1; filter: drop-shadow(0 6px 20px rgba(232, 96, 67, 0.4)); }
+      50% { transform: scale(1.06) rotate(3deg); opacity: 1; filter: drop-shadow(0 6px 20px rgba(232, 96, 67, 0.45)); }
     }
 
-    /* Soft Neumorphic Elevation for Dashboard */
+    /* Soft Neumorphic Shadows for Dashboard */
     .soft-shadow {
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 20px 40px -15px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 12px 36px -6px rgba(0, 0, 0, 0.05), 0 24px 48px -18px rgba(0, 0, 0, 0.07);
     }
     .soft-card-shadow {
       box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.03), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
@@ -91,334 +123,395 @@
     .soft-inner-shadow {
       box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
     }
-
-    /* Diffused Ambient Glow Backdrop for Dashboard Frame */
     .diffused-backdrop {
-      background: radial-gradient(circle at 15% 20%, rgba(200, 215, 230, 0.6) 0%, transparent 40%),
-                  radial-gradient(circle at 85% 85%, rgba(245, 185, 160, 0.45) 0%, transparent 45%),
+      background: radial-gradient(circle at 18% 22%, rgba(205, 220, 235, 0.65) 0%, transparent 45%),
+                  radial-gradient(circle at 82% 80%, rgba(245, 185, 160, 0.5) 0%, transparent 45%),
                   #D4D8DD;
     }
 
-    /* Horizontal Card Pinning Track */
-    .pin-wrap {
-      display: flex;
-      width: 300%;
-      height: 100%;
+    /* Circular SVG Arc Gauge (Matching Walton Video Frame 035) */
+    .arc-progress {
+      stroke-dasharray: 283;
+      stroke-dashoffset: 283;
+      transition: stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    /* Marquee ticker */
-    @keyframes tickerScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .ticker-track {
-      display: flex;
-      width: 200%;
-      animation: tickerScroll 24s linear infinite;
-    }
-    .ticker-track:hover { animation-play-state: paused; }
   </style>
 </head>
 
-<body class="bg-groundSand text-inkBlack antialiased selection:bg-accentCoral selection:text-white">
+<body class="bg-waltonGround text-waltonInk antialiased selection:bg-waltonInk selection:text-white">
 
   <!-- ===================================================================== -->
-  <!-- TOP GLOBAL NAV BAR (Fixed, Minimal, Institutional)                   -->
+  <!-- PERSISTENT RIGHT CAPSULE PROGRESS INDICATOR (Matching Reference Video) -->
   <!-- ===================================================================== -->
-  <header class="fixed top-0 left-0 right-0 z-50 bg-warmWhite/80 backdrop-blur-md border-b border-mutedBorder/60 py-3.5 px-6 sm:px-10 transition-all duration-300">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-full bg-inkBlack text-white flex items-center justify-center font-bold text-xs tracking-wider">
-          ग
-        </div>
-        <div>
-          <span class="font-bold text-sm tracking-tight text-inkBlack">GraminAdvisory</span>
-          <span class="ml-2 text-[10px] font-mono uppercase bg-black/5 text-subtleGrey px-2 py-0.5 rounded border border-black/5">
-            SIH26091 · MoSJE / NSFDC
-          </span>
-        </div>
-      </div>
-
-      <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold text-subtleGrey tracking-tight">
-        <a href="#hero-section" class="hover:text-inkBlack transition-colors">Mission</a>
-        <a href="#scrolly-stories" class="hover:text-inkBlack transition-colors">Entrepreneurs</a>
-        <a href="#platform-cards" class="hover:text-inkBlack transition-colors">4 Pillars</a>
-        <a href="#dashboard-anchor" class="text-accentCoral hover:text-orange-700 font-bold transition-colors">Launch Dashboard ↗</a>
-      </nav>
-
-      <div class="flex items-center space-x-3">
-        <button onclick="toggleLang()" class="px-2.5 py-1 rounded-full border border-mutedBorder bg-white text-xs font-medium text-inkBlack hover:bg-slate-50 transition-all flex items-center space-x-1">
-          <span>🌐</span>
-          <span id="nav-lang-lbl">English</span>
-        </button>
-        <button onclick="scrollToDashboard()" class="px-4 py-1.5 rounded-full bg-inkBlack text-white text-xs font-semibold hover:bg-slate-800 transition-all shadow-sm">
-          Open Workspace
-        </button>
-      </div>
-    </div>
-  </header>
-
-
-  <!-- ===================================================================== -->
-  <!-- 1. HERO SECTION (High-Fashion Compressed Serif + Rural Indian Mission) -->
-  <!-- ===================================================================== -->
-  <section id="hero-section" class="min-h-screen pt-28 pb-16 px-6 sm:px-10 flex flex-col justify-between max-w-7xl mx-auto relative">
-    
-    <div class="my-auto py-12 max-w-4xl">
-      <!-- Institutional Category Tag -->
-      <div class="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-widest text-accentCoral font-semibold mb-6">
-        <span class="w-2 h-2 rounded-full bg-accentCoral animate-ping"></span>
-        <span>Ministry of Social Justice and Empowerment · NSFDC Initiative</span>
-      </div>
-
-      <!-- High-Fashion Headline (Walton Reference Aesthetic) -->
-      <h1 class="text-5xl sm:text-7xl lg:text-8xl font-display font-medium tracking-tight text-inkBlack leading-[0.95] uppercase">
-        Where opportunity<br />
-        <span class="font-serif italic font-normal text-accentCoral lowercase tracking-normal">takes root.</span>
-      </h1>
-
-      <p class="mt-8 text-lg sm:text-xl text-subtleGrey max-w-2xl font-sans leading-relaxed">
-        Empowering Scheduled Caste micro-entrepreneurs across 24 rural trades through deterministic 6.5% / 8.0% statutory credit, 12-month solvency stress testing, and instant Lead-Bank DPR generation.
-      </p>
-
-      <!-- Action Cluster -->
-      <div class="mt-10 flex flex-wrap items-center gap-4">
-        <button onclick="scrollToDashboard()" class="bg-accentCoral hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-full text-sm transition-all transform hover:-translate-y-0.5 shadow-lg shadow-accentCoral/25 flex items-center space-x-2">
-          <span>Enter Financial Dashboard</span>
-          <span>↓</span>
-        </button>
-        <a href="#scrolly-stories" class="px-7 py-4 rounded-full bg-white hover:bg-slate-100 text-inkBlack font-semibold text-sm transition-all border border-mutedBorder">
-          View Success Stories
-        </a>
-      </div>
-    </div>
-
-    <!-- Live Mandi Pulse Ticker Bar -->
-    <div class="w-full bg-white rounded-2xl p-3 border border-mutedBorder soft-card-shadow flex items-center overflow-hidden">
-      <span class="text-xs font-bold text-concessionalEmerald uppercase tracking-wider whitespace-nowrap mr-4 pr-4 border-r border-mutedBorder flex items-center space-x-1.5">
-        <span class="w-2 h-2 rounded-full bg-concessionalEmerald animate-pulse"></span>
-        <span>Agmarknet 2.0 Spot Pulse</span>
-      </span>
-      <div class="overflow-hidden relative flex-1">
-        <div class="ticker-track text-xs text-subtleGrey font-mono">
-          <span class="mx-4">🌾 Wheat: <b class="text-inkBlack tnum">₹2,425/qtl</b></span>
-          <span class="mx-4">🌼 Mustard: <b class="text-inkBlack tnum">₹5,450/qtl</b></span>
-          <span class="mx-4">🌱 Tur Dal: <b class="text-inkBlack tnum">₹8,100/qtl</b></span>
-          <span class="mx-4">🫘 Soybean: <b class="text-inkBlack tnum">₹4,650/qtl</b></span>
-          <span class="mx-4">🧅 Onion: <b class="text-inkBlack tnum">₹2,200/qtl</b></span>
-          <span class="mx-4">🍅 Tomato: <b class="text-inkBlack tnum">₹1,850/qtl</b></span>
-          <span class="mx-4">🌶️ Red Chilli: <b class="text-inkBlack tnum">₹18,500/qtl</b></span>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-
-  <!-- ===================================================================== -->
-  <!-- 2. PINNED SCROLLYTELLING: "FACES OF RURAL ENTERPRISE"                   -->
-  <!-- ===================================================================== -->
-  <section id="scrolly-stories" class="relative bg-inkBlack text-white py-24 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-6 sm:px-10">
-      
-      <div class="max-w-2xl mb-16">
-        <span class="text-xs font-mono uppercase text-accentCoral font-bold tracking-widest">Ground-Truth Proof</span>
-        <h2 class="text-4xl sm:text-6xl font-display font-medium uppercase tracking-tight mt-2 text-white">
-          Real enterprise.<br />
-          <span class="font-serif italic lowercase tracking-normal text-slate-300">verified turnarounds.</span>
-        </h2>
-        <p class="text-sm sm:text-base text-slate-400 mt-4 leading-relaxed">
-          Instead of distant statistics, our deterministic financial engine is built on the empirical unit economics of grassroots Scheduled Caste micro-entrepreneurs across India.
-        </p>
-      </div>
-
-      <!-- 3 Pinned Story Cards Grid (High-Quality Dignifying Imagery) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <!-- Story 1: Ramesh Kumar (Mustard Oil Expeller - D08) -->
-        <div class="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 soft-shadow flex flex-col justify-between transition-all hover:border-accentCoral/50">
-          <div class="h-64 overflow-hidden relative">
-            <img 
-              src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=800&q=80" 
-              alt="Rural Indian Agro Processing" 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90 contrast-105"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono text-emerald-400 font-bold border border-white/10">
-              D08 · AGRO-PROCESSING
-            </span>
-          </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-white">Ramesh Kumar</h3>
-            <p class="text-xs font-mono text-accentCoral font-semibold mt-0.5">Aligarh, Uttar Pradesh</p>
-            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-              "Transitioned from selling raw mustard seed to a 6-bolt cold-press expeller unit. Leveraged ₹6.80L NSFDC Term Loan at 8% with 26 quarterly repayments."
-            </p>
-            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs">
-              <span class="text-slate-400">Monthly Turnover:</span>
-              <span class="font-bold text-emerald-400 tnum">₹2,45,000</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Story 2: Sunita Devi (Tailoring & Garments - D18) -->
-        <div class="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 soft-shadow flex flex-col justify-between transition-all hover:border-accentCoral/50">
-          <div class="h-64 overflow-hidden relative">
-            <img 
-              src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80" 
-              alt="Rural Indian Tailoring & Handloom" 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90 contrast-105"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono text-softPurple font-bold border border-white/10">
-              D18 · PM VISHWAKARMA
-            </span>
-          </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-white">Sunita Devi</h3>
-            <p class="text-xs font-mono text-accentCoral font-semibold mt-0.5">Varanasi, Uttar Pradesh</p>
-            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-              "Expanded from 1 manual sewing machine to a 6-pedal garment production workshop with ₹1.00L PM Vishwakarma 5% credit + ₹15,000 digital toolkit voucher."
-            </p>
-            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs">
-              <span class="text-slate-400">Seasonal Peak Margin:</span>
-              <span class="font-bold text-softPurple tnum">38.5% Net</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Story 3: Manoj Paswan (Tractor Repair Garage - D15) -->
-        <div class="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 soft-shadow flex flex-col justify-between transition-all hover:border-accentCoral/50">
-          <div class="h-64 overflow-hidden relative">
-            <img 
-              src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80" 
-              alt="Mechanical Fabrication Workshop" 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter brightness-90 contrast-105"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-            <span class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono text-orange-400 font-bold border border-white/10">
-              D15 · TECHNICAL SERVICES
-            </span>
-          </div>
-          <div class="p-6">
-            <h3 class="text-xl font-bold text-white">Manoj Paswan</h3>
-            <p class="text-xs font-mono text-accentCoral font-semibold mt-0.5">Meerut, Uttar Pradesh</p>
-            <p class="text-xs text-slate-300 mt-3 leading-relaxed">
-              "Refinanced ₹1.20L predatory moneylender debt at 3 senkda (36% APR) into a 6.5% NSFDC Micro Credit facility, liberating ₹2,460 monthly interest bleed."
-            </p>
-            <div class="mt-4 pt-4 border-t border-white/10 flex justify-between text-xs">
-              <span class="text-slate-400">Debt Relief Savings:</span>
-              <span class="font-bold text-orange-400 tnum">₹88,560 Saved</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- ===================================================================== -->
-  <!-- 3. THE PLATFORM IN 4 CARDS (Pinned Stack Section)                     -->
-  <!-- ===================================================================== -->
-  <section id="platform-cards" class="py-24 px-6 sm:px-10 max-w-7xl mx-auto">
-    <div class="max-w-2xl mb-14">
-      <span class="text-xs font-mono uppercase text-accentCoral font-bold tracking-widest">Platform Architecture</span>
-      <h2 class="text-4xl sm:text-5xl font-display uppercase tracking-tight text-inkBlack mt-2">
-        Four pillars of<br />
-        <span class="font-serif italic lowercase tracking-normal text-subtleGrey">statutory precision.</span>
-      </h2>
-    </div>
-
-    <!-- 4 Structured Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      
-      <!-- Card 1 -->
-      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
-        <div>
-          <span class="text-xs font-mono text-accentCoral font-bold">01 / DUAL-TIER CREDIT</span>
-          <h3 class="text-xl font-bold text-inkBlack mt-2">NSFDC Statutory Calculator</h3>
-          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
-            Strict statutory modeling under MoSJE guidelines: Micro Credit Finance (&le; ₹1.40L @ 6.5% with 11 quarters) and Term Loan Scheme (up to ₹50L @ 8.0% with 26 quarters).
-          </p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-concessionalEmerald">
-          ₹1,40,000 &rarr; ₹1,25,000 Loan + ₹15k Equity
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
-        <div>
-          <span class="text-xs font-mono text-accentCoral font-bold">02 / STRESS TESTING</span>
-          <h3 class="text-xl font-bold text-inkBlack mt-2">12-Month Solvency Simulator</h3>
-          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
-            Agro-climatic seasonality multipliers stress test cash flows during August monsoon troughs to prevent debt default and calibrate working capital buffers.
-          </p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-inkBlack">
-          Minimum DSCR &ge; 1.50 Guaranteed
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
-        <div>
-          <span class="text-xs font-mono text-accentCoral font-bold">03 / DEBT LIBERATION</span>
-          <h3 class="text-xl font-bold text-inkBlack mt-2">Mode B Refinancing Engine</h3>
-          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
-            Algorithmic consolidation of predatory informal moneylender debt (2 to 5 senkda / 24%–60% APR) into low-cost institutional banking credit.
-          </p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-accentCoral">
-          Usurious Loans Act & Damdupat Legal Relief
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between hover:border-accentCoral/50 transition-all">
-        <div>
-          <span class="text-xs font-mono text-accentCoral font-bold">04 / BANK SANCTION</span>
-          <h3 class="text-xl font-bold text-inkBlack mt-2">1-Page Lead-Bank DPR</h3>
-          <p class="text-xs text-subtleGrey mt-2 leading-relaxed">
-            Generates standardized, bank-ready Detailed Project Reports conforming to the RBI Lead Bank Scheme (1969) with tamper-proof QR code verification.
-          </p>
-        </div>
-        <div class="mt-6 pt-4 border-t border-mutedBorder text-xs font-bold text-concessionalEmerald">
-          Instant PDF Sanction Proposal Export
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- ===================================================================== -->
-  <!-- 4. TRANSITION SEPARATOR: ENTER THE AUTHENTICATED DASHBOARD            -->
-  <!-- ===================================================================== -->
-  <div id="dashboard-anchor" class="py-12 px-6 sm:px-10 max-w-7xl mx-auto text-center">
-    <div class="inline-flex items-center space-x-2 text-xs font-mono uppercase text-subtleGrey tracking-widest mb-3">
-      <span>Operational Interface</span>
-      <span>·</span>
-      <span>Live Application Environment</span>
-    </div>
-    <h2 class="text-3xl sm:text-4xl font-display font-medium uppercase tracking-tight text-inkBlack">
-      The Entrepreneur Workspace
-    </h2>
-    <p class="text-xs sm:text-sm text-subtleGrey mt-1 max-w-xl mx-auto">
-      Below is the live operational dashboard matching your exact reference architecture.
-    </p>
+  <div class="walton-nav-capsule">
+    <div class="text-[10px] text-waltonMuted font-bold mb-1">☰</div>
+    <div id="cap-ind-1" class="capsule-pill-indicator"></div>
+    <div id="cap-ind-2" class="capsule-dot"></div>
+    <div id="cap-ind-3" class="capsule-dot"></div>
+    <div id="cap-ind-4" class="capsule-dot"></div>
+    <div id="cap-ind-5" class="capsule-dot"></div>
   </div>
 
 
   <!-- ===================================================================== -->
-  <!-- 5. THE AUTHENTICATED DASHBOARD (EXACT VISUAL MATCH TO USER REFERENCE)  -->
+  <!-- TOP HEADER (Clean, Minimal, Center Logo + Menu Hamburger Button)      -->
   <!-- ===================================================================== -->
-  <section class="py-6 px-3 sm:px-8 max-w-[1480px] mx-auto mb-20">
+  <header class="fixed top-0 left-0 right-0 z-50 py-5 px-8 flex items-center justify-between pointer-events-none">
     
+    <!-- Left Bookmark / Tag -->
+    <div class="pointer-events-auto flex items-center space-x-2">
+      <span class="text-xs font-mono font-bold tracking-widest uppercase bg-white/70 backdrop-blur-md px-3 py-1 rounded-full border border-black/5 shadow-sm text-waltonInk">
+        MoSJE · NSFDC · SIH26091
+      </span>
+    </div>
+
+    <!-- Center Emblem "W" style -> "ग" Gramin Emblem with 4 Dots -->
+    <div class="pointer-events-auto flex flex-col items-center cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+      <div class="w-8 h-8 rounded-full bg-waltonInk text-white flex items-center justify-center font-bold text-sm tracking-widest shadow-sm">
+        ग
+      </div>
+      <!-- 4 Colored Dots (Matching Walton Reference) -->
+      <div class="flex items-center space-x-1 mt-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-accentCoral"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-concessionalEmerald"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-ochreChip"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-slateChip"></span>
+      </div>
+    </div>
+
+    <!-- Right Hamburger / Menu Button (Matching Reference) -->
+    <div class="pointer-events-auto flex items-center space-x-3">
+      <button onclick="scrollToDashboard()" class="hidden sm:inline-flex text-xs font-bold tracking-tight text-waltonInk uppercase bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-black/5 shadow-sm hover:bg-white transition-all">
+        Dashboard ↗
+      </button>
+      <div class="w-9 h-9 rounded-full bg-white shadow-sm border border-black/5 flex items-center justify-center text-xs font-bold cursor-pointer hover:bg-slate-50 transition-all">
+        =
+      </div>
+    </div>
+
+  </header>
+
+
+  <!-- ===================================================================== -->
+  <!-- SCENE 1: THE PINNED HERO (WHERE OPPORTUNITY TAKES ROOT)                -->
+  <!-- Layered with Floating Real Rural Entrepreneur Image Cards That Disperse-->
+  <!-- ===================================================================== -->
+  <section id="hero-pinned-scene" class="relative w-full h-screen overflow-hidden flex items-center justify-center bg-waltonGround">
+    
+    <!-- Giant Condensed Serif Typography Behind Imagery (Frames 001-009) -->
+    <div id="hero-title-wrap" class="absolute inset-0 flex flex-col items-center justify-center text-center select-none z-10 pointer-events-none px-4">
+      <h1 class="hero-big-title font-display font-bold uppercase text-waltonInk leading-[0.85] tracking-tight">
+        <div>WHERE</div>
+        <div>OPPORTUNITY</div>
+        <div>TAKES</div>
+        <div>ROOT</div>
+      </h1>
+    </div>
+
+    <!-- Floating Image Cluster (Clustered Over Text, Dispersing on Scroll) -->
+    <div id="hero-images-layer" class="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
+      
+      <!-- Central Large Image: Ramesh Kumar & Rural Partner shaking hands (Frame 001) -->
+      <div id="img-center" class="absolute w-[340px] sm:w-[440px] h-[250px] sm:h-[310px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white/90 transform scale-100 transition-all">
+        <img 
+          src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=900&q=80" 
+          alt="Rural Indian Entrepreneur" 
+          class="w-full h-full object-cover filter brightness-[0.9] contrast-[1.05]"
+        />
+        <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-[10px] flex justify-between font-mono">
+          <span>Ramesh Kumar (D08)</span>
+          <span class="text-concessionalEmerald font-bold">NSFDC Term Loan Verified</span>
+        </div>
+      </div>
+
+      <!-- Satellite 1: Top Right Aerial Fields (Disperses Up-Right) -->
+      <div id="img-sat-1" class="absolute -top-12 sm:top-16 right-4 sm:right-28 w-24 sm:w-36 h-20 sm:h-28 rounded-xl overflow-hidden shadow-xl border-2 border-white/80">
+        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80" alt="Aerial Mustard" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Satellite 2: Bottom Left Girl Studying / Skill Training (Disperses Down-Left) -->
+      <div id="img-sat-2" class="absolute bottom-16 sm:bottom-28 left-4 sm:left-32 w-32 sm:w-48 h-24 sm:h-36 rounded-xl overflow-hidden shadow-xl border-2 border-white/80">
+        <img src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=400&q=80" alt="Sunita Devi Tailoring" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Satellite 3: Bottom Right Rural Workshop (Disperses Down-Right) -->
+      <div id="img-sat-3" class="absolute bottom-12 sm:bottom-20 right-8 sm:right-40 w-28 sm:w-44 h-24 sm:h-32 rounded-xl overflow-hidden shadow-xl border-2 border-white/80">
+        <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80" alt="Manoj Paswan Garage" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Satellite 4: Top Left Village Pond / Aquaculture (Disperses Up-Left) -->
+      <div id="img-sat-4" class="absolute top-20 sm:top-24 left-6 sm:left-44 w-28 sm:w-40 h-20 sm:h-28 rounded-xl overflow-hidden shadow-xl border-2 border-white/80">
+        <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80" alt="Rural Fisheries" class="w-full h-full object-cover" />
+      </div>
+
+      <!-- Color Accent Block 1 (Ochre) -->
+      <div id="chip-ochre" class="absolute top-40 right-1/4 w-8 h-8 rounded-md bg-ochreChip shadow-md"></div>
+      <!-- Color Accent Block 2 (Olive) -->
+      <div id="chip-olive" class="absolute bottom-36 left-1/4 w-7 h-7 rounded-md bg-oliveChip shadow-md"></div>
+      <!-- Color Accent Block 3 (Slate) -->
+      <div id="chip-slate" class="absolute top-1/2 left-20 w-6 h-6 rounded-md bg-slateChip shadow-md"></div>
+    </div>
+
+    <!-- Scroll Hint at Bottom of Hero -->
+    <div class="absolute bottom-8 z-30 flex flex-col items-center text-waltonMuted text-[11px] font-mono tracking-wider">
+      <span>SCROLL TO EXPLORE</span>
+      <span class="mt-1 animate-bounce">↓</span>
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- SCENE 2: THE THESIS & VERTICAL LINE DROP (Frame 013 Reference)        -->
+  <!-- ===================================================================== -->
+  <section id="scene-thesis" class="min-h-screen py-32 px-6 sm:px-10 flex flex-col items-center justify-center bg-waltonWarm relative">
+    
+    <!-- Vertical Line Drop with Progress Dot (Exact match to Reference Frame 013) -->
+    <div class="flex flex-col items-center mb-12">
+      <div id="thesis-line" class="w-[1.5px] h-28 bg-waltonInk relative origin-top">
+        <div id="thesis-dot" class="w-2.5 h-2.5 rounded-full bg-waltonInk absolute -bottom-1 -left-[4.5px]"></div>
+      </div>
+    </div>
+
+    <!-- Chapter [ 01 ] -->
+    <span class="text-xs font-mono uppercase text-waltonMuted font-bold tracking-widest mb-4">
+      [ 01 ]
+    </span>
+
+    <!-- Thesis Headline (Medium Serif) -->
+    <h2 class="text-3xl sm:text-5xl lg:text-6xl font-serif text-center text-waltonInk max-w-3xl leading-[1.15]">
+      Statutory credit enables rural producers to fulfill their highest potential.
+    </h2>
+
+    <p class="text-sm sm:text-base text-waltonMuted text-center max-w-xl mt-6 leading-relaxed font-sans">
+      To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core domains.
+    </p>
+
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- SCENE 3: THE FLOATING ORBIT / VORTEX (Frame 027 Reference)            -->
+  <!-- Multiple photo tiles flying in to form a circle around [ 02 ]         -->
+  <!-- ===================================================================== -->
+  <section id="scene-orbit" class="relative w-full h-[180vh] bg-waltonGround">
+    
+    <!-- Sticky Pinned Container -->
+    <div id="orbit-pinned-wrap" class="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-4">
+      
+      <!-- Central Narrative [ 02 ] -->
+      <div id="orbit-center-text" class="text-center max-w-xl z-20 pointer-events-none">
+        <span class="text-xs font-mono uppercase text-waltonMuted font-bold tracking-widest block mb-3">
+          [ 02 ]
+        </span>
+        <h3 class="text-4xl sm:text-6xl font-serif italic text-waltonInk leading-tight">
+          What does opportunity<br />
+          mean today?
+        </h3>
+        <p class="text-xs sm:text-sm text-waltonMuted mt-4 max-w-md mx-auto leading-relaxed">
+          It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and instant bank-sanction DPRs.
+        </p>
+      </div>
+
+      <!-- Ring of Orbiting Photo Tiles (Flying into circular ring matching Frame 027) -->
+      <div id="orbit-ring" class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+        
+        <!-- Tile 1 (Top Center) -->
+        <div class="orbit-tile absolute -translate-y-64 w-24 h-24 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=300&q=80" alt="Oil expeller" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 2 (Top Right) -->
+        <div class="orbit-tile absolute translate-x-52 -translate-y-48 w-20 h-20 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80" alt="Farmland" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 3 (Right) -->
+        <div class="orbit-tile absolute translate-x-72 w-28 h-20 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=300&q=80" alt="Tailoring workshop" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 4 (Bottom Right) -->
+        <div class="orbit-tile absolute translate-x-56 translate-y-48 w-24 h-24 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80" alt="Mechanical repairs" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 5 (Bottom Center) -->
+        <div class="orbit-tile absolute translate-y-64 w-28 h-20 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80" alt="Rural artisan" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 6 (Bottom Left) -->
+        <div class="orbit-tile absolute -translate-x-56 translate-y-48 w-20 h-20 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80" alt="Entrepreneur" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 7 (Left) -->
+        <div class="orbit-tile absolute -translate-x-72 w-24 h-24 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80" alt="Village store" class="w-full h-full object-cover" />
+        </div>
+        <!-- Tile 8 (Top Left) -->
+        <div class="orbit-tile absolute -translate-x-52 -translate-y-48 w-20 h-20 rounded-xl overflow-hidden shadow-lg border border-white">
+          <img src="https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=300&q=80" alt="Agro trade" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Color Swatch Dots in Orbit -->
+        <div class="orbit-tile absolute -translate-x-28 -translate-y-64 w-5 h-5 rounded-md bg-ochreChip"></div>
+        <div class="orbit-tile absolute translate-x-32 -translate-y-64 w-6 h-6 rounded-md bg-accentCoral"></div>
+        <div class="orbit-tile absolute translate-x-64 translate-y-16 w-5 h-5 rounded-md bg-oliveChip"></div>
+        <div class="orbit-tile absolute -translate-x-64 translate-y-16 w-6 h-6 rounded-md bg-slateChip"></div>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- SCENE 4: FULL-BLEED IMMERSIVE IMAGE + RADIAL ARC GAUGE (Frame 035)    -->
+  <!-- ===================================================================== -->
+  <section id="scene-immersive" class="relative w-full h-screen overflow-hidden flex flex-col justify-between p-8 sm:p-14 bg-black text-white">
+    
+    <!-- Full-Bleed High-Res Rural Indian Backdrop -->
+    <div class="absolute inset-0 z-0">
+      <img 
+        src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80" 
+        alt="Green fields harvest" 
+        class="w-full h-full object-cover filter brightness-[0.6] contrast-[1.1]"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40"></div>
+    </div>
+
+    <!-- Top Breadcrumb in Immersive Scene -->
+    <div class="relative z-10 flex items-center justify-between">
+      <span class="text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">
+        02 / 04 · STATUTORY SOLVENCY RATING
+      </span>
+      <span class="text-xs font-mono text-white/60">SIH26091 VERIFIED</span>
+    </div>
+
+    <!-- Center Radial Arc Gauge with Percentage Badge (Exact match to Frame 035) -->
+    <div class="relative z-10 my-auto flex flex-col items-center justify-center">
+      <div class="relative w-56 h-56 sm:w-72 sm:h-72 flex items-center justify-center">
+        <!-- SVG Arc Ring -->
+        <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none" />
+          <circle id="gauge-circle" cx="50" cy="50" r="45" stroke="#FFFFFF" stroke-width="2.5" fill="none" stroke-linecap="round" class="arc-progress" />
+        </svg>
+
+        <!-- Center Percentage Badge (Yellow / Amber Pill like Frame 035) -->
+        <div class="absolute w-14 h-14 rounded-full bg-yellow-400 text-slate-950 flex items-center justify-center font-bold text-xs shadow-xl font-mono">
+          67%
+        </div>
+
+        <!-- Dot on Arc Endpoint -->
+        <div class="absolute top-2 w-3 h-3 rounded-full bg-white shadow-lg"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Metric Text & Action Pill (Matching Frame 035 Reference) -->
+    <div class="relative z-10 flex flex-col sm:flex-row items-end justify-between gap-6">
+      <div class="max-w-xl">
+        <h3 class="text-3xl sm:text-5xl font-sans font-bold text-yellow-400 tracking-tight leading-none">
+          67% of rural producers
+        </h3>
+        <p class="text-sm sm:text-base text-white/85 mt-2 font-serif italic">
+          struggle with informal debt traps before accessing structured Lead-Bank facilities.
+        </p>
+      </div>
+
+      <!-- Action Pill (02 / 04  FULL REPORT ↗ from Reference) -->
+      <button onclick="scrollToDashboard()" class="px-6 py-3 rounded-full bg-white text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center space-x-3 shadow-2xl hover:bg-slate-100 transition-all">
+        <span>02 / 04</span>
+        <span class="h-3 w-[1px] bg-black/20"></span>
+        <span>OPEN DASHBOARD ↗</span>
+      </button>
+    </div>
+
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- SCENE 5: THE PLATFORM IN 4 CARDS (Pinned Summary Deck)                -->
+  <!-- ===================================================================== -->
+  <section id="scene-cards" class="py-24 px-6 sm:px-12 max-w-7xl mx-auto">
+    <div class="max-w-2xl mb-12">
+      <span class="text-xs font-mono uppercase text-accentCoral font-bold tracking-widest">[ 03 ] · CORE MODULES</span>
+      <h2 class="text-4xl sm:text-5xl font-display font-bold uppercase tracking-tight text-waltonInk mt-2">
+        The Four Pillars.
+      </h2>
+      <p class="text-xs sm:text-sm text-waltonMuted mt-2">
+        Fitting all 24 empirical domains and statutory NSFDC rules into a unified advisory platform.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">PILLAR 01</span>
+          <h4 class="font-bold text-lg text-waltonInk mt-2">NSFDC Dual-Tier Credit</h4>
+          <p class="text-xs text-waltonMuted mt-2 leading-relaxed">
+            Statutory micro credit (&le; ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).
+          </p>
+        </div>
+        <div class="mt-6 pt-3 border-t border-mutedBorder text-xs font-bold text-concessionalEmerald">
+          ₹1,40,000 &rarr; ₹1,25,000 Loan + ₹15k Equity
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">PILLAR 02</span>
+          <h4 class="font-bold text-lg text-waltonInk mt-2">12-Month Solvency Simulator</h4>
+          <p class="text-xs text-waltonMuted mt-2 leading-relaxed">
+            August monsoon lean-month stress testing across 24 empirical trade domains.
+          </p>
+        </div>
+        <div class="mt-6 pt-3 border-t border-mutedBorder text-xs font-bold text-waltonInk">
+          Annual DSCR &ge; 1.50 Guaranteed
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">PILLAR 03</span>
+          <h4 class="font-bold text-lg text-waltonInk mt-2">Mode B Debt Liberation</h4>
+          <p class="text-xs text-waltonMuted mt-2 leading-relaxed">
+            Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking.
+          </p>
+        </div>
+        <div class="mt-6 pt-3 border-t border-mutedBorder text-xs font-bold text-accentCoral">
+          Damdupat & Usurious Loans Relief
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl p-6 border border-mutedBorder soft-card-shadow flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-mono text-accentCoral font-bold">PILLAR 04</span>
+          <h4 class="font-bold text-lg text-waltonInk mt-2">1-Page Lead-Bank DPR</h4>
+          <p class="text-xs text-waltonMuted mt-2 leading-relaxed">
+            Single-page bank sanction proposal conforming to RBI Lead Bank Scheme standards with QR verification.
+          </p>
+        </div>
+        <div class="mt-6 pt-3 border-t border-mutedBorder text-xs font-bold text-concessionalEmerald">
+          Instant PDF Sanction Proposal Export
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ===================================================================== -->
+  <!-- SCENE 6: THE SETO MINIMAL DASHBOARD (EXACT REPLICA OF USER WEBP IMAGE) -->
+  <!-- ===================================================================== -->
+  <section id="dashboard-section" class="py-16 px-4 sm:px-8 max-w-[1500px] mx-auto">
+    
+    <div class="text-center mb-8">
+      <span class="text-xs font-mono uppercase text-waltonMuted font-bold tracking-widest block mb-1">
+        [ 04 ] · OPERATIONAL CORE
+      </span>
+      <h2 class="text-3xl sm:text-4xl font-display font-bold uppercase text-waltonInk">
+        The Entrepreneur Workspace
+      </h2>
+      <p class="text-xs text-waltonMuted mt-1">Exact visual reproduction of your SETO minimal dashboard reference.</p>
+    </div>
+
     <!-- Outer Diffused Canvas (Matching User's Uploaded Webp Screenshot) -->
-    <div class="diffused-backdrop rounded-[36px] p-4 sm:p-7 soft-shadow">
+    <div class="diffused-backdrop rounded-[38px] p-4 sm:p-7 soft-shadow">
       
       <!-- Main Dashboard Container (Rounded White Card with 3-Column Shell) -->
       <div class="bg-dashCard rounded-[28px] overflow-hidden soft-card-shadow grid grid-cols-1 lg:grid-cols-12 min-h-[760px] font-dashboard">
@@ -429,46 +522,46 @@
         <aside class="lg:col-span-3 bg-dashSidebar p-6 flex flex-col justify-between border-r border-dashBorder">
           
           <div class="space-y-6">
-            <!-- Brand Lockup (SETO Style from screenshot -> MoSJE/GraminAI) -->
+            <!-- Brand Lockup: SETO Style -> GraminAI -->
             <div class="flex items-center space-x-2.5 px-2">
-              <div class="w-7 h-7 rounded-lg bg-inkBlack text-white flex items-center justify-center font-bold text-xs">
+              <div class="w-7 h-7 rounded-lg bg-waltonInk text-white flex items-center justify-center font-bold text-xs">
                 ✦
               </div>
-              <span class="font-bold text-lg text-inkBlack tracking-tight font-sans">GraminAI</span>
+              <span class="font-bold text-lg text-waltonInk tracking-tight font-sans">GraminAI</span>
             </div>
 
             <!-- Primary Navigation List (Active Pill matches screenshot) -->
             <nav class="space-y-1">
-              <button onclick="setDashTab('home')" id="tab-btn-home" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white text-inkBlack font-semibold text-xs soft-card-shadow transition-all">
+              <button onclick="setDashTab('home')" id="tab-btn-home" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white text-waltonInk font-semibold text-xs soft-card-shadow transition-all">
                 <span>🏠</span>
                 <span>Home</span>
               </button>
-              <button onclick="setDashTab('simulator')" id="tab-btn-simulator" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+              <button onclick="setDashTab('simulator')" id="tab-btn-simulator" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all">
                 <span>⚙️</span>
                 <span>Enterprise Studio</span>
               </button>
-              <button onclick="setDashTab('amortizer')" id="tab-btn-amortizer" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+              <button onclick="setDashTab('amortizer')" id="tab-btn-amortizer" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all">
                 <span>📉</span>
                 <span>NSFDC Amortizer</span>
               </button>
-              <button onclick="setDashTab('restructure')" id="tab-btn-restructure" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+              <button onclick="setDashTab('restructure')" id="tab-btn-restructure" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all">
                 <span>⚖️</span>
                 <span>Debt Liberation</span>
               </button>
-              <button onclick="setDashTab('dpr')" id="tab-btn-dpr" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+              <button onclick="setDashTab('dpr')" id="tab-btn-dpr" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all">
                 <span>📄</span>
                 <span>1-Page DPR</span>
               </button>
-              <button class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+              <button class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all">
                 <div class="flex items-center space-x-3">
                   <span>🔔</span>
                   <span>Notifications</span>
                 </div>
-                <span class="w-5 h-5 rounded-full bg-inkBlack text-white text-[10px] flex items-center justify-center font-bold">
+                <span class="w-5 h-5 rounded-full bg-waltonInk text-white text-[10px] flex items-center justify-center font-bold">
                   8
                 </span>
               </button>
-              <button class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all">
+              <button class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all">
                 <span>⚙️</span>
                 <span>Settings</span>
               </button>
@@ -476,20 +569,20 @@
 
             <!-- Collapsible Sub-Tree: Advisory Tools ^ (Matching Screenshot) -->
             <div class="pt-4 border-t border-dashBorder/80 px-2">
-              <div class="flex items-center justify-between text-xs font-semibold text-subtleGrey mb-2 cursor-pointer">
+              <div class="flex items-center justify-between text-xs font-semibold text-waltonMuted mb-2 cursor-pointer">
                 <span>Advisory Tools</span>
                 <span class="text-[10px]">^</span>
               </div>
-              <div class="space-y-1.5 pl-2 text-xs font-medium text-subtleGrey">
-                <div onclick="selectDomainPreset('D08')" class="cursor-pointer hover:text-inkBlack py-1 flex items-center space-x-2">
+              <div class="space-y-1.5 pl-2 text-xs font-medium text-waltonMuted">
+                <div onclick="selectDomainPreset('D08')" class="cursor-pointer hover:text-waltonInk py-1 flex items-center space-x-2">
                   <span>🌾</span>
                   <span>D08 Mustard Oil Mill</span>
                 </div>
-                <div onclick="selectDomainPreset('D18')" class="cursor-pointer hover:text-inkBlack py-1 flex items-center space-x-2">
+                <div onclick="selectDomainPreset('D18')" class="cursor-pointer hover:text-waltonInk py-1 flex items-center space-x-2">
                   <span>🧵</span>
                   <span>D18 Tailoring Workshop</span>
                 </div>
-                <div onclick="selectDomainPreset('D15')" class="cursor-pointer hover:text-inkBlack py-1 flex items-center space-x-2">
+                <div onclick="selectDomainPreset('D15')" class="cursor-pointer hover:text-waltonInk py-1 flex items-center space-x-2">
                   <span>🔧</span>
                   <span>D15 Tractor Garage</span>
                 </div>
@@ -506,12 +599,12 @@
                 class="w-10 h-10 rounded-full object-cover border-2 border-white"
               />
               <div class="overflow-hidden">
-                <p class="text-xs font-bold text-inkBlack truncate">Ramesh Kumar</p>
-                <p class="text-[10px] text-subtleGrey font-mono truncate">SC · Income ≤ ₹5.00L</p>
+                <p class="text-xs font-bold text-waltonInk truncate">Ramesh Kumar</p>
+                <p class="text-[10px] text-waltonMuted font-mono truncate">SC · Income ≤ ₹5.00L</p>
               </div>
             </div>
             
-            <button onclick="alert('Statutory Certificate: Verified Scheduled Caste Beneficiary (MoSJE / NSFDC). Concessional rate: 6.5% / 8.0%.')" class="w-full py-2 px-3 rounded-xl bg-white text-inkBlack font-bold text-xs flex items-center justify-center space-x-1.5 soft-card-shadow hover:bg-slate-50 transition-all">
+            <button onclick="alert('Statutory Certificate: Verified Scheduled Caste Beneficiary (MoSJE / NSFDC). Concessional rate: 6.5% / 8.0%.')" class="w-full py-2 px-3 rounded-xl bg-white text-waltonInk font-bold text-xs flex items-center justify-center space-x-1.5 soft-card-shadow hover:bg-slate-50 transition-all">
               <span class="text-concessionalEmerald">✦</span>
               <span>Statutory Verified</span>
             </button>
@@ -528,7 +621,7 @@
           <!-- Top Area: 4-Pointed Iridescent Star + Welcome Greeting -->
           <div class="text-center pt-2">
             <!-- 4-Pointed Star Icon (Matching User's Reference Screenshot) -->
-            <div class="mx-auto mb-4 iris-star">
+            <div class="mx-auto mb-4 flex items-center justify-center">
               <svg class="iris-star-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
@@ -538,16 +631,15 @@
                     <stop offset="100%" stop-color="#F59E0B" />
                   </radialGradient>
                 </defs>
-                <!-- 4 Curved Petals / Points -->
                 <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" fill="url(#starGlow)" opacity="0.9" />
                 <circle cx="50" cy="50" r="10" fill="#FFFFFF" opacity="0.85" filter="blur(2px)" />
               </svg>
             </div>
 
-            <h2 class="text-3xl sm:text-4xl font-bold text-inkBlack tracking-tight font-sans">
+            <h2 class="text-3xl sm:text-4xl font-bold text-waltonInk tracking-tight font-sans">
               Welcome, Ramesh!
             </h2>
-            <p class="text-xs sm:text-sm text-subtleGrey mt-1">
+            <p class="text-xs sm:text-sm text-waltonMuted mt-1">
               How can I help structure your rural enterprise today?
             </p>
           </div>
@@ -556,28 +648,28 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="dash-quick-cards">
             
             <!-- Card 1: Simulate Enterprise -->
-            <div onclick="setDashTab('simulator')" class="bg-warmWhite rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
+            <div onclick="setDashTab('simulator')" class="bg-waltonWarm rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
               <div class="text-xl mb-3">⭐</div>
-              <h4 class="font-bold text-xs text-inkBlack">Simulate enterprise</h4>
-              <p class="text-[11px] text-subtleGrey mt-1 leading-relaxed">
+              <h4 class="font-bold text-xs text-waltonInk">Simulate enterprise</h4>
+              <p class="text-[11px] text-waltonMuted mt-1 leading-relaxed">
                 Test 12-month seasonality & August lean-month cash flows.
               </p>
             </div>
 
             <!-- Card 2: NSFDC Loan Structurer -->
-            <div onclick="setDashTab('amortizer')" class="bg-warmWhite rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
+            <div onclick="setDashTab('amortizer')" class="bg-waltonWarm rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
               <div class="text-xl mb-3">✏️</div>
-              <h4 class="font-bold text-xs text-inkBlack">NSFDC amortizer</h4>
-              <p class="text-[11px] text-subtleGrey mt-1 leading-relaxed">
+              <h4 class="font-bold text-xs text-waltonInk">NSFDC amortizer</h4>
+              <p class="text-[11px] text-waltonMuted mt-1 leading-relaxed">
                 Calculate 11 or 26 quarterly instalments at 6.5% / 8.0%.
               </p>
             </div>
 
             <!-- Card 3: Debt Liberation & DPR -->
-            <div onclick="setDashTab('restructure')" class="bg-warmWhite rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
+            <div onclick="setDashTab('restructure')" class="bg-waltonWarm rounded-2xl p-4 border border-dashBorder soft-card-shadow hover:border-accentCoral/40 hover:-translate-y-0.5 transition-all cursor-pointer">
               <div class="text-xl mb-3">🎨</div>
-              <h4 class="font-bold text-xs text-inkBlack">Debt liberation</h4>
-              <p class="text-[11px] text-subtleGrey mt-1 leading-relaxed">
+              <h4 class="font-bold text-xs text-waltonInk">Debt liberation</h4>
+              <p class="text-[11px] text-waltonMuted mt-1 leading-relaxed">
                 Refinance 3-senkda moneylender debt into bank credit.
               </p>
             </div>
@@ -585,44 +677,44 @@
           </div>
 
           <!-- Dynamic Tool Viewport (Rendered when a tool is active) -->
-          <div id="dynamic-tool-viewport" class="hidden bg-warmWhite rounded-2xl p-5 border border-dashBorder">
+          <div id="dynamic-tool-viewport" class="hidden bg-waltonWarm rounded-2xl p-5 border border-dashBorder">
             <!-- Injected via JavaScript -->
           </div>
 
           <!-- Bottom Command Bar (Exact Replica of Reference Screenshot) -->
-          <div class="bg-warmWhite rounded-2xl p-3 border border-dashBorder soft-inner-shadow space-y-2.5">
-            <div class="flex items-center space-x-2 text-xs text-subtleGrey px-2">
+          <div class="bg-waltonWarm rounded-2xl p-3 border border-dashBorder soft-inner-shadow space-y-2.5">
+            <div class="flex items-center space-x-2 text-xs text-waltonMuted px-2">
               <span class="text-accentCoral font-bold">✦</span>
               <input 
                 id="cmd-input" 
                 type="text" 
                 placeholder="Initiate a query or send a command to the AI..." 
-                class="w-full bg-transparent focus:outline-none text-inkBlack placeholder-subtleGrey text-xs font-medium"
+                class="w-full bg-transparent focus:outline-none text-waltonInk placeholder-waltonMuted text-xs font-medium"
                 onkeydown="if(event.key === 'Enter') executeCommand();"
               />
             </div>
 
             <div class="flex items-center justify-between pt-1">
               <div class="flex items-center space-x-2 text-xs">
-                <button onclick="setDashTab('dpr')" class="px-3 py-1.5 rounded-full bg-white text-inkBlack font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
+                <button onclick="setDashTab('dpr')" class="px-3 py-1.5 rounded-full bg-white text-waltonInk font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
                   <span>📎</span>
                   <span>Lead-Bank DPR</span>
                 </button>
-                <button onclick="setDashTab('amortizer')" class="px-3 py-1.5 rounded-full bg-white text-inkBlack font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
+                <button onclick="setDashTab('amortizer')" class="px-3 py-1.5 rounded-full bg-white text-waltonInk font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
                   <span>⚙️</span>
                   <span>Quarterly EQI</span>
                 </button>
-                <button onclick="toggleLang()" class="px-3 py-1.5 rounded-full bg-white text-inkBlack font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
+                <button onclick="toggleLang()" class="px-3 py-1.5 rounded-full bg-white text-waltonInk font-semibold text-[11px] border border-mutedBorder hover:bg-slate-50 transition-all flex items-center space-x-1">
                   <span>🌐</span>
                   <span>Options</span>
                 </button>
               </div>
 
               <div class="flex items-center space-x-2">
-                <button onclick="alert('Bhashini Multilingual Speech Engine Active. Listening for Hindi/Regional prompt...')" class="w-8 h-8 rounded-full bg-white border border-mutedBorder flex items-center justify-center text-subtleGrey hover:text-inkBlack transition-all text-xs">
+                <button onclick="alert('Bhashini Multilingual Speech Engine Active. Listening for Hindi/Regional prompt...')" class="w-8 h-8 rounded-full bg-white border border-mutedBorder flex items-center justify-center text-waltonMuted hover:text-waltonInk transition-all text-xs">
                   🎤
                 </button>
-                <button onclick="executeCommand()" class="w-8 h-8 rounded-full bg-inkBlack text-white flex items-center justify-center hover:bg-slate-800 transition-all text-xs font-bold shadow-md">
+                <button onclick="executeCommand()" class="w-8 h-8 rounded-full bg-waltonInk text-white flex items-center justify-center hover:bg-slate-800 transition-all text-xs font-bold shadow-md">
                   ↑
                 </button>
               </div>
@@ -640,8 +732,8 @@
           <div class="space-y-4">
             <!-- Header (Matching Reference Screenshot) -->
             <div class="flex items-center justify-between">
-              <h3 class="font-bold text-base text-inkBlack font-sans">Recent scenarios</h3>
-              <button onclick="renderRecentScenarios()" class="text-subtleGrey hover:text-inkBlack text-sm" title="Refresh">
+              <h3 class="font-bold text-base text-waltonInk font-sans">Recent scenarios</h3>
+              <button onclick="alert('Refreshed recent simulation runs.')" class="text-waltonMuted hover:text-waltonInk text-sm" title="Refresh">
                 🖼️
               </button>
             </div>
@@ -651,9 +743,9 @@
               <input 
                 type="text" 
                 placeholder="Search..." 
-                class="w-full bg-dashSidebar rounded-xl px-3 py-2 text-xs text-inkBlack placeholder-subtleGrey border border-dashBorder focus:outline-none focus:border-inkBlack"
+                class="w-full bg-dashSidebar rounded-xl px-3 py-2 text-xs text-waltonInk placeholder-waltonMuted border border-dashBorder focus:outline-none focus:border-waltonInk"
               />
-              <span class="absolute right-3 top-2.5 text-xs text-subtleGrey">🔍</span>
+              <span class="absolute right-3 top-2.5 text-xs text-waltonMuted">🔍</span>
             </div>
 
             <!-- Recent Scenarios List (Exact layout of checkboxes, titles, images from screenshot) -->
@@ -662,16 +754,16 @@
               <!-- Item 1: D08 Mustard Oil Mill -->
               <div onclick="selectDomainPreset('D08')" class="p-2.5 rounded-xl hover:bg-dashSidebar transition-all cursor-pointer border border-transparent hover:border-dashBorder">
                 <div class="flex items-start space-x-2">
-                  <input type="checkbox" checked class="mt-0.5 rounded border-gray-300 text-inkBlack focus:ring-0" />
+                  <input type="checkbox" checked class="mt-0.5 rounded border-gray-300 text-waltonInk focus:ring-0" />
                   <div class="flex-1">
-                    <p class="font-bold text-inkBlack">D08 Mustard Oil Mill</p>
-                    <p class="text-[11px] text-subtleGrey mt-0.5">₹6.80L Term Loan · 26 Qtrs</p>
+                    <p class="font-bold text-waltonInk">D08 Mustard Oil Mill</p>
+                    <p class="text-[11px] text-waltonMuted mt-0.5">₹6.80L Term Loan · 26 Qtrs</p>
                     <div class="flex items-center space-x-2 mt-2">
                       <div class="flex -space-x-1">
                         <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[9px] font-bold flex items-center justify-center">R</span>
                         <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold flex items-center justify-center">B</span>
                       </div>
-                      <span class="text-[10px] text-subtleGrey font-mono">2h ago</span>
+                      <span class="text-[10px] text-waltonMuted font-mono">2h ago</span>
                     </div>
                   </div>
                 </div>
@@ -680,10 +772,10 @@
               <!-- Item 2: D18 Tailoring Workshop (With Image Preview matching screenshot) -->
               <div onclick="selectDomainPreset('D18')" class="p-2.5 rounded-xl hover:bg-dashSidebar transition-all cursor-pointer border border-transparent hover:border-dashBorder">
                 <div class="flex items-start space-x-2">
-                  <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-inkBlack focus:ring-0" />
+                  <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-waltonInk focus:ring-0" />
                   <div class="flex-1">
-                    <p class="font-bold text-inkBlack">D18 Tailoring Workshop</p>
-                    <p class="text-[11px] text-subtleGrey mt-0.5">PM Vishwakarma 5% credit...</p>
+                    <p class="font-bold text-waltonInk">D18 Tailoring Workshop</p>
+                    <p class="text-[11px] text-waltonMuted mt-0.5">PM Vishwakarma 5% credit...</p>
                     <!-- Rounded Image Thumbnail in Card -->
                     <div class="mt-2 rounded-xl overflow-hidden h-20 w-full relative">
                       <img 
@@ -694,7 +786,7 @@
                     </div>
                     <div class="flex items-center justify-between mt-2">
                       <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-800 text-[9px] font-bold flex items-center justify-center">S</span>
-                      <span class="text-[10px] text-subtleGrey font-mono">3h ago</span>
+                      <span class="text-[10px] text-waltonMuted font-mono">3h ago</span>
                     </div>
                   </div>
                 </div>
@@ -703,13 +795,13 @@
               <!-- Item 3: Mode B Moneylender Refinancing -->
               <div onclick="setDashTab('restructure')" class="p-2.5 rounded-xl hover:bg-dashSidebar transition-all cursor-pointer border border-transparent hover:border-dashBorder">
                 <div class="flex items-start space-x-2">
-                  <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-inkBlack focus:ring-0" />
+                  <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-waltonInk focus:ring-0" />
                   <div class="flex-1">
-                    <p class="font-bold text-inkBlack">Sahukar Debt Relief</p>
-                    <p class="text-[11px] text-subtleGrey mt-0.5">₹1.20L @ 3 senkda &rarr; 6.5%</p>
+                    <p class="font-bold text-waltonInk">Sahukar Debt Relief</p>
+                    <p class="text-[11px] text-waltonMuted mt-0.5">₹1.20L @ 3 senkda &rarr; 6.5%</p>
                     <div class="flex items-center justify-between mt-2">
                       <span class="text-[10px] text-concessionalEmerald font-bold">+₹2,460/mo relief</span>
-                      <span class="text-[10px] text-subtleGrey font-mono">5h ago</span>
+                      <span class="text-[10px] text-waltonMuted font-mono">5h ago</span>
                     </div>
                   </div>
                 </div>
@@ -719,7 +811,7 @@
           </div>
 
           <!-- Bottom Action Button: Create New Simulation (Black Pill matching screenshot) -->
-          <button onclick="setDashTab('simulator')" class="w-full py-3 rounded-full bg-inkBlack hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-md transition-all mt-4">
+          <button onclick="setDashTab('simulator')" class="w-full py-3 rounded-full bg-waltonInk hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-md transition-all mt-4">
             Create new simulation +
           </button>
 
@@ -739,7 +831,7 @@
     let lenis;
     try {
       lenis = new Lenis({
-        duration: 1.2,
+        duration: 1.4,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true
       });
@@ -749,17 +841,132 @@
       }
       requestAnimationFrame(raf);
     } catch(e) {
-      console.warn("Lenis initialization skipped", e);
+      console.warn("Lenis initialization error:", e);
     }
 
-    // 2. Initialize GSAP ScrollTrigger
+    // 2. Initialize GSAP ScrollTrigger Animations (Matching Walton Video)
     gsap.registerPlugin(ScrollTrigger);
+
+    window.addEventListener("DOMContentLoaded", () => {
+      
+      // Timeline 1: Hero Image Cluster Dispersion on Scroll (Frames 001 - 009)
+      const tlHero = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#hero-pinned-scene",
+          start: "top top",
+          end: "+=120%",
+          pin: true,
+          scrub: 1.2
+        }
+      });
+
+      tlHero
+        // Center image scales down and fades
+        .to("#img-center", { scale: 0.65, opacity: 0, y: -40, duration: 1 })
+        // Satellite images fly outward in their respective directions (parallax dispersion)
+        .to("#img-sat-1", { x: 260, y: -180, scale: 0.4, opacity: 0, duration: 1 }, 0)
+        .to("#img-sat-2", { x: -280, y: 160, scale: 0.4, opacity: 0, duration: 1 }, 0)
+        .to("#img-sat-3", { x: 300, y: 180, scale: 0.4, opacity: 0, duration: 1 }, 0)
+        .to("#img-sat-4", { x: -240, y: -160, scale: 0.4, opacity: 0, duration: 1 }, 0)
+        // Color accent chips disperse
+        .to("#chip-ochre", { x: 140, y: -100, opacity: 0, duration: 0.8 }, 0)
+        .to("#chip-olive", { x: -140, y: 100, opacity: 0, duration: 0.8 }, 0)
+        .to("#chip-slate", { x: -180, opacity: 0, duration: 0.8 }, 0)
+        // Giant Typography scales slightly up and reveals cleanly
+        .fromTo("#hero-title-wrap", { scale: 0.96 }, { scale: 1.04, duration: 1 }, 0)
+        .to("#hero-title-wrap", { opacity: 0.15, y: -60, duration: 0.8 }, 0.6);
+
+      // Timeline 2: Vertical Line Drop on Thesis (Frame 013)
+      gsap.fromTo("#thesis-line", 
+        { scaleY: 0 },
+        { 
+          scaleY: 1, 
+          duration: 1.2, 
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: "#scene-thesis",
+            start: "top 65%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Timeline 3: Pinned Orbital Vortex (Frame 027)
+      const tlOrbit = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#scene-orbit",
+          start: "top top",
+          end: "+=150%",
+          pin: "#orbit-pinned-wrap",
+          scrub: 1.4
+        }
+      });
+
+      tlOrbit
+        // Tiles fly inward from large radius into clean circular ring
+        .from(".orbit-tile", {
+          scale: 0.2,
+          opacity: 0,
+          stagger: 0.05,
+          duration: 1
+        })
+        // Center text fades in
+        .from("#orbit-center-text", {
+          opacity: 0,
+          scale: 0.85,
+          duration: 0.8
+        }, 0.2)
+        // Entire ring rotates slowly as user continues scrolling
+        .to("#orbit-ring", {
+          rotation: 45,
+          duration: 2,
+          ease: "none"
+        }, 0.5);
+
+      // Timeline 4: Immersive Circular Arc Gauge (Frame 035)
+      ScrollTrigger.create({
+        trigger: "#scene-immersive",
+        start: "top 50%",
+        onEnter: () => {
+          // Animate circle dash offset (283 * (1 - 0.67) = 93)
+          document.getElementById('gauge-circle').style.strokeDashoffset = "93";
+        },
+        onLeaveBack: () => {
+          document.getElementById('gauge-circle').style.strokeDashoffset = "283";
+        }
+      });
+
+      // Update capsule indicator based on scroll
+      const sections = ["#hero-pinned-scene", "#scene-thesis", "#scene-orbit", "#scene-immersive", "#dashboard-section"];
+      sections.forEach((sec, idx) => {
+        ScrollTrigger.create({
+          trigger: sec,
+          start: "top 40%",
+          end: "bottom 40%",
+          onEnter: () => updateCapsule(idx + 1),
+          onEnterBack: () => updateCapsule(idx + 1)
+        });
+      });
+
+    });
+
+    function updateCapsule(activeIdx) {
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById(`cap-ind-${i}`);
+        if (!el) continue;
+        if (i === activeIdx) {
+          el.className = "capsule-pill-indicator";
+        } else {
+          el.className = "capsule-dot";
+        }
+      }
+    }
 
     // Scroll to Dashboard Helper
     function scrollToDashboard() {
-      const el = document.getElementById('dashboard-anchor');
+      const el = document.getElementById('dashboard-section');
       if (lenis) {
-        lenis.scrollTo(el, { offset: -30 });
+        lenis.scrollTo(el, { offset: -20 });
       } else {
         el.scrollIntoView({ behavior: 'smooth' });
       }
@@ -769,11 +976,10 @@
     let currentLang = 'en';
     function toggleLang() {
       currentLang = currentLang === 'en' ? 'hi' : 'en';
-      document.getElementById('nav-lang-lbl').innerText = currentLang === 'en' ? 'English' : 'हिंदी';
+      alert(`Language switched to: ${currentLang === 'en' ? 'English' : 'हिंदी'}`);
     }
 
-    // 3. Dashboard State Management
-    let activeTab = 'home';
+    // 3. Dashboard State Management (SETO Exact Component System)
     let currentDomain = {
       code: "D08",
       name: "Mustard & Edible Oil Expeller Mill",
@@ -787,18 +993,17 @@
     };
 
     function setDashTab(tab) {
-      activeTab = tab;
       const viewport = document.getElementById('dynamic-tool-viewport');
       const quickCards = document.getElementById('dash-quick-cards');
 
-      // Update active nav button
+      // Update sidebar buttons
       ['home', 'simulator', 'amortizer', 'restructure', 'dpr'].forEach(t => {
         const btn = document.getElementById(`tab-btn-${t}`);
         if (btn) {
           if (t === tab) {
-            btn.className = "w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white text-inkBlack font-semibold text-xs soft-card-shadow transition-all";
+            btn.className = "w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white text-waltonInk font-semibold text-xs soft-card-shadow transition-all";
           } else {
-            btn.className = "w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-subtleGrey hover:text-inkBlack hover:bg-white/60 font-medium text-xs transition-all";
+            btn.className = "w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-waltonMuted hover:text-waltonInk hover:bg-white/60 font-medium text-xs transition-all";
           }
         }
       });
@@ -823,32 +1028,30 @@
       }
     }
 
-    // Render 1: Simulator View
     function renderSimulatorView(container) {
       container.innerHTML = `
         <div class="space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
             <div>
               <span class="text-[10px] font-mono text-accentCoral font-bold uppercase">Module 1 · Seasonality Simulator</span>
-              <h4 class="font-bold text-sm text-inkBlack">${currentDomain.name} (${currentDomain.code})</h4>
+              <h4 class="font-bold text-sm text-waltonInk">${currentDomain.name} (${currentDomain.code})</h4>
             </div>
-            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+            <button onclick="setDashTab('home')" class="text-xs text-waltonMuted hover:text-waltonInk">✕ Close</button>
           </div>
 
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div class="p-3 rounded-xl bg-white border border-dashBorder">
-              <span class="text-subtleGrey">Total Project Cost:</span>
-              <p class="text-base font-bold text-inkBlack tnum">₹${currentDomain.cost.toLocaleString('en-IN')}</p>
+              <span class="text-waltonMuted">Total Project Cost:</span>
+              <p class="text-base font-bold text-waltonInk tnum">₹${currentDomain.cost.toLocaleString('en-IN')}</p>
             </div>
             <div class="p-3 rounded-xl bg-white border border-dashBorder">
-              <span class="text-subtleGrey">Annual Cash Flow (NOCF):</span>
+              <span class="text-waltonMuted">Annual Cash Flow (NOCF):</span>
               <p class="text-base font-bold text-concessionalEmerald tnum">₹2,84,400</p>
             </div>
           </div>
 
-          <!-- Mini 12-Month Bar Chart -->
           <div class="pt-2">
-            <span class="text-[11px] font-semibold text-subtleGrey">12-Month Seasonal Multipliers (August Lean Trough Stress):</span>
+            <span class="text-[11px] font-semibold text-waltonMuted">12-Month Seasonal Multipliers (August Lean Trough Stress):</span>
             <div class="grid grid-cols-12 gap-1 h-24 items-end pt-3 pb-1 border-b border-dashBorder">
               ${[1.3, 1.2, 1.0, 0.7, 0.6, 0.8, 1.1, 1.3, 1.4, 1.3, 1.2, 1.1].map(m => `
                 <div class="h-full flex flex-col justify-end items-center group relative">
@@ -856,7 +1059,7 @@
                 </div>
               `).join('')}
             </div>
-            <div class="grid grid-cols-12 text-center text-[9px] text-subtleGrey font-mono pt-1">
+            <div class="grid grid-cols-12 text-center text-[9px] text-waltonMuted font-mono pt-1">
               <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
               <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
             </div>
@@ -864,7 +1067,7 @@
 
           <div class="flex justify-between items-center pt-2">
             <span class="text-xs font-bold text-concessionalEmerald">✓ Solvency Rating: SAFE (DSCR 1.62)</span>
-            <button onclick="setDashTab('amortizer')" class="px-3 py-1.5 rounded-xl bg-inkBlack text-white text-xs font-bold">
+            <button onclick="setDashTab('amortizer')" class="px-3 py-1.5 rounded-xl bg-waltonInk text-white text-xs font-bold">
               View 26-Quarter Repayment &rarr;
             </button>
           </div>
@@ -872,36 +1075,35 @@
       `;
     }
 
-    // Render 2: Amortizer View (Exact 11 / 26 Quarters)
     function renderAmortizerView(container) {
       container.innerHTML = `
         <div class="space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
             <div>
               <span class="text-[10px] font-mono text-concessionalEmerald font-bold uppercase">NSFDC Statutory Amortizer</span>
-              <h4 class="font-bold text-sm text-inkBlack">Quarterly Repayment Schedule (${currentDomain.quarters} Quarters @ ${currentDomain.rate}% p.a.)</h4>
+              <h4 class="font-bold text-sm text-waltonInk">Quarterly Repayment Schedule (${currentDomain.quarters} Quarters @ ${currentDomain.rate}% p.a.)</h4>
             </div>
-            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+            <button onclick="setDashTab('home')" class="text-xs text-waltonMuted hover:text-waltonInk">✕ Close</button>
           </div>
 
           <div class="grid grid-cols-3 gap-3 text-xs">
             <div class="p-2.5 rounded-xl bg-white border border-dashBorder">
-              <span class="text-subtleGrey">Sanction Loan:</span>
-              <p class="font-bold text-inkBlack tnum">₹${currentDomain.loan.toLocaleString('en-IN')}</p>
+              <span class="text-waltonMuted">Sanction Loan:</span>
+              <p class="font-bold text-waltonInk tnum">₹${currentDomain.loan.toLocaleString('en-IN')}</p>
             </div>
             <div class="p-2.5 rounded-xl bg-white border border-dashBorder">
-              <span class="text-subtleGrey">Promoter Margin:</span>
-              <p class="font-bold text-inkBlack tnum">₹${currentDomain.equity.toLocaleString('en-IN')}</p>
+              <span class="text-waltonMuted">Promoter Margin:</span>
+              <p class="font-bold text-waltonInk tnum">₹${currentDomain.equity.toLocaleString('en-IN')}</p>
             </div>
             <div class="p-2.5 rounded-xl bg-white border border-dashBorder">
-              <span class="text-subtleGrey">Equated Quarterly (EQI):</span>
+              <span class="text-waltonMuted">Equated Quarterly (EQI):</span>
               <p class="font-bold text-accentCoral tnum">₹${currentDomain.eqi.toLocaleString('en-IN')}</p>
             </div>
           </div>
 
           <div class="max-h-48 overflow-y-auto border border-dashBorder rounded-xl bg-white text-[11px]">
             <table class="w-full text-left border-collapse">
-              <thead class="bg-dashSidebar text-subtleGrey sticky top-0 border-b border-dashBorder">
+              <thead class="bg-dashSidebar text-waltonMuted sticky top-0 border-b border-dashBorder">
                 <tr>
                   <th class="p-2">Quarter</th>
                   <th class="p-2">Type</th>
@@ -913,14 +1115,14 @@
               <tbody class="divide-y divide-dashBorder tnum">
                 <tr class="bg-orange-50/50">
                   <td class="p-2 font-bold">Q1 (Moratorium)</td>
-                  <td class="p-2 text-subtleGrey">Moratorium</td>
+                  <td class="p-2 text-waltonMuted">Moratorium</td>
                   <td class="p-2">₹0</td>
                   <td class="p-2 text-orange-600">₹12,240</td>
                   <td class="p-2 font-bold">₹12,240</td>
                 </tr>
                 <tr class="bg-orange-50/50">
                   <td class="p-2 font-bold">Q2 (Moratorium)</td>
-                  <td class="p-2 text-subtleGrey">Moratorium</td>
+                  <td class="p-2 text-waltonMuted">Moratorium</td>
                   <td class="p-2">₹0</td>
                   <td class="p-2 text-orange-600">₹12,240</td>
                   <td class="p-2 font-bold">₹12,240</td>
@@ -951,8 +1153,8 @@
           </div>
 
           <div class="flex justify-between items-center pt-1 text-xs">
-            <span class="text-subtleGrey">Showing 5 of 26 quarters (7-Year Amortization)</span>
-            <button onclick="setDashTab('dpr')" class="px-3 py-1.5 rounded-xl bg-inkBlack text-white font-bold">
+            <span class="text-waltonMuted">Showing 5 of 26 quarters (7-Year Amortization)</span>
+            <button onclick="setDashTab('dpr')" class="px-3 py-1.5 rounded-xl bg-waltonInk text-white font-bold">
               Generate 1-Page Lead-Bank DPR ↗
             </button>
           </div>
@@ -960,21 +1162,20 @@
       `;
     }
 
-    // Render 3: Mode B Debt Liberation
     function renderRestructureView(container) {
       container.innerHTML = `
         <div class="space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
             <div>
               <span class="text-[10px] font-mono text-accentCoral font-bold uppercase">Mode B · Informal Debt Refinancing</span>
-              <h4 class="font-bold text-sm text-inkBlack">Moneylender Consolidation Calculator</h4>
+              <h4 class="font-bold text-sm text-waltonInk">Moneylender Consolidation Calculator</h4>
             </div>
-            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+            <button onclick="setDashTab('home')" class="text-xs text-waltonMuted hover:text-waltonInk">✕ Close</button>
           </div>
 
           <div class="space-y-3 text-xs">
             <div>
-              <div class="flex justify-between font-semibold text-inkBlack mb-1">
+              <div class="flex justify-between font-semibold text-waltonInk mb-1">
                 <span>Informal Moneylender Principal:</span>
                 <span id="txt-modal-principal" class="font-bold text-accentCoral tnum">₹1,20,000</span>
               </div>
@@ -982,7 +1183,7 @@
             </div>
 
             <div>
-              <label class="font-semibold text-inkBlack block mb-1">Informal Rate (Dialectal Quote):</label>
+              <label class="font-semibold text-waltonInk block mb-1">Informal Rate (Dialectal Quote):</label>
               <select id="sel-modal-r" onchange="updateLiveDebt()" class="w-full bg-white border border-dashBorder rounded-xl p-2 text-xs">
                 <option value="36">3 senkda (3% per month / 36% APR)</option>
                 <option value="48">4 senkda (4% per month / 48% APR)</option>
@@ -994,20 +1195,20 @@
 
           <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-1.5 text-xs">
             <div class="flex justify-between">
-              <span class="text-subtleGrey">Current Monthly Bleed:</span>
+              <span class="text-waltonMuted">Current Monthly Bleed:</span>
               <span id="val-modal-bleed" class="font-bold text-red-600 tnum">₹3,600 / mo</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-subtleGrey">New NSFDC 6.5% EMI:</span>
+              <span class="text-waltonMuted">New NSFDC 6.5% EMI:</span>
               <span id="val-modal-emi" class="font-bold text-concessionalEmerald tnum">₹1,140 / mo</span>
             </div>
             <div class="flex justify-between pt-1 border-t border-emerald-200 font-bold">
-              <span class="text-inkBlack">Net Cash Flow Relief:</span>
+              <span class="text-waltonInk">Net Cash Flow Relief:</span>
               <span id="val-modal-relief" class="text-concessionalEmerald tnum">+₹2,460 / month</span>
             </div>
           </div>
 
-          <button onclick="alert('Debt Restructuring Proposal Generated. Conforms to Usurious Loans Act 1918 and State Money-Lenders Act.')" class="w-full py-2.5 rounded-xl bg-inkBlack text-white font-bold text-xs">
+          <button onclick="alert('Debt Restructuring Proposal Generated. Conforms to Usurious Loans Act 1918 and State Money-Lenders Act.')" class="w-full py-2.5 rounded-xl bg-waltonInk text-white font-bold text-xs">
             Generate Legal Settlement Package ↗
           </button>
         </div>
@@ -1031,45 +1232,43 @@
       document.getElementById('val-modal-relief').innerText = `+₹${relief.toLocaleString('en-IN')} / month`;
     }
 
-    // Render 4: Lead-Bank DPR View
     function renderDPRView(container) {
       container.innerHTML = `
         <div class="space-y-4">
           <div class="flex items-center justify-between pb-3 border-b border-dashBorder">
             <div>
               <span class="text-[10px] font-mono text-concessionalEmerald font-bold uppercase">RBI Lead Bank Scheme Standard (1969)</span>
-              <h4 class="font-bold text-sm text-inkBlack">1-Page Detailed Project Report (DPR)</h4>
+              <h4 class="font-bold text-sm text-waltonInk">1-Page Detailed Project Report (DPR)</h4>
             </div>
-            <button onclick="setDashTab('home')" class="text-xs text-subtleGrey hover:text-inkBlack">✕ Close</button>
+            <button onclick="setDashTab('home')" class="text-xs text-waltonMuted hover:text-waltonInk">✕ Close</button>
           </div>
 
           <div class="p-4 rounded-xl bg-white border border-dashBorder space-y-2 text-xs">
             <div class="flex justify-between">
-              <span class="text-subtleGrey">Enterprise Name:</span>
-              <span class="font-bold text-inkBlack">${currentDomain.name}</span>
+              <span class="text-waltonMuted">Enterprise Name:</span>
+              <span class="font-bold text-waltonInk">${currentDomain.name}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-subtleGrey">Beneficiary:</span>
-              <span class="font-bold text-inkBlack">Ramesh Kumar (SC · Verified)</span>
+              <span class="text-waltonMuted">Beneficiary:</span>
+              <span class="font-bold text-waltonInk">Ramesh Kumar (SC · Verified)</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-subtleGrey">Sanction Loan:</span>
+              <span class="text-waltonMuted">Sanction Loan:</span>
               <span class="font-bold text-concessionalEmerald tnum">₹${currentDomain.loan.toLocaleString('en-IN')} @ ${currentDomain.rate}%</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-subtleGrey">Lead-Bank QR Hash:</span>
-              <span class="font-mono text-[10px] text-subtleGrey">SHA256: e926b08...mosje_nsfdc</span>
+              <span class="text-waltonMuted">Lead-Bank QR Hash:</span>
+              <span class="font-mono text-[10px] text-waltonMuted">SHA256: 290bfbc...mosje_nsfdc</span>
             </div>
           </div>
 
-          <button onclick="alert('Downloading official bilingual 1-Page Lead-Bank DPR PDF with QR verification.')" class="w-full py-2.5 rounded-xl bg-inkBlack text-white font-bold text-xs shadow-md">
+          <button onclick="alert('Downloading official bilingual 1-Page Lead-Bank DPR PDF with QR verification.')" class="w-full py-2.5 rounded-xl bg-waltonInk text-white font-bold text-xs shadow-md">
             Download Bank-Sanction PDF 📥
           </button>
         </div>
       `;
     }
 
-    // Preset Selector
     function selectDomainPreset(code) {
       if (code === 'D08') {
         currentDomain = { code: "D08", name: "Mustard & Edible Oil Expeller Mill", tier: "TERM_LOAN", cost: 680000, loan: 612000, equity: 68000, rate: 8.0, quarters: 26, eqi: 30420 };
@@ -1081,7 +1280,6 @@
       setDashTab('simulator');
     }
 
-    // Command Bar Interpreter
     function executeCommand() {
       const input = document.getElementById('cmd-input');
       const val = (input.value || "").trim().toLowerCase();

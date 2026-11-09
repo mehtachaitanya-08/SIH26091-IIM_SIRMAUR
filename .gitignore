@@ -38,4 +38,7 @@ Thumbs.db
 .tempmediaStorage/
 tmp/
 temp/
+scratch/
+*.mp4
+
 
