@@ -643,17 +643,16 @@ export default function App() {
             className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#0E7A53] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
           >
             <div>
-              <span className="text-[11px] font-mono-num text-[#0E7A53] font-bold uppercase tracking-wider block">PILLAR 01</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#0E7A53] transition-colors">
+              <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#0E7A53] transition-colors">
                 NSFDC Dual-Tier Credit
               </h4>
-              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
                 Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#0E7A53]">
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis">₹1.40L Cap · ₹1.25L Loan + ₹15k Equity</span>
-              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
+              <span>View details</span>
+              <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
@@ -663,17 +662,16 @@ export default function App() {
             className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#D49B5A] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
           >
             <div>
-              <span className="text-[11px] font-mono-num text-[#B47228] font-bold uppercase tracking-wider block">PILLAR 02</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#B47228] transition-colors">
+              <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#B47228] transition-colors">
                 12-Month Solvency Model
               </h4>
-              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
                 August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#B47228]">
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Annual DSCR ≥ 1.50 Guaranteed</span>
-              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
+              <span>View details</span>
+              <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
@@ -683,17 +681,16 @@ export default function App() {
             className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#E86043] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
           >
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider block">PILLAR 03</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#E86043] transition-colors">
+              <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#E86043] transition-colors">
                 Mode B Debt Liberation
               </h4>
-              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
                 Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#E86043]">
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Damdupat & Usurious Loans Relief</span>
-              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
+              <span>View details</span>
+              <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
@@ -703,17 +700,16 @@ export default function App() {
             className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#4A6274] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
           >
             <div>
-              <span className="text-[11px] font-mono-num text-[#4A6274] font-bold uppercase tracking-wider block">PILLAR 04</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#4A6274] transition-colors">
+              <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#4A6274] transition-colors">
                 1-Page Lead-Bank DPR
               </h4>
-              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
                 Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#4A6274]">
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Instant Bank Appraisal Proposal</span>
-              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
+              <span>View details</span>
+              <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
