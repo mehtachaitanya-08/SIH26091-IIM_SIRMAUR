@@ -221,9 +221,9 @@ export default function SetoDashboard() {
       )}
 
       {/* Section Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-extrabold uppercase text-[#111311] tracking-tight">
-          The Entrepreneur Workspace
+      <div className="text-center mb-10 sm:mb-14">
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#111311] tracking-tight leading-[1.08]">
+          The Entrepreneur Workspace.
         </h2>
       </div>
 

@@ -3,11 +3,67 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { 
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const PILLAR_DOSSIERS = {
+  1: {
+    number: 'PILLAR 01',
+    title: 'NSFDC Dual-Tier Credit Architecture',
+    color: '#0E7A53',
+    mandate: 'MoSJE Mandate · Concessional Lending Framework',
+    summary: 'Direct institutional credit structuring conforming to statutory National Scheduled Castes Finance and Development Corporation guidelines.',
+    specifications: [
+      { label: 'Micro Credit Facility (MCF)', value: 'Up to ₹1,40,000 @ 6.5% p.a. (11 quarters tenure, 1 moratorium quarter)' },
+      { label: 'Term Loan Facility', value: 'Up to ₹50,00,000 @ 8.0% p.a. (26 quarters tenure, 2 moratorium quarters)' },
+      { label: 'Beneficiary Eligibility', value: 'Scheduled Caste (SC) micro-entrepreneurs; household income ≤ ₹5,00,000' },
+      { label: 'Margin Money Structure', value: 'Up to 90% concessional loan routing with 10% entrepreneur margin contribution' }
+    ]
+  },
+  2: {
+    number: 'PILLAR 02',
+    title: '12-Month Solvency Stress Simulator',
+    color: '#B47228',
+    mandate: 'Monsoon Cash-Flow Resilience & DSCR Verification',
+    summary: 'Dynamic month-by-month cash flow modeling across 24 empirical trade dossiers to prevent debt distress during seasonal contractions.',
+    specifications: [
+      { label: 'Lean Season Simulation', value: 'Simulates August monsoon revenue drops (-35% to -45%) across rural trades' },
+      { label: 'Solvency Benchmark', value: 'Enforces statutory Debt Service Coverage Ratio (DSCR ≥ 1.50) across all 12 operating cycles' },
+      { label: 'Empirical Coverage', value: '24 validated trade dossiers spanning agro-processing, tailoring, retail, and artisanal crafts' },
+      { label: 'Stress Buffer Alert', value: 'Calculates operational working capital reserve thresholds before loan sanction' }
+    ]
+  },
+  3: {
+    number: 'PILLAR 03',
+    title: 'Mode B Debt Liberation (Sahukar Refinance)',
+    color: '#E86043',
+    mandate: 'Usurious Loans Act & Rule of Damdupat Statutory Relief',
+    summary: 'Systematic consolidation of informal high-interest moneylender debt into low-cost institutional banking facilities.',
+    specifications: [
+      { label: 'Informal Debt Conversion', value: 'Refinances 3-senkda to 5-senkda (36% to 60% APR) compounding debt to 6.5% p.a.' },
+      { label: 'Rule of Damdupat Threshold', value: 'Automatically triggers legal violation alerts when total interest paid equals or exceeds principal' },
+      { label: 'Statutory Shield', value: 'Leverages Section 3 of the Usurious Loans Act to halt compound interest penalties' },
+      { label: 'Household Cash Liberation', value: 'Releases up to ₹4,800/month in predatory servicing charges back into working capital' }
+    ]
+  },
+  4: {
+    number: 'PILLAR 04',
+    title: 'Statutory 1-Page Lead-Bank DPR',
+    color: '#4A6274',
+    mandate: 'RBI Lead Bank Scheme Standardized Appraisal Format',
+    summary: 'Instant generation of an auditable, single-page bank sanction appraisal conforming to Lead Bank Scheme standards.',
+    specifications: [
+      { label: 'Appraisal Layout', value: 'Single-page concise lead-bank appraisal with QR code verification hash' },
+      { label: 'Statutory Financial Metrics', value: 'Embedded CAPEX, OPEX, Break-Even, Sensitivity, and DSCR amortization tables' },
+      { label: 'Branch Approval Routing', value: 'Pre-formatted for Lead District Managers (LDMs) and District Industry Centres (DICs)' },
+      { label: 'Scheme Alignment', value: 'Full statutory mapping to NSFDC Term Loan / MCF and PM Vishwakarma craft guidelines' }
+    ]
+  }
+};
 
 export default function App() {
   const containerRef = useRef(null);
@@ -19,6 +75,7 @@ export default function App() {
   
   const [activeSection, setActiveSection] = useState(1);
   const [lenisInstance, setLenisInstance] = useState(null);
+  const [selectedPillarModal, setSelectedPillarModal] = useState(null);
 
   // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization
   useEffect(() => {
@@ -581,70 +638,146 @@ export default function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Card 1 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#0E7A53] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+          <div 
+            onClick={() => setSelectedPillarModal(1)}
+            className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#0E7A53] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+          >
             <div>
               <span className="text-[11px] font-mono-num text-[#0E7A53] font-bold uppercase tracking-wider block">PILLAR 01</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#0E7A53] transition-colors">
                 NSFDC Dual-Tier Credit
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#0E7A53] whitespace-nowrap overflow-hidden text-ellipsis">
-              ₹1.40L Cap · ₹1.25L Loan + ₹15k Equity
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#0E7A53]">
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">₹1.40L Cap · ₹1.25L Loan + ₹15k Equity</span>
+              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#D49B5A] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+          <div 
+            onClick={() => setSelectedPillarModal(2)}
+            className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#D49B5A] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+          >
             <div>
               <span className="text-[11px] font-mono-num text-[#B47228] font-bold uppercase tracking-wider block">PILLAR 02</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#B47228] transition-colors">
                 12-Month Solvency Model
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#B47228] whitespace-nowrap overflow-hidden text-ellipsis">
-              Annual DSCR ≥ 1.50 Guaranteed
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#B47228]">
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Annual DSCR ≥ 1.50 Guaranteed</span>
+              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#E86043] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+          <div 
+            onClick={() => setSelectedPillarModal(3)}
+            className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#E86043] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+          >
             <div>
               <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider block">PILLAR 03</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#E86043] transition-colors">
                 Mode B Debt Liberation
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#E86043] whitespace-nowrap overflow-hidden text-ellipsis">
-              Damdupat & Usurious Loans Relief
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#E86043]">
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Damdupat & Usurious Loans Relief</span>
+              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
             </div>
           </div>
 
           {/* Card 4 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#4A6274] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+          <div 
+            onClick={() => setSelectedPillarModal(4)}
+            className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#4A6274] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+          >
             <div>
               <span className="text-[11px] font-mono-num text-[#4A6274] font-bold uppercase tracking-wider block">PILLAR 04</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center group-hover:text-[#4A6274] transition-colors">
                 1-Page Lead-Bank DPR
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.
               </p>
             </div>
-            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#4A6274] whitespace-nowrap overflow-hidden text-ellipsis">
-              Instant Bank Appraisal Proposal
+            <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-mono-num font-bold text-[#4A6274]">
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Instant Bank Appraisal Proposal</span>
+              <span className="text-[10px] font-sans-ui text-[#686D65] font-normal group-hover:text-[#111311] transition-colors ml-2 shrink-0">Dossier →</span>
             </div>
           </div>
 
         </div>
+
+        {/* Statutory Pillar Modal Dialog */}
+        {selectedPillarModal && PILLAR_DOSSIERS[selectedPillarModal] && (
+          <div 
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+            onClick={() => setSelectedPillarModal(null)}
+          >
+            <div 
+              className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-black/5 space-y-5"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between border-b border-black/5 pb-4">
+                <div>
+                  <span 
+                    className="text-[11px] font-mono-num font-bold uppercase tracking-wider block"
+                    style={{ color: PILLAR_DOSSIERS[selectedPillarModal].color }}
+                  >
+                    {PILLAR_DOSSIERS[selectedPillarModal].number}
+                  </span>
+                  <h3 className="font-sans-ui font-bold text-xl text-[#111311] mt-1">
+                    {PILLAR_DOSSIERS[selectedPillarModal].title}
+                  </h3>
+                  <span className="text-[11px] font-mono-num text-[#686D65] uppercase tracking-wider block mt-1">
+                    {PILLAR_DOSSIERS[selectedPillarModal].mandate}
+                  </span>
+                </div>
+                <button 
+                  onClick={() => setSelectedPillarModal(null)}
+                  className="p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Narrative Description */}
+              <p className="text-xs sm:text-sm text-[#686D65] font-sans-ui leading-relaxed">
+                {PILLAR_DOSSIERS[selectedPillarModal].summary}
+              </p>
+
+              {/* Statutory Specifications List */}
+              <div className="space-y-3 bg-[#F8F6F0] p-4 rounded-2xl border border-black/5 text-xs font-sans-ui">
+                {PILLAR_DOSSIERS[selectedPillarModal].specifications.map((spec, i) => (
+                  <div key={i} className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 border-b border-black/5 last:border-0 pb-2 last:pb-0">
+                    <span className="font-bold text-[#111311]">{spec.label}:</span>
+                    <span className="text-[#686D65] sm:text-right">{spec.value}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedPillarModal(null)}
+                className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider"
+              >
+                Close Statutory Dossier
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ============================================================== */}
