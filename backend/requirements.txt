@@ -1,0 +1,10 @@
+# Loan server packages (install into backend/.venv, which git ignores):
+#   python3 -m venv backend/.venv
+#   backend/.venv/bin/pip install -r backend/requirements.txt
+fastapi==0.162.2
+pydantic==2.14.3
+starlette==1.10.0
+uvicorn==0.54.0
+# tests only
+pytest==9.2.0
+httpx==0.28.1
