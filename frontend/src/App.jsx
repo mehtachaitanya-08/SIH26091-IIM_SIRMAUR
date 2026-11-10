@@ -339,6 +339,25 @@ export default function App() {
     };
   }, []);
 
+  // Ensure scroll reset and clean viewport whenever switching views
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+      if (document.documentElement) {
+        document.documentElement.scrollTop = 0;
+        document.documentElement.classList.remove('lenis', 'lenis-smooth', 'lenis-stopped');
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.height = '';
+      }
+      if (document.body) {
+        document.body.scrollTop = 0;
+        document.body.classList.remove('lenis', 'lenis-smooth', 'lenis-stopped');
+        document.body.style.overflow = '';
+        document.body.style.height = '';
+      }
+    }
+  }, [currentView]);
+
   // Authentication State & Modal
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'

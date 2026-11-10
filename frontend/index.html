@@ -12,34 +12,40 @@
     <!-- Tailwind CSS CDN for instant robust styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              waltonGround: '#F4F1EA',
-              waltonWarm: '#F8F6F0',
-              waltonInk: '#111311',
-              waltonMuted: '#686D65',
-              dashBg: '#D4D8DD',
-              dashCard: '#FFFFFF',
-              dashSidebar: '#F8F9FA',
-              dashBorder: '#E9ECEF',
-              accentCoral: '#E86043',
-              concessionalEmerald: '#0E7A53',
-              chipOchre: '#D49B5A',
-              chipOlive: '#5A7352',
-              chipSlate: '#4A6274',
-              arcYellow: '#FACC15'
-            },
-            fontFamily: {
-              cinzel: ['Cinzel', 'Georgia', 'serif'],
-              editorial: ['"Instrument Serif"', '"Noto Serif Devanagari"', 'Georgia', 'serif'],
-              sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-              dashboard: ['"Inter Tight"', 'sans-serif'],
-              mono: ['"Space Grotesk"', 'monospace']
+      try {
+        if (typeof tailwind !== 'undefined') {
+          tailwind.config = {
+            theme: {
+              extend: {
+                colors: {
+                  waltonGround: '#F4F1EA',
+                  waltonWarm: '#F8F6F0',
+                  waltonInk: '#111311',
+                  waltonMuted: '#686D65',
+                  dashBg: '#D4D8DD',
+                  dashCard: '#FFFFFF',
+                  dashSidebar: '#F8F9FA',
+                  dashBorder: '#E9ECEF',
+                  accentCoral: '#E86043',
+                  concessionalEmerald: '#0E7A53',
+                  chipOchre: '#D49B5A',
+                  chipOlive: '#5A7352',
+                  chipSlate: '#4A6274',
+                  arcYellow: '#FACC15'
+                },
+                fontFamily: {
+                  cinzel: ['Cinzel', 'Georgia', 'serif'],
+                  editorial: ['"Instrument Serif"', '"Noto Serif Devanagari"', 'Georgia', 'serif'],
+                  sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                  dashboard: ['"Inter Tight"', 'sans-serif'],
+                  mono: ['"Space Grotesk"', 'monospace']
+                }
+              }
             }
-          }
+          };
         }
+      } catch (e) {
+        console.warn('Tailwind CDN config skipped:', e);
       }
     </script>
 
