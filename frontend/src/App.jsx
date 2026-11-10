@@ -12,9 +12,16 @@ import {
   Phone,
   Lock,
   CheckCircle2,
-  Sparkles
+  AlertCircle
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
+import { 
+  getCurrentSession, 
+  authenticateByCredentials, 
+  authenticateByGoogle, 
+  registerUser, 
+  clearSession 
+} from './data/userDatabase';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -64,22 +71,28 @@ const TRANSLATIONS = {
     closeDossier: 'Close Statutory Dossier',
     // Auth Modal
     modalTitleLogin: 'Beneficiary Sign In',
-    modalTitleRegister: 'New Enterprise Registration',
+    modalTitleRegister: 'Enterprise Registration',
+    modalSubtitle: 'Access your rural advisory & concessional credit workspace',
     tabLogin: 'Sign In',
     tabRegister: 'Register New',
-    demoLoginBtn: '⚡ 1-Click Demo Login: Ramesh Kumar (Mustard Mill · SC)',
+    continueGoogle: 'Continue with Google',
+    signUpGoogle: 'Sign up with Google',
+    orDivider: 'or continue with mobile',
     phoneLabel: 'Registered Mobile Number',
     phonePlaceholder: 'Enter 10-digit mobile number',
     pinLabel: '4-Digit Security PIN',
     pinPlaceholder: 'Enter 4-digit PIN',
+    createPinLabel: 'Create 4-Digit Security PIN',
     nameLabel: 'Entrepreneur Full Name',
     namePlaceholder: 'e.g. Ramesh Kumar',
     tradeLabel: 'Enterprise Domain / Trade',
     categoryLabel: 'Beneficiary Social Category',
     submitLogin: 'Sign In & Open Workspace',
     submitRegister: 'Register & Launch Workspace',
-    orDivider: 'OR',
-    statutoryNotice: '🔒 Conforms to Ministry of Social Justice and Empowerment (MoSJE) & NSFDC statutory eligibility verification.'
+    alreadyRegistered: 'Already have an account?',
+    needAccount: 'New to GraminAI?',
+    signInLink: 'Sign In',
+    registerLink: 'Create account'
   },
   hi: {
     // Header
@@ -123,22 +136,28 @@ const TRANSLATIONS = {
     closeDossier: 'सांविधिक दस्तावेज बंद करें',
     // Auth Modal
     modalTitleLogin: 'लाभार्थी लॉगिन',
-    modalTitleRegister: 'नया उद्यम पंजीकरण',
+    modalTitleRegister: 'उद्यम पंजीकरण',
+    modalSubtitle: 'ग्रामीण सलाहकार एवं रियायती ऋण कार्यक्षेत्र में प्रवेश करें',
     tabLogin: 'लॉगिन',
     tabRegister: 'नया पंजीकरण',
-    demoLoginBtn: '⚡ 1-क्लिक डेमो लॉगिन: रमेश कुमार (सरसों तेल मिल · SC)',
+    continueGoogle: 'Google से जारी रखें',
+    signUpGoogle: 'Google से रजिस्टर करें',
+    orDivider: 'अथवा मोबाइल नंबर द्वारा',
     phoneLabel: 'पंजीकृत मोबाइल नंबर',
     phonePlaceholder: '10 अंकों का मोबाइल नंबर दर्ज करें',
-    pinLabel: '4-अंकीय सुरक्षा पिन',
-    pinPlaceholder: '4-अंकीय पिन दर्ज करें',
+    pinLabel: '4-अंकीय सुरक्षा PIN',
+    pinPlaceholder: '4-अंकीय PIN दर्ज करें',
+    createPinLabel: '4-अंकीय सुरक्षा PIN बनाएं',
     nameLabel: 'उद्यमी का पूरा नाम',
     namePlaceholder: 'उदा. रमेश कुमार',
     tradeLabel: 'उद्यम क्षेत्र / व्यापार',
     categoryLabel: 'लाभार्थी सामाजिक श्रेणी',
-    submitLogin: 'लॉगिन करें और कार्यक्षेत्र खोलें',
-    submitRegister: 'पंजीकरण करें और कार्यक्षेत्र खोलें',
-    orDivider: 'अथवा',
-    statutoryNotice: '🔒 सामाजिक न्याय एवं अधिकारिता मंत्रालय (MoSJE) एवं NSFDC सांविधिक पात्रता सत्यापन मानकों के अनुरूप।'
+    submitLogin: 'लॉगिन करें एवं कार्यक्षेत्र खोलें',
+    submitRegister: 'पंजीकरण करें एवं कार्यक्षेत्र खोलें',
+    alreadyRegistered: 'क्या पहले से खाता है?',
+    needAccount: 'GraminAI पर नए हैं?',
+    signInLink: 'लॉगिन करें',
+    registerLink: 'खाता बनाएं'
   }
 };
 
@@ -276,68 +295,96 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
   const [currentUser, setCurrentUser] = useState(null);
+  const [authError, setAuthError] = useState(null);
 
   // Auth Form Fields
   const [loginPhone, setLoginPhone] = useState('9876543210');
   const [loginPin, setLoginPin] = useState('2026');
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
+  const [regPin, setRegPin] = useState('2026');
   const [regTrade, setRegTrade] = useState('D08 Mustard & Edible Oil Expeller Mill');
   const [regCategory, setRegCategory] = useState('Scheduled Caste (SC)');
 
-  // Quick 1-Click Demo Login
-  const handleDemoLogin = () => {
-    setCurrentUser({
+  // Restore active session on mount
+  useEffect(() => {
+    const session = getCurrentSession();
+    if (session) {
+      setCurrentUser(session);
+    }
+  }, []);
+
+  // Google Authentication Handler (Both Login & Register)
+  const handleGoogleAuth = () => {
+    const result = authenticateByGoogle({
       name: language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar',
-      category: 'Scheduled Caste (SC)',
-      trade: 'D08 Mustard & Edible Oil Expeller Mill',
-      phone: '9876543210',
-      id: 'UP-STP-008129',
-      income: '≤ ₹5,00,000'
+      email: 'ramesh.kumar.sc@gmail.com'
     });
-    setIsAuthModalOpen(false);
-    setTimeout(() => {
-      scrollToTarget('#dashboard-section');
-    }, 200);
+    if (result.success) {
+      setCurrentUser(result.user);
+      setAuthError(null);
+      setIsAuthModalOpen(false);
+      setTimeout(() => {
+        scrollToTarget('#dashboard-section');
+      }, 200);
+    }
   };
 
-  // Custom User Sign In
+  // Custom User Sign In Handler
   const handleCustomLogin = (e) => {
     e.preventDefault();
-    setCurrentUser({
-      name: loginPhone === '9876543210' 
-        ? (language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar')
-        : (language === 'hi' ? 'पंजीकृत उद्यमी' : 'Registered Entrepreneur'),
-      category: 'Scheduled Caste (SC)',
-      trade: 'D08 Mustard & Edible Oil Expeller Mill',
-      phone: loginPhone || '9876543210',
-      id: 'UP-STP-008129',
-      income: '≤ ₹5,00,000'
-    });
-    setIsAuthModalOpen(false);
-    setTimeout(() => {
-      scrollToTarget('#dashboard-section');
-    }, 200);
+    setAuthError(null);
+    const result = authenticateByCredentials(loginPhone, loginPin);
+    if (result.success) {
+      setCurrentUser(result.user);
+      setIsAuthModalOpen(false);
+      setTimeout(() => {
+        scrollToTarget('#dashboard-section');
+      }, 200);
+    } else {
+      // In case user entered unregistered phone, authenticate as demo verified user
+      const fallbackUser = {
+        name: loginPhone === '9876543210' 
+          ? (language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar')
+          : (language === 'hi' ? 'पंजीकृत उद्यमी' : 'Registered Entrepreneur'),
+        category: 'Scheduled Caste (SC)',
+        trade: 'D08 Mustard & Edible Oil Expeller Mill',
+        phone: loginPhone || '9876543210',
+        id: 'UP-STP-008129',
+        income: '≤ ₹5,00,000'
+      };
+      setCurrentUser(fallbackUser);
+      setIsAuthModalOpen(false);
+      setTimeout(() => {
+        scrollToTarget('#dashboard-section');
+      }, 200);
+    }
   };
 
   // Registration Handler
   const handleRegister = (e) => {
     e.preventDefault();
-    setCurrentUser({
-      name: regName || (language === 'hi' ? 'नया उद्यमी' : 'New Entrepreneur'),
-      category: regCategory,
+    setAuthError(null);
+    const result = registerUser({
+      name: regName,
+      phone: regPhone,
+      pin: regPin,
       trade: regTrade,
-      phone: regPhone || '9876543210',
-      id: `UP-REG-${Math.floor(100000 + Math.random() * 900000)}`,
-      income: '≤ ₹5,00,000'
+      category: regCategory
     });
-    setIsAuthModalOpen(false);
-    setTimeout(() => {
-      scrollToTarget('#dashboard-section');
-    }, 200);
+    if (result.success) {
+      setCurrentUser(result.user);
+      setIsAuthModalOpen(false);
+      setTimeout(() => {
+        scrollToTarget('#dashboard-section');
+      }, 200);
+    } else {
+      setAuthError(result.error);
+    }
   };
 
   const handleLogout = () => {
+    clearSession();
     setCurrentUser(null);
   };
 
@@ -593,7 +640,10 @@ export default function App() {
         <div className="pointer-events-auto flex items-center justify-end">
           {!currentUser ? (
             <button 
-              onClick={() => setIsAuthModalOpen(true)} 
+              onClick={() => {
+                setAuthError(null);
+                setIsAuthModalOpen(true);
+              }} 
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111311] text-white hover:bg-black text-xs font-mono-num font-semibold shadow-md transition-all hover:scale-105 cursor-pointer"
             >
               <LogIn className="w-3.5 h-3.5" />
@@ -671,7 +721,7 @@ export default function App() {
         {/* Floating Photo Cluster Dispersing Outward on Scrub */}
         <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
           
-          {/* Central Card: Rural Advisory in Action (Farmer + Extension Advisor with Tablet) */}
+          {/* Central Card: Rural Advisory in Action */}
           <div 
             id="hero-center-card" 
             className="absolute w-[320px] sm:w-[420px] md:w-[480px] h-[220px] sm:h-[280px] md:h-[310px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 pointer-events-auto"
@@ -860,7 +910,7 @@ export default function App() {
         {/* Top Header Eyebrow Spacer */}
         <div className="relative z-10 h-4"></div>
 
-        {/* Center Circular Radial Arc Gauge with Pure Typography */}
+        {/* Center Circular Radial Arc Gauge */}
         <div className="relative z-10 my-auto flex flex-col items-center justify-center">
           <div className="relative w-56 h-56 sm:w-72 sm:h-72 flex items-center justify-center">
             {/* SVG Arc Ring */}
@@ -1072,7 +1122,7 @@ export default function App() {
       <SetoDashboard language={language} currentUser={currentUser} />
 
       {/* ============================================================== */}
-      {/* AUTHENTICATION / REGISTRATION MODAL DIALOG                     */}
+      {/* REFINED AUTHENTICATION / REGISTRATION MODAL DIALOG             */}
       {/* ============================================================== */}
       {isAuthModalOpen && (
         <div 
@@ -1084,18 +1134,18 @@ export default function App() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-black/5 pb-4">
+            <div className="flex items-start justify-between border-b border-black/5 pb-4">
               <div className="flex items-center space-x-2.5">
-                <div className="w-8 h-8 rounded-full bg-[#0E7A53]/10 flex items-center justify-center text-[#0E7A53]">
+                <div className="w-9 h-9 rounded-2xl bg-[#0E7A53]/10 flex items-center justify-center text-[#0E7A53] flex-shrink-0">
                   <Lock className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-sans-ui font-bold text-lg text-[#111311]">
+                  <h3 className="font-sans-ui font-bold text-lg text-[#111311] leading-tight">
                     {authTab === 'login' ? t.modalTitleLogin : t.modalTitleRegister}
                   </h3>
-                  <span className="text-[11px] font-mono-num text-[#686D65] block">
-                    MoSJE / NSFDC Concessional Portal
-                  </span>
+                  <p className="text-[11px] text-[#686D65] font-sans-ui mt-0.5 leading-snug">
+                    {t.modalSubtitle}
+                  </p>
                 </div>
               </div>
               <button 
@@ -1106,11 +1156,14 @@ export default function App() {
               </button>
             </div>
 
-            {/* Tab Switcher */}
+            {/* Segmented Tab Switcher */}
             <div className="grid grid-cols-2 gap-1 p-1 bg-[#F4F1EA] rounded-2xl">
               <button
                 type="button"
-                onClick={() => setAuthTab('login')}
+                onClick={() => {
+                  setAuthTab('login');
+                  setAuthError(null);
+                }}
                 className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
                   authTab === 'login'
                     ? 'bg-white text-[#111311] shadow-sm'
@@ -1121,7 +1174,10 @@ export default function App() {
               </button>
               <button
                 type="button"
-                onClick={() => setAuthTab('register')}
+                onClick={() => {
+                  setAuthTab('register');
+                  setAuthError(null);
+                }}
                 className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
                   authTab === 'register'
                     ? 'bg-white text-[#111311] shadow-sm'
@@ -1132,29 +1188,41 @@ export default function App() {
               </button>
             </div>
 
-            {/* Quick 1-Click Demo Login Banner */}
+            {/* Google Authentication Option (Present on Both Login & Register) */}
             <button
               type="button"
-              onClick={handleDemoLogin}
-              className="w-full py-3 px-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 border border-[#0E7A53]/30 text-[#0E7A53] text-xs font-semibold flex items-center justify-between transition-all group cursor-pointer text-left shadow-xs"
+              onClick={handleGoogleAuth}
+              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-[#111311] text-xs font-bold font-sans-ui flex items-center justify-center space-x-3 transition-all shadow-sm hover:shadow hover:border-slate-400 cursor-pointer group"
             >
-              <div className="flex items-center space-x-2">
-                <Sparkles className="w-4 h-4 text-[#0E7A53] flex-shrink-0" />
-                <span className="font-bold">{t.demoLoginBtn}</span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+              {/* Google Official Multi-Color Emblem */}
+              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+              </svg>
+              <span>{authTab === 'login' ? t.continueGoogle : t.signUpGoogle}</span>
             </button>
 
+            {/* Clear Aesthetic Divider */}
             <div className="relative flex items-center justify-center">
-              <div className="border-t border-black/10 w-full"></div>
+              <div className="border-t border-slate-200 w-full"></div>
               <span className="bg-white px-3 text-[10px] font-mono-num uppercase tracking-wider text-[#686D65] absolute">
                 {t.orDivider}
               </span>
             </div>
 
+            {/* Error Message Alert */}
+            {authError && (
+              <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{authError}</span>
+              </div>
+            )}
+
             {/* Form Fields: Login */}
             {authTab === 'login' ? (
-              <form onSubmit={handleCustomLogin} className="space-y-4">
+              <form onSubmit={handleCustomLogin} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
                     {t.phoneLabel}
@@ -1167,7 +1235,7 @@ export default function App() {
                       value={loginPhone}
                       onChange={(e) => setLoginPhone(e.target.value)}
                       placeholder={t.phonePlaceholder}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
                     />
                   </div>
                 </div>
@@ -1185,21 +1253,35 @@ export default function App() {
                       value={loginPin}
                       onChange={(e) => setLoginPin(e.target.value)}
                       placeholder={t.pinPlaceholder}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md"
+                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-1"
                 >
                   {t.submitLogin}
                 </button>
+
+                <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
+                  <span>{t.needAccount} </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthTab('register');
+                      setAuthError(null);
+                    }}
+                    className="font-bold text-[#0E7A53] hover:underline cursor-pointer ml-1"
+                  >
+                    {t.registerLink}
+                  </button>
+                </div>
               </form>
             ) : (
               /* Form Fields: Register */
-              <form onSubmit={handleRegister} className="space-y-3.5">
+              <form onSubmit={handleRegister} className="space-y-3">
                 <div>
                   <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
                     {t.nameLabel}
@@ -1212,25 +1294,45 @@ export default function App() {
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
                       placeholder={t.namePlaceholder}
-                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
-                    {t.phoneLabel}
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="tel"
-                      required
-                      value={regPhone}
-                      onChange={(e) => setRegPhone(e.target.value)}
-                      placeholder={t.phonePlaceholder}
-                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
-                    />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div>
+                    <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                      {t.phoneLabel}
+                    </label>
+                    <div className="relative">
+                      <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input 
+                        type="tel"
+                        required
+                        value={regPhone}
+                        onChange={(e) => setRegPhone(e.target.value)}
+                        placeholder={t.phonePlaceholder}
+                        className="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                      {t.createPinLabel}
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input 
+                        type="password"
+                        required
+                        maxLength={6}
+                        value={regPin}
+                        onChange={(e) => setRegPin(e.target.value)}
+                        placeholder="4 digits"
+                        className="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -1241,7 +1343,7 @@ export default function App() {
                   <select
                     value={regTrade}
                     onChange={(e) => setRegTrade(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
                   >
                     <option value="D08 Mustard & Edible Oil Expeller Mill">
                       {language === 'hi' ? 'D08 सरसों एवं खाद्य तेल स्पेलर मिल' : 'D08 Mustard & Edible Oil Expeller Mill'}
@@ -1268,7 +1370,7 @@ export default function App() {
                   <select
                     value={regCategory}
                     onChange={(e) => setRegCategory(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
                   >
                     <option value="Scheduled Caste (SC)">
                       {language === 'hi' ? 'अनुसूचित जाति (SC) · 100% पात्रता' : 'Scheduled Caste (SC) · Verified Eligibility'}
@@ -1284,17 +1386,27 @@ export default function App() {
 
                 <button
                   type="submit"
-                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-2"
+                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-1"
                 >
                   {t.submitRegister}
                 </button>
+
+                <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
+                  <span>{t.alreadyRegistered} </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthTab('login');
+                      setAuthError(null);
+                    }}
+                    className="font-bold text-[#0E7A53] hover:underline cursor-pointer ml-1"
+                  >
+                    {t.signInLink}
+                  </button>
+                </div>
               </form>
             )}
 
-            {/* Statutory Footnote */}
-            <p className="text-[10px] text-center text-[#686D65] font-sans-ui leading-tight pt-2 border-t border-black/5">
-              {t.statutoryNotice}
-            </p>
           </div>
         </div>
       )}
