@@ -1,0 +1,6770 @@
+{
+ "code": "D20",
+ "name": "Metal smithy (lohar): farm hand tools, gates, grills",
+ "name_hi": "",
+ "dossier": "research_dossiers/D20_Metal_Smithy_Dossier.md",
+ "status": "verified",
+ "sections": [
+  {
+   "id": "classification",
+   "title": "1. Classification & market",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 35,
+     "cells": [
+      "Item",
+      "Value",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 37,
+     "cells": [
+      "NIC 2008, farm hand tools",
+      "25932 \"Manufacture of hand tools (non-power-driven) for agricultural/horticulture/ forestry\"",
+      "[S2] p.71"
+     ],
+     "text_numbers": [
+      {
+       "token": "2008",
+       "kind": "date"
+      },
+      {
+       "token": "25932",
+       "kind": "code"
+      },
+      {
+       "token": "71",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S2]",
+     "hi": ""
+    },
+    {
+     "line": 38,
+     "cells": [
+      "NIC 2008, other hand tools",
+      "25933 \"Manufacture of hand tools such as pliers, screwdrivers, press tools, blacksmiths’ tools, drills, punches, milling cutters etc.\"",
+      "[S2] p.71"
+     ],
+     "text_numbers": [
+      {
+       "token": "2008",
+       "kind": "date"
+      },
+      {
+       "token": "25933",
+       "kind": "code"
+      },
+      {
+       "token": "71",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S2]",
+     "hi": ""
+    },
+    {
+     "line": 39,
+     "cells": [
+      "NIC 2008, forging",
+      "25910 \"Forging, pressing, stamping and roll-forming of metal; powder metallurgy\"",
+      "[S2] p.71"
+     ],
+     "text_numbers": [
+      {
+       "token": "2008",
+       "kind": "date"
+      },
+      {
+       "token": "25910",
+       "kind": "code"
+      },
+      {
+       "token": "71",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S2]",
+     "hi": ""
+    },
+    {
+     "line": 40,
+     "cells": [
+      "NIC 2008, gates and grills",
+      "25111 \"Manufacture of doors, windows and their frames, shutters and rolling shutters, gates and similer articles used on buildings\"",
+      "[S2] p.70"
+     ],
+     "text_numbers": [
+      {
+       "token": "2008",
+       "kind": "date"
+      },
+      {
+       "token": "25111",
+       "kind": "code"
+      },
+      {
+       "token": "70",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S2]",
+     "hi": ""
+    },
+    {
+     "line": 41,
+     "cells": [
+      "NIC 2025, farm hand tools",
+      "259302 \"Manufacture of hand tools (non-power-driven) for agricultural/ horticulture/ forestry\"",
+      "[S3] p.105"
+     ],
+     "text_numbers": [
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "259302",
+       "kind": "code"
+      },
+      {
+       "token": "105",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S3]",
+     "hi": ""
+    },
+    {
+     "line": 42,
+     "cells": [
+      "NIC 2025, other hand tools",
+      "259303 \"Manufacture of hand tools such as pliers, screwdrivers, press tools, blacksmiths’ tools, hammers, drills, punches, milling cutters and similar items\"",
+      "[S3] p.105"
+     ],
+     "text_numbers": [
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "259303",
+       "kind": "code"
+      },
+      {
+       "token": "105",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S3]",
+     "hi": ""
+    },
+    {
+     "line": 43,
+     "cells": [
+      "NIC 2025, forging",
+      "259101 \"Forging, pressing, stamping and roll-forming of metal\"",
+      "[S3] p.104"
+     ],
+     "text_numbers": [
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "259101",
+       "kind": "code"
+      },
+      {
+       "token": "104",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S3]",
+     "hi": ""
+    },
+    {
+     "line": 44,
+     "cells": [
+      "NIC 2025, gates and grills",
+      "251101 \"Manufacture of metal doors, windows and their frames, shutters and rolling shutters, gates and similar articles used in buildings\"",
+      "[S3] p.102"
+     ],
+     "text_numbers": [
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "251101",
+       "kind": "code"
+      },
+      {
+       "token": "102",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S3]",
+     "hi": ""
+    },
+    {
+     "line": 45,
+     "cells": [
+      "App rule (our design choice)",
+      "Pick the code for the user's main income: farm tools → 25932 / 259302; gates and grills → 25111 / 251101",
+      "—"
+     ],
+     "text_numbers": [
+      {
+       "token": "25932",
+       "kind": "code"
+      },
+      {
+       "token": "259302",
+       "kind": "code"
+      },
+      {
+       "token": "25111",
+       "kind": "code"
+      },
+      {
+       "token": "251101",
+       "kind": "code"
+      }
+     ],
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 46,
+     "cells": [
+      "Sector",
+      "Manufacturing (NIC Section C, Division 25)",
+      "[S2] pp.70–71"
+     ],
+     "text_numbers": [
+      {
+       "token": "25",
+       "kind": "code"
+      },
+      {
+       "token": "70",
+       "kind": "page"
+      },
+      {
+       "token": "71",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S2]",
+     "hi": ""
+    },
+    {
+     "line": 47,
+     "cells": [
+      "Rural unincorporated non-farm establishments, all activities",
+      "3,97,477 hundred (ASUSE 2023-24); 4,24,139 hundred (ASUSE 2025)",
+      "[S4] p.6"
+     ],
+     "figures": [
+      {
+       "value": 397477,
+       "unit": "hundred",
+       "as_written": "3,97,477",
+       "cell": 1,
+       "tag": "[S4]",
+       "page": "p.6"
+      },
+      {
+       "value": 424139,
+       "unit": "hundred",
+       "as_written": "4,24,139",
+       "cell": 1,
+       "tag": "[S4]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2023",
+       "kind": "date"
+      },
+      {
+       "token": "24",
+       "kind": "date"
+      },
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S4]",
+     "hi": ""
+    },
+    {
+     "line": 48,
+     "cells": [
+      "Rural count of smithy units",
+      "NOT FOUND (needs ASUSE unit-level data)",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND (needs ASUSE unit-level data)",
+     "hi": ""
+    },
+    {
+     "line": 49,
+     "cells": [
+      "Who does this work",
+      "The PIB note says traditional artisans \"are generally engaged in occupations like carpenter, Blacksmith, Potter, Washerman, and others\"",
+      "[S14] p.2"
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 51,
+     "text": "**Demand drivers.**",
+     "hi": ""
+    },
+    {
+     "line": 52,
+     "text": "- **Gates and grills.** The UP Government profile says: \"Demand for fence, grill and railing is mostly from new or redevelopment/ remodeling of housing and commercial buildings\" [S5] p.4.",
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 53,
+     "text": "- **Farm tools.** No official demand figure found: NOT FOUND.",
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "- **Farm tools.** No official demand figure found: NOT FOUND.",
+     "hi": ""
+    },
+    {
+     "line": 55,
+     "text": "**Demand within 5–10 km (formula for the app).**",
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "label"
+      },
+      {
+       "token": "10",
+       "kind": "label"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 56,
+     "text": "`ESTIMATE: farm households [Census, NOT IN HAND] × tools bought or re-sharpened per household per year [NOT FOUND] × price [NOT FOUND]`",
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "`ESTIMATE: farm households [Census, NOT IN HAND] × tools bought or re-sharpened per household per year [NOT FOUND] × price [NOT FOUND]`",
+     "hi": ""
+    },
+    {
+     "line": 58,
+     "text": "The inputs are NOT FOUND.",
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "The inputs are NOT FOUND.",
+     "hi": ""
+    },
+    {
+     "line": 60,
+     "text": "**Rural vs semi-urban.** No official comparison: NOT FOUND. Gate and grill demand follows building work [S5] p.4, so it is likely stronger in semi-urban areas (our reading).",
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**Rural vs semi-urban.** No official comparison: NOT FOUND. Gate and grill demand follows building work [S5] p.4, so it is likely stronger in semi-urban areas (our reading).",
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 62,
+     "text": "**Sales channels.** No official source. These are field-survey questions, not data:",
+     "hi": ""
+    },
+    {
+     "line": 63,
+     "text": "- Walk-in farmers (tools, re-sharpening)",
+     "hi": ""
+    },
+    {
+     "line": 64,
+     "text": "- Haat sales",
+     "hi": ""
+    },
+    {
+     "line": 65,
+     "text": "- House-builders (gates, grills)",
+     "hi": ""
+    },
+    {
+     "line": 66,
+     "text": "- PM Vishwakarma marketing support, which includes \"onboarding them on e-commerce platforms such as GeM\" [S14] p.5",
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 68,
+     "text": "**Underserved niches and how to spot them in a block.**",
+     "hi": ""
+    },
+    {
+     "line": 70,
+     "cells": [
+      "Niche",
+      "Why it may be open",
+      "How a user checks it",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 72,
+     "cells": [
+      "Re-sharpening and repair of farm tools before sowing and harvest",
+      "Farm hand tools have their own NIC code [S2] p.71",
+      "Ask farmers where they get sickles and ploughshares sharpened, and how long they wait",
+      "Demand NOT FOUND"
+     ],
+     "text_numbers": [
+      {
+       "token": "71",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "Demand NOT FOUND",
+     "tag": "[S2]",
+     "hi": ""
+    },
+    {
+     "line": 73,
+     "cells": [
+      "Gates and grills for new houses",
+      "Demand follows building work [S5] p.4",
+      "Count houses under construction in the block",
+      "[S5] for the driver; size NOT FOUND"
+     ],
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "[S5] for the driver; size NOT FOUND",
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 74,
+     "cells": [
+      "Implement repair welding",
+      "See the D15 dossier",
+      "—",
+      "—"
+     ],
+     "text_numbers": [
+      {
+       "token": "15",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "capex",
+   "title": "2. CapEx",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 80,
+     "text": "**Price source.** The UP Government MSME portal profile \"Fabrication of Grills, Gates and Fence\" [S5] gives a machine list with quantity, rate and total.",
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 82,
+     "cells": [
+      "Point",
+      "Detail",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 84,
+     "cells": [
+      "Date",
+      "**Undated**",
+      "[S5]"
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 85,
+     "cells": [
+      "Scale",
+      "It is a **large unit**: \"Total Recurring Expenditure 233.58\" lakh a year",
+      "[S5] p.7"
+     ],
+     "text_numbers": [
+      {
+       "token": "233.58",
+       "kind": "quote"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 86,
+     "cells": [
+      "Caveat",
+      "\"We can modify the project capacity and project cost as per your requirement.\"",
+      "[S5] p.2"
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 88,
+     "text": "Each price needs a fresh quotation.",
+     "hi": ""
+    },
+    {
+     "line": 90,
+     "text": "**Checks on the profile's arithmetic** (SOP D4):",
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 92,
+     "cells": [
+      "Check",
+      "Sum",
+      "Result"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 94,
+     "cells": [
+      "Machine list",
+      "40,000 + 36,000 + 20,000 + 40,000 + 20,000 + 75,000 + 25,000 + 15,000 + 10,000 + 50,000 + 10,000 + 10,000 = 3,51,000",
+      "Matches \"Total : 351000\" [S5] p.7"
+     ],
+     "figures": [
+      {
+       "value": 40000,
+       "unit": "INR",
+       "as_written": "40,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 36000,
+       "unit": "INR",
+       "as_written": "36,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 20000,
+       "unit": "INR",
+       "as_written": "20,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 40000,
+       "unit": "INR",
+       "as_written": "40,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 20000,
+       "unit": "INR",
+       "as_written": "20,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 75000,
+       "unit": "INR",
+       "as_written": "75,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 25000,
+       "unit": "INR",
+       "as_written": "25,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 15000,
+       "unit": "INR",
+       "as_written": "15,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 10000,
+       "unit": "INR",
+       "as_written": "10,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 50000,
+       "unit": "INR",
+       "as_written": "50,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 10000,
+       "unit": "INR",
+       "as_written": "10,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 10000,
+       "unit": "INR",
+       "as_written": "10,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.7",
+       "unit_inferred": true
+      },
+      {
+       "value": 351000,
+       "unit": "INR",
+       "as_written": "3,51,000",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "unit_inferred": true,
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "351000",
+       "kind": "quote"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 95,
+     "cells": [
+      "Project cost",
+      "3.51 + 0.80 + 0.30 + 0.30 + 38.93 = 43.84",
+      "Matches \"43.84\" [S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 3.51,
+       "unit": "INR lakh",
+       "as_written": "3.51",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.8,
+       "unit": "INR lakh",
+       "as_written": "0.80",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.3,
+       "unit": "INR lakh",
+       "as_written": "0.30",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.3,
+       "unit": "INR lakh",
+       "as_written": "0.30",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 38.93,
+       "unit": "INR lakh",
+       "as_written": "38.93",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "43.84",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "unit_inferred": true,
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "43.84",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 96,
+     "cells": [
+      "Own share",
+      "0.88 + 0.20 + 0.08 + 0.30 + 9.73 = 11.19",
+      "Matches [S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 0.88,
+       "unit": "INR lakh",
+       "as_written": "0.88",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.2,
+       "unit": "INR lakh",
+       "as_written": "0.20",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.08,
+       "unit": "INR lakh",
+       "as_written": "0.08",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.3,
+       "unit": "INR lakh",
+       "as_written": "0.30",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 9.73,
+       "unit": "INR lakh",
+       "as_written": "9.73",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 11.19,
+       "unit": "INR lakh",
+       "as_written": "11.19",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "unit_inferred": true,
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 97,
+     "cells": [
+      "Loan",
+      "2.63 + 0.60 + 0.23 + 29.20 = 32.66",
+      "Matches [S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 2.63,
+       "unit": "INR lakh",
+       "as_written": "2.63",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.6,
+       "unit": "INR lakh",
+       "as_written": "0.60",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 0.23,
+       "unit": "INR lakh",
+       "as_written": "0.23",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 29.2,
+       "unit": "INR lakh",
+       "as_written": "29.20",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5",
+       "unit_inferred": true
+      },
+      {
+       "value": 32.66,
+       "unit": "INR lakh",
+       "as_written": "32.66",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "unit_inferred": true,
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 98,
+     "cells": [
+      "Salaries",
+      "4 × 7,000 + 4 × 5,000 + 15,000 + 7,000 = 70,000 a month; × 12 = 8,40,000",
+      "Matches [S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 4,
+       "unit": "people",
+       "as_written": "4",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 7000,
+       "unit": "INR per month",
+       "as_written": "7,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 4,
+       "unit": "people",
+       "as_written": "4",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 5000,
+       "unit": "INR per month",
+       "as_written": "5,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 15000,
+       "unit": "INR per month",
+       "as_written": "15,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 7000,
+       "unit": "INR per month",
+       "as_written": "7,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 70000,
+       "unit": "INR per month",
+       "as_written": "70,000",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      },
+      {
+       "value": 12,
+       "unit": "months",
+       "as_written": "12",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 840000,
+       "unit": "INR",
+       "as_written": "8,40,000",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 99,
+     "cells": [
+      "Turnover",
+      "202.50 × 65,000 + 64.80 × 1,50,000 + 2.70 × 12,00,000 = 2,61,22,500",
+      "Matches [S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 202.5,
+       "unit": "tonnes",
+       "as_written": "202.50",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 65000,
+       "unit": "INR per tonne",
+       "as_written": "65,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 64.8,
+       "unit": "tonnes",
+       "as_written": "64.80",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 150000,
+       "unit": "INR per tonne",
+       "as_written": "1,50,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 2.7,
+       "unit": "tonnes",
+       "as_written": "2.70",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 1200000,
+       "unit": "INR per tonne",
+       "as_written": "12,00,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 26122500,
+       "unit": "INR",
+       "as_written": "2,61,22,500",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 100,
+     "cells": [
+      "Working-capital heading",
+      "Says \"TOTAL WORKING CAPITAL 3 MONTHS\", but the 233.58 lakh total uses the **annual** salary of 8.40 lakh",
+      "**Inconsistent.** The 38.93 is 233.58 ÷ 6 = 2 months, as the next line says (\"Working Capital for 2 months\") [S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 233.58,
+       "unit": "INR lakh",
+       "as_written": "233.58",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 8.4,
+       "unit": "INR lakh",
+       "as_written": "8.40",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 38.93,
+       "unit": "INR lakh",
+       "as_written": "38.93",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.6",
+       "unit_inferred": true
+      },
+      {
+       "value": 233.58,
+       "unit": "INR lakh",
+       "as_written": "233.58",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.6",
+       "unit_inferred": true
+      },
+      {
+       "value": 6,
+       "unit": "number",
+       "as_written": "6",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 2,
+       "unit": "months",
+       "as_written": "2",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "quote"
+      },
+      {
+       "token": "2",
+       "kind": "quote"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 101,
+     "cells": [
+      "Furniture",
+      "Shown as \"0.80\" in the cost table (p.5), but \"Furniture and Fixture/ Office Equipment, electricity installation 0.50\" on p.7",
+      "**Inconsistent** [S5]"
+     ],
+     "figures": [
+      {
+       "value": 0.8,
+       "unit": "INR lakh",
+       "as_written": "0.80",
+       "cell": 1,
+       "tag": "[S5]",
+       "unit_inferred": true
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      },
+      {
+       "token": "0.50",
+       "kind": "quote"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 102,
+     "cells": [
+      "Staff count",
+      "\"start from 8 employees\" (p.5), but the salary table lists 4 + 4 + 1 + 1 = 10 people",
+      "**Inconsistent** [S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 4,
+       "unit": "people",
+       "as_written": "4",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 4,
+       "unit": "people",
+       "as_written": "4",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 1,
+       "unit": "people",
+       "as_written": "1",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 1,
+       "unit": "people",
+       "as_written": "1",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.5"
+      },
+      {
+       "value": 10,
+       "unit": "people",
+       "as_written": "10",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "quote"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 103,
+     "cells": [
+      "Profit",
+      "Printed \"28.57\"; ESTIMATE 266.63 − 238.08 = 28.55",
+      "Rounding only. The label \"Cost of Production ‐ Turnover\" is the wrong way round [S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 28.57,
+       "unit": "number",
+       "as_written": "28.57",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 266.63,
+       "unit": "number",
+       "as_written": "266.63",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 238.08,
+       "unit": "number",
+       "as_written": "238.08",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 28.55,
+       "unit": "number",
+       "as_written": "28.55",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 104,
+     "cells": [
+      "Wastage",
+      "The turnover is labelled \"Excluding 10% wastage\", but nothing is deducted: ESTIMATE 2,61,22,500 + 5,40,000 = 2,66,62,500",
+      "**Inconsistent** [S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 10,
+       "unit": "%",
+       "as_written": "10%",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 26122500,
+       "unit": "INR",
+       "as_written": "2,61,22,500",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 540000,
+       "unit": "INR",
+       "as_written": "5,40,000",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 26662500,
+       "unit": "INR",
+       "as_written": "2,66,62,500",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "(SOP D4)",
+       "tag_line": 90
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 105,
+     "cells": [
+      "Own share",
+      "The profile funds \"based on 25% loan on fixed assets\": own 11.19 of 43.84 = ESTIMATE 25.5%",
+      "NSFDC needs only **at least 10%** [S1], so an SC borrower may need far less own money than this profile shows [S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 25,
+       "unit": "%",
+       "as_written": "25%",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 11.19,
+       "unit": "INR lakh",
+       "as_written": "11.19",
+       "cell": 1,
+       "unit_inferred": true,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "43.84",
+       "cell": 1,
+       "unit_inferred": true,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 25.5,
+       "unit": "%",
+       "as_written": "25.5%",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 10,
+       "unit": "%",
+       "as_written": "10%",
+       "cell": 2,
+       "tag": "[S1]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 107,
+     "text": "**Connected load and phase.** NOT FOUND. The profile gives no HP or kW figure. Whether 3-phase is needed likely depends on the welding sets and presses (our reading; vendor quote) and the State DISCOM code ⚠.",
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "label"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**Connected load and phase.** NOT FOUND. The profile gives no HP or kW figure. Whether 3-phase is needed likely depends on the welding sets and presses (our reading; vendor quote) and the State DISCOM code ⚠.",
+     "unverified": true,
+     "tag": "ASSUMED: our reading",
+     "hi": ""
+    },
+    {
+     "line": 109,
+     "text": "**Where machines are made.** NOT FOUND.",
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**Where machines are made.** NOT FOUND.",
+     "hi": ""
+    },
+    {
+     "line": 111,
+     "text": "### 2a. Micro Finance size (project cost up to ₹1.40 lakh [S1]): village lohar",
+     "figures": [
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "tag": "[S1]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 113,
+     "text": "The item list is our design choice. Only three lines have official prices.",
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 115,
+     "cells": [
+      "#",
+      "Item",
+      "Qty",
+      "Line total (₹)",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 117,
+     "cells": [
+      "1",
+      "Welding Machine",
+      "1",
+      "25,000 (the profile's \"Rate\" for one)",
+      "[S5] p.7"
+     ],
+     "figures": [
+      {
+       "value": 1,
+       "unit": "count",
+       "as_written": "1",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.7"
+      },
+      {
+       "value": 25000,
+       "unit": "INR",
+       "as_written": "25,000",
+       "cell": 3,
+       "tag": "[S5]",
+       "page": "p.7"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "1",
+       "kind": "label"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 118,
+     "cells": [
+      "2",
+      "Hand Drills and tools",
+      "1",
+      "20,000",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 1,
+       "unit": "count",
+       "as_written": "1",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 20000,
+       "unit": "INR",
+       "as_written": "20,000",
+       "cell": 3,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "label"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 119,
+     "cells": [
+      "3",
+      "Hand Tools and gauges",
+      "1 lot",
+      "10,000",
+      "[S5] p.7"
+     ],
+     "figures": [
+      {
+       "value": 1,
+       "unit": "count",
+       "as_written": "1",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.7"
+      },
+      {
+       "value": 10000,
+       "unit": "INR",
+       "as_written": "10,000",
+       "cell": 3,
+       "tag": "[S5]",
+       "page": "p.7"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "label"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 120,
+     "cells": [
+      "",
+      "**Sourced subtotal**",
+      "",
+      "**ESTIMATE 25,000 + 20,000 + 10,000 = 55,000**",
+      "[S5]"
+     ],
+     "figures": [
+      {
+       "value": 25000,
+       "unit": "INR",
+       "as_written": "25,000",
+       "cell": 3,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 20000,
+       "unit": "INR",
+       "as_written": "20,000",
+       "cell": 3,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 10000,
+       "unit": "INR",
+       "as_written": "10,000",
+       "cell": 3,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 55000,
+       "unit": "INR",
+       "as_written": "55,000",
+       "cell": 3,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "tag": "CALCULATED",
+     "hi": ""
+    },
+    {
+     "line": 121,
+     "cells": [
+      "4",
+      "Hearth (bhatti), blower, anvil, hammers, tongs",
+      "1 set",
+      "VENDOR QUOTE NEEDED",
+      "—"
+     ],
+     "figures": [
+      {
+       "value": 1,
+       "unit": "count",
+       "as_written": "1",
+       "cell": 2,
+       "tag": "ASSUMED",
+       "basis": "design choice",
+       "tag_line": 113
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "label"
+      }
+     ],
+     "status": "VENDOR QUOTE NEEDED",
+     "value": null,
+     "reason": "VENDOR QUOTE NEEDED",
+     "tag": "ASSUMED: design choice",
+     "hi": ""
+    },
+    {
+     "line": 122,
+     "cells": [
+      "5",
+      "Bench grinder",
+      "1",
+      "VENDOR QUOTE NEEDED",
+      "—"
+     ],
+     "figures": [
+      {
+       "value": 1,
+       "unit": "count",
+       "as_written": "1",
+       "cell": 2,
+       "tag": "ASSUMED",
+       "basis": "design choice",
+       "tag_line": 113
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "label"
+      }
+     ],
+     "status": "VENDOR QUOTE NEEDED",
+     "value": null,
+     "reason": "VENDOR QUOTE NEEDED",
+     "tag": "ASSUMED: design choice",
+     "hi": ""
+    },
+    {
+     "line": 123,
+     "cells": [
+      "6",
+      "Pre-operative: Udyam, local licence, power connection",
+      "—",
+      "NOT FOUND (see §6)",
+      "—"
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "label"
+      },
+      {
+       "token": "6",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND (see §6)",
+     "hi": ""
+    },
+    {
+     "line": 124,
+     "cells": [
+      "7",
+      "Working capital (steel, coal or charcoal, electrodes)",
+      "—",
+      "See §3",
+      "—"
+     ],
+     "text_numbers": [
+      {
+       "token": "7",
+       "kind": "label"
+      },
+      {
+       "token": "3",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 126,
+     "text": "- **Room under the ceiling.** ₹1.40 lakh [S1] − 55,000 = ESTIMATE ₹85,000 left for rows 4–7.",
+     "figures": [
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "tag": "[S1]"
+      },
+      {
+       "value": 55000,
+       "unit": "INR",
+       "as_written": "55,000",
+       "unit_inferred": true,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 85000,
+       "unit": "INR",
+       "as_written": "₹85,000",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "ref"
+      },
+      {
+       "token": "7",
+       "kind": "ref"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 127,
+     "text": "- **Loan on the sourced items alone.** At most 90% [S1] × 55,000 = ESTIMATE ₹49,500. Own share at least ₹5,500.",
+     "figures": [
+      {
+       "value": 90,
+       "unit": "%",
+       "as_written": "90%",
+       "tag": "[S1]"
+      },
+      {
+       "value": 55000,
+       "unit": "INR",
+       "as_written": "55,000",
+       "unit_inferred": true,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 49500,
+       "unit": "INR",
+       "as_written": "₹49,500",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 5500,
+       "unit": "INR",
+       "as_written": "₹5,500",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 128,
+     "text": "- **Loan at the ceiling.** Project ₹1,40,000 [S1] → \"up to 90%\" [S1] = at most ₹1,26,000 → capped at ₹1,25,000 [S1]. Own share is **at least** ₹15,000 [S1].",
+     "figures": [
+      {
+       "value": 140000,
+       "unit": "INR",
+       "as_written": "₹1,40,000",
+       "tag": "[S1]"
+      },
+      {
+       "value": 90,
+       "unit": "%",
+       "as_written": "90%",
+       "tag": "[S1]"
+      },
+      {
+       "value": 126000,
+       "unit": "INR",
+       "as_written": "₹1,26,000",
+       "tag": "[S1]"
+      },
+      {
+       "value": 125000,
+       "unit": "INR",
+       "as_written": "₹1,25,000",
+       "tag": "[S1]"
+      },
+      {
+       "value": 15000,
+       "unit": "INR",
+       "as_written": "₹15,000",
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 129,
+     "text": "- **PM Vishwakarma toolkit.** The e-voucher of \"₹15,000\" [S14] p.4 could cover part of row 4 for an eligible user (see §7).",
+     "figures": [
+      {
+       "value": 15000,
+       "unit": "INR",
+       "as_written": "₹15,000",
+       "tag": "[S14]",
+       "page": "p.4"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "page"
+      },
+      {
+       "token": "4",
+       "kind": "ref"
+      },
+      {
+       "token": "7",
+       "kind": "ref"
+      }
+     ],
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 131,
+     "text": "### 2b. Term Loan size (the UP profile's unit)",
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 133,
+     "cells": [
+      "#",
+      "Item",
+      "₹ lakh",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 135,
+     "cells": [
+      "1",
+      "Plant and Machinery (12 lines, incl. \"Pickling and Surface treatment 75000\", \"Sand Blasting Facility 25000\", \"Spray Painting Facility 15000\", \"Welding Machine Nos 2 25000 50000\")",
+      "3.51",
+      "[S5] pp.5–7"
+     ],
+     "figures": [
+      {
+       "value": 12,
+       "unit": "lines",
+       "as_written": "12",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "pp.5–7"
+      },
+      {
+       "value": 3.51,
+       "unit": "INR lakh",
+       "as_written": "3.51",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "pp.5–7"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "1",
+       "kind": "label"
+      },
+      {
+       "token": "75000",
+       "kind": "quote"
+      },
+      {
+       "token": "25000",
+       "kind": "quote"
+      },
+      {
+       "token": "15000",
+       "kind": "quote"
+      },
+      {
+       "token": "2",
+       "kind": "quote"
+      },
+      {
+       "token": "25000",
+       "kind": "quote"
+      },
+      {
+       "token": "50000",
+       "kind": "quote"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 136,
+     "cells": [
+      "2",
+      "Furniture & Fixture",
+      "0.80",
+      "[S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 0.8,
+       "unit": "INR lakh",
+       "as_written": "0.80",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.5"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "label"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 137,
+     "cells": [
+      "3",
+      "Contingencies",
+      "0.30",
+      "[S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 0.3,
+       "unit": "INR lakh",
+       "as_written": "0.30",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.5"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "label"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 138,
+     "cells": [
+      "4",
+      "Pre and Post operative",
+      "0.30",
+      "[S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 0.3,
+       "unit": "INR lakh",
+       "as_written": "0.30",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.5"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "4",
+       "kind": "label"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 139,
+     "cells": [
+      "5",
+      "Margin for Working Capital",
+      "38.93",
+      "[S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 38.93,
+       "unit": "INR lakh",
+       "as_written": "38.93",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.5"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "label"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 140,
+     "cells": [
+      "",
+      "**Total project cost**",
+      "**43.84**",
+      "[S5] p.5"
+     ],
+     "figures": [
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "43.84",
+       "cell": 2,
+       "tag": "[S5]",
+       "page": "p.5"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 142,
+     "text": "- **NSFDC Term Loan.** At most 90% [S1] × 43.84 = ESTIMATE **₹39.456 lakh**, below the ₹45 lakh cap [S1]. Own share is **at least** ESTIMATE 43.84 − 39.456 = **₹4.384 lakh** [S1].",
+     "figures": [
+      {
+       "value": 90,
+       "unit": "%",
+       "as_written": "90%",
+       "tag": "[S1]"
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "43.84",
+       "unit_inferred": true,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 39.456,
+       "unit": "INR lakh",
+       "as_written": "₹39.456",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 45,
+       "unit": "INR lakh",
+       "as_written": "₹45",
+       "tag": "[S1]"
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "43.84",
+       "unit_inferred": true,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 39.456,
+       "unit": "INR lakh",
+       "as_written": "39.456",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "unit_inferred": true
+      },
+      {
+       "value": 4.384,
+       "unit": "INR lakh",
+       "as_written": "₹4.384",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 143,
+     "text": "- **The profile's own funding.** Own contribution \"11.19\", Term Loan \"3.46\", Working capital \"29.20\" [S5] p.6, from a bank, not NSFDC.",
+     "figures": [
+      {
+       "value": 11.19,
+       "unit": "number",
+       "as_written": "11.19",
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 3.46,
+       "unit": "number",
+       "as_written": "3.46",
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 29.2,
+       "unit": "number",
+       "as_written": "29.20",
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 144,
+     "text": "- **Working capital dominates.** ESTIMATE 38.93 ÷ 43.84 = **88.8%** of the project is working capital. This unit **would fail PMEGP's limit** (§7).",
+     "figures": [
+      {
+       "value": 38.93,
+       "unit": "number",
+       "as_written": "38.93",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 43.84,
+       "unit": "number",
+       "as_written": "43.84",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 88.8,
+       "unit": "%",
+       "as_written": "88.8%",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "7",
+       "kind": "ref"
+      }
+     ],
+     "tag": "CALCULATED",
+     "hi": ""
+    },
+    {
+     "line": 145,
+     "text": "- **Pollution.** The machine list includes pickling, sandblasting and spray painting [S5] p.6. It also sells \"Brass, Bronze, SS steel with plating/ metal coating\" and \"Cast products\" [S5] p.8.",
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 146,
+     "text": "- Pickling and plating are **Red** [S7] p.27.",
+     "text_numbers": [
+      {
+       "token": "27",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 147,
+     "text": "- Casting in-house would be **Orange** foundry work [S7] p.28, unless the castings are bought in (NOT FOUND).",
+     "text_numbers": [
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "- Casting in-house would be **Orange** foundry work [S7] p.28, unless the castings are bought in (NOT FOUND).",
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 148,
+     "text": "- So this unit is **Red, not White** (§6).",
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "opex",
+   "title": "3. OpEx & working capital",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 154,
+     "text": "**Yearly recurring cost, Term Loan size** (UP profile [S5] p.6):",
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 156,
+     "cells": [
+      "Cost",
+      "₹",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 158,
+     "cells": [
+      "Salary and Wages",
+      "8,40,000",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 840000,
+       "unit": "INR",
+       "as_written": "8,40,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 159,
+     "cells": [
+      "Raw Material",
+      "2,17,75,000",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 21775000,
+       "unit": "INR",
+       "as_written": "2,17,75,000",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 160,
+     "cells": [
+      "Utilities",
+      "2,07,770",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 207770,
+       "unit": "INR",
+       "as_written": "2,07,770",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 161,
+     "cells": [
+      "Other selling and administrative",
+      "5,35,250",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 535250,
+       "unit": "INR",
+       "as_written": "5,35,250",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 162,
+     "cells": [
+      "**Total**",
+      "**233.58 lakh a year** (ESTIMATE ÷ 12 = **19.465 lakh a month**)",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 233.58,
+       "unit": "INR lakh",
+       "as_written": "233.58",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 19.465,
+       "unit": "INR lakh",
+       "as_written": "19.465",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "12",
+       "kind": "formula"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 164,
+     "text": "**Raw material per tonne sold.** ESTIMATE 2,17,75,000 ÷ (202.50 + 64.80 + 2.70 = 270 t) = about ₹80,648 per tonne of output [S5] pp.6, 8. This is above the profile's own selling rate for mild-steel railings of \"65,000.00\" per tonne [S5] p.8. The figures don't fit together for mild steel alone; they only work because of the much higher-priced stainless and brass lines [S5] p.8 (our reading). **Do not use the profile's per-tonne economics for a village smithy.**",
+     "figures": [
+      {
+       "value": 21775000,
+       "unit": "INR",
+       "as_written": "2,17,75,000",
+       "tag": "[S5]",
+       "page": "pp.6, 8"
+      },
+      {
+       "value": 202.5,
+       "unit": "tonnes",
+       "as_written": "202.50",
+       "tag": "[S5]",
+       "page": "pp.6, 8"
+      },
+      {
+       "value": 64.8,
+       "unit": "tonnes",
+       "as_written": "64.80",
+       "tag": "[S5]",
+       "page": "pp.6, 8"
+      },
+      {
+       "value": 2.7,
+       "unit": "tonnes",
+       "as_written": "2.70",
+       "tag": "[S5]",
+       "page": "pp.6, 8"
+      },
+      {
+       "value": 270,
+       "unit": "tonnes",
+       "as_written": "270",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 80648,
+       "unit": "INR per tonne",
+       "as_written": "₹80,648",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 65000.0,
+       "unit": "INR per tonne",
+       "as_written": "65,000.00",
+       "tag": "[S5]",
+       "page": "p.8"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "page"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 166,
+     "text": "**Micro Finance size.** All costs (rent, coal or charcoal, steel, electricity) are NOT FOUND. A factory profile does not scale down to a one-person forge (SOP D5).",
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**Micro Finance size.** All costs (rent, coal or charcoal, steel, electricity) are NOT FOUND. A factory profile does not scale down to a one-person forge (SOP D5).",
+     "hi": ""
+    },
+    {
+     "line": 168,
+     "text": "**Working-capital cycle (days).**",
+     "hi": ""
+    },
+    {
+     "line": 170,
+     "cells": [
+      "Stage",
+      "Days",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 172,
+     "cells": [
+      "Profile's own working capital",
+      "\"Working Capital for 2 months\" = 38.93 lakh, i.e. about 60 days of recurring cost",
+      "[S5] p.6"
+     ],
+     "figures": [
+      {
+       "value": 38.93,
+       "unit": "INR lakh",
+       "as_written": "38.93",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 60,
+       "unit": "days",
+       "as_written": "60",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "quote"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 173,
+     "cells": [
+      "Steel / coal stock (Micro)",
+      "NOT FOUND",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 174,
+     "cells": [
+      "Making time per order",
+      "NOT FOUND",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 175,
+     "cells": [
+      "Customer credit (udhaar)",
+      "NOT FOUND",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 177,
+     "text": "**Formula** (framework G11): `Working capital = (sum of cycle days ÷ 30) × monthly OpEx`.",
+     "text_numbers": [
+      {
+       "token": "11",
+       "kind": "ref"
+      },
+      {
+       "token": "30",
+       "kind": "formula"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 178,
+     "text": "- Term Loan size, using the profile's 2 months: ESTIMATE (60 ÷ 30) × 19.465 = 38.93 lakh, which matches [S5] p.6.",
+     "figures": [
+      {
+       "value": 2,
+       "unit": "months",
+       "as_written": "2",
+       "tag": "[S5]",
+       "page": "p.6"
+      },
+      {
+       "value": 19.465,
+       "unit": "INR lakh",
+       "as_written": "19.465",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "unit_inferred": true
+      },
+      {
+       "value": 38.93,
+       "unit": "INR lakh",
+       "as_written": "38.93",
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "60",
+       "kind": "ref"
+      },
+      {
+       "token": "30",
+       "kind": "formula"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 179,
+     "text": "- The profile gives no split by stage (stock vs credit), and **no supplier credit is subtracted**, so this is a gross figure.",
+     "hi": ""
+    },
+    {
+     "line": 180,
+     "text": "- Micro size: NOT FOUND (field survey).",
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "- Micro size: NOT FOUND (field survey).",
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "unit_economics",
+   "title": "4. Unit economics & pricing",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 186,
+     "cells": [
+      "Item",
+      "Value",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 188,
+     "cells": [
+      "Selling rate, mild-steel railings and fencing",
+      "\"65,000.00\" per tonne",
+      "[S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 65000.0,
+       "unit": "INR lakh",
+       "as_written": "65,000.00",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8",
+       "unit_inferred": true
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 189,
+     "cells": [
+      "Selling rate, cast products and stainless steel",
+      "\"1,50,000.00\" per tonne",
+      "[S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 150000.0,
+       "unit": "INR lakh",
+       "as_written": "1,50,000.00",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8",
+       "unit_inferred": true
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 190,
+     "cells": [
+      "Scrap",
+      "\"Add cost of Scrap 30 18,000.00 5,40,000.00\"",
+      "[S5] p.8"
+     ],
+     "text_numbers": [
+      {
+       "token": "30",
+       "kind": "quote"
+      },
+      {
+       "token": "18,000.00",
+       "kind": "quote"
+      },
+      {
+       "token": "5,40,000.00",
+       "kind": "quote"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 191,
+     "cells": [
+      "Turnover at 100% capacity",
+      "\"266.63\" lakh",
+      "[S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 100,
+       "unit": "%",
+       "as_written": "100%",
+       "cell": 0,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 266.63,
+       "unit": "INR lakh",
+       "as_written": "266.63",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8",
+       "unit_inferred": true
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 192,
+     "cells": [
+      "Profit on sales at 100% capacity",
+      "\"10.72%\"",
+      "[S5] p.8"
+     ],
+     "figures": [
+      {
+       "value": 100,
+       "unit": "%",
+       "as_written": "100%",
+       "cell": 0,
+       "tag": "[S5]",
+       "page": "p.8"
+      },
+      {
+       "value": 10.72,
+       "unit": "%",
+       "as_written": "10.72%",
+       "cell": 1,
+       "tag": "[S5]",
+       "page": "p.8"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 193,
+     "cells": [
+      "Price per farm tool (sickle, khurpi, ploughshare)",
+      "NOT FOUND (no official price series)",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND (no official price series)",
+     "hi": ""
+    },
+    {
+     "line": 194,
+     "cells": [
+      "Steel price",
+      "NOT FOUND (no official series opened)",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND (no official series opened)",
+     "hi": ""
+    },
+    {
+     "line": 195,
+     "cells": [
+      "Break-even",
+      "NOT FOUND",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 197,
+     "text": "**Regional purchasing power.** HCES 2023-24 rural MPCE (Statement 7, Rural column) [S13] p.12. These are Section I figures; \"‘MPCE estimates with imputation’ are presented in Section II\" [S13] p.4.",
+     "text_numbers": [
+      {
+       "token": "2023",
+       "kind": "date"
+      },
+      {
+       "token": "24",
+       "kind": "date"
+      },
+      {
+       "token": "7",
+       "kind": "ref"
+      },
+      {
+       "token": "12",
+       "kind": "page"
+      },
+      {
+       "token": "4",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 199,
+     "cells": [
+      "State",
+      "Rural MPCE (₹)",
+      "Ratio to all-India (ESTIMATE ÷ 4,122)"
+     ],
+     "header": true,
+     "text_numbers": [
+      {
+       "token": "4,122",
+       "kind": "formula"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 201,
+     "cells": [
+      "UP",
+      "3,481",
+      "0.84"
+     ],
+     "figures": [
+      {
+       "value": 3481,
+       "unit": "INR per month",
+       "as_written": "3,481",
+       "cell": 1,
+       "tag": "[S13]",
+       "page": "p.12",
+       "tag_line": 197
+      },
+      {
+       "value": 0.84,
+       "unit": "ratio",
+       "as_written": "0.84",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "tag_line": 199
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 202,
+     "cells": [
+      "Bihar",
+      "3,670",
+      "0.89"
+     ],
+     "figures": [
+      {
+       "value": 3670,
+       "unit": "INR per month",
+       "as_written": "3,670",
+       "cell": 1,
+       "tag": "[S13]",
+       "page": "p.12",
+       "tag_line": 197
+      },
+      {
+       "value": 0.89,
+       "unit": "ratio",
+       "as_written": "0.89",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "tag_line": 199
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 203,
+     "cells": [
+      "MP",
+      "3,441",
+      "0.83"
+     ],
+     "figures": [
+      {
+       "value": 3441,
+       "unit": "INR per month",
+       "as_written": "3,441",
+       "cell": 1,
+       "tag": "[S13]",
+       "page": "p.12",
+       "tag_line": 197
+      },
+      {
+       "value": 0.83,
+       "unit": "ratio",
+       "as_written": "0.83",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "tag_line": 199
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 204,
+     "cells": [
+      "Rajasthan",
+      "4,510",
+      "1.09"
+     ],
+     "figures": [
+      {
+       "value": 4510,
+       "unit": "INR per month",
+       "as_written": "4,510",
+       "cell": 1,
+       "tag": "[S13]",
+       "page": "p.12",
+       "tag_line": 197
+      },
+      {
+       "value": 1.09,
+       "unit": "ratio",
+       "as_written": "1.09",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "tag_line": 199
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 205,
+     "cells": [
+      "Maharashtra",
+      "4,145",
+      "1.01"
+     ],
+     "figures": [
+      {
+       "value": 4145,
+       "unit": "INR per month",
+       "as_written": "4,145",
+       "cell": 1,
+       "tag": "[S13]",
+       "page": "p.12",
+       "tag_line": 197
+      },
+      {
+       "value": 1.01,
+       "unit": "ratio",
+       "as_written": "1.01",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "tag_line": 199
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 206,
+     "cells": [
+      "All-India",
+      "4,122",
+      "1.00"
+     ],
+     "figures": [
+      {
+       "value": 4122,
+       "unit": "INR per month",
+       "as_written": "4,122",
+       "cell": 1,
+       "tag": "[S13]",
+       "page": "p.12",
+       "tag_line": 197
+      },
+      {
+       "value": 1.0,
+       "unit": "ratio",
+       "as_written": "1.00",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "tag_line": 199
+      }
+     ],
+     "tag": "[S13]",
+     "hi": ""
+    },
+    {
+     "line": 208,
+     "text": "**Pricing strategy (our design choice).**",
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 209,
+     "text": "- Quote steel at the day's rate plus a labour charge, so the owner is not exposed to steel price swings.",
+     "hi": ""
+    },
+    {
+     "line": 210,
+     "text": "- In States with a ratio below 1.0, lead with farm-tool sales and re-sharpening (needed items) before decorative grills.",
+     "figures": [
+      {
+       "value": 1.0,
+       "unit": "ratio",
+       "as_written": "1.0",
+       "tag": "ASSUMED",
+       "basis": "our design choice",
+       "tag_line": 208
+      }
+     ],
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "seasonality",
+   "title": "5. Seasonality",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 216,
+     "cells": [
+      "Month",
+      "M1 Apr",
+      "M2 May",
+      "M3 Jun",
+      "M4 Jul",
+      "M5 Aug",
+      "M6 Sep",
+      "M7 Oct",
+      "M8 Nov",
+      "M9 Dec",
+      "M10 Jan",
+      "M11 Feb",
+      "M12 Mar"
+     ],
+     "header": true,
+     "text_numbers": [
+      {
+       "token": "1",
+       "kind": "ref"
+      },
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "3",
+       "kind": "ref"
+      },
+      {
+       "token": "4",
+       "kind": "ref"
+      },
+      {
+       "token": "5",
+       "kind": "ref"
+      },
+      {
+       "token": "6",
+       "kind": "ref"
+      },
+      {
+       "token": "7",
+       "kind": "ref"
+      },
+      {
+       "token": "8",
+       "kind": "ref"
+      },
+      {
+       "token": "9",
+       "kind": "ref"
+      },
+      {
+       "token": "10",
+       "kind": "ref"
+      },
+      {
+       "token": "11",
+       "kind": "ref"
+      },
+      {
+       "token": "12",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 218,
+     "cells": [
+      "Multiplier",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 219,
+     "cells": [
+      "Reason",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 221,
+     "text": "- No official monthly series was found.",
+     "hi": ""
+    },
+    {
+     "line": 222,
+     "text": "- Farm-tool demand likely follows sowing and harvest, but no source gives a number.",
+     "hi": ""
+    },
+    {
+     "line": 223,
+     "text": "- **Lean-month stress factor: NOT FOUND.**",
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "- **Lean-month stress factor: NOT FOUND.**",
+     "hi": ""
+    },
+    {
+     "line": 224,
+     "text": "- **G9 fails until our field survey fills this row.** Survey question: \"In which months do you sell or sharpen the most and the fewest tools? Roughly how many in each?\"",
+     "text_numbers": [
+      {
+       "token": "9",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "compliance",
+   "title": "6. Compliance",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 230,
+     "text": "All rows were opened on 09 Nov 2026 unless marked ⚠.",
+     "text_numbers": [
+      {
+       "token": "09",
+       "kind": "date"
+      },
+      {
+       "token": "2026",
+       "kind": "date"
+      }
+     ],
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 232,
+     "text": "**Pollution: which category applies depends on the process.**",
+     "hi": ""
+    },
+    {
+     "line": 234,
+     "cells": [
+      "Process",
+      "Category",
+      "Exact quote",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 236,
+     "cells": [
+      "Hot forging, liquid fuel",
+      "**Orange** (PI 76.0)",
+      "\"102.1 Forging of ferrous and non- ferrous metals using liquid fuel\" … \"76.0 Orange\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 76.0,
+       "unit": "index",
+       "as_written": "76.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "102.1",
+       "kind": "quote"
+      },
+      {
+       "token": "76.0",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 237,
+     "cells": [
+      "Hot forging, gaseous fuel",
+      "**Orange** (PI 68.0)",
+      "\"102.2 … using gaseous fuel\" … \"68.0 Orange\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 68.0,
+       "unit": "index",
+       "as_written": "68.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "102.2",
+       "kind": "quote"
+      },
+      {
+       "token": "68.0",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 238,
+     "cells": [
+      "Hot forging, electricity",
+      "**Orange** (PI 60.0)",
+      "\"102.3 … using electricity\" … \"60.0 Orange\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 60.0,
+       "unit": "index",
+       "as_written": "60.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "102.3",
+       "kind": "quote"
+      },
+      {
+       "token": "60.0",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 239,
+     "cells": [
+      "Cold forging, no heat treatment",
+      "**Green** (PI 40.0)",
+      "\"102.4 Forging of ferrous and non- ferrous metals (cold forging, without any heat treatment)\" … \"40.0 Green\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 40.0,
+       "unit": "index",
+       "as_written": "40.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "102.4",
+       "kind": "quote"
+      },
+      {
+       "token": "40.0",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 240,
+     "cells": [
+      "Hot forging on a **coal or charcoal hearth** (the usual village bhatti)",
+      "**NOT FOUND ⚠**: no row names solid fuel",
+      "—",
+      "[S7]"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**NOT FOUND ⚠**: no row names solid fuel",
+     "unverified": true,
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 241,
+     "cells": [
+      "Metal fabrication or hand-tool making by machine, no heat or surface treatment, no spray painting",
+      "**White** (PI 0.0)",
+      "\"209.0 Metal fabrication works and hand tool manufacturing through machines (without heat/surface treatment or spray painting)\"",
+      "[S7] p.53"
+     ],
+     "figures": [
+      {
+       "value": 0.0,
+       "unit": "index",
+       "as_written": "0.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.53"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "209.0",
+       "kind": "quote"
+      },
+      {
+       "token": "53",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 242,
+     "cells": [
+      "Engineering and fabrication, dry process",
+      "**White** (PI 0.0)",
+      "\"51.0 Engineering and fabrication units (dry process without any heat treatment / metal surface finishing operations / painting)\"",
+      "[S7] p.12"
+     ],
+     "figures": [
+      {
+       "value": 0.0,
+       "unit": "index",
+       "as_written": "0.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.12"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "51.0",
+       "kind": "quote"
+      },
+      {
+       "token": "12",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 243,
+     "cells": [
+      "**Pickling or other metal surface treatment** (in the UP profile's machine list)",
+      "**Red** (PI 88.8)",
+      "\"101.1 Industry or process involving metal surface treatment or process such as pickling/ electroplating/paint stripping/ heat treatment using cyanide bath/ phosphating or finishing and anodizing / enamellings/ galvanizing\" … \"88.8 Red\"",
+      "[S7] p.27"
+     ],
+     "figures": [
+      {
+       "value": 88.8,
+       "unit": "index",
+       "as_written": "88.8",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.27"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "101.1",
+       "kind": "quote"
+      },
+      {
+       "token": "88.8",
+       "kind": "quote"
+      },
+      {
+       "token": "27",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 244,
+     "cells": [
+      "**Almirah and grill making, dry mechanical process** (the D20 gates and grills product)",
+      "**Green** (PI 30.0)",
+      "\"3.0 Almirah, Grill Manufacturing (Dry Mechanical Process )\" … \"30.0 Green\"",
+      "[S7] p.2"
+     ],
+     "figures": [
+      {
+       "value": 30.0,
+       "unit": "index",
+       "as_written": "30.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.2"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "20",
+       "kind": "ref"
+      },
+      {
+       "token": "3.0",
+       "kind": "quote"
+      },
+      {
+       "token": "30.0",
+       "kind": "quote"
+      },
+      {
+       "token": "2",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 245,
+     "cells": [
+      "Heat treatment in a furnace, e.g. hardening sickles (no cyaniding)",
+      "**Green** (PI 50.0)",
+      "\"101.3 Heat treatment - furnace ( without cyaniding)\" … \"50.0 Green\"",
+      "[S7] p.27"
+     ],
+     "figures": [
+      {
+       "value": 50.0,
+       "unit": "index",
+       "as_written": "50.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.27"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "101.3",
+       "kind": "quote"
+      },
+      {
+       "token": "50.0",
+       "kind": "quote"
+      },
+      {
+       "token": "27",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 246,
+     "cells": [
+      "Heat treatment by newer methods (induction hardening etc.)",
+      "**Green** (PI 38.8)",
+      "\"101.4 Heat treatment with any of the new technology like ultrasound probe, induction hardening, ionization beam, gas carburizing etc.\" … \"38.8 Green\"",
+      "[S7] p.27"
+     ],
+     "figures": [
+      {
+       "value": 38.8,
+       "unit": "index",
+       "as_written": "38.8",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.27"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "101.4",
+       "kind": "quote"
+      },
+      {
+       "token": "38.8",
+       "kind": "quote"
+      },
+      {
+       "token": "27",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 247,
+     "cells": [
+      "Foundry (casting), cupola furnace",
+      "**Orange** (PI 77.5)",
+      "\"104.1 Foundry operations using Cupola furnace\" … \"77.5 Orange\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 77.5,
+       "unit": "index",
+       "as_written": "77.5",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "104.1",
+       "kind": "quote"
+      },
+      {
+       "token": "77.5",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 248,
+     "cells": [
+      "Foundry (casting), induction or arc furnace",
+      "**Orange** (PI 59.5)",
+      "\"104.2 Foundry operations using Induction furnace/arc furnace\" … \"59.5 Orange\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 59.5,
+       "unit": "index",
+       "as_written": "59.5",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "104.2",
+       "kind": "quote"
+      },
+      {
+       "token": "59.5",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 249,
+     "cells": [
+      "Steel furniture without spray painting / with spray painting",
+      "**White** (0.0) / **Green** (25.0)",
+      "\"63.2 Steel furniture without spray painting\" … \"0.0 White\"; \"63.1 Steel furniture with spray painting\" … \"25.0 Green\"",
+      "[S7] pp.15–16"
+     ],
+     "text_numbers": [
+      {
+       "token": "0.0",
+       "kind": "ref"
+      },
+      {
+       "token": "25.0",
+       "kind": "ref"
+      },
+      {
+       "token": "63.2",
+       "kind": "quote"
+      },
+      {
+       "token": "0.0",
+       "kind": "quote"
+      },
+      {
+       "token": "63.1",
+       "kind": "quote"
+      },
+      {
+       "token": "25.0",
+       "kind": "quote"
+      },
+      {
+       "token": "15",
+       "kind": "page"
+      },
+      {
+       "token": "16",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 250,
+     "cells": [
+      "Sand or shot blasting (in the UP profile)",
+      "**NOT FOUND**: no CPCB row names it",
+      "—",
+      "[S7]"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**NOT FOUND**: no CPCB row names it",
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 251,
+     "cells": [
+      "Blacksmithy as such",
+      "**NOT FOUND**: the only smithy row is \"70.0 Gold and silver smithy\"",
+      "—",
+      "[S7] p.21"
+     ],
+     "text_numbers": [
+      {
+       "token": "70.0",
+       "kind": "quote"
+      },
+      {
+       "token": "21",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**NOT FOUND**: the only smithy row is \"70.0 Gold and silver smithy\"",
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 252,
+     "cells": [
+      "Spray painting",
+      "**Green** (PI 47.5)",
+      "\"125.0 Spray painting, paint baking, paint shipping\" … \"47.5 Green\"",
+      "[S7] p.34"
+     ],
+     "figures": [
+      {
+       "value": 47.5,
+       "unit": "index",
+       "as_written": "47.5",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.34"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "125.0",
+       "kind": "quote"
+      },
+      {
+       "token": "47.5",
+       "kind": "quote"
+      },
+      {
+       "token": "34",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 253,
+     "cells": [
+      "Wire drawing, no pickling, no heat treatment",
+      "**White** (PI 0.0)",
+      "\"105.3 Wire drawing and wire netting (without pickling and without heat treatment)\" … \"0.0 White\"",
+      "[S7] p.28"
+     ],
+     "figures": [
+      {
+       "value": 0.0,
+       "unit": "index",
+       "as_written": "0.0",
+       "cell": 1,
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "105.3",
+       "kind": "quote"
+      },
+      {
+       "token": "0.0",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 255,
+     "text": "**App rule (our design choice):**",
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 256,
+     "text": "- IF the unit does pickling, plating or galvanising THEN show **Red**, and tell the user to drop it or outsource it.",
+     "hi": ""
+    },
+    {
+     "line": 257,
+     "text": "- ELSE IF it does hot forging or in-house casting THEN show **Orange**. If the fuel is coal or charcoal, tell the user to confirm with the State board ⚠.",
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 258,
+     "text": "- ELSE IF it makes gates, grills or almirahs, heat-treats tools, or spray-paints THEN show **Green**. Exception: in Maharashtra, grill making \"(Without Painting)\" is White (MPCB item 6 [S8]).",
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "ref"
+      }
+     ],
+     "tag": "[S8]",
+     "hi": ""
+    },
+    {
+     "line": 259,
+     "text": "- ELSE (cold work, repair welding and general fabrication only) show **White**, and tell the user to confirm with the State board ⚠. The State board decides how CPCB rows 3.0, 51.0 and 209.0 apply (NOT FOUND).",
+     "text_numbers": [
+      {
+       "token": "3.0",
+       "kind": "ref"
+      },
+      {
+       "token": "51.0",
+       "kind": "ref"
+      },
+      {
+       "token": "209.0",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "- ELSE (cold work, repair welding and general fabrication only) show **White**, and tell the user to confirm with the State board ⚠. The State board decides how CPCB rows 3.0, 51.0 and 209.0 apply (NOT FOUND).",
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 261,
+     "cells": [
+      "Rule",
+      "Law & section",
+      "Trigger",
+      "Threshold",
+      "Govt fee",
+      "Enforcer",
+      "Exact quote",
+      "Tag",
+      "State differences"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 263,
+     "cells": [
+      "FSSAI",
+      "FSS Act",
+      "Food business only",
+      "Not applicable",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—"
+     ],
+     "hi": ""
+    },
+    {
+     "line": 264,
+     "cells": [
+      "White: no consent, written intimation",
+      "Air Act s.21 proviso: G.S.R. 702(E) 12.11.2024, para (a) replaced by G.S.R. 512(E) [S9] p.8. Water Act s.25 proviso: G.S.R. 703(E) 12.11.2024, para (a) replaced by G.S.R. 511(E) [S10] p.8. Both dated \"28th July, 2025\" on p.8; later notes give \"29th July, 2025\" ⚠. Schedules replaced by G.S.R. 761(E) [S9] p.16 / 762(E) [S10] p.16 (17.10.2025), then by G.S.R. 598(E) [S9] p.25 / 599(E) [S10] p.24 (08.07.2026)",
+      "Listed White sector",
+      "Pollution index **up to 25, and only if the sector is named in the Schedule**. A score of 25 or less alone does not exempt (e.g. Green rows scored 25.0 are not exempt)",
+      "—",
+      "SPCB",
+      "\"(a) all industrial sectors or projects or processes or activities having pollution index score upto 25 as listed in the Schedule to this notification, subject to condition that such industrial sectors or projects or processes or activities shall inform in writing to the State Pollution Control Boards or the Pollution Control Committees\" (2025 text, [S9] p.8). 2026 Schedule: \"78. Metal fabrication works and hand tool manufacturing through machines (without heat or surface treatment or spray painting)\"; \"17. Engineering and fabrication units dry process without any heat treatment or metal surface finishing operations or painting\"; \"19. Steel furniture without spray painting\"; \"56. Assembling units and mechanical workshops (without heat or surface treatment or spray painting)\"; \"73. Manufacturing of domestic hardware and utensils (without heat or surface treatment or effluent generation)\". Almirah and grill making is **not** in the 2026 White Schedule",
+      "[S9] pp.8, 26–28; [S10] p.8",
+      "Orange or Red units need consent from the State board: procedure and fee NOT FOUND ⚠"
+     ],
+     "figures": [
+      {
+       "value": 25,
+       "unit": "index",
+       "as_written": "25",
+       "cell": 3,
+       "tag": "[S9]",
+       "page": "pp.8, 26–28"
+      },
+      {
+       "value": 25,
+       "unit": "index",
+       "as_written": "25",
+       "cell": 3,
+       "tag": "[S9]",
+       "page": "pp.8, 26–28"
+      },
+      {
+       "value": 25.0,
+       "unit": "index",
+       "as_written": "25.0",
+       "cell": 3,
+       "tag": "[S9]",
+       "page": "pp.8, 26–28"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "21",
+       "kind": "ref"
+      },
+      {
+       "token": "702",
+       "kind": "code"
+      },
+      {
+       "token": "12.11",
+       "kind": "date"
+      },
+      {
+       "token": "2024",
+       "kind": "date"
+      },
+      {
+       "token": "512",
+       "kind": "code"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "25",
+       "kind": "ref"
+      },
+      {
+       "token": "703",
+       "kind": "code"
+      },
+      {
+       "token": "12.11",
+       "kind": "date"
+      },
+      {
+       "token": "2024",
+       "kind": "date"
+      },
+      {
+       "token": "511",
+       "kind": "code"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "28",
+       "kind": "quote"
+      },
+      {
+       "token": "2025",
+       "kind": "quote"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "29",
+       "kind": "quote"
+      },
+      {
+       "token": "2025",
+       "kind": "quote"
+      },
+      {
+       "token": "761",
+       "kind": "code"
+      },
+      {
+       "token": "16",
+       "kind": "page"
+      },
+      {
+       "token": "762",
+       "kind": "code"
+      },
+      {
+       "token": "16",
+       "kind": "page"
+      },
+      {
+       "token": "17.10",
+       "kind": "ref"
+      },
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "598",
+       "kind": "code"
+      },
+      {
+       "token": "25",
+       "kind": "page"
+      },
+      {
+       "token": "599",
+       "kind": "code"
+      },
+      {
+       "token": "24",
+       "kind": "page"
+      },
+      {
+       "token": "08.07",
+       "kind": "ref"
+      },
+      {
+       "token": "2026",
+       "kind": "date"
+      },
+      {
+       "token": "25",
+       "kind": "quote"
+      },
+      {
+       "token": "2025",
+       "kind": "ref"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "2026",
+       "kind": "date"
+      },
+      {
+       "token": "78",
+       "kind": "quote"
+      },
+      {
+       "token": "17",
+       "kind": "quote"
+      },
+      {
+       "token": "19",
+       "kind": "quote"
+      },
+      {
+       "token": "56",
+       "kind": "quote"
+      },
+      {
+       "token": "73",
+       "kind": "quote"
+      },
+      {
+       "token": "2026",
+       "kind": "date"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      },
+      {
+       "token": "26",
+       "kind": "page"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "Orange or Red units need consent from the State board: procedure and fee NOT FOUND ⚠",
+     "unverified": true,
+     "tag": "[S9]",
+     "hi": ""
+    },
+    {
+     "line": 265,
+     "cells": [
+      "Pollution: Maharashtra",
+      "MPCB circular, 16.06.2025",
+      "On the State list (\"new or left-over White category industries\")",
+      "**White**: item 53 \"Engineering workshop, machine shop, fabrication shop, smithy shop, turning shop, cutting shop\"; item 76 \"Hand Tools without casting\"; item 213 \"Various types of Hand Tools manufacturing\"; item 6 \"Assembling of Almirah, Grill Manufacturing (Without Painting)\"; item 55 \"Fabricating units for tractor trailer, agricultural equipment etc. (without electroplating, spray painting & powder coating)\"; item 60 \"Fabricatingunits for iron doors and shutters (without electroplating, spray painting & powder coating)\"",
+      "NOT FOUND",
+      "MPCB",
+      "\"the consents for White category industries will be granted based on self-certification by the respective White category industries on the portal of the MPC Board\"",
+      "[S8] pp.1, 3–4, 7",
+      "Maharashtra lists \"smithy shop\" as White by name. How this fits with CPCB's Orange hot-forging rows: NOT FOUND ⚠. UP, Bihar, MP, Rajasthan lists: ⚠ not opened. **Note:** Maharashtra's own White list does not by itself give the central written-intimation exemption, which covers only sectors named in the central Schedule [S9] p.8 (our reading)"
+     ],
+     "text_numbers": [
+      {
+       "token": "16.06",
+       "kind": "date"
+      },
+      {
+       "token": "2025",
+       "kind": "date"
+      },
+      {
+       "token": "53",
+       "kind": "ref"
+      },
+      {
+       "token": "76",
+       "kind": "ref"
+      },
+      {
+       "token": "213",
+       "kind": "ref"
+      },
+      {
+       "token": "6",
+       "kind": "ref"
+      },
+      {
+       "token": "55",
+       "kind": "ref"
+      },
+      {
+       "token": "60",
+       "kind": "ref"
+      },
+      {
+       "token": "1",
+       "kind": "page"
+      },
+      {
+       "token": "3",
+       "kind": "page"
+      },
+      {
+       "token": "4",
+       "kind": "page"
+      },
+      {
+       "token": "7",
+       "kind": "page"
+      },
+      {
+       "token": "8",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "unverified": true,
+     "tag": "[S8]",
+     "hi": ""
+    },
+    {
+     "line": 266,
+     "cells": [
+      "**GST registration**",
+      "CGST Act s.22(1)",
+      "Aggregate turnover in a financial year",
+      "₹20 lakh; ₹10 lakh in \"special category States\"",
+      "NOT FOUND",
+      "CBIC / State tax",
+      "\"if his aggregate turnover in a financial year exceeds twenty lakh rupees\"",
+      "[S11] p.49",
+      "Special category = the Article 279A(4)(g) States, minus \"Jammu and Kashmir\" and \"Arunachal Pradesh, Assam, Himachal Pradesh, Meghalaya, Sikkim and Uttarakhand\" [S11] p.51. None of our 5 States is named. Article 279A list not opened ⚠"
+     ],
+     "figures": [
+      {
+       "value": 20,
+       "unit": "INR lakh",
+       "as_written": "₹20",
+       "cell": 3,
+       "tag": "[S11]",
+       "page": "p.49"
+      },
+      {
+       "value": 10,
+       "unit": "INR lakh",
+       "as_written": "₹10",
+       "cell": 3,
+       "tag": "[S11]",
+       "page": "p.49"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "22",
+       "kind": "ref"
+      },
+      {
+       "token": "1",
+       "kind": "ref"
+      },
+      {
+       "token": "49",
+       "kind": "page"
+      },
+      {
+       "token": "279",
+       "kind": "ref"
+      },
+      {
+       "token": "4",
+       "kind": "ref"
+      },
+      {
+       "token": "51",
+       "kind": "page"
+      },
+      {
+       "token": "5",
+       "kind": "label"
+      },
+      {
+       "token": "279",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "unverified": true,
+     "tag": "[S11]",
+     "hi": ""
+    },
+    {
+     "line": 267,
+     "cells": [
+      "GST ₹40 lakh goods-only limit",
+      "Notification 10/2019-CT",
+      "Only for \"exclusive supply of goods\"",
+      "₹40 lakh",
+      "—",
+      "CBIC",
+      "\"Any person, who is engaged in exclusive supply of goods and whose aggregate turnover in the financial year does not exceed forty lakh rupees\"",
+      "[S12]",
+      "A smith who only sells tools and gates he makes may be \"exclusively\" a goods supplier (our reading). Repair or sharpening work makes it a mix, so ₹20 lakh applies. Not available in \"Arunachal Pradesh, Manipur, Meghalaya, Mizoram, Nagaland, Puducherry, Sikkim, Telangana, Tripura, Uttarakhand\" [S12]"
+     ],
+     "figures": [
+      {
+       "value": 40,
+       "unit": "INR lakh",
+       "as_written": "₹40",
+       "cell": 0,
+       "tag": "[S12]"
+      },
+      {
+       "value": 40,
+       "unit": "INR lakh",
+       "as_written": "₹40",
+       "cell": 3,
+       "tag": "[S12]"
+      },
+      {
+       "value": 20,
+       "unit": "INR lakh",
+       "as_written": "₹20",
+       "cell": 8,
+       "tag": "[S12]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "10",
+       "kind": "code"
+      },
+      {
+       "token": "2019",
+       "kind": "date"
+      }
+     ],
+     "tag": "[S12]",
+     "hi": ""
+    },
+    {
+     "line": 268,
+     "cells": [
+      "GST: inter-State supply",
+      "CGST Act s.24(i)",
+      "Any inter-State taxable supply",
+      "Registration compulsory",
+      "—",
+      "CBIC",
+      "\"persons making any inter-State taxable supply\"",
+      "[S11] p.51",
+      "Selling tools across a State border forces registration [S11]"
+     ],
+     "text_numbers": [
+      {
+       "token": "24",
+       "kind": "ref"
+      },
+      {
+       "token": "51",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S11]",
+     "hi": ""
+    },
+    {
+     "line": 269,
+     "cells": [
+      "Udyam registration",
+      "MSMED Act (section NOT FOUND)",
+      "NOT FOUND",
+      "NOT FOUND",
+      "NOT FOUND ⚠",
+      "MoMSME",
+      "NOT FOUND",
+      "⚠",
+      "NOT FOUND"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "MSMED Act (section NOT FOUND)",
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 270,
+     "cells": [
+      "Shops & Establishments / panchayat licence",
+      "State Acts",
+      "Workshop premises",
+      "NOT FOUND",
+      "NOT FOUND",
+      "State labour dept / panchayat",
+      "NOT FOUND",
+      "⚠",
+      "NOT FOUND for each of the 5 States"
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "label"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 271,
+     "cells": [
+      "Electricity connection",
+      "State supply code / tariff order",
+      "Welding sets, presses",
+      "NOT FOUND",
+      "NOT FOUND",
+      "DISCOM",
+      "NOT FOUND",
+      "⚠",
+      "NOT FOUND"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 272,
+     "cells": [
+      "Gas cylinders (if gas cutting or gas forging)",
+      "NOT FOUND ⚠",
+      "Storing cylinders",
+      "NOT FOUND",
+      "—",
+      "NOT FOUND ⚠",
+      "—",
+      "⚠",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND ⚠",
+     "unverified": true,
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "schemes",
+   "title": "7. Scheme fit",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 278,
+     "text": "### 7.1 NSFDC first",
+     "text_numbers": [
+      {
+       "token": "7.1",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 280,
+     "cells": [
+      "Item",
+      "Micro Finance Scheme (MFS)",
+      "Term Loan"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 282,
+     "cells": [
+      "Project cost",
+      "\"units costing up to ₹1.40 lakh\" [S1]",
+      "\"more than ₹1.40 lakh and up to ₹50.00 lakh\" [S1]"
+     ],
+     "figures": [
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "cell": 2,
+       "tag": "[S1]"
+      },
+      {
+       "value": 50.0,
+       "unit": "INR lakh",
+       "as_written": "₹50.00",
+       "cell": 2,
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 283,
+     "cells": [
+      "Loan",
+      "\"The maximum loan limit is ₹1.25 lakh\" [S1]",
+      "\"up to ₹45.00 lakh\" [S1]"
+     ],
+     "figures": [
+      {
+       "value": 1.25,
+       "unit": "INR lakh",
+       "as_written": "₹1.25",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 45.0,
+       "unit": "INR lakh",
+       "as_written": "₹45.00",
+       "cell": 2,
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 284,
+     "cells": [
+      "Share of cost",
+      "\"In all schemes, NSFDC provides up to 90% of the project cost.\" [S1]. Own share at least 10%, more when the cap binds",
+      "same [S1]"
+     ],
+     "figures": [
+      {
+       "value": 90,
+       "unit": "%",
+       "as_written": "90%",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 10,
+       "unit": "%",
+       "as_written": "10%",
+       "cell": 1,
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 285,
+     "cells": [
+      "Interest",
+      "\"6.5% p.a.\" [S1]",
+      "\"8% p.a.\" [S1]"
+     ],
+     "figures": [
+      {
+       "value": 6.5,
+       "unit": "%",
+       "as_written": "6.5%",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 8,
+       "unit": "%",
+       "as_written": "8%",
+       "cell": 2,
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 286,
+     "cells": [
+      "Channel",
+      "\"Implemented via SCAs/CAs.\" [S1]",
+      "\"Implemented via SCAs/CAs.\" [S1]"
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 287,
+     "cells": [
+      "Repayment",
+      "\"quarterly installments within 3 years (including a 3-month moratorium)\" [S1]",
+      "\"within 7 years (including a 6-month moratorium…)\" [S1]"
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "quote"
+      },
+      {
+       "token": "3",
+       "kind": "quote"
+      },
+      {
+       "token": "7",
+       "kind": "quote"
+      },
+      {
+       "token": "6",
+       "kind": "quote"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 288,
+     "cells": [
+      "Who",
+      "SC with a valid caste certificate; \"Annual family income from all sources must not exceed ₹5.00 Lakhs (applicable to both rural and urban areas, effective January 7, 2026)\" [S1]. \"Partnership firms and co-operative societies are eligible to apply for funding, provided that all members belong to the Scheduled Caste community\" [S1]",
+      "same [S1]"
+     ],
+     "figures": [
+      {
+       "value": 5.0,
+       "unit": "INR lakh",
+       "as_written": "₹5.00",
+       "cell": 1,
+       "tag": "[S1]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "7",
+       "kind": "quote"
+      },
+      {
+       "token": "2026",
+       "kind": "quote"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 289,
+     "cells": [
+      "Fits D20?",
+      "Yes. NSFDC lists \"Small Industries Sector (e.g., manufacturing units, handicrafts, boutiques)\" [S1]. The §2a sourced items (₹55,000) fit under ₹1.40 lakh [S1][S5]",
+      "**⚠ Unclear.** The §2b unit (₹43.84 lakh) is below ₹50 lakh [S1][S5], but 88.8% of it is working capital (ESTIMATE, §2b). Whether an SCA will fund a project that is mostly working capital at 8%: NOT FOUND ⚠. It is close to the ₹45 lakh loan cap: the loan of ₹39.456 lakh leaves ₹5.544 lakh of room (ESTIMATE 45 − 39.456)"
+     ],
+     "figures": [
+      {
+       "value": 55000,
+       "unit": "INR",
+       "as_written": "₹55,000",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "same_as": 120
+      },
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "₹43.84",
+       "cell": 2,
+       "tag": "[S5]"
+      },
+      {
+       "value": 50,
+       "unit": "INR lakh",
+       "as_written": "₹50",
+       "cell": 2,
+       "tag": "[S1]"
+      },
+      {
+       "value": 88.8,
+       "unit": "%",
+       "as_written": "88.8%",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "same_as": 144
+      },
+      {
+       "value": 8,
+       "unit": "%",
+       "as_written": "8%",
+       "cell": 2,
+       "tag": "[S1]"
+      },
+      {
+       "value": 45,
+       "unit": "INR lakh",
+       "as_written": "₹45",
+       "cell": 2,
+       "tag": "[S1]"
+      },
+      {
+       "value": 39.456,
+       "unit": "INR lakh",
+       "as_written": "₹39.456",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "same_as": 142
+      },
+      {
+       "value": 5.544,
+       "unit": "INR lakh",
+       "as_written": "₹5.544",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 45,
+       "unit": "number",
+       "as_written": "45",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 39.456,
+       "unit": "INR lakh",
+       "as_written": "39.456",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE",
+       "unit_inferred": true
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "20",
+       "kind": "ref"
+      },
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "2",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "**⚠ Unclear.** The §2b unit (₹43.84 lakh) is below ₹50 lakh [S1][S5], but 88.8% of it is working capital (ESTIMATE, §2b). Whether an SCA will fund a project that is mostly working capital at 8%: NOT FOUND ⚠. It is close to the ₹45 lakh loan cap: the loan of ₹39.456 lakh leaves ₹5.544 lakh of room (ESTIMATE 45 − 39.456)",
+     "unverified": true,
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 291,
+     "text": "**Women.** \"A target of 40% of the total funds under the Term Loan and Micro Finance Schemes is specifically allocated for women beneficiaries.\" [S1]",
+     "figures": [
+      {
+       "value": 40,
+       "unit": "%",
+       "as_written": "40%",
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 293,
+     "text": "**Watch the channel.** Two other NSFDC schemes cover the same project sizes at much higher interest [S1]:",
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 295,
+     "cells": [
+      "NSFDC scheme",
+      "Project size",
+      "Channel",
+      "Interest",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 297,
+     "cells": [
+      "Aajeevika Micro-Finance Yojana (AMY)",
+      "\"projects costing up to ₹1.40 lakh\"",
+      "NBFC-MFIs",
+      "\"15% p.a.\"",
+      "[S1]"
+     ],
+     "figures": [
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 15,
+       "unit": "%",
+       "as_written": "15%",
+       "cell": 3,
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 298,
+     "cells": [
+      "Udyam Nidhi Yojana (UNY)",
+      "\"projects costing up to ₹5.00 lakh\"; \"The maximum loan is ₹4.50 lakh\"",
+      "\"Cooperative Societies and Cooperative Banks at a beneficiary interest rate of 13% p.a., and through Small Finance Banks (SFBs) at 15% p.a.\"",
+      "13% / 15%",
+      "[S1]"
+     ],
+     "figures": [
+      {
+       "value": 5.0,
+       "unit": "INR lakh",
+       "as_written": "₹5.00",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 4.5,
+       "unit": "INR lakh",
+       "as_written": "₹4.50",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 13,
+       "unit": "%",
+       "as_written": "13%",
+       "cell": 2,
+       "tag": "[S1]"
+      },
+      {
+       "value": 15,
+       "unit": "%",
+       "as_written": "15%",
+       "cell": 2,
+       "tag": "[S1]"
+      },
+      {
+       "value": 13,
+       "unit": "%",
+       "as_written": "13%",
+       "cell": 3,
+       "tag": "[S1]"
+      },
+      {
+       "value": 15,
+       "unit": "%",
+       "as_written": "15%",
+       "cell": 3,
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 300,
+     "text": "**App rules (our design choice):**",
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 301,
+     "text": "- Quote 6.5% only for the MFS loan and 8% only for the Term Loan, both \"Implemented via SCAs/CAs.\" [S1].",
+     "figures": [
+      {
+       "value": 6.5,
+       "unit": "%",
+       "as_written": "6.5%",
+       "tag": "[S1]"
+      },
+      {
+       "value": 8,
+       "unit": "%",
+       "as_written": "8%",
+       "tag": "[S1]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 302,
+     "text": "- IF the lender is an MFI, cooperative bank or small finance bank THEN warn: \"This may be AMY or UNY at 13–15%.\" [S1]",
+     "figures": [
+      {
+       "value": 15,
+       "unit": "%",
+       "as_written": "15%",
+       "tag": "[S1]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "13",
+       "kind": "quote"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 303,
+     "text": "- IF the lender is a public sector bank or regional rural bank THEN say \"confirm the rate\". NSFDC's partners include \"Public Sector Banks (PSBs) Regional Rural Banks (RRBs)\", and \"rates vary slightly by scheme and channelizing agency\" [S1].",
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 305,
+     "text": "**Two more NSFDC services** [S1]:",
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 307,
+     "cells": [
+      "Service",
+      "What it is",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 309,
+     "cells": [
+      "Online application",
+      "\"Online Mode (PM-SURAJ Portal)\"",
+      "[S1]"
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 310,
+     "cells": [
+      "Free skill training",
+      "\"free, NSQF-compliant Skill Development Training Programmes for persons belonging to Scheduled Castes (between the ages of 18 and 45) under the PM-DAKSH Yojana\"; \"stipend of ₹1,500/- per month via Direct Benefit Transfer (DBT), subject to maintaining an overall attendance of 80% or above throughout the training period\"",
+      "[S1]"
+     ],
+     "figures": [
+      {
+       "value": 1500,
+       "unit": "INR",
+       "as_written": "₹1,500",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 80,
+       "unit": "%",
+       "as_written": "80%",
+       "cell": 1,
+       "tag": "[S1]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "18",
+       "kind": "quote"
+      },
+      {
+       "token": "45",
+       "kind": "quote"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 312,
+     "text": "**How to apply** [S1]:",
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 313,
+     "text": "- NSFDC does not take applications directly: \"Direct contact or correspondence by applicants/beneficiaries is not entertained by NSFDC. All loan applications must be routed through authorized State Channelizing Agencies (SCAs) or other Channelizing Agencies (CAs).\"",
+     "hi": ""
+    },
+    {
+     "line": 314,
+     "text": "- Offline applications go with \"a valid caste certificate, income proof, KYC documents\" and the agency's checklist.",
+     "hi": ""
+    },
+    {
+     "line": 316,
+     "text": "Note: [S1] is a MoSJE development-site copy (devmosje.negd.in). Confirm on nsfdc.nic.in ⚠.",
+     "unverified": true,
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 318,
+     "text": "### 7.2 Other schemes",
+     "text_numbers": [
+      {
+       "token": "7.2",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 320,
+     "text": "**PM Vishwakarma** is likely the best fit for a village lohar. The PIB note names \"Blacksmith\" among the occupations of traditional artisans [S14] p.2. Whether \"Blacksmith (Lohar)\" is one of the 18 listed trades: the trade list is not in the saved copy ⚠. The SOP points to the full guideline (p.12), which is not saved here.",
+     "figures": [
+      {
+       "value": 18,
+       "unit": "count",
+       "as_written": "18",
+       "tag": "[S14]",
+       "page": "p.2"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "page"
+      },
+      {
+       "token": "12",
+       "kind": "page"
+      }
+     ],
+     "unverified": true,
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 322,
+     "cells": [
+      "Scheme",
+      "Who qualifies",
+      "Min. size",
+      "Benefit",
+      "Own share",
+      "Period / open now?",
+      "Negative list",
+      "Combine with NSFDC loan?",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 324,
+     "cells": [
+      "**PM Vishwakarma**",
+      "\"working with bare hands and tools\"; \"Engaged in one of the mentioned 18 family-based traditional trades\"; \"Involved in the unorganized sector or self-employment basis\"; \"Minimum age should be 18 years on the date of registration\"; \"restricted to one member of the family only\"; family member must \"not be employed in government service\". **Fits the Micro size (§2a) only.** The 10-person factory (§2b) likely fails \"self-employment basis\" (our reading)",
+      "NOT FOUND",
+      "Toolkit \"₹15,000 in the form of an e-voucher\"; training \"stipend of ₹500 per day\"; loan \"₹1 Lakhs\" (18 months, \"Basic training completed\"), then \"₹2 Lakhs\" (30 months: \"Availed 1st tranche of loan\", \"Maintained standard loan account\", \"Adopted digital transactions in business, or undergone advanced training\"); \"Concessional rate of interest fixed at 5%\"; \"Re.1 per digital transaction\"",
+      "NOT FOUND",
+      "Outlay \"from FY 2023-24 to FY 2027-28\". New registrations? ⚠",
+      "NOT FOUND",
+      "**Unclear ⚠.** \"No loans should have been availed under a similar credit-based scheme of the Central/State government for self-employment/business development in the past 5 years.\" Whether NSFDC counts: NOT FOUND ⚠. **App rule (our design choice):** IF the user is a traditional lohar THEN show PM Vishwakarma first (5%), and tell them to ask the District Project Management Unit before taking an NSFDC loan",
+      "[S14] pp.2–5"
+     ],
+     "figures": [
+      {
+       "value": 10,
+       "unit": "people",
+       "as_written": "10",
+       "cell": 1,
+       "tag": "ASSUMED",
+       "basis": "our reading"
+      },
+      {
+       "value": 15000,
+       "unit": "INR",
+       "as_written": "₹15,000",
+       "cell": 3,
+       "tag": "[S14]",
+       "page": "pp.2–5"
+      },
+      {
+       "value": 500,
+       "unit": "INR",
+       "as_written": "₹500",
+       "cell": 3,
+       "tag": "[S14]",
+       "page": "pp.2–5"
+      },
+      {
+       "value": 1,
+       "unit": "INR lakh",
+       "as_written": "₹1",
+       "cell": 3,
+       "tag": "[S14]",
+       "page": "pp.2–5"
+      },
+      {
+       "value": 2,
+       "unit": "INR lakh",
+       "as_written": "₹2",
+       "cell": 3,
+       "tag": "[S14]",
+       "page": "pp.2–5"
+      },
+      {
+       "value": 5,
+       "unit": "%",
+       "as_written": "5%",
+       "cell": 3,
+       "tag": "[S14]",
+       "page": "pp.2–5"
+      },
+      {
+       "value": 5,
+       "unit": "%",
+       "as_written": "5%",
+       "cell": 7,
+       "tag": "[S14]",
+       "same_as": 324
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "18",
+       "kind": "quote"
+      },
+      {
+       "token": "18",
+       "kind": "quote"
+      },
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "18",
+       "kind": "ref"
+      },
+      {
+       "token": "30",
+       "kind": "ref"
+      },
+      {
+       "token": "1",
+       "kind": "quote"
+      },
+      {
+       "token": "1",
+       "kind": "quote"
+      },
+      {
+       "token": "2023",
+       "kind": "quote"
+      },
+      {
+       "token": "24",
+       "kind": "date"
+      },
+      {
+       "token": "2027",
+       "kind": "quote"
+      },
+      {
+       "token": "28",
+       "kind": "date"
+      },
+      {
+       "token": "5",
+       "kind": "quote"
+      },
+      {
+       "token": "2",
+       "kind": "page"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "unverified": true,
+     "tag": "ASSUMED: our reading",
+     "hi": ""
+    },
+    {
+     "line": 325,
+     "cells": [
+      "**PMEGP**",
+      "Any individual above 18; \"There will be no income ceiling\"; new projects only; \"Projects without Capital Expenditure are not eligible\"; \"The ‘Family’ includes self and spouse.\"",
+      "NOT FOUND",
+      "Subsidy for \"Special (including SC…)\": 25% urban, **35% rural**",
+      "**5%**",
+      "Undated summary (2022-11 web folder). **Status after March 2026: NOT FOUND**",
+      "Pre-revision list does not name smithy in its readable text ⚠",
+      "**Unclear ⚠.** \"the units that have already availed Government Subsidy under any other scheme… are not eligible\"; \"The balance amount ( excluding the own contribution) of the total project cost will be Provided by Banks\"",
+      "[S15] pp.2–3; [S16] p.23"
+     ],
+     "figures": [
+      {
+       "value": 18,
+       "unit": "years",
+       "as_written": "18",
+       "cell": 1,
+       "tag": "[S15]",
+       "page": "pp.2–3"
+      },
+      {
+       "value": 25,
+       "unit": "%",
+       "as_written": "25%",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2–3"
+      },
+      {
+       "value": 35,
+       "unit": "%",
+       "as_written": "35%",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2–3"
+      },
+      {
+       "value": 5,
+       "unit": "%",
+       "as_written": "5%",
+       "cell": 4,
+       "tag": "[S15]",
+       "page": "pp.2–3"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2022",
+       "kind": "date"
+      },
+      {
+       "token": "11",
+       "kind": "date"
+      },
+      {
+       "token": "2026",
+       "kind": "date"
+      },
+      {
+       "token": "2",
+       "kind": "page"
+      },
+      {
+       "token": "3",
+       "kind": "page"
+      },
+      {
+       "token": "23",
+       "kind": "page"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "unverified": true,
+     "tag": "[S15]",
+     "hi": ""
+    },
+    {
+     "line": 326,
+     "cells": [
+      "**PMEGP and NSFDC together**",
+      "PMEGP lists its financing institutions as \"All Public Sector Banks\", \"All Regional Rural Banks, Co-operative Banks, Private Sector Scheduled Commercial Banks regulated by RBI\" and \"Small Industries Development Bank of India (SIDBI)\". **NSFDC and SCAs are not listed**; the implementing agencies name \"National Scheduled Tribes Finance and Development Corporation (NSTFDC)\" but not NSFDC. Also: \"Existing Units (under PMRY, REGP or any other scheme of Government of India or State Government) and the units that have already availed Government Subsidy\" are not eligible",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "**So the PMEGP bank loan cannot be the NSFDC loan, and a unit already set up with an NSFDC (Government of India) loan is likely shut out of a PMEGP first loan** (our reading) ⚠",
+      "[S15] pp.3–5"
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "page"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      }
+     ],
+     "unverified": true,
+     "tag": "[S15]",
+     "hi": ""
+    },
+    {
+     "line": 327,
+     "cells": [
+      "PMEGP bank terms and limits",
+      "—",
+      "—",
+      "\"95% in case of special category\"; \"Normal Rate of interest shall be charged. Repayment schedule may range between 3 to 7 years\" (the bank's rate, not NSFDC's 6.5%/8% [S1]). Manufacturing working capital \"not be more than 40%\" of project cost. Capital per worker \"does not exceed Rs. 3 lakh in Plain areas and Rs. 4.5 lakh in hilly areas\". Cap \"Rs. 50.00 lakh\"",
+      "—",
+      "—",
+      "—",
+      "—",
+      "[S15] pp.2, 5–6"
+     ],
+     "figures": [
+      {
+       "value": 95,
+       "unit": "%",
+       "as_written": "95%",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2, 5–6"
+      },
+      {
+       "value": 6.5,
+       "unit": "%",
+       "as_written": "6.5%",
+       "cell": 3,
+       "tag": "[S1]"
+      },
+      {
+       "value": 8,
+       "unit": "%",
+       "as_written": "8%",
+       "cell": 3,
+       "tag": "[S1]"
+      },
+      {
+       "value": 40,
+       "unit": "%",
+       "as_written": "40%",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2, 5–6"
+      },
+      {
+       "value": 3,
+       "unit": "INR lakh",
+       "as_written": "3",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2, 5–6"
+      },
+      {
+       "value": 4.5,
+       "unit": "INR lakh",
+       "as_written": "4.5",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2, 5–6"
+      },
+      {
+       "value": 50.0,
+       "unit": "INR lakh",
+       "as_written": "50.00",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "pp.2, 5–6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "quote"
+      },
+      {
+       "token": "7",
+       "kind": "quote"
+      },
+      {
+       "token": "2",
+       "kind": "page"
+      },
+      {
+       "token": "5",
+       "kind": "page"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S15]",
+     "hi": ""
+    },
+    {
+     "line": 328,
+     "cells": [
+      "PMEGP check on the §2b unit",
+      "—",
+      "—",
+      "Working capital = ESTIMATE 88.8% of project cost, **far above the 40% manufacturing limit** [S15]. So the unit **fails PMEGP as designed**",
+      "—",
+      "—",
+      "—",
+      "—",
+      "[S5]; [S15] p.6"
+     ],
+     "figures": [
+      {
+       "value": 88.8,
+       "unit": "%",
+       "as_written": "88.8%",
+       "cell": 3,
+       "tag": "CALCULATED",
+       "basis": "ESTIMATE"
+      },
+      {
+       "value": 40,
+       "unit": "%",
+       "as_written": "40%",
+       "cell": 3,
+       "tag": "[S15]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "CALCULATED",
+     "hi": ""
+    },
+    {
+     "line": 329,
+     "cells": [
+      "**MUDRA**",
+      "Tiers NOT FOUND this session (mudra.org.in did not open ⚠)",
+      "—",
+      "—",
+      "—",
+      "—",
+      "—",
+      "NOT FOUND",
+      "⚠"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "Tiers NOT FOUND this session (mudra.org.in did not open ⚠)",
+     "unverified": true,
+     "hi": ""
+    },
+    {
+     "line": 331,
+     "text": "**When D20 does NOT fit:**",
+     "text_numbers": [
+      {
+       "token": "20",
+       "kind": "ref"
+      }
+     ],
+     "hi": ""
+    },
+    {
+     "line": 332,
+     "text": "- PM Vishwakarma: not for a unit with hired workers (\"self-employment basis\", our reading of [S14] p.3). It may also be blocked for 5 years by an earlier government business loan [S14] p.3 ⚠.",
+     "figures": [
+      {
+       "value": 5,
+       "unit": "years",
+       "as_written": "5",
+       "tag": "[S14]",
+       "page": "p.3"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "page"
+      },
+      {
+       "token": "3",
+       "kind": "page"
+      }
+     ],
+     "unverified": true,
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 333,
+     "text": "- PMEGP: the §2b profile unit fails the 40% working-capital limit [S15] p.6.",
+     "figures": [
+      {
+       "value": 40,
+       "unit": "%",
+       "as_written": "40%",
+       "tag": "[S15]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S15]",
+     "hi": ""
+    },
+    {
+     "line": 334,
+     "text": "- Any scheme: a unit doing pickling or plating is **Red** [S7] p.27. Expect the State board's consent process before any lender disburses (our reading ⚠).",
+     "text_numbers": [
+      {
+       "token": "27",
+       "kind": "page"
+      }
+     ],
+     "unverified": true,
+     "tag": "[S7]",
+     "hi": ""
+    }
+   ]
+  },
+  {
+   "id": "risks",
+   "title": "8. Risks, SWOT & competition",
+   "title_hi": "",
+   "items": [
+    {
+     "line": 340,
+     "cells": [
+      "Risk",
+      "Severity",
+      "Early warning sign",
+      "App rule (if-then)",
+      "Tag"
+     ],
+     "header": true,
+     "hi": ""
+    },
+    {
+     "line": 342,
+     "cells": [
+      "Heat and eye strain (framework key risk)",
+      "NOT FOUND",
+      "—",
+      "Show a safety checklist: eye shield, gloves, ventilation (our design choice)",
+      "—"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 343,
+     "cells": [
+      "Wrong pollution category (Red for pickling, Orange for hot forging)",
+      "High (our judgement)",
+      "Plans to pickle, plate or hot-forge",
+      "See the §6 app rule",
+      "[S7] pp.27–28"
+     ],
+     "text_numbers": [
+      {
+       "token": "6",
+       "kind": "ref"
+      },
+      {
+       "token": "27",
+       "kind": "page"
+      },
+      {
+       "token": "28",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S7]",
+     "hi": ""
+    },
+    {
+     "line": 344,
+     "cells": [
+      "Steel price swings",
+      "High (our judgement)",
+      "Steel rate rises at the dealer",
+      "IF the steel price rises more than 10% THEN re-quote orders (our design choice)",
+      "Price series NOT FOUND"
+     ],
+     "figures": [
+      {
+       "value": 10,
+       "unit": "%",
+       "as_written": "10%",
+       "cell": 3,
+       "tag": "ASSUMED",
+       "basis": "our design choice"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "Price series NOT FOUND",
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 345,
+     "cells": [
+      "Working capital far larger than machines (§2b)",
+      "High (our judgement)",
+      "Working capital is more than half the project",
+      "IF working capital is more than 40% of project cost THEN warn that PMEGP won't fund it and stress-test the EMI",
+      "[S5]; [S15] p.6"
+     ],
+     "figures": [
+      {
+       "value": 40,
+       "unit": "%",
+       "as_written": "40%",
+       "cell": 3,
+       "tag": "[S15]",
+       "page": "p.6"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      },
+      {
+       "token": "6",
+       "kind": "page"
+      }
+     ],
+     "tag": "[S15]",
+     "hi": ""
+    },
+    {
+     "line": 346,
+     "cells": [
+      "Single-buyer dependence (one builder or contractor gives most gate orders)",
+      "Medium (our judgement)",
+      "One buyer is more than half of orders",
+      "IF one buyer is more than 50% of sales THEN warn and stress-test the EMI without them",
+      "Threshold is our design choice"
+     ],
+     "figures": [
+      {
+       "value": 50,
+       "unit": "%",
+       "as_written": "50%",
+       "cell": 3,
+       "tag": "ASSUMED",
+       "basis": "our design choice"
+      }
+     ],
+     "tag": "ASSUMED: our design choice",
+     "hi": ""
+    },
+    {
+     "line": 347,
+     "cells": [
+      "Single-supplier dependence (steel from one dealer)",
+      "NOT FOUND",
+      "One dealer only",
+      "IF one supplier only THEN ask for a second",
+      "Our design choice"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "tag": "ASSUMED: design choice",
+     "hi": ""
+    },
+    {
+     "line": 348,
+     "cells": [
+      "Seasonal lull",
+      "NOT FOUND",
+      "—",
+      "Needs §5",
+      "—"
+     ],
+     "text_numbers": [
+      {
+       "token": "5",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "NOT FOUND",
+     "hi": ""
+    },
+    {
+     "line": 350,
+     "text": "**SWOT (both sizes).**",
+     "hi": ""
+    },
+    {
+     "line": 352,
+     "cells": [
+      "",
+      "Micro Finance (≤ ₹1.40 lakh) [S1]",
+      "Term Loan (UP profile unit, ₹43.84 lakh) [S1][S5]"
+     ],
+     "header": true,
+     "figures": [
+      {
+       "value": 1.4,
+       "unit": "INR lakh",
+       "as_written": "₹1.40",
+       "cell": 1,
+       "tag": "[S1]"
+      },
+      {
+       "value": 43.84,
+       "unit": "INR lakh",
+       "as_written": "₹43.84",
+       "cell": 2,
+       "tag": "[S5]"
+      }
+     ],
+     "tag": "[S1]",
+     "hi": ""
+    },
+    {
+     "line": 354,
+     "cells": [
+      "Strengths",
+      "Low capital: sourced items ₹55,000 (§2a) [S5]; White if cold work or fabrication only [S7]; traditional artisans include blacksmiths [S14]",
+      "Multiple product lines; \"10.72%\" profit on sales at full capacity [S5]"
+     ],
+     "figures": [
+      {
+       "value": 55000,
+       "unit": "INR",
+       "as_written": "₹55,000",
+       "cell": 1,
+       "tag": "CALCULATED",
+       "same_as": 120
+      },
+      {
+       "value": 10.72,
+       "unit": "%",
+       "as_written": "10.72%",
+       "cell": 2,
+       "tag": "[S5]"
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      }
+     ],
+     "tag": "[S5]",
+     "hi": ""
+    },
+    {
+     "line": 355,
+     "cells": [
+      "Weaknesses",
+      "Hot forging makes it Orange [S7]; coal-hearth category NOT FOUND",
+      "Profile has internal inconsistencies (§2); 88.8% working capital; Red if pickling [S7]"
+     ],
+     "figures": [
+      {
+       "value": 88.8,
+       "unit": "%",
+       "as_written": "88.8%",
+       "cell": 2,
+       "tag": "CALCULATED",
+       "same_as": 144
+      }
+     ],
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "ref"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "Hot forging makes it Orange [S7]; coal-hearth category NOT FOUND",
+     "tag": "CALCULATED",
+     "hi": ""
+    },
+    {
+     "line": 356,
+     "cells": [
+      "Opportunities",
+      "PM Vishwakarma toolkit and 5% loan (if the trade is listed ⚠) [S14]; re-sharpening before sowing",
+      "Gates and grills for new houses [S5]"
+     ],
+     "figures": [
+      {
+       "value": 5,
+       "unit": "%",
+       "as_written": "5%",
+       "cell": 1,
+       "tag": "[S14]"
+      }
+     ],
+     "unverified": true,
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 357,
+     "cells": [
+      "Threats",
+      "Factory-made tools (NOT FOUND); steel prices",
+      "Steel prices; consent process for Red/Orange"
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "Factory-made tools (NOT FOUND); steel prices",
+     "hi": ""
+    },
+    {
+     "line": 359,
+     "text": "**Competitor density in a block.** No official block-level count of smithies was found. Options, in order:",
+     "hi": ""
+    },
+    {
+     "line": 360,
+     "text": "1. PM Vishwakarma registrations by district and trade, from the MSME dashboard (linked in [S14]): ⚠ not opened.",
+     "text_numbers": [
+      {
+       "token": "1",
+       "kind": "ref"
+      }
+     ],
+     "unverified": true,
+     "tag": "[S14]",
+     "hi": ""
+    },
+    {
+     "line": 361,
+     "text": "2. ASUSE unit-level data for NIC 25932 / 259302: NOT FOUND in the fact sheet.",
+     "text_numbers": [
+      {
+       "token": "2",
+       "kind": "label"
+      },
+      {
+       "token": "25932",
+       "kind": "code"
+      },
+      {
+       "token": "259302",
+       "kind": "code"
+      }
+     ],
+     "status": "NOT FOUND",
+     "value": null,
+     "reason": "2. ASUSE unit-level data for NIC 25932 / 259302: NOT FOUND in the fact sheet.",
+     "hi": ""
+    },
+    {
+     "line": 362,
+     "text": "3. Field count (our survey).",
+     "text_numbers": [
+      {
+       "token": "3",
+       "kind": "label"
+      }
+     ],
+     "hi": ""
+    }
+   ]
+  }
+ ],
+ "questions": [
+  {
+   "id": "D20.main_product",
+   "text": "What brings in most of your income?",
+   "hi": "",
+   "choices": [
+    "farm_tools",
+    "gates_grills",
+    "dont_know"
+   ],
+   "line": 45,
+   "quote": "Pick the code for the user's main income"
+  },
+  {
+   "id": "D20.pickling",
+   "text": "Does the unit do pickling, plating or galvanising?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 256,
+   "quote": "IF the unit does pickling, plating or galvanising"
+  },
+  {
+   "id": "D20.hot_forging_or_casting",
+   "text": "Does it do hot forging or in-house casting?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 257,
+   "quote": "ELSE IF it does hot forging or in-house casting"
+  },
+  {
+   "id": "D20.grills_heat_treat_or_spray",
+   "text": "Does it make gates, grills or almirahs, heat-treat tools, or spray-paint?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 258,
+   "quote": "ELSE IF it makes gates, grills or almirahs, heat-treats tools, or spray-paints"
+  },
+  {
+   "id": "state",
+   "text": "Which State is the unit in?",
+   "hi": "",
+   "choices": [
+    "maharashtra",
+    "other",
+    "dont_know"
+   ],
+   "line": null
+  },
+  {
+   "id": "lender_type",
+   "text": "Who is lending you the money?",
+   "hi": "",
+   "choices": [
+    "sca",
+    "psb_rrb",
+    "mfi",
+    "coop_bank",
+    "sfb",
+    "dont_know"
+   ],
+   "line": 302,
+   "quote": "IF the lender is an MFI, cooperative bank or small finance bank"
+  },
+  {
+   "id": "D20.traditional_lohar",
+   "text": "Are you a traditional lohar (family-based blacksmith working with hand tools)?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 324,
+   "quote": "IF the user is a traditional lohar"
+  },
+  {
+   "id": "govt_business_loan_5y",
+   "text": "Have you had a government loan for a business (any scheme) in the last 5 years?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 332,
+   "quote": "It may also be blocked for 5 years by an earlier government business loan"
+  },
+  {
+   "id": "D20.steel_up_10pct",
+   "text": "Has the steel price risen more than 10% since you quoted?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 344,
+   "quote": "IF the steel price rises more than 10%"
+  },
+  {
+   "id": "D20.wc_over_40pct",
+   "text": "Is working capital more than 40% of your project cost?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 345,
+   "quote": "IF working capital is more than 40% of project cost"
+  },
+  {
+   "id": "D20.one_buyer_over_50pct",
+   "text": "Does one buyer give you more than 50% of your sales?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 346,
+   "quote": "IF one buyer is more than 50% of sales"
+  },
+  {
+   "id": "D20.one_supplier",
+   "text": "Do you buy steel from only one supplier?",
+   "hi": "",
+   "choices": [
+    "yes",
+    "no",
+    "dont_know"
+   ],
+   "line": 347,
+   "quote": "IF one supplier only"
+  }
+ ],
+ "rules": [
+  {
+   "id": "D20.nic_code",
+   "kind": "choice",
+   "question": "D20.main_product",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "yourself which product earns most over a year",
+   "cases": {
+    "farm_tools": {
+     "text": "Use NIC 2008 code 25932 / NIC 2025 code 259302.",
+     "line": 45,
+     "dossier_text": "farm tools → 25932 / 259302",
+     "tag": "ASSUMED: our design choice",
+     "evidence": [
+      {
+       "line": 37,
+       "quote": "Manufacture of hand tools (non-power-driven) for agricultural/horticulture/ forestry",
+       "tag": "[S2]",
+       "page": "p.71"
+      },
+      {
+       "line": 41,
+       "quote": "Manufacture of hand tools (non-power-driven) for agricultural/ horticulture/ forestry",
+       "tag": "[S3]",
+       "page": "p.105"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    },
+    "gates_grills": {
+     "text": "Use NIC 2008 code 25111 / NIC 2025 code 251101.",
+     "line": 45,
+     "dossier_text": "gates and grills → 25111 / 251101",
+     "tag": "ASSUMED: our design choice",
+     "evidence": [
+      {
+       "line": 40,
+       "quote": "gates and similer articles used on buildings",
+       "tag": "[S2]",
+       "page": "p.70"
+      },
+      {
+       "line": 44,
+       "quote": "gates and similar articles used in buildings",
+       "tag": "[S3]",
+       "page": "p.102"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    }
+   },
+   "dont_know_text": "Work out which product earns the most over a year, then answer again."
+  },
+  {
+   "id": "D20.pollution",
+   "kind": "chain",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "the State Pollution Control Board",
+   "steps": [
+    {
+     "question": "D20.pickling",
+     "when": "yes",
+     "category": "Red",
+     "text": "Red. Drop pickling, plating or galvanising, or outsource it.",
+     "line": 256,
+     "dossier_text": "IF the unit does pickling, plating or galvanising THEN show **Red**, and tell the user to drop it or outsource it.",
+     "tag": "ASSUMED: our design choice",
+     "unverified": false,
+     "evidence": [
+      {
+       "line": 243,
+       "quote": "101.1 Industry or process involving metal surface treatment or process such as pickling/ electroplating/paint stripping/ heat treatment using cyanide bath/ phosphating or finishing and anodizing / enamellings/ galvanizing",
+       "tag": "[S7]",
+       "page": "p.27"
+      }
+     ],
+     "tag_line": 255,
+     "hi": ""
+    },
+    {
+     "question": "D20.hot_forging_or_casting",
+     "when": "yes",
+     "category": "Orange",
+     "text": "Orange.",
+     "line": 257,
+     "dossier_text": "ELSE IF it does hot forging or in-house casting THEN show **Orange**.",
+     "tag": "ASSUMED: our design choice",
+     "unverified": true,
+     "evidence": [
+      {
+       "line": 236,
+       "quote": "102.1 Forging of ferrous and non- ferrous metals using liquid fuel",
+       "tag": "[S7]",
+       "page": "p.28"
+      },
+      {
+       "line": 247,
+       "quote": "104.1 Foundry operations using Cupola furnace",
+       "tag": "[S7]",
+       "page": "p.28"
+      }
+     ],
+     "notes": [
+      {
+       "line": 257,
+       "text": "If the fuel is coal or charcoal, confirm with the State board.",
+       "dossier_text": "If the fuel is coal or charcoal, tell the user to confirm with the State board ⚠.",
+       "tag": "ASSUMED: our design choice",
+       "unverified": true,
+       "tag_line": 255,
+       "hi": ""
+      }
+     ],
+     "tag_line": 255,
+     "hi": ""
+    },
+    {
+     "question": "D20.grills_heat_treat_or_spray",
+     "when": "yes",
+     "category": "Green",
+     "text": "Green.",
+     "line": 258,
+     "dossier_text": "ELSE IF it makes gates, grills or almirahs, heat-treats tools, or spray-paints THEN show **Green**.",
+     "tag": "ASSUMED: our design choice",
+     "unverified": false,
+     "evidence": [
+      {
+       "line": 244,
+       "quote": "3.0 Almirah, Grill Manufacturing (Dry Mechanical Process )",
+       "tag": "[S7]",
+       "page": "p.2"
+      },
+      {
+       "line": 245,
+       "quote": "101.3 Heat treatment - furnace ( without cyaniding)",
+       "tag": "[S7]",
+       "page": "p.27"
+      },
+      {
+       "line": 252,
+       "quote": "125.0 Spray painting, paint baking, paint shipping",
+       "tag": "[S7]",
+       "page": "p.34"
+      }
+     ],
+     "notes": [
+      {
+       "when": {
+        "state": "maharashtra"
+       },
+       "line": 258,
+       "text": "In Maharashtra, grill making \"(Without Painting)\" is White (MPCB item 6).",
+       "dossier_text": "Exception: in Maharashtra, grill making \"(Without Painting)\" is White (MPCB item 6 [S8]).",
+       "tag": "[S8]",
+       "hi": ""
+      }
+     ],
+     "tag_line": 255,
+     "hi": ""
+    }
+   ],
+   "otherwise": {
+    "category": "White",
+    "text": "White (cold work, repair welding and general fabrication only). Confirm with the State board.",
+    "line": 259,
+    "dossier_text": "ELSE (cold work, repair welding and general fabrication only) show **White**, and tell the user to confirm with the State board ⚠.",
+    "tag": "ASSUMED: our design choice",
+    "unverified": true,
+    "evidence": [
+     {
+      "line": 241,
+      "quote": "209.0 Metal fabrication works and hand tool manufacturing through machines (without heat/surface treatment or spray painting)",
+      "tag": "[S7]",
+      "page": "p.53"
+     },
+     {
+      "line": 242,
+      "quote": "51.0 Engineering and fabrication units (dry process without any heat treatment / metal surface finishing operations / painting)",
+      "tag": "[S7]",
+      "page": "p.12"
+     }
+    ],
+    "tag_line": 255,
+    "hi": ""
+   }
+  },
+  {
+   "id": "lender",
+   "kind": "choice",
+   "question": "lender_type",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "the lender which NSFDC scheme the loan is under",
+   "cases": {
+    "sca": {
+     "text": "Expect 6.5% (Micro Finance Scheme) or 8% (Term Loan), \"Implemented via SCAs/CAs.\"",
+     "line": 301,
+     "dossier_text": "Quote 6.5% only for the MFS loan and 8% only for the Term Loan, both \"Implemented via SCAs/CAs.\" [S1].",
+     "tag": "[S1]",
+     "hi": "",
+     "unverified": false
+    },
+    "psb_rrb": {
+     "text": "Confirm the rate with the lender: \"rates vary slightly by scheme and channelizing agency\".",
+     "line": 303,
+     "dossier_text": "IF the lender is a public sector bank or regional rural bank THEN say \"confirm the rate\".",
+     "tag": "[S1]",
+     "evidence": [
+      {
+       "line": 303,
+       "quote": "\"rates vary slightly by scheme and channelizing agency\"",
+       "tag": "[S1]"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    },
+    "mfi": {
+     "text": "This may be AMY or UNY at 13–15%.",
+     "line": 302,
+     "dossier_text": "THEN warn: \"This may be AMY or UNY at 13–15%.\" [S1]",
+     "tag": "[S1]",
+     "evidence": [
+      {
+       "line": 297,
+       "quote": "\"15% p.a.\"",
+       "tag": "[S1]"
+      },
+      {
+       "line": 298,
+       "quote": "\"Cooperative Societies and Cooperative Banks at a beneficiary interest rate of 13% p.a., and through Small Finance Banks (SFBs) at 15% p.a.\"",
+       "tag": "[S1]"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    },
+    "coop_bank": {
+     "text": "This may be AMY or UNY at 13–15%.",
+     "line": 302,
+     "dossier_text": "THEN warn: \"This may be AMY or UNY at 13–15%.\" [S1]",
+     "tag": "[S1]",
+     "evidence": [
+      {
+       "line": 298,
+       "quote": "\"Cooperative Societies and Cooperative Banks at a beneficiary interest rate of 13% p.a., and through Small Finance Banks (SFBs) at 15% p.a.\"",
+       "tag": "[S1]"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    },
+    "sfb": {
+     "text": "This may be AMY or UNY at 13–15%.",
+     "line": 302,
+     "dossier_text": "THEN warn: \"This may be AMY or UNY at 13–15%.\" [S1]",
+     "tag": "[S1]",
+     "evidence": [
+      {
+       "line": 298,
+       "quote": "\"Cooperative Societies and Cooperative Banks at a beneficiary interest rate of 13% p.a., and through Small Finance Banks (SFBs) at 15% p.a.\"",
+       "tag": "[S1]"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    }
+   }
+  },
+  {
+   "id": "D20.pm_vishwakarma_first",
+   "kind": "choice",
+   "question": "D20.traditional_lohar",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "the District Project Management Unit",
+   "cases": {
+    "yes": {
+     "text": "Look at PM Vishwakarma first (5% loan), and ask the District Project Management Unit before taking an NSFDC loan.",
+     "line": 324,
+     "dossier_text": "IF the user is a traditional lohar THEN show PM Vishwakarma first (5%), and tell them to ask the District Project Management Unit before taking an NSFDC loan",
+     "tag": "ASSUMED: our design choice",
+     "unverified": true,
+     "evidence": [
+      {
+       "line": 324,
+       "quote": "\"Concessional rate of interest fixed at 5%\"",
+       "tag": "[S14]"
+      }
+     ],
+     "hi": ""
+    }
+   }
+  },
+  {
+   "id": "D20.pm_vishwakarma_5y",
+   "kind": "choice",
+   "question": "govt_business_loan_5y",
+   "tag": "[S14]",
+   "dont_know_ask": "the District Project Management Unit",
+   "cases": {
+    "yes": {
+     "text": "PM Vishwakarma: possibly blocked for 5 years by an earlier government business loan.",
+     "line": 332,
+     "dossier_text": "It may also be blocked for 5 years by an earlier government business loan [S14] p.3 ⚠.",
+     "tag": "[S14]",
+     "page": "p.3",
+     "unverified": true,
+     "evidence": [
+      {
+       "line": 324,
+       "quote": "\"No loans should have been availed under a similar credit-based scheme of the Central/State government for self-employment/business development in the past 5 years.\"",
+       "tag": "[S14]"
+      }
+     ],
+     "advice": [
+      {
+       "line": null,
+       "text": "Ask the District Project Management Unit (DPMU) whether your loan counts before applying.",
+       "tag": "ASSUMED: our advice, not in the dossier",
+       "hi": ""
+      }
+     ],
+     "hi": ""
+    }
+   }
+  },
+  {
+   "id": "D20.steel_price",
+   "kind": "choice",
+   "question": "D20.steel_up_10pct",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "your steel dealer",
+   "cases": {
+    "yes": {
+     "text": "Re-quote your orders.",
+     "line": 344,
+     "dossier_text": "IF the steel price rises more than 10% THEN re-quote orders (our design choice)",
+     "tag": "ASSUMED: our design choice",
+     "hi": "",
+     "unverified": false
+    }
+   }
+  },
+  {
+   "id": "D20.working_capital",
+   "kind": "choice",
+   "question": "D20.wc_over_40pct",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "your project report",
+   "cases": {
+    "yes": {
+     "text": "PMEGP won't fund it; stress-test the instalment.",
+     "line": 345,
+     "dossier_text": "IF working capital is more than 40% of project cost THEN warn that PMEGP won't fund it and stress-test the EMI",
+     "tag": "[S15]",
+     "page": "p.6",
+     "evidence": [
+      {
+       "line": 327,
+       "quote": "\"not be more than 40%\"",
+       "tag": "[S15]"
+      }
+     ],
+     "hi": "",
+     "unverified": false
+    }
+   },
+   "dont_know_text": "Check your project report, then answer again."
+  },
+  {
+   "id": "D20.single_buyer",
+   "kind": "choice",
+   "question": "D20.one_buyer_over_50pct",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "your sales book",
+   "cases": {
+    "yes": {
+     "text": "Warning: one buyer is more than half your sales. Stress-test the instalment without them.",
+     "line": 346,
+     "dossier_text": "IF one buyer is more than 50% of sales THEN warn and stress-test the EMI without them",
+     "tag": "ASSUMED: our design choice",
+     "hi": "",
+     "unverified": false
+    }
+   },
+   "dont_know_text": "Check your sales book, then answer again."
+  },
+  {
+   "id": "D20.single_supplier",
+   "kind": "choice",
+   "question": "D20.one_supplier",
+   "tag": "ASSUMED: our design choice",
+   "dont_know_ask": "yourself",
+   "cases": {
+    "yes": {
+     "text": "Find a second steel supplier.",
+     "line": 347,
+     "dossier_text": "IF one supplier only THEN ask for a second",
+     "tag": "ASSUMED: our design choice",
+     "hi": "",
+     "unverified": false
+    }
+   },
+   "dont_know_text": "Work it out, then answer again."
+  }
+ ],
+ "sources": [
+  {
+   "tag": "[S1]",
+   "title": "FAQ – National Scheduled Castes Finance and Development Corporation",
+   "issuer": "MoSJE (dev-site copy)",
+   "url": "https://devmosje.negd.in/?p=15629",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/NSFDC_devmosje_p15629.html"
+  },
+  {
+   "tag": "[S2]",
+   "title": "National Industrial Classification 2008, pp.70–71",
+   "issuer": "MoSPI",
+   "url": "https://mospi.gov.in/sites/default/files/main_menu/national_industrial_classification/nic_2008_17apr09.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/NIC_2008.pdf"
+  },
+  {
+   "tag": "[S3]",
+   "title": "National Industrial Classification 2025, pp.102, 104–105",
+   "issuer": "MoSPI",
+   "url": "https://mospi.gov.in/uploads/publications_reports/publications_reports1763457214315_c3e5d4f3-8e25-4775-85e3-ad42d571652f_NIC_2025_Final.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/NIC_2025.pdf"
+  },
+  {
+   "tag": "[S4]",
+   "title": "Fact sheet ASUSE 2025, p.6",
+   "issuer": "MoSPI",
+   "url": "https://www.mospi.gov.in/uploads/latestreleasesfiles/1777360756062-publications_reports1774347275480_658da785-11e1-4df3-9f02-27e08a8675f6_Factsheet_ASUSE_2025-f.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/ASUSE_2025_Factsheet.pdf"
+  },
+  {
+   "tag": "[S5]",
+   "title": "Project Report of Fabrication of Grills, Gates and Fence, pp.2–8 (undated)",
+   "issuer": "UP MSME 1-Connect portal, Government of Uttar Pradesh",
+   "url": "https://msme1connect.up.gov.in/Projectreport/Project%20Report638665747150126666.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "D20/UP_MSME_Grills_Gates.pdf"
+  },
+  {
+   "tag": "[S7]",
+   "title": "List of Sectors Classified by Central Pollution Control Board (As on 24th August 2026), pp.2, 12, 15–16, 21, 27–28, 34, 53",
+   "issuer": "CPCB",
+   "url": "https://cpcb.gov.in/uploads/Sectors_Classified_by_CPCB.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/CPCB_Sectors_Classified.pdf"
+  },
+  {
+   "tag": "[S8]",
+   "title": "Circular: Categorization of new or left-over White category industries (16/06/2025), pp.1, 3–4, 7",
+   "issuer": "Maharashtra Pollution Control Board",
+   "url": "https://mpcb.gov.in/sites/default/files/standing_orders/Circular_White_Category_MPCB_16062025.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/MPCB_White_Circular_16062025.pdf"
+  },
+  {
+   "tag": "[S9]",
+   "title": "MoEFCC G.S.R. 702(E) 12.11.2024 (Air Act) and amendments incl. G.S.R. 598(E) 08.07.2026, pp.3–4, 8, 16, 24–28",
+   "issuer": "MoEFCC via CPCB",
+   "url": "https://cpcb.gov.in/uploads/White_category_exemption_airact.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/CPCB_White_exemption_airact.pdf"
+  },
+  {
+   "tag": "[S10]",
+   "title": "MoEFCC G.S.R. 703(E) 12.11.2024 (Water Act) and amendments incl. G.S.R. 599(E) 08.07.2026, pp.3–4, 8, 16, 24–28",
+   "issuer": "MoEFCC via CPCB",
+   "url": "https://cpcb.gov.in/uploads/White_category_exemption_wateract.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/CPCB_White_exemption_wateract.pdf"
+  },
+  {
+   "tag": "[S11]",
+   "title": "CGST Act 2017 (updated 31.08.2021), ss.22, 24, pp.49–51",
+   "issuer": "CBIC",
+   "url": "https://cbic-gst.gov.in/pdf/CGST-Act-Updated-31082021.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/CGST_Act_updated_31082021.pdf"
+  },
+  {
+   "tag": "[S12]",
+   "title": "Notification No. 10/2019-Central Tax",
+   "issuer": "Ministry of Finance",
+   "url": "https://www.gstcouncil.gov.in/sites/default/files/2024-05/notfctn-10-central-tax-english-2019.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/GST_Notfn_10_2019_CT.pdf"
+  },
+  {
+   "tag": "[S13]",
+   "title": "Fact Sheet on HCES 2023-24, pp.4, 12",
+   "issuer": "MoSPI",
+   "url": "https://mospi.gov.in/sites/default/files/publication_reports/HCES%20FactSheet%202023-24.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/HCES_FactSheet_2023-24.pdf"
+  },
+  {
+   "tag": "[S14]",
+   "title": "PM Vishwakarma Scheme: Honouring Heritage, Powering Progress (16 Sep 2025), pp.2–5",
+   "issuer": "PIB",
+   "url": "https://static.pib.gov.in/WriteReadData/specificdocs/documents/2025/sep/doc2025916638501.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/PM_Vishwakarma_PIB_Sep2025.pdf"
+  },
+  {
+   "tag": "[S15]",
+   "title": "Salient Features of Revised PMEGP, pp.2–6 (undated; web folder 2022-11)",
+   "issuer": "Delhi Khadi & Village Industries Board",
+   "url": "https://dkvib.delhi.gov.in/sites/default/files/2022-11/salient-features-of-revised-ppmegp.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/PMEGP_Revised_Salient_DelhiKVIB.pdf"
+  },
+  {
+   "tag": "[S16]",
+   "title": "Guidelines on PMEGP (pre-revision scan), p.23, Para 29",
+   "issuer": "KVIC copy on a Government server",
+   "url": "https://cdnbbsr.s3waas.gov.in/s371e09b16e21f7b6919bbfc43f6a5b2f0/uploads/2023/03/2023031676.pdf",
+   "opened": "09 Nov 2026",
+   "saved": "_shared/PMEGP_Guidelines_s3waas_2023-03.pdf"
+  }
+ ]
+}

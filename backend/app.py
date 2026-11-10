@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from backend import loan
+from backend import businesses, loan
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
 
 app = FastAPI(
@@ -67,4 +67,27 @@ def cashflow(req: CashflowRequest):
     try:
         return loan.build_cashflow(req)
     except loan.CashflowLengthError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@app.get("/businesses")
+def list_businesses():
+    return businesses.listing()
+
+
+@app.get("/businesses/{code}")
+def business(code: str):
+    try:
+        return businesses.detail(code)
+    except businesses.UnknownCode:
+        raise HTTPException(status_code=404, detail=f"No business code {code!r}; codes are D01 to D24")
+
+
+@app.post("/businesses/{code}/advice")
+def business_advice(code: str, req: businesses.AdviceRequest):
+    try:
+        return businesses.advice(code, req.answers)
+    except businesses.UnknownCode:
+        raise HTTPException(status_code=404, detail=f"No business code {code!r}; codes are D01 to D24")
+    except businesses.BadAnswer as exc:
         raise HTTPException(status_code=422, detail=str(exc))
