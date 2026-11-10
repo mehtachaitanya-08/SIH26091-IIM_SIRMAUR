@@ -293,12 +293,57 @@ export default function App() {
   const [language, setLanguage] = useState('en');
   const t = TRANSLATIONS[language] || TRANSLATIONS.en;
 
+  // Top-Level View Routing: 'landing' | 'dashboard'
+  const [currentView, setCurrentView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const p = window.location.pathname;
+      const h = window.location.hash;
+      if (p === '/dashboard' || p.startsWith('/dashboard') || h === '#/dashboard' || h === '#dashboard') {
+        return 'dashboard';
+      }
+    }
+    return 'landing';
+  });
+
+  const navigateToDashboard = () => {
+    setCurrentView('dashboard');
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', '/dashboard');
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const navigateToLanding = () => {
+    setCurrentView('landing');
+    if (typeof window !== 'undefined') {
+      window.history.pushState(null, '', '/');
+      window.scrollTo(0, 0);
+    }
+  };
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const p = window.location.pathname;
+      const h = window.location.hash;
+      if (p === '/dashboard' || p.startsWith('/dashboard') || h === '#/dashboard' || h === '#dashboard') {
+        setCurrentView('dashboard');
+      } else {
+        setCurrentView('landing');
+      }
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
   // Authentication State & Modal
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
   const [currentUser, setCurrentUser] = useState(null);
   const [authError, setAuthError] = useState(null);
-  const [workspaceMode, setWorkspaceMode] = useState('mockup'); // 'mockup' | 'production'
 
   // Auth Form Fields
   const [loginPhone, setLoginPhone] = useState('');
@@ -328,9 +373,7 @@ export default function App() {
       if (result.success) {
         setCurrentUser(result.user);
         setIsAuthModalOpen(false);
-        setTimeout(() => {
-          scrollToTarget('#dashboard-section');
-        }, 200);
+        navigateToDashboard();
       } else {
         setAuthError(result.error || 'Failed to authenticate Google profile.');
       }
@@ -349,9 +392,7 @@ export default function App() {
     if (result.success) {
       setCurrentUser(result.user);
       setIsAuthModalOpen(false);
-      setTimeout(() => {
-        scrollToTarget('#dashboard-section');
-      }, 200);
+      navigateToDashboard();
     } else {
       setAuthError(result.error || 'Invalid mobile number or security PIN.');
     }
@@ -371,9 +412,7 @@ export default function App() {
     if (result.success) {
       setCurrentUser(result.user);
       setIsAuthModalOpen(false);
-      setTimeout(() => {
-        scrollToTarget('#dashboard-section');
-      }, 200);
+      navigateToDashboard();
     } else {
       setAuthError(result.error);
     }
@@ -382,10 +421,13 @@ export default function App() {
   const handleLogout = () => {
     clearSession();
     setCurrentUser(null);
+    navigateToLanding();
   };
 
-  // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization
+  // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization (Landing View Only)
   useEffect(() => {
+    if (currentView !== 'landing') return;
+
     let lenis;
     let updateTicker;
     let rafId;
@@ -587,7 +629,7 @@ export default function App() {
       if (lenis) lenis.destroy();
       setLenisInstance(null);
     };
-  }, []);
+  }, [currentView]);
 
   const scrollToTarget = (targetId) => {
     if (lenisInstance) {
@@ -597,6 +639,399 @@ export default function App() {
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // Shared Auth Modal Renderer
+  const renderAuthModal = () => {
+    if (!isAuthModalOpen) return null;
+    return (
+      <div 
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+        onClick={() => setIsAuthModalOpen(false)}
+      >
+        <div 
+          className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-black/10 space-y-5"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Modal Header */}
+          <div className="flex items-start justify-between border-b border-black/5 pb-4">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-9 h-9 rounded-2xl bg-[#0E7A53]/10 flex items-center justify-center text-[#0E7A53] flex-shrink-0">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-sans-ui font-bold text-lg text-[#111311] leading-tight">
+                  {authTab === 'login' ? t.modalTitleLogin : t.modalTitleRegister}
+                </h3>
+                <p className="text-[11px] text-[#686D65] font-sans-ui mt-0.5 leading-snug">
+                  {t.modalSubtitle}
+                </p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsAuthModalOpen(false)}
+              className="p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Segmented Tab Switcher */}
+          <div className="grid grid-cols-2 gap-1 p-1 bg-[#F4F1EA] rounded-2xl">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthTab('login');
+                setAuthError(null);
+              }}
+              className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
+                authTab === 'login'
+                  ? 'bg-white text-[#111311] shadow-sm'
+                  : 'text-[#686D65] hover:text-[#111311]'
+              }`}
+            >
+              {t.tabLogin}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthTab('register');
+                setAuthError(null);
+              }}
+              className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
+                authTab === 'register'
+                  ? 'bg-white text-[#111311] shadow-sm'
+                  : 'text-[#686D65] hover:text-[#111311]'
+              }`}
+            >
+              {t.tabRegister}
+            </button>
+          </div>
+
+          {/* Google Authentication Option (Present on Both Login & Register) */}
+          <button
+            type="button"
+            disabled={isAuthenticating}
+            onClick={handleGoogleAuth}
+            className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-[#111311] text-xs font-bold font-sans-ui flex items-center justify-center space-x-3 transition-all shadow-sm hover:shadow hover:border-slate-400 cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {/* Google Official Multi-Color Emblem */}
+            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+            </svg>
+            <span>{isAuthenticating ? (language === 'hi' ? 'Google से जुड़ रहे हैं...' : 'Connecting to Google...') : (authTab === 'login' ? t.continueGoogle : t.signUpGoogle)}</span>
+          </button>
+
+          {/* Clear Aesthetic Divider */}
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-slate-200 w-full"></div>
+            <span className="bg-white px-3 text-[10px] font-mono-num uppercase tracking-wider text-[#686D65] absolute">
+              {t.orDivider}
+            </span>
+          </div>
+
+          {/* Error Message Alert */}
+          {authError && (
+            <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{authError}</span>
+            </div>
+          )}
+
+          {/* Form Fields: Login */}
+          {authTab === 'login' ? (
+            <form onSubmit={handleCustomLogin} className="space-y-3.5">
+              <div>
+                <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
+                  {t.phoneLabel}
+                </label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input 
+                    type="tel"
+                    required
+                    value={loginPhone}
+                    onChange={(e) => setLoginPhone(e.target.value)}
+                    placeholder={t.phonePlaceholder}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
+                  {t.pinLabel}
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input 
+                    type="password"
+                    required
+                    maxLength={6}
+                    value={loginPin}
+                    onChange={(e) => setLoginPin(e.target.value)}
+                    placeholder={t.pinPlaceholder}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-1"
+              >
+                {t.submitLogin}
+              </button>
+
+              <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
+                <span>{t.needAccount} </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthTab('register');
+                    setAuthError(null);
+                  }}
+                  className="font-bold text-[#0E7A53] hover:underline cursor-pointer ml-1"
+                >
+                  {t.registerLink}
+                </button>
+              </div>
+            </form>
+          ) : (
+            /* Form Fields: Register */
+            <form onSubmit={handleRegister} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                  {t.nameLabel}
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input 
+                    type="text"
+                    required
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                    placeholder={t.namePlaceholder}
+                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                    {t.phoneLabel}
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="tel"
+                      required
+                      value={regPhone}
+                      onChange={(e) => setRegPhone(e.target.value)}
+                      placeholder={t.phonePlaceholder}
+                      className="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                    {t.createPinLabel}
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="password"
+                      required
+                      maxLength={6}
+                      value={regPin}
+                      onChange={(e) => setRegPin(e.target.value)}
+                      placeholder="4 digits"
+                      className="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                  {t.tradeLabel}
+                </label>
+                <select
+                  value={regTrade}
+                  onChange={(e) => setRegTrade(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
+                >
+                  <option value="D08 Mustard & Edible Oil Expeller Mill">
+                    {language === 'hi' ? 'D08 सरसों एवं खाद्य तेल स्पेलर मिल' : 'D08 Mustard & Edible Oil Expeller Mill'}
+                  </option>
+                  <option value="D18 Village Tailoring & Garments">
+                    {language === 'hi' ? 'D18 ग्रामीण सिलाई एवं वस्त्र निर्माण' : 'D18 Village Tailoring & Garments'}
+                  </option>
+                  <option value="D15 Tractor & Farm Equipment Garage">
+                    {language === 'hi' ? 'D15 ट्रैक्टर एवं कृषि उपकरण गैराज' : 'D15 Tractor & Farm Equipment Garage'}
+                  </option>
+                  <option value="D04 Commercial Dairy Unit">
+                    {language === 'hi' ? 'D04 ग्रामीण वाणिज्यिक डेयरी यूनिट' : 'D04 Commercial Dairy Unit'}
+                  </option>
+                  <option value="D01 Kirana & General Provision">
+                    {language === 'hi' ? 'D01 ग्रामीण किराना एवं प्रोविजन स्टोर' : 'D01 Kirana & General Provision'}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                  {t.categoryLabel}
+                </label>
+                <select
+                  value={regCategory}
+                  onChange={(e) => setRegCategory(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
+                >
+                  <option value="Scheduled Caste (SC)">
+                    {language === 'hi' ? 'अनुसूचित जाति (SC) · 100% पात्रता' : 'Scheduled Caste (SC) · Verified Eligibility'}
+                  </option>
+                  <option value="Scheduled Tribe (ST)">
+                    {language === 'hi' ? 'अनुसूचित जनजाति (ST)' : 'Scheduled Tribe (ST)'}
+                  </option>
+                  <option value="Other Backward Classes (OBC)">
+                    {language === 'hi' ? 'अन्य पिछड़ा वर्ग (OBC)' : 'Other Backward Classes (OBC)'}
+                  </option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-1"
+              >
+                {t.submitRegister}
+              </button>
+
+              <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
+                <span>{t.alreadyRegistered} </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthTab('login');
+                    setAuthError(null);
+                  }}
+                  className="font-bold text-[#0E7A53] hover:underline cursor-pointer ml-1"
+                >
+                  {t.signInLink}
+                </button>
+              </div>
+            </form>
+          )}
+
+        </div>
+      </div>
+    );
+  };
+
+  // ==========================================================================
+  // DEDICATED FULL-PAGE PRODUCTION DASHBOARD VIEW
+  // When currentView === 'dashboard', render standalone dashboard (NO landing page)
+  // ==========================================================================
+  if (currentView === 'dashboard') {
+    return (
+      <div className="min-h-screen bg-[#F4F1EA] text-[#111311] font-sans-ui flex flex-col antialiased selection:bg-[#111311] selection:text-white">
+        {/* Dedicated Standalone Dashboard Top Navigation */}
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/10 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-sm">
+          {/* Left: Brand Identity & Subtitle */}
+          <div className="flex items-center space-x-3.5">
+            <button
+              onClick={navigateToLanding}
+              className="flex items-center space-x-3 cursor-pointer group text-left"
+              title="Return to GraminAI Landing Page"
+            >
+              <img
+                src="/images/logo.png"
+                alt="GraminAI Emblem"
+                className="h-9 sm:h-10 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-editorial text-lg sm:text-xl font-bold tracking-tight text-[#111311]">
+                    GraminAI
+                  </span>
+                  <span className="text-[10px] font-mono-num font-bold px-2 py-0.5 rounded-full bg-[#0E7A53]/10 text-[#0E7A53] uppercase border border-[#0E7A53]/20">
+                    Production Workspace
+                  </span>
+                </div>
+                <p className="text-[10px] font-mono-num text-[#686D65] hidden md:block">
+                  MoSJE & NSFDC Concessional Credit · Statutory Advisory Suite
+                </p>
+              </div>
+            </button>
+          </div>
+
+          {/* Right: Controls & User Pill */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Language Toggle */}
+            <button
+              onClick={() => setLanguage(prev => prev === 'en' ? 'hi' : 'en')}
+              className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-mono-num font-bold text-[#111311] transition-colors cursor-pointer"
+            >
+              <Globe className="w-3.5 h-3.5 text-[#0E7A53]" />
+              <span>{language === 'en' ? 'हिन्दी' : 'EN'}</span>
+            </button>
+
+            {/* User Profile / Status */}
+            {currentUser ? (
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#111311] text-white text-xs font-mono-num shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span className="max-w-[120px] sm:max-w-[180px] truncate">{currentUser.name}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-1.5 rounded-full bg-white hover:bg-red-50 text-slate-500 hover:text-red-600 border border-black/10 transition-colors cursor-pointer"
+                  title={t.logout}
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  setAuthError(null);
+                  setIsAuthModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111311] text-white text-xs font-mono-num font-bold hover:bg-black transition-colors cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>{t.loginRegister}</span>
+              </button>
+            )}
+
+            {/* Back to Landing Page Button */}
+            <button
+              onClick={navigateToLanding}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-black/15 bg-white hover:bg-slate-50 text-xs font-mono-num font-bold text-[#111311] shadow-sm transition-all hover:scale-105 cursor-pointer ml-1"
+            >
+              <span>{language === 'hi' ? '← मुख्य पृष्ठ' : '← Landing Page'}</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Dedicated Standalone Production Dashboard Container */}
+        <main className="flex-1 w-full max-w-[1700px] mx-auto p-2 sm:p-6">
+          <ProductionDashboard
+            language={language}
+            currentUser={currentUser}
+            onNavigateHome={navigateToLanding}
+          />
+        </main>
+
+        {/* Global Auth Modal Container */}
+        {renderAuthModal()}
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="bg-[#F4F1EA] text-[#111311] antialiased selection:bg-[#111311] selection:text-white relative">
@@ -648,16 +1083,13 @@ export default function App() {
           ) : (
             <div className="flex items-center space-x-2">
               <button 
-                onClick={() => {
-                  setWorkspaceMode('production');
-                  scrollToTarget('#dashboard-section');
-                }} 
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 text-[#111311] hover:bg-white text-xs font-mono-num font-bold shadow-sm border border-black/10 transition-all hover:scale-105 cursor-pointer"
-                title={`${currentUser.name} (Live Production Workspace)`}
+                onClick={navigateToDashboard} 
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#0E7A53] hover:bg-[#0c6846] text-white text-xs font-mono-num font-bold shadow-md transition-all hover:scale-105 cursor-pointer"
+                title={`${currentUser.name} · Open Dedicated Workspace`}
               >
-                <span className="w-2 h-2 rounded-full bg-[#0E7A53]"></span>
-                <span className="max-w-[110px] truncate">{currentUser.name}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#0E7A53]" />
+                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+                <span className="max-w-[120px] truncate">{currentUser.name}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
               <button 
                 onClick={handleLogout}
@@ -1118,333 +1550,43 @@ export default function App() {
       {/* ============================================================== */}
       {/* SCENE 6: SETO MINIMAL DASHBOARD MOCKUP CONTAINER              */}
       {/* ============================================================== */}
-      {currentUser && (
-        <div className="max-w-[1500px] mx-auto px-4 sm:px-8 pt-8 flex justify-center items-center gap-2">
-          <button
-            onClick={() => setWorkspaceMode('mockup')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer font-sans-ui ${
-              workspaceMode === 'mockup'
-                ? 'bg-[#111311] text-white shadow-sm'
-                : 'bg-white/80 text-[#686D65] hover:text-[#111311] border border-black/10'
-            }`}
-          >
-            Preview Mockup (Scene 6)
-          </button>
-          <button
-            onClick={() => setWorkspaceMode('production')}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 font-sans-ui ${
-              workspaceMode === 'production'
-                ? 'bg-[#0E7A53] text-white shadow-sm'
-                : 'bg-white/80 text-[#686D65] hover:text-[#111311] border border-black/10'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-300"></span>
-            Live Production Workspace
-          </button>
-        </div>
-      )}
-      {workspaceMode === 'production' && currentUser ? (
-        <div id="dashboard-section">
-          <ProductionDashboard 
-            language={language} 
-            currentUser={currentUser} 
-            onNavigateHome={() => setWorkspaceMode('mockup')} 
-          />
-        </div>
-      ) : (
-        <SetoDashboard language={language} currentUser={currentUser} />
-      )}
-
-      {/* ============================================================== */}
-      {/* REFINED AUTHENTICATION / REGISTRATION MODAL DIALOG             */}
-      {/* ============================================================== */}
-      {isAuthModalOpen && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
-          onClick={() => setIsAuthModalOpen(false)}
-        >
-          <div 
-            className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-black/10 space-y-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-start justify-between border-b border-black/5 pb-4">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-2xl bg-[#0E7A53]/10 flex items-center justify-center text-[#0E7A53] flex-shrink-0">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-sans-ui font-bold text-lg text-[#111311] leading-tight">
-                    {authTab === 'login' ? t.modalTitleLogin : t.modalTitleRegister}
-                  </h3>
-                  <p className="text-[11px] text-[#686D65] font-sans-ui mt-0.5 leading-snug">
-                    {t.modalSubtitle}
-                  </p>
-                </div>
+      <div id="dashboard-section" className="relative">
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-8 pt-8">
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-5 sm:p-6 border border-black/10 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+            <div className="flex items-center space-x-3 text-left">
+              <div className="w-3.5 h-3.5 rounded-full bg-[#0E7A53] animate-pulse flex-shrink-0"></div>
+              <div>
+                <h4 className="text-xs sm:text-sm font-bold text-[#111311] font-mono-num uppercase tracking-wider">
+                  {language === 'hi' ? 'इंटरैक्टिव पूर्वावलोकन मॉकअप (दृश्य 06)' : 'Interactive Preview Mockup (Scene 06)'}
+                </h4>
+                <p className="text-[11px] text-[#686D65] mt-0.5 font-sans-ui">
+                  {language === 'hi' 
+                    ? 'यह मुख्य पृष्ठ पूर्वावलोकन है। वास्तविक लाइव डेटा, 24 ट्रेड डोज़ियर और आधिकारिक लीड-बैंक डीपीआर के लिए अलग प्रोडक्शन कार्यक्षेत्र खोलें।'
+                    : 'This is the landing page preview. For live calculations, saved trade dossiers, and official Lead-Bank DPR export, launch the dedicated production page.'}
+                </p>
               </div>
-              <button 
-                onClick={() => setIsAuthModalOpen(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
             </div>
-
-            {/* Segmented Tab Switcher */}
-            <div className="grid grid-cols-2 gap-1 p-1 bg-[#F4F1EA] rounded-2xl">
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthTab('login');
-                  setAuthError(null);
-                }}
-                className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
-                  authTab === 'login'
-                    ? 'bg-white text-[#111311] shadow-sm'
-                    : 'text-[#686D65] hover:text-[#111311]'
-                }`}
-              >
-                {t.tabLogin}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthTab('register');
-                  setAuthError(null);
-                }}
-                className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
-                  authTab === 'register'
-                    ? 'bg-white text-[#111311] shadow-sm'
-                    : 'text-[#686D65] hover:text-[#111311]'
-                }`}
-              >
-                {t.tabRegister}
-              </button>
-            </div>
-
-            {/* Google Authentication Option (Present on Both Login & Register) */}
             <button
-              type="button"
-              disabled={isAuthenticating}
-              onClick={handleGoogleAuth}
-              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-[#111311] text-xs font-bold font-sans-ui flex items-center justify-center space-x-3 transition-all shadow-sm hover:shadow hover:border-slate-400 cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed"
+              onClick={() => {
+                if (currentUser) {
+                  navigateToDashboard();
+                } else {
+                  setAuthError(null);
+                  setIsAuthModalOpen(true);
+                }
+              }}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#111311] hover:bg-black text-white text-xs font-mono-num font-bold shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
             >
-              {/* Google Official Multi-Color Emblem */}
-              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-              </svg>
-              <span>{isAuthenticating ? (language === 'hi' ? 'Google से जुड़ रहे हैं...' : 'Connecting to Google...') : (authTab === 'login' ? t.continueGoogle : t.signUpGoogle)}</span>
+              <span>{language === 'hi' ? 'पूर्ण प्रोडक्शन डैशबोर्ड खोलें →' : 'Launch Full Production Dashboard →'}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#0E7A53]" />
             </button>
-
-            {/* Clear Aesthetic Divider */}
-            <div className="relative flex items-center justify-center">
-              <div className="border-t border-slate-200 w-full"></div>
-              <span className="bg-white px-3 text-[10px] font-mono-num uppercase tracking-wider text-[#686D65] absolute">
-                {t.orDivider}
-              </span>
-            </div>
-
-            {/* Error Message Alert */}
-            {authError && (
-              <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                <span>{authError}</span>
-              </div>
-            )}
-
-            {/* Form Fields: Login */}
-            {authTab === 'login' ? (
-              <form onSubmit={handleCustomLogin} className="space-y-3.5">
-                <div>
-                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
-                    {t.phoneLabel}
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="tel"
-                      required
-                      value={loginPhone}
-                      onChange={(e) => setLoginPhone(e.target.value)}
-                      placeholder={t.phonePlaceholder}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
-                    {t.pinLabel}
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="password"
-                      required
-                      maxLength={6}
-                      value={loginPin}
-                      onChange={(e) => setLoginPin(e.target.value)}
-                      placeholder={t.pinPlaceholder}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-1"
-                >
-                  {t.submitLogin}
-                </button>
-
-                <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
-                  <span>{t.needAccount} </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthTab('register');
-                      setAuthError(null);
-                    }}
-                    className="font-bold text-[#0E7A53] hover:underline cursor-pointer ml-1"
-                  >
-                    {t.registerLink}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              /* Form Fields: Register */
-              <form onSubmit={handleRegister} className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
-                    {t.nameLabel}
-                  </label>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="text"
-                      required
-                      value={regName}
-                      onChange={(e) => setRegName(e.target.value)}
-                      placeholder={t.namePlaceholder}
-                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
-                      {t.phoneLabel}
-                    </label>
-                    <div className="relative">
-                      <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input 
-                        type="tel"
-                        required
-                        value={regPhone}
-                        onChange={(e) => setRegPhone(e.target.value)}
-                        placeholder={t.phonePlaceholder}
-                        className="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
-                      {t.createPinLabel}
-                    </label>
-                    <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <input 
-                        type="password"
-                        required
-                        maxLength={6}
-                        value={regPin}
-                        onChange={(e) => setRegPin(e.target.value)}
-                        placeholder="4 digits"
-                        className="w-full pl-10 pr-3 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
-                    {t.tradeLabel}
-                  </label>
-                  <select
-                    value={regTrade}
-                    onChange={(e) => setRegTrade(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
-                  >
-                    <option value="D08 Mustard & Edible Oil Expeller Mill">
-                      {language === 'hi' ? 'D08 सरसों एवं खाद्य तेल स्पेलर मिल' : 'D08 Mustard & Edible Oil Expeller Mill'}
-                    </option>
-                    <option value="D18 Village Tailoring & Garments">
-                      {language === 'hi' ? 'D18 ग्रामीण सिलाई एवं वस्त्र निर्माण' : 'D18 Village Tailoring & Garments'}
-                    </option>
-                    <option value="D15 Tractor & Farm Equipment Garage">
-                      {language === 'hi' ? 'D15 ट्रैक्टर एवं कृषि उपकरण गैराज' : 'D15 Tractor & Farm Equipment Garage'}
-                    </option>
-                    <option value="D04 Commercial Dairy Unit">
-                      {language === 'hi' ? 'D04 ग्रामीण वाणिज्यिक डेयरी यूनिट' : 'D04 Commercial Dairy Unit'}
-                    </option>
-                    <option value="D01 Kirana & General Provision">
-                      {language === 'hi' ? 'D01 ग्रामीण किराना एवं प्रोविजन स्टोर' : 'D01 Kirana & General Provision'}
-                    </option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
-                    {t.categoryLabel}
-                  </label>
-                  <select
-                    value={regCategory}
-                    onChange={(e) => setRegCategory(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
-                  >
-                    <option value="Scheduled Caste (SC)">
-                      {language === 'hi' ? 'अनुसूचित जाति (SC) · 100% पात्रता' : 'Scheduled Caste (SC) · Verified Eligibility'}
-                    </option>
-                    <option value="Scheduled Tribe (ST)">
-                      {language === 'hi' ? 'अनुसूचित जनजाति (ST)' : 'Scheduled Tribe (ST)'}
-                    </option>
-                    <option value="Other Backward Classes (OBC)">
-                      {language === 'hi' ? 'अन्य पिछड़ा वर्ग (OBC)' : 'Other Backward Classes (OBC)'}
-                    </option>
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-1"
-                >
-                  {t.submitRegister}
-                </button>
-
-                <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
-                  <span>{t.alreadyRegistered} </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthTab('login');
-                      setAuthError(null);
-                    }}
-                    className="font-bold text-[#0E7A53] hover:underline cursor-pointer ml-1"
-                  >
-                    {t.signInLink}
-                  </button>
-                </div>
-              </form>
-            )}
-
           </div>
         </div>
-      )}
+        <SetoDashboard language={language} currentUser={currentUser} />
+      </div>
+
+      {/* Global Authentication Modal */}
+      {renderAuthModal()}
 
     </div>
   );
