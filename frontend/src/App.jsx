@@ -370,7 +370,7 @@ export default function App() {
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPin, setRegPin] = useState('');
-  const [regTrade, setRegTrade] = useState('D08 Mustard & Edible Oil Expeller Mill');
+  const [regTrade, setRegTrade] = useState('D20 Metal Smithy');
   const [regCategory, setRegCategory] = useState('Scheduled Caste (SC)');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
@@ -884,6 +884,9 @@ export default function App() {
                   onChange={(e) => setRegTrade(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
                 >
+                  <option value="D20 Metal Smithy">
+                    D20 Metal Smithy (lohar): farm hand tools, gates, grills
+                  </option>
                   <option value="D08 Mustard & Edible Oil Expeller Mill">
                     {language === 'hi' ? 'D08 सरसों एवं खाद्य तेल स्पेलर मिल' : 'D08 Mustard & Edible Oil Expeller Mill'}
                   </option>

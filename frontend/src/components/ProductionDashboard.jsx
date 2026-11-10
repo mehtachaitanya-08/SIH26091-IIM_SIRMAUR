@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   calculateNSFDCLoan,
-  evaluateModeA,
   restructureDebt,
   fetchDossiers,
-  fetchHealth
+  fetchHealth,
+  fetchFeasibility,
+  downloadDpr,
+  sendChat,
+  chatRoute,
+  dprPayload
 } from '../services/api';
-import { calculateEMI } from '../engine';
 
 // Import SSOT Modular Dashboard Components
 import DashboardShell from './dashboard/DashboardShell';
@@ -15,258 +18,218 @@ import CenterWorkspace from './dashboard/CenterWorkspace';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
 import StatutoryVerificationModal from './dashboard/StatutoryVerificationModal';
 
-// Initial Seed Scenarios for Production Session
+// Seed scenarios: names and where they open. No figures: every figure comes from the server.
 const DEFAULT_PRODUCTION_SCENARIOS = [
   {
-    id: 'D08',
-    domainCode: 'D08',
-    tab: 'simulator',
-    name: 'D08 Mustard Oil Mill',
-    subtitle: '₹6.80L Term Loan · 26 Qtrs',
-    time: '2h ago',
-    type: 'd08',
-    badge: 'DSCR 1.62x'
+    id: 'D20',
+    domainCode: 'D20',
+    tab: 'feasibility',
+    name: 'D20 Metal Smithy',
+    subtitle: 'Verified business · feasibility and loan',
+    time: 'Start here',
+    type: 'custom'
   },
   {
     id: 'D18',
     domainCode: 'D18',
-    tab: 'simulator',
+    tab: 'amortizer',
     name: 'D18 Tailoring Workshop',
-    subtitle: 'PM Vishwakarma 5% credit...',
+    subtitle: 'Not yet verified · NSFDC loan only: enter your cost',
     image: '/images/scenario_tailoring.jpg',
     imageAlt: 'Tailoring craftsmanship',
     imageFallback: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
-    time: '3h ago',
-    type: 'd18',
-    badge: 'DSCR 2.14x'
+    time: 'Template',
+    type: 'custom'
   },
   {
     id: 'debt',
     tab: 'restructure',
     name: 'Sahukar Debt Relief',
-    subtitle: '₹1.20L @ 3 senkda → 6.5%',
-    time: '5h ago',
-    type: 'debt',
-    reliefText: '+₹2,460/mo relief',
-    badge: '+₹2,460/mo relief'
+    subtitle: 'Moneylender senkda debt → bank credit (ASSUMED engine)',
+    time: 'Template',
+    type: 'custom'
   }
 ];
 
-// Fallback Core 3 Presets in case catalog load is delayed
-const FALLBACK_PRESETS = {
-  D08: {
-    code: 'D08',
-    name: 'Mustard & Edible Oil Expeller Mill',
-    nameHi: 'सरसों एवं खाद्य तेल स्पेलर मिल',
-    cost: 680000,
-    annualNocf: 284400,
-    dscr: 1.62,
-    seasonality: [1.3, 1.2, 1.0, 0.7, 0.6, 0.8, 1.1, 1.3, 1.4, 1.3, 1.2, 1.1],
-    months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-  },
-  D18: {
-    code: 'D18',
-    name: 'Village Tailoring & Garments',
-    nameHi: 'ग्रामीण सिलाई एवं वस्त्र निर्माण',
-    cost: 100000,
-    annualNocf: 96000,
-    dscr: 2.14,
-    seasonality: [0.9, 0.9, 1.0, 1.1, 1.2, 0.8, 0.7, 0.9, 1.2, 1.4, 1.5, 1.0],
-    months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-  },
-  D15: {
-    code: 'D15',
-    name: 'Tractor & Farm Equipment Garage',
-    nameHi: 'ट्रैक्टर एवं कृषि उपकरण मरम्मत गैराज',
-    cost: 580000,
-    annualNocf: 242000,
-    dscr: 1.55,
-    seasonality: [0.8, 0.9, 1.6, 1.7, 1.1, 1.5, 0.6, 0.5, 0.7, 1.2, 1.4, 1.0],
-    months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
+// Saved scenarios are stored as {v: 2, list}. Older saves (a bare list) carried invented
+// figures (e.g. DSCR badges), so they are not shown again.
+const SCENARIOS_KEY = 'graminai_production_scenarios';
+function loadScenarios() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SCENARIOS_KEY));
+    return saved && saved.v === 2 && Array.isArray(saved.list) ? saved.list : DEFAULT_PRODUCTION_SCENARIOS;
+  } catch {
+    return DEFAULT_PRODUCTION_SCENARIOS;
   }
-};
+}
+
+const isPositiveNumber = (v) => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) > 0;
+const isNonNegativeNumber = (v) => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) >= 0;
 
 /**
  * ProductionDashboard — Live Authenticated Production Workspace
- * Connected to Python REST backend via api.js with resilient client-side fallback,
- * live Google OAuth session bindings, 24-dossier catalog, persistent scenarios,
- * and genuine Lead-Bank DPR PDF document generation.
+ * Every figure comes from the verified server (backend/app.py) through api.js. When the server
+ * is offline a red banner says so; only the NSFDC loan is still worked out in the browser
+ * (same rules, services/nsfdcLoan.js). Anything not in the verified data shows NOT FOUND.
  */
 export default function ProductionDashboard({
   language = 'en',
   currentUser = null,
-  onNavigateHome
+  onNavigateHome,
+  initialTab = 'home'
 }) {
   // Navigation & Viewport State
-  const [activeTab, setActiveTab] = useState('home');
-  const [selectedDomainCode, setSelectedDomainCode] = useState('D08');
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const [selectedDomainCode, setSelectedDomainCode] = useState('D20');
   const [isAdvisoryOpen, setIsAdvisoryOpen] = useState(true);
 
-  // Full 24-Domain Catalog
-  const [allDossiers, setAllDossiers] = useState(FALLBACK_PRESETS);
-  const [backendStatus, setBackendStatus] = useState({ online: false, mode: 'connecting' });
+  // The 24 businesses from the server: {code: {code, name, status}}
+  const [allDossiers, setAllDossiers] = useState({});
+  const [serverOffline, setServerOffline] = useState(false);
 
-  // Mode B Debt Restructuring Interactive States
+  // Loan inputs: all USER INPUT. SC status pre-filled only from the user's own registration answer.
+  const [projectCost, setProjectCost] = useState('');
+  const [familyIncome, setFamilyIncome] = useState('');
+  const registeredSc = typeof currentUser?.category === 'string' && /\(SC\)|^SC$/.test(currentUser.category);
+  const [isSc, setIsSc] = useState(registeredSc ? true : null);
+  // The session can arrive after the first render: pre-fill once it does, unless the user already chose.
+  useEffect(() => {
+    if (registeredSc) setIsSc((prev) => (prev === null ? true : prev));
+  }, [registeredSc]);
+  const [loanResult, setLoanResult] = useState(null);
+  const [loanError, setLoanError] = useState(null);
+  // Answers the chat collected, kept with the business they belong to: {code, answers}
+  const [adviceAnswers, setAdviceAnswers] = useState(null);
+
+  // Mode B Debt Restructuring inputs (USER INPUT) and the server's reply.
+  // Nothing is worked out until the user enters their own debt (the sliders start at their old positions).
   const [debtPrincipal, setDebtPrincipal] = useState(120000);
   const [debtRateSenkda, setDebtRateSenkda] = useState(3.0);
   const [debtMonthsActive, setDebtMonthsActive] = useState(36);
+  const [debtEntered, setDebtEntered] = useState(false);
+  const enterDebt = (setter) => (v) => { setDebtEntered(true); setter(v); };
+  const [debtRefinanceData, setDebtRefinanceData] = useState(null);
 
-  // Calculated State Containers (populated via api.js)
-  const [loanStructure, setLoanStructure] = useState({
-    loanAmount: 612000,
-    promoterEquity: 68000,
-    promoterEquityPct: 10,
-    repaymentQuarters: 26,
-    interestRatePA: 8.0,
-    totalQuarters: 28,
-    tenureYears: 7
-  });
+  // Feasibility report for the selected business
+  const [feasibility, setFeasibility] = useState(null);
 
-  const [amortizationSchedule, setAmortizationSchedule] = useState({
-    equatedQuarterlyInstallment: 30424,
-    quarters: []
-  });
-
-  const [debtRefinanceData, setDebtRefinanceData] = useState({
-    principal: 120000,
-    apr: 36,
-    monthlyBleed: 3600,
-    newEmi: 3678,
-    monthlyCashRelief: -78,
-    monthsActive: 36,
-    paidToDate: 129600,
-    damdupatViolated: true
-  });
+  // Chat
+  const [commandInput, setCommandInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatBusy, setChatBusy] = useState(false);
+  const [chatNotice, setChatNotice] = useState(null);
 
   // UI & Scenario Persistence States
-  const [commandInput, setCommandInput] = useState('');
   const [toastMessage, setToastMessage] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [recentChecks, setRecentChecks] = useState({ D08: true, D18: false, debt: false });
+  const [recentChecks, setRecentChecks] = useState({ D20: true, D18: false, debt: false });
   const [userModalOpen, setUserModalOpen] = useState(false);
-  const [scenariosList, setScenariosList] = useState(() => {
-    try {
-      const saved = localStorage.getItem('graminai_production_scenarios');
-      return saved ? JSON.parse(saved) : DEFAULT_PRODUCTION_SCENARIOS;
-    } catch {
-      return DEFAULT_PRODUCTION_SCENARIOS;
-    }
-  });
+  const [scenariosList, setScenariosList] = useState(loadScenarios);
 
-  // Load Dossiers Catalog and Health Check on Mount
+  // Every reply updates the banner: it shows while replies are offline and clears once the server answers.
+  const noteOffline = useCallback((res) => {
+    if (res && typeof res === 'object') setServerOffline(Boolean(res.offline));
+    return res;
+  }, []);
+
+  // Load the business list and health check on mount
   useEffect(() => {
     let isMounted = true;
-
-    async function initCatalogAndHealth() {
-      try {
-        const [healthRes, dossiersRes] = await Promise.all([
-          fetchHealth().catch(() => null),
-          fetchDossiers().catch(() => null)
-        ]);
-
-        if (!isMounted) return;
-
-        if (healthRes && healthRes.status === 'ok') {
-          setBackendStatus({
-            online: !healthRes.clientOnly,
-            mode: healthRes.clientOnly ? 'client-fallback' : 'rest-api',
-            version: healthRes.version
-          });
-        }
-
-        if (dossiersRes && dossiersRes.dossiers) {
-          const mapped = {};
-          dossiersRes.dossiers.forEach((d) => {
-            mapped[d.code] = {
-              code: d.code,
-              name: d.title || d.name,
-              cost: d.capex || d.cost || 100000,
-              annualNocf: Math.round((d.revenue || 200000) - (d.opex || 100000)),
-              dscr: d.dscr || 1.65,
-              seasonality: d.seasonalityMultipliers || [1.0, 1.0, 1.0, 0.7, 0.6, 0.8, 1.1, 1.3, 1.4, 1.3, 1.2, 1.1],
-              months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-            };
-          });
-          setAllDossiers(prev => ({ ...prev, ...mapped }));
-        }
-      } catch (err) {
-        console.warn('[ProductionDashboard] Initialization warning:', err);
-      }
-    }
-
-    initCatalogAndHealth();
+    Promise.all([fetchHealth(), fetchDossiers()]).then(([healthRes, dossiersRes]) => {
+      if (!isMounted) return;
+      setServerOffline(Boolean(healthRes?.offline || dossiersRes?.offline));
+      const mapped = {};
+      (dossiersRes?.dossiers || []).forEach((d) => {
+        mapped[d.code] = { code: d.code, name: d.name || d.code, status: d.status };
+      });
+      setAllDossiers(mapped);
+    }).catch((err) => console.warn('[ProductionDashboard] Initialization warning:', err));
     return () => { isMounted = false; };
   }, []);
 
-  // Active Domain Definition
-  const activeDomain = allDossiers[selectedDomainCode] || FALLBACK_PRESETS[selectedDomainCode] || FALLBACK_PRESETS.D08;
+  // Selected business: the server's name and status; nothing else is assumed about it.
+  const activeDomain = allDossiers[selectedDomainCode] || { code: selectedDomainCode, name: selectedDomainCode, status: 'loading' };
 
-  // Recalculate NSFDC Loan via API Service
+  // Feasibility report for the selected business
   useEffect(() => {
     let isMounted = true;
-    const cost = activeDomain.cost || 680000;
-    const income = currentUser?.incomeNum || 350000;
-
-    calculateNSFDCLoan(cost, income, { isSc: true }).then((result) => {
-      if (!isMounted) return;
-
-      if (result && result.loanAmount) {
-        setLoanStructure({
-          loanAmount: result.loanAmount,
-          promoterEquity: result.promoterContribution || result.promoterEquity || Math.round(cost * 0.1),
-          promoterEquityPct: Math.round(((result.promoterContribution || (cost * 0.1)) / cost) * 100),
-          repaymentQuarters: result.repaymentQuarters || 26,
-          interestRatePA: result.quarterlyInterestRate ? (result.quarterlyInterestRate * 4).toFixed(1) : 8.0,
-          totalQuarters: (result.repaymentQuarters || 26) + (result.moratoriumQuarters || 2),
-          tenureYears: result.termYears || 7
-        });
-
-        if (result.amortizationSchedule) {
-          const scheduleList = result.amortizationSchedule;
-          const firstAmortizing = scheduleList.find(q => !q.isMoratorium) || scheduleList[0];
-          setAmortizationSchedule({
-            equatedQuarterlyInstallment: firstAmortizing ? firstAmortizing.totalInstallment : Math.round(result.loanAmount / (result.repaymentQuarters || 26)),
-            quarters: scheduleList
-          });
-        }
-      }
-    }).catch((err) => {
-      console.warn('[ProductionDashboard] calculateNSFDCLoan error:', err);
-    });
-
+    setFeasibility(null);
+    fetchFeasibility(selectedDomainCode).then((res) => {
+      if (isMounted) setFeasibility(noteOffline(res));
+    }).catch((err) => { if (isMounted) setFeasibility({ code: selectedDomainCode, error: err.message }); });
     return () => { isMounted = false; };
-  }, [activeDomain.cost, currentUser]);
+  }, [selectedDomainCode, noteOffline]);
 
-  // Recalculate Mode B Debt Restructuring via API Service
+  // NSFDC loan: only once the user has entered cost, income and SC status
+  const loanReady = isPositiveNumber(projectCost) && isNonNegativeNumber(familyIncome) && typeof isSc === 'boolean';
   useEffect(() => {
     let isMounted = true;
+    setLoanResult(null);
+    setLoanError(null);
+    if (!loanReady) return undefined;
+    calculateNSFDCLoan(Number(projectCost), Number(familyIncome), { isSc }).then((res) => {
+      if (isMounted) setLoanResult(noteOffline(res));
+    }).catch((err) => { if (isMounted) setLoanError(err.message); });
+    return () => { isMounted = false; };
+  }, [projectCost, familyIncome, isSc, loanReady, noteOffline]);
 
+  // Shapes the views read. interestRatePA comes from the server's interestRatePa (p.a. %).
+  const loanStructure = loanResult && loanResult.isEligible ? {
+    schemeName: loanResult.schemeName,
+    loanAmount: loanResult.loanAmount,
+    promoterEquity: loanResult.promoterEquity,
+    promoterEquityPct: loanResult.promoterEquityPct,
+    repaymentQuarters: loanResult.repaymentQuarters,
+    moratoriumQuarters: loanResult.moratoriumQuarters,
+    interestRatePA: loanResult.interestRatePa,
+    totalQuarters: loanResult.totalQuarters,
+    tenureYears: loanResult.tenureYears,
+    interestAddedDuringPause: loanResult.interestAddedDuringPause,
+    totalDebtService: loanResult.totalDebtService,
+    tags: loanResult.tags || {},
+    offline: Boolean(loanResult.offline)
+  } : null;
+  const amortizationSchedule = loanStructure ? {
+    equatedQuarterlyInstallment: loanResult.equatedQuarterlyInstallment,
+    quarters: loanResult.amortizationSchedule || []
+  } : null;
+  const loanInputs = {
+    projectCost, familyIncome, isSc,
+    onProjectCostChange: setProjectCost,
+    onFamilyIncomeChange: setFamilyIncome,
+    onIsScChange: setIsSc,
+    ready: loanReady,
+    result: loanResult,
+    error: loanError
+  };
+
+  // Mode B Debt Restructuring: the server's figures only (team's engine, tagged ASSUMED by the server)
+  useEffect(() => {
+    let isMounted = true;
+    if (!debtEntered) { setDebtRefinanceData(null); return undefined; }
     restructureDebt(debtPrincipal, debtRateSenkda, debtMonthsActive).then((res) => {
       if (!isMounted) return;
-
-      const apr = debtRateSenkda * 12;
-      const monthlyBleed = res.monthlyBleed || Math.round(debtPrincipal * (apr / 100 / 12));
-      const newEmi = res.newMonthlyEmi || res.newEmi || calculateEMI(debtPrincipal, 6.5, 36);
-      const monthlyCashRelief = monthlyBleed - newEmi;
-      const paidToDate = res.totalPredatoryPaid || (monthlyBleed * debtMonthsActive);
-      const damdupatViolated = res.damdupatViolated !== undefined ? res.damdupatViolated : (paidToDate >= debtPrincipal);
-
+      noteOffline(res);
+      if (res.offline) { setDebtRefinanceData({ offline: true }); return; }
+      const debt = (res.auditedDebts || res.audited_debts || [])[0] || {};
+      const plan = res.refinancingPlan || res.refinancing_plan || {};
       setDebtRefinanceData({
         principal: debtPrincipal,
-        apr,
-        monthlyBleed,
-        newEmi,
-        monthlyCashRelief,
+        monthlyBleed: res.oldMonthlyInterest,
+        newEmi: res.newMonthlyEmi,
+        monthlyCashRelief: res.monthlySavings,
         monthsActive: debtMonthsActive,
-        paidToDate,
-        damdupatViolated
+        paidToDate: debt.total_interest_paid_to_date,
+        damdupatViolated: res.damdupatViolated,
+        pathwayName: plan.pathway_name,
+        formalRatePct: plan.formal_interest_rate_pct,
+        tag: res.tags?.source
       });
     }).catch((err) => {
-      console.warn('[ProductionDashboard] restructureDebt error:', err);
+      if (isMounted) setDebtRefinanceData({ error: err.message });
     });
-
     return () => { isMounted = false; };
-  }, [debtPrincipal, debtRateSenkda, debtMonthsActive]);
+  }, [debtPrincipal, debtRateSenkda, debtMonthsActive, debtEntered, noteOffline]);
 
   // Helper Toast
   const showToast = useCallback((msg) => {
@@ -289,173 +252,121 @@ export default function ProductionDashboard({
   const persistScenarios = (newScenarios) => {
     setScenariosList(newScenarios);
     try {
-      localStorage.setItem('graminai_production_scenarios', JSON.stringify(newScenarios));
+      localStorage.setItem(SCENARIOS_KEY, JSON.stringify({ v: 2, list: newScenarios }));
     } catch {
       // Ignore localStorage exceptions in restricted sandbox environments
     }
   };
 
-  // Create New Simulation Action
+  // Create New Simulation Action: saves the business and the user's own cost, nothing invented
   const handleCreateNewSimulation = () => {
-    const timestamp = 'Just now';
     const newId = `SIM-${Date.now().toString().slice(-4)}`;
     const newScenario = {
       id: newId,
       domainCode: activeDomain.code,
-      tab: 'simulator',
-      name: `${activeDomain.code} ${activeDomain.name.split(' ')[0]} Sim`,
-      subtitle: `₹${(activeDomain.cost / 100000).toFixed(2)}L Project · DSCR ${activeDomain.dscr}x`,
-      time: timestamp,
-      type: 'custom',
-      badge: `DSCR ${activeDomain.dscr}x`
+      tab: 'amortizer',
+      name: `${activeDomain.code} ${String(activeDomain.name).split(' ')[0]} Sim`,
+      subtitle: isPositiveNumber(projectCost) ? `Project cost ${formatINR(Number(projectCost))} (your input)` : 'Project cost not entered yet',
+      time: 'Just now',
+      type: 'custom'
     };
-
-    const updated = [newScenario, ...scenariosList];
-    persistScenarios(updated);
-    setActiveTab('simulator');
+    persistScenarios([newScenario, ...scenariosList]);
+    setActiveTab('amortizer');
     showToast(`Created & Saved Simulation [${newId}]`);
   };
 
   // Refresh Scenarios Action
   const handleRefreshScenarios = () => {
-    try {
-      const saved = localStorage.getItem('graminai_production_scenarios');
-      if (saved) {
-        setScenariosList(JSON.parse(saved));
-        showToast('Synchronized scenarios with persistent store');
-      } else {
-        setScenariosList(DEFAULT_PRODUCTION_SCENARIOS);
-        showToast('Refreshed scenario library');
-      }
-    } catch {
-      showToast('Refreshed scenario library');
-    }
+    setScenariosList(loadScenarios());
+    showToast('Refreshed scenario library');
   };
 
-  // Command Execution Dispatcher
-  const handleCommand = (overrideText = null) => {
-    const text = (overrideText || commandInput).trim().toLowerCase();
-    if (!text) return;
+  // Chat: the whole conversation goes to the server each time; the server keeps nothing.
+  const handleChatSend = async (overrideText = null) => {
+    const text = (overrideText ?? commandInput).trim();
+    if (!text || chatBusy) return;
     setCommandInput('');
-
-    if (text.includes('stress') || text.includes('simulat') || text.includes('season')) {
-      setActiveTab('simulator');
-      showToast('Loaded 12-Month Seasonality & August Lean Trough Simulator');
-    } else if (text.includes('amort') || text.includes('loan') || text.includes('eqi')) {
-      setActiveTab('amortizer');
-      showToast(`Generated ${loanStructure.totalQuarters}-Quarter NSFDC Amortization Schedule`);
-    } else if (text.includes('debt') || text.includes('moneylender') || text.includes('relief') || text.includes('senkda')) {
-      setActiveTab('restructure');
-      showToast('Loaded Moneylender Debt Liberation & Damdupat Audit');
-    } else if (text.includes('dpr') || text.includes('pdf') || text.includes('report') || text.includes('bank')) {
-      setActiveTab('dpr');
-      showToast('Generated 1-Page Lead-Bank DPR Sanction Dossier');
-    } else {
-      setActiveTab('simulator');
-      showToast(`AI Advisory calibrated parameters for ${activeDomain.name}`);
+    const msgs = [...chatMessages, { role: 'user', content: text }];
+    setChatMessages(msgs);
+    setChatBusy(true);
+    setChatNotice(null);
+    try {
+      const res = await sendChat(msgs);
+      if (res.offline) {
+        setServerOffline(true);
+        setChatMessages(chatMessages); // not answered: keep it out of the conversation, give it back in the box
+        setCommandInput(text);
+        setChatNotice('Server offline: the assistant is not available. The loan calculator still works.');
+        return;
+      }
+      setServerOffline(false);
+      if (res.status !== 'ok') {
+        setChatNotice(res.status === 'ai_key_rejected'
+          ? 'AI key rejected: the assistant is not available. The loan calculator still works.'
+          : 'AI offline: the assistant is not available right now. The loan calculator still works.');
+      }
+      if (res.reply) setChatMessages([...msgs, { role: 'assistant', content: res.reply }]);
+      else { setChatMessages(chatMessages); setCommandInput(text); }
+      const route = chatRoute(res.tool_results);
+      if (route.code) setSelectedDomainCode(route.code);
+      if (route.loanInputs) {
+        if (route.loanInputs.projectCost !== undefined) setProjectCost(String(route.loanInputs.projectCost));
+        if (route.loanInputs.familyIncome !== undefined) setFamilyIncome(String(route.loanInputs.familyIncome));
+        if (typeof route.loanInputs.isSc === 'boolean') setIsSc(route.loanInputs.isSc);
+      }
+      if (route.answers) setAdviceAnswers({ code: route.code, answers: route.answers });
+      if (route.tab) setActiveTab(route.tab);
+    } catch (err) {
+      setChatMessages(chatMessages);
+      setCommandInput(text);
+      setChatNotice(`Assistant error: ${err.message}`);
+    } finally {
+      setChatBusy(false);
     }
   };
 
-  // Genuine Lead-Bank DPR PDF / Document Downloader
-  const handleDownloadDprPdf = () => {
-    const beneficiaryName = currentUser?.name || (language === 'hi' ? 'लाभार्थी उद्यमी' : 'Beneficiary Entrepreneur');
-    const beneficiaryCategory = currentUser?.category || 'Scheduled Caste (SC)';
-    const certId = currentUser?.id ? `MoSJE/NSFDC/2026/${currentUser.id}` : 'MoSJE/NSFDC/2026/STATUTORY-VERIFIED';
-    const dateStr = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    const htmlContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>RBI Lead Bank DPR - ${activeDomain.code} ${activeDomain.name}</title>
-  <style>
-    @page { size: A4 portrait; margin: 15mm; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #111311; line-height: 1.4; padding: 20px; }
-    .header { border-bottom: 2px solid #0E7A53; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
-    .title { font-size: 20px; font-weight: 800; color: #111311; margin: 0; }
-    .subtitle { font-size: 11px; color: #686D65; margin-top: 4px; }
-    .badge { background: #E6F4EA; color: #0E7A53; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; border: 1px solid #A8DAB5; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .card { background: #F8F9FA; border: 1px solid #E9ECEF; border-radius: 10px; padding: 14px; }
-    .card-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #686D65; margin-bottom: 8px; border-bottom: 1px solid #E9ECEF; padding-bottom: 4px; }
-    .row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
-    .row strong { color: #111311; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
-    th, td { border: 1px solid #E9ECEF; padding: 6px 10px; text-align: left; }
-    th { background: #F8F9FA; font-weight: bold; color: #686D65; }
-    .legal-box { background: #FFF9E6; border: 1px solid #FFE082; border-radius: 8px; padding: 10px; font-size: 11px; color: #8D6E63; margin-top: 15px; }
-    .footer { font-size: 10px; color: #A0A59D; margin-top: 25px; text-align: center; border-top: 1px solid #E9ECEF; padding-top: 10px; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div>
-      <h1 class="title">RBI LEAD BANK SCHEME STANDARD (1969)</h1>
-      <p class="subtitle">MoSJE / NSFDC Concessional Credit Appraisal Dossier · SIH26091</p>
-    </div>
-    <div class="badge">STATUTORY SANCTION READY</div>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <div class="card-title">1. Beneficiary Identification</div>
-      <div class="row"><span>Full Name:</span><strong>${beneficiaryName}</strong></div>
-      <div class="row"><span>Social Category:</span><strong>${beneficiaryCategory} · Verified</strong></div>
-      <div class="row"><span>Certificate ID:</span><strong>${certId}</strong></div>
-      <div class="row"><span>Appraisal Date:</span><strong>${dateStr}</strong></div>
-      <div class="row"><span>District Lead Bank:</span><strong>${currentUser?.district || 'Sitapur District (Lead Bank: Bank of India)'}</strong></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">2. Enterprise Project Appraisal</div>
-      <div class="row"><span>Enterprise Trade:</span><strong>${activeDomain.name} (${activeDomain.code})</strong></div>
-      <div class="row"><span>Total Project Cost:</span><strong>₹${activeDomain.cost.toLocaleString('en-IN')}</strong></div>
-      <div class="row"><span>Promoter Margin (10%):</span><strong>₹${loanStructure.promoterEquity.toLocaleString('en-IN')}</strong></div>
-      <div class="row"><span>NSFDC Sanction Loan (90%):</span><strong>₹${loanStructure.loanAmount.toLocaleString('en-IN')}</strong></div>
-      <div class="row"><span>Concessional Rate:</span><strong>${loanStructure.interestRatePA}% p.a. (Quarterly Rest)</strong></div>
-      <div class="row"><span>Solvency Rating:</span><strong>SAFE (DSCR ${activeDomain.dscr}x)</strong></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">3. Equated Quarterly Installment (EQI) Schedule</div>
-    <div class="row">
-      <span>Tenure & Amortization:</span>
-      <strong>${loanStructure.tenureYears} Years (${loanStructure.totalQuarters} Quarters: 2 Moratorium + ${loanStructure.repaymentQuarters} Repaying)</strong>
-    </div>
-    <div class="row">
-      <span>Equated Quarterly Installment (EQI):</span>
-      <strong style="color: #0E7A53; font-size: 14px;">₹${amortizationSchedule.equatedQuarterlyInstallment.toLocaleString('en-IN')} / Quarter</strong>
-    </div>
-  </div>
-
-  <div class="legal-box">
-    <strong>Statutory Certification:</strong>
-    This document constitutes an official Detailed Project Report (DPR) prepared in compliance with Reserve Bank of India Lead Bank Scheme guidelines and Ministry of Social Justice & Empowerment NSFDC concessional lending criteria. The beneficiary fulfills statutory caste and income thresholds.
-  </div>
-
-  <div class="footer">
-    Lead Bank QR Hash: SHA256: 290bfbc47a9d3e8...mosje_nsfdc_verified · Generated by GraminAI Platform
-  </div>
-</body>
-</html>`;
-
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Lead_Bank_DPR_${activeDomain.code}_${beneficiaryName.replace(/\s+/g, '_')}.html`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    showToast(`Downloaded Lead-Bank DPR for ${activeDomain.code}`);
+  // 1-page DPR PDF, made by the server from verified data
+  const handleDownloadDprPdf = async () => {
+    if (!loanReady) {
+      setActiveTab('amortizer');
+      showToast('Enter project cost, family income and SC status first');
+      return;
+    }
+    try {
+      const blob = await downloadDpr(dprPayload({
+        code: activeDomain.code,
+        projectCost: Number(projectCost),
+        familyIncome: Number(familyIncome),
+        isSc,
+        answers: adviceAnswers,
+        applicantName: currentUser?.name || null
+      }));
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `DPR_${activeDomain.code}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded DPR for ${activeDomain.code}`);
+    } catch (err) {
+      if (err.name === 'ServerOfflineError') setServerOffline(true);
+      showToast(`DPR not made: ${err.message}`);
+    }
   };
 
-  const formatINR = (val) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(val);
-  };
+  function formatINR(val) {
+    if (typeof val !== 'number' || !Number.isFinite(val)) return 'NOT FOUND';
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(val);
+  }
+
+  const banner = serverOffline ? (
+    <div role="alert" className="mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 font-sans-ui">
+      Server offline. Business data, feasibility, DPR and the assistant need the server. The NSFDC loan is still worked out
+      in your browser with the same rules. Start the server with: backend/.venv/bin/uvicorn backend.app:app --port 8000
+    </div>
+  ) : null;
 
   return (
     <DashboardShell
@@ -464,6 +375,7 @@ export default function ProductionDashboard({
       id="production-dashboard"
       toastMessage={toastMessage}
       showTitle={true}
+      banner={banner}
     >
       {/* Statutory Beneficiary Verification Modal */}
       <StatutoryVerificationModal
@@ -498,16 +410,22 @@ export default function ProductionDashboard({
         language={language}
         loanStructure={loanStructure}
         amortizationSchedule={amortizationSchedule}
+        loanInputs={loanInputs}
+        feasibility={feasibility}
         debtPrincipal={debtPrincipal}
-        onPrincipalChange={setDebtPrincipal}
+        onPrincipalChange={enterDebt(setDebtPrincipal)}
         debtRateSenkda={debtRateSenkda}
-        onRateChange={setDebtRateSenkda}
+        onRateChange={enterDebt(setDebtRateSenkda)}
         debtMonthsActive={debtMonthsActive}
-        onMonthsActiveChange={setDebtMonthsActive}
+        onMonthsActiveChange={enterDebt(setDebtMonthsActive)}
+        debtEntered={debtEntered}
         debtRefinanceData={debtRefinanceData}
         commandInput={commandInput}
         onCommandInputChange={setCommandInput}
-        onCommandSubmit={handleCommand}
+        onCommandSubmit={() => handleChatSend()}
+        chatMessages={chatMessages}
+        chatBusy={chatBusy}
+        chatNotice={chatNotice}
         onShowToast={showToast}
         onDownloadPdf={handleDownloadDprPdf}
         formatINR={formatINR}

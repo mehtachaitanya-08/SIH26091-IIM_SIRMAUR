@@ -87,25 +87,7 @@ export default function ScenariosSidebar({
                     )}
 
                     <div className="flex items-center justify-between mt-2">
-                      {scenario.type === 'd08' && (
-                        <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
-                          DSCR 1.62x
-                        </span>
-                      )}
-
-                      {scenario.type === 'd18' && (
-                        <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
-                          DSCR 2.14x
-                        </span>
-                      )}
-
-                      {scenario.type === 'debt' && (
-                        <span className="text-[11px] text-[#0E7A53] font-bold font-mono-num">
-                          {scenario.reliefText || '+₹2,460/mo relief'}
-                        </span>
-                      )}
-
-                      {scenario.type !== 'd08' && scenario.type !== 'd18' && scenario.type !== 'debt' && scenario.badge && (
+                      {scenario.badge && (
                         <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
                           {scenario.badge}
                         </span>

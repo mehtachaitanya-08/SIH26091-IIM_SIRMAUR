@@ -9,7 +9,7 @@ import UserCard from './UserCard';
 export default function NavRail({
   activeTab = 'home',
   onSelectTab,
-  selectedDomainCode = 'D08',
+  selectedDomainCode = 'D20',
   onSelectDomain,
   presets = {},
   isAdvisoryOpen = true,
@@ -25,7 +25,8 @@ export default function NavRail({
     { id: 'simulator', label: 'Enterprise Studio' },
     { id: 'amortizer', label: 'NSFDC Amortizer' },
     { id: 'restructure', label: 'Debt Liberation' },
-    { id: 'dpr', label: '1-Page DPR' }
+    { id: 'dpr', label: '1-Page DPR' },
+    { id: 'feasibility', label: 'Feasibility' }
   ];
 
   const presetList = Object.values(presets);
@@ -73,13 +74,10 @@ export default function NavRail({
           {/* Utility Action Buttons */}
           <button
             type="button"
-            onClick={() => onShowToast && onShowToast('8 Statutory notifications pending')}
+            onClick={() => onShowToast && onShowToast('No notifications')}
             className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer font-sans-ui"
           >
             <span>Notifications</span>
-            <span className="w-5 h-5 rounded-full bg-[#111311] text-white text-[11px] flex items-center justify-center font-bold">
-              8
-            </span>
           </button>
 
           <button

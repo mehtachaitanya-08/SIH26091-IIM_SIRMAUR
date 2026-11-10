@@ -2,31 +2,34 @@ import React from 'react';
 import { Download } from 'lucide-react';
 
 /**
- * LeadBankDprView — 1-Page Lead-Bank Detailed Project Report Appraisal
- * Implements RBI Lead Bank Scheme standard (1969) credit appraisal summary
- * with bank-sanction PDF export capability.
+ * LeadBankDprView — 1-page Detailed Project Report (DPR)
+ * The PDF is made by the server (POST /api/dpr) from verified data only, each figure with its tag.
+ * It is an advisory document, not a loan sanction.
  */
 export default function LeadBankDprView({
   activeDomain,
   loanStructure,
   currentUser = null,
+  loanInputs = null,
   language = 'en',
   onClose,
   onDownloadPdf,
   formatINR,
   mode = 'mockup'
 }) {
-  if (!activeDomain || !loanStructure) return null;
+  if (!activeDomain) return null;
 
   const beneficiaryName = currentUser?.name || (language === 'hi' ? 'लाभार्थी उद्यमी' : 'Beneficiary Entrepreneur');
   const beneficiaryCategory = currentUser?.category ? `${currentUser.category} · Verified` : 'SC · Verified';
+  const fmt = (v) => (formatINR ? formatINR(v) : `₹${v}`);
+  const isMockup = mode !== 'production';
 
   return (
     <div className="bg-[#F8F6F0] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
       <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
         <div>
           <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">
-            RBI Lead Bank Scheme Standard (1969)
+            For the bank / State Channelising Agency
           </span>
           <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
             1-Page Detailed Project Report (DPR)
@@ -43,33 +46,39 @@ export default function LeadBankDprView({
 
       <div className="p-4 rounded-xl bg-white border border-[#E9ECEF] space-y-2 text-xs">
         <div className="flex justify-between">
-          <span className="text-[#686D65]">Enterprise Name:</span>
-          <span className="font-bold text-[#111311] font-sans-ui">{activeDomain.name}</span>
+          <span className="text-[#686D65]">Business:</span>
+          <span className="font-bold text-[#111311] font-sans-ui">{activeDomain.name} ({activeDomain.code})</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[#686D65]">Beneficiary:</span>
+          <span className="text-[#686D65]">Applicant:</span>
           <span className="font-bold text-[#111311] font-sans-ui">
             {beneficiaryName} ({beneficiaryCategory})
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[#686D65]">Sanction Loan:</span>
+          <span className="text-[#686D65]">NSFDC loan:</span>
           <span className="font-bold text-[#0E7A53] font-mono-num">
-            {formatINR ? formatINR(loanStructure.loanAmount) : `₹${loanStructure.loanAmount}`} @ {loanStructure.interestRatePA}%
+            {isMockup ? 'see dashboard'
+              : loanStructure ? `${fmt(loanStructure.loanAmount)} @ ${loanStructure.interestRatePA}% p.a. [S1]`
+              : loanInputs?.error ? `Not worked out: ${loanInputs.error}`
+              : loanInputs?.result && !loanInputs.result.isEligible
+                ? (loanInputs.result.status === 'not_covered' ? 'Not covered by the NSFDC loan schemes [S1]' : 'Not eligible for NSFDC loans [S1]')
+              : loanInputs?.ready ? 'Working out the loan…'
+              : 'NOT FOUND: enter your project cost, income and SC status in the NSFDC Amortizer'}
           </span>
         </div>
-        <div className="flex justify-between">
-          <span className="text-[#686D65]">Promoter Equity Margin:</span>
-          <span className="font-bold text-[#111311] font-mono-num">
-            {formatINR ? formatINR(loanStructure.promoterEquity) : `₹${loanStructure.promoterEquity}`} ({loanStructure.promoterEquityPct}%)
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-[#686D65]">Lead-Bank QR Hash:</span>
-          <span className="font-mono-num text-[11px] text-[#686D65]">
-            SHA256: 290bfbc47a9d3e8...mosje_nsfdc_verified
-          </span>
-        </div>
+        {!isMockup && loanStructure && (
+          <div className="flex justify-between">
+            <span className="text-[#686D65]">Your own money:</span>
+            <span className="font-bold text-[#111311] font-mono-num">
+              {fmt(loanStructure.promoterEquity)} ({loanStructure.promoterEquityPct}%) [CALCULATED]
+            </span>
+          </div>
+        )}
+        <p className="text-[11px] text-[#686D65] pt-1">
+          Made by the server from verified sources: loan, quarterly summary, your answers to the business questions,
+          gaps (NOT FOUND) and sources, each figure tagged. Advisory document only: not a loan sanction.
+        </p>
       </div>
 
       <button
@@ -78,7 +87,7 @@ export default function LeadBankDprView({
         className="w-full py-2.5 rounded-xl bg-[#111311] text-white font-bold text-xs shadow-md hover:bg-slate-800 transition-all flex items-center justify-center space-x-1.5 cursor-pointer font-sans-ui"
       >
         <Download className="w-4 h-4 text-emerald-400" />
-        <span>Download Bank-Sanction PDF</span>
+        <span>Download DPR PDF</span>
       </button>
     </div>
   );

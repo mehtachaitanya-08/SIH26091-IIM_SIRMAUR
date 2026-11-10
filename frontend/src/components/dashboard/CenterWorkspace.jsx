@@ -4,6 +4,7 @@ import SeasonalitySimulatorView from './SeasonalitySimulatorView';
 import NsfdcAmortizerView from './NsfdcAmortizerView';
 import DebtLiberationView from './DebtLiberationView';
 import LeadBankDprView from './LeadBankDprView';
+import FeasibilityView from './FeasibilityView';
 import CommandBar from './CommandBar';
 
 /**
@@ -19,6 +20,8 @@ export default function CenterWorkspace({
   language = 'en',
   loanStructure,
   amortizationSchedule,
+  loanInputs = null,
+  feasibility = null,
   debtPrincipal = 120000,
   onPrincipalChange,
   debtRateSenkda = 3.0,
@@ -26,9 +29,13 @@ export default function CenterWorkspace({
   debtMonthsActive = 36,
   onMonthsActiveChange,
   debtRefinanceData,
+  debtEntered = true,
   commandInput = '',
   onCommandInputChange,
   onCommandSubmit,
+  chatMessages = null,
+  chatBusy = false,
+  chatNotice = null,
   onShowToast,
   onDownloadPdf,
   formatINR,
@@ -74,7 +81,7 @@ export default function CenterWorkspace({
           >
             <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Simulate enterprise</h4>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              Test 12-month seasonality & August lean-month cash flows.
+              Your business's season, market and gaps from verified sources.
             </p>
           </div>
 
@@ -84,7 +91,7 @@ export default function CenterWorkspace({
           >
             <h4 className="font-bold text-xs text-[#111311] font-sans-ui">NSFDC amortizer</h4>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              Calculate 11 or 26 quarterly instalments at 6.5% / 8.0%.
+              NSFDC loan and quarterly repayment schedule for your project cost.
             </p>
           </div>
 
@@ -106,7 +113,9 @@ export default function CenterWorkspace({
           activeDomain={activeDomain}
           onClose={() => onSelectTab && onSelectTab('home')}
           onNavigateAmortizer={() => onSelectTab && onSelectTab('amortizer')}
+          onNavigateFeasibility={() => onSelectTab && onSelectTab('feasibility')}
           formatINR={formatINR}
+          mode={mode}
         />
       )}
 
@@ -115,9 +124,11 @@ export default function CenterWorkspace({
         <NsfdcAmortizerView
           loanStructure={loanStructure}
           amortizationSchedule={amortizationSchedule}
+          loanInputs={loanInputs}
           onClose={() => onSelectTab && onSelectTab('home')}
           onNavigateDpr={() => onSelectTab && onSelectTab('dpr')}
           formatINR={formatINR}
+          mode={mode}
         />
       )}
 
@@ -131,9 +142,11 @@ export default function CenterWorkspace({
           debtMonthsActive={debtMonthsActive}
           onMonthsActiveChange={onMonthsActiveChange}
           debtRefinanceData={debtRefinanceData}
+          debtEntered={debtEntered}
           onClose={() => onSelectTab && onSelectTab('home')}
           onGenerateLegalPackage={() => onShowToast && onShowToast('Generated Usurious Loans Act Legal Defense Package')}
           formatINR={formatINR}
+          mode={mode}
         />
       )}
 
@@ -142,6 +155,7 @@ export default function CenterWorkspace({
         <LeadBankDprView
           activeDomain={activeDomain}
           loanStructure={loanStructure}
+          loanInputs={loanInputs}
           currentUser={currentUser}
           language={language}
           onClose={() => onSelectTab && onSelectTab('home')}
@@ -151,11 +165,24 @@ export default function CenterWorkspace({
         />
       )}
 
+      {/* Viewport 5: Feasibility report (server, verified data only) */}
+      {activeTab === 'feasibility' && (
+        <FeasibilityView
+          activeDomain={activeDomain}
+          feasibility={feasibility}
+          onClose={() => onSelectTab && onSelectTab('home')}
+          mode={mode}
+        />
+      )}
+
       {/* Bottom Operational Command Bar */}
       <CommandBar
         commandInput={commandInput}
         onInputChange={onCommandInputChange}
         onSubmit={onCommandSubmit}
+        chatMessages={chatMessages}
+        chatBusy={chatBusy}
+        chatNotice={chatNotice}
         onSelectChip={(tab) => onSelectTab && onSelectTab(tab)}
         onShowToast={onShowToast}
         mode={mode}

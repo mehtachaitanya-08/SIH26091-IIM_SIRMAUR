@@ -77,8 +77,9 @@ describe('CHALLENGER M3 EMPIRICAL ADVERSARIAL STRESS SUITE', () => {
       assert.ok(prodCode.includes('fetchHealth'), 'Must invoke fetchHealth');
     });
 
-    it('ProductionDashboard.jsx supports offline client fallback gracefully when backend is unreachable', () => {
-      assert.ok(prodCode.includes('FALLBACK_PRESETS'), 'Must define FALLBACK_PRESETS for offline startup');
+    it('ProductionDashboard.jsx shows a server-offline banner instead of built-in sample figures', () => {
+      assert.ok(!prodCode.includes('FALLBACK_PRESETS'), 'Must not define built-in sample figures');
+      assert.ok(prodCode.includes('Server offline.'), 'Must show a server-offline banner');
       assert.ok(prodCode.includes('DEFAULT_PRODUCTION_SCENARIOS'), 'Must define default production scenarios');
     });
   });
@@ -316,10 +317,8 @@ describe('CHALLENGER M3 EMPIRICAL ADVERSARIAL STRESS SUITE', () => {
       assert.ok(PRESETS.D18, 'SetoDashboard missing D18');
       assert.ok(PRESETS.D15, 'SetoDashboard missing D15');
 
-      // FALLBACK_PRESETS in ProductionDashboard
-      assert.ok(prodCode.includes("D08: {"), 'ProductionDashboard missing D08');
-      assert.ok(prodCode.includes("D18: {"), 'ProductionDashboard missing D18');
-      assert.ok(prodCode.includes("D15: {"), 'ProductionDashboard missing D15');
+      // ProductionDashboard takes all 24 businesses from the server (fetchDossiers), no built-in presets
+      assert.ok(prodCode.includes('fetchDossiers()'), 'ProductionDashboard must load businesses from the server');
     });
 
     it('Both dashboards render identical SETO visual tokens (.diffused-backdrop, soft-shadow, StarBlossom)', () => {
@@ -336,11 +335,11 @@ describe('CHALLENGER M3 EMPIRICAL ADVERSARIAL STRESS SUITE', () => {
       assert.ok(prodCode.includes('graminai_production_scenarios'), 'Missing correct localStorage key');
     });
 
-    it('ProductionDashboard includes genuine Lead-Bank DPR PDF HTML document generator', () => {
+    it('ProductionDashboard downloads the 1-page DPR PDF made by the server', () => {
       assert.ok(prodCode.includes('handleDownloadDprPdf'), 'ProductionDashboard missing handleDownloadDprPdf');
-      assert.ok(prodCode.includes('RBI LEAD BANK SCHEME STANDARD (1969)'), 'Missing RBI Lead Bank Scheme standard header');
-      assert.ok(prodCode.includes('MoSJE / NSFDC Concessional Credit Appraisal Dossier'), 'Missing statutory dossier title');
-      assert.ok(prodCode.includes('new Blob([htmlContent]'), 'Missing dynamic blob creation for download');
+      assert.ok(prodCode.includes('downloadDpr('), 'Must call the server DPR (POST /api/dpr)');
+      assert.ok(!prodCode.includes('STATUTORY SANCTION READY'), 'Must not claim a sanction');
+      assert.ok(!prodCode.includes('new Blob([htmlContent]'), 'Must not build its own HTML DPR');
     });
 
     it('Zero hardcoded "Ramesh" references exist anywhere in frontend/src/', () => {

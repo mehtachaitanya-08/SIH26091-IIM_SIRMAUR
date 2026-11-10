@@ -97,13 +97,12 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
       assert.ok(code.includes('Within 07 Jan 2026 MoSJE Mandate'), 'Modal must render MoSJE statutory mandate');
     });
 
-    it('SeasonalitySimulatorView renders 12-month bar chart and August lean dip', () => {
+    it('SeasonalitySimulatorView shows NOT FOUND, never a made-up curve or SAFE rating', () => {
       const simPath = path.join(componentsDir, 'SeasonalitySimulatorView.jsx');
       const code = fs.readFileSync(simPath, 'utf8');
       assert.ok(code.includes('Seasonality & Stress Simulator'));
-      assert.ok(code.includes('August Lean Trough Stress'));
-      assert.ok(code.includes('Solvency Rating: SAFE'));
-      assert.ok(code.includes("m < 0.8 ? 'bg-orange-400' : 'bg-[#0E7A53]'"), 'August dip (<0.8) must render warning color');
+      assert.ok(code.includes('NOT FOUND'));
+      assert.ok(!code.includes('Solvency Rating: SAFE'));
     });
 
     it('NsfdcAmortizerView renders equated quarterly installments and moratorium rows', () => {
@@ -132,7 +131,8 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
       const dprPath = path.join(componentsDir, 'LeadBankDprView.jsx');
       const code = fs.readFileSync(dprPath, 'utf8');
       assert.ok(code.includes('1-Page Detailed Project Report (DPR)'));
-      assert.ok(code.includes('Download Bank-Sanction PDF'));
+      assert.ok(code.includes('Download DPR PDF'));
+      assert.ok(code.includes('not a loan sanction'));
     });
   });
 

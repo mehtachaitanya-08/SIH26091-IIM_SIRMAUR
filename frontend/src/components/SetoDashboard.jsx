@@ -1,9 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import {
-  calculateNSFDCLoanStructure,
-  generateNSFDCAmortizationSchedule,
-  calculateEMI
-} from '../engine';
+import { calculateEMI } from '../engine';
 import { AlertTriangle, X, Download } from 'lucide-react';
 
 // Import SSOT Modular Dashboard Subcomponents
@@ -18,38 +14,11 @@ import CommandBar from './dashboard/CommandBar';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
 import StatutoryVerificationModal from './dashboard/StatutoryVerificationModal';
 
-// Empirical Presets for Advisory Tools Sub-Tree
+// Presets for the Advisory Tools list: names only. Figures are on the signed-in dashboard (from the server).
 export const PRESETS = {
-  D08: {
-    code: 'D08',
-    name: 'Mustard & Edible Oil Expeller Mill',
-    nameHi: 'सरसों एवं खाद्य तेल स्पेलर मिल',
-    cost: 680000,
-    annualNocf: 284400,
-    dscr: 1.62,
-    seasonality: [1.3, 1.2, 1.0, 0.7, 0.6, 0.8, 1.1, 1.3, 1.4, 1.3, 1.2, 1.1],
-    months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-  },
-  D18: {
-    code: 'D18',
-    name: 'Village Tailoring & Garments',
-    nameHi: 'ग्रामीण सिलाई एवं वस्त्र निर्माण',
-    cost: 100000,
-    annualNocf: 96000,
-    dscr: 2.14,
-    seasonality: [0.9, 0.9, 1.0, 1.1, 1.2, 0.8, 0.7, 0.9, 1.2, 1.4, 1.5, 1.0],
-    months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-  },
-  D15: {
-    code: 'D15',
-    name: 'Tractor & Farm Equipment Garage',
-    nameHi: 'ट्रैक्टर एवं कृषि उपकरण मरम्मत गैराज',
-    cost: 580000,
-    annualNocf: 242000,
-    dscr: 1.55,
-    seasonality: [0.8, 0.9, 1.6, 1.7, 1.1, 1.5, 0.6, 0.5, 0.7, 1.2, 1.4, 1.0],
-    months: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
-  }
+  D08: { code: 'D08', name: 'Mustard & Edible Oil Expeller Mill', nameHi: 'सरसों एवं खाद्य तेल स्पेलर मिल' },
+  D18: { code: 'D18', name: 'Village Tailoring & Garments', nameHi: 'ग्रामीण सिलाई एवं वस्त्र निर्माण' },
+  D15: { code: 'D15', name: 'Tractor & Farm Equipment Garage', nameHi: 'ट्रैक्टर एवं कृषि उपकरण मरम्मत गैराज' }
 };
 
 // Static Preset Scenario Definitions for Right Sidebar Panel
@@ -59,7 +28,7 @@ export const RECENT_SCENARIOS = [
     domainCode: 'D08',
     tab: 'simulator',
     name: 'D08 Mustard Oil Mill',
-    subtitle: '₹6.80L Term Loan · 26 Qtrs',
+    subtitle: 'NSFDC Term Loan · see dashboard',
     time: '2h ago',
     type: 'd08'
   },
@@ -68,7 +37,7 @@ export const RECENT_SCENARIOS = [
     domainCode: 'D18',
     tab: 'simulator',
     name: 'D18 Tailoring Workshop',
-    subtitle: 'PM Vishwakarma 5% credit...',
+    subtitle: 'PM Vishwakarma credit · see dashboard',
     image: '/images/scenario_tailoring.jpg',
     imageAlt: 'Tailoring craftsmanship',
     imageFallback: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
@@ -79,10 +48,9 @@ export const RECENT_SCENARIOS = [
     id: 'debt',
     tab: 'restructure',
     name: 'Sahukar Debt Relief',
-    subtitle: '₹1.20L @ 3 senkda → 6.5%',
+    subtitle: 'Moneylender senkda debt · see dashboard',
     time: '5h ago',
-    type: 'debt',
-    reliefText: '+₹2,460/mo relief'
+    type: 'debt'
   }
 ];
 
@@ -112,14 +80,9 @@ export default function SetoDashboard({ language = 'en', currentUser = null }) {
   // Active Domain Data
   const activeDomain = PRESETS[selectedDomainCode] || PRESETS.D08;
 
-  // NSFDC Engine Calculations for Active Domain
-  const loanStructure = useMemo(() => {
-    return calculateNSFDCLoanStructure({ projectCost: activeDomain.cost });
-  }, [activeDomain.cost]);
-
-  const amortizationSchedule = useMemo(() => {
-    return generateNSFDCAmortizationSchedule(loanStructure);
-  }, [loanStructure]);
+  // No loan figures in the mock-up: the signed-in dashboard gets them from the server.
+  const loanStructure = null;
+  const amortizationSchedule = null;
 
   // Debt Relief Calculations
   const debtRefinanceData = useMemo(() => {
@@ -175,13 +138,13 @@ export default function SetoDashboard({ language = 'en', currentUser = null }) {
       showToast('Loaded 12-Month Seasonality & August Lean Trough Simulator');
     } else if (text.includes('amort') || text.includes('loan') || text.includes('eqi')) {
       setActiveTab('amortizer');
-      showToast(`Generated ${loanStructure.totalQuarters}-Quarter NSFDC Amortization Schedule`);
+      showToast('Opened the NSFDC Amortizer (figures on the dashboard)');
     } else if (text.includes('debt') || text.includes('moneylender') || text.includes('relief') || text.includes('senkda')) {
       setActiveTab('restructure');
       showToast('Loaded Moneylender Debt Liberation & Damdupat Audit');
     } else if (text.includes('dpr') || text.includes('pdf') || text.includes('report') || text.includes('bank')) {
       setActiveTab('dpr');
-      showToast('Generated 1-Page Lead-Bank DPR Sanction Dossier');
+      showToast('Opened the 1-Page DPR (download on the dashboard)');
     } else {
       setActiveTab('simulator');
       showToast(`AI Assistant calibrated parameters for ${activeDomain.name}`);
@@ -423,7 +386,7 @@ export default function SetoDashboard({ language = 'en', currentUser = null }) {
             currentUser={currentUser}
             language={language}
             onClose={() => setActiveTab('home')}
-            onDownloadPdf={() => showToast('Downloading Official Lead-Bank DPR PDF Dossier')}
+            onDownloadPdf={() => showToast('Sign in to download the DPR PDF from the dashboard')}
             formatINR={formatINR}
             mode="mockup"
           />
@@ -511,23 +474,9 @@ export default function SetoDashboard({ language = 'en', currentUser = null }) {
                       )}
 
                       <div className="flex items-center justify-between mt-2">
-                        {scenario.type === 'd08' && (
-                          <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
-                            DSCR 1.62x
-                          </span>
-                        )}
-
-                        {scenario.type === 'd18' && (
-                          <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
-                            DSCR 2.14x
-                          </span>
-                        )}
-
-                        {scenario.type === 'debt' && (
-                          <span className="text-[11px] text-[#0E7A53] font-bold font-mono-num">
-                            {scenario.reliefText}
-                          </span>
-                        )}
+                        <span className="text-[11px] text-[#0E7A53] font-medium font-sans-ui">
+                          see dashboard
+                        </span>
 
                         <span className="text-[11px] text-[#686D65] font-mono-num">{scenario.time}</span>
                       </div>

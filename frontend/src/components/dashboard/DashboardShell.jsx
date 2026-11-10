@@ -12,7 +12,8 @@ export default function DashboardShell({
   id = 'dashboard-section',
   toastMessage = null,
   showTitle = true,
-  className = ''
+  className = '',
+  banner = null
 }) {
   const headline = language === 'hi' ? 'उद्यमी कार्यक्षेत्र.' : 'The Entrepreneur Workspace.';
 
@@ -39,6 +40,8 @@ export default function DashboardShell({
           </h2>
         </div>
       )}
+
+      {banner}
 
       {/* Enterprise Advisory Workspace Enclosure with SETO Diffused Ambient Canvas */}
       <div className="bg-[#E9ECEF] diffused-backdrop rounded-[32px] p-3 sm:p-6 border border-[#DEE2E6] soft-shadow">

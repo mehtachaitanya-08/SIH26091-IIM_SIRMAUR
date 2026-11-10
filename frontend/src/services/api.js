@@ -1,369 +1,253 @@
 /**
  * GraminAI API Client Service
- * Asynchronous service communicating with Python HTTP backend on /api
- * with graceful offline fallback to frontend/src/engine.js and local dossiers database.
- * 
+ * Talks to the verified server (backend/app.py) on /api.
+ *
+ * When the server is offline, nothing is filled in from a bundled file. Each call says so
+ * with `offline: true`, and the dashboard shows a red "server offline" banner. The one exception
+ * is the NSFDC loan: it is worked out in the browser with the same rules as the server
+ * (./nsfdcLoan.js, checked against the server's own answers in test/stage3_website.test.js).
+ *
  * Statutory Mandate: MoSJE / NSFDC (SIH26091)
  */
 
-import {
-  calculateNSFDCLoanStructure,
-  generateNSFDCAmortizationSchedule,
-  checkNSFDCEligibility,
-  evaluateIncubation,
-  evaluateRestructuring,
-  NSFDC_CONSTANTS,
-  ARCHETYPES
-} from '../engine.js';
+import { offlineNsfdcLoan } from './nsfdcLoan.js';
 
-import dossiersData from '../data/dossiers_db.json' with { type: 'json' };
+/** The 24 business codes, D01 to D24. */
+const CODE = /^D(0[1-9]|1\d|2[0-4])$/;
+
+/** The server could not be reached (or the dev proxy found nothing on port 8000). */
+export class ServerOfflineError extends Error {
+  constructor(cause) {
+    super('The GraminAI server is offline. Start it with: backend/.venv/bin/uvicorn backend.app:app --port 8000');
+    this.name = 'ServerOfflineError';
+    this.cause = cause;
+  }
+}
+
+/** The server answered with an error of its own ({error, status}). */
+export class ServerError extends Error {
+  constructor(message, status, details) {
+    super(message);
+    this.name = 'ServerError';
+    this.status = status;
+    this.details = details;
+  }
+}
+
+async function call(path, { method = 'GET', body, accept = 'application/json' } = {}) {
+  let res;
+  try {
+    res = await fetch(path, {
+      method,
+      headers: body === undefined ? { Accept: accept } : { 'Content-Type': 'application/json', Accept: accept },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) })
+    });
+  } catch (err) {
+    throw new ServerOfflineError(err);
+  }
+  if (res.ok) return res;
+  const text = await res.text().catch(() => '');
+  // Offline: a gateway error, or the Vite dev proxy's empty 500 when nothing listens on port 8000.
+  if ([502, 503, 504].includes(res.status) || (res.status === 500 && text.trim() === '')) {
+    throw new ServerOfflineError(new Error(`HTTP ${res.status}`));
+  }
+  let data = null;
+  try { data = JSON.parse(text); } catch { /* not JSON: a crash page */ }
+  if (data && (data.error || data.detail)) {
+    const msg = typeof data.error === 'string' ? data.error
+      : typeof data.detail === 'string' ? data.detail
+      : JSON.stringify(data.detail || data.error);
+    throw new ServerError(msg, res.status, data.details);
+  }
+  // The server answered but crashed: report it, never hide it behind browser maths.
+  throw new ServerError(`Server error (HTTP ${res.status}): ${text.trim().slice(0, 200) || 'no message'}`, res.status);
+}
+
+const getJson = async (path, opts) => (await call(path, opts)).json();
 
 /**
  * Check backend service health status.
- * @returns {Promise<Object>} Service health and active calculation engine metadata.
+ * @returns {Promise<Object>} the server's {status, version}, or {status:'offline', offline:true}
  */
 export async function fetchHealth() {
   try {
-    const res = await fetch('/api/health', {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
+    return await getJson('/api/health');
   } catch (err) {
-    console.warn('[GraminAI API] Backend unavailable, using client-side health fallback:', err?.message || err);
-    return {
-      status: 'ok',
-      version: '1.0.0',
-      clientOnly: true,
-      mode: 'client-offline-fallback',
-      timestamp: new Date().toISOString(),
-      engines: {
-        nsfdc_calculator: '2.0.0 (client-fallback)',
-        multi_archetype_financial_engine: '2.0.0 (client-fallback)',
-        dossiers_db: '2.0.0 (local-bundle)',
-        total_dossiers: Object.keys(dossiersData.dossiers || {}).length
-      }
-    };
+    if (err instanceof ServerOfflineError) return { status: 'offline', offline: true };
+    throw err;
   }
 }
 
 /**
- * Calculate statutory NSFDC dual-tier credit financing & amortization table.
- * @param {number} projectCost - Total project cost in INR.
- * @param {number} familyIncome - Annual family income in INR.
- * @param {Object} [options] - Additional parameters { isSc, promoterEquityOffered, casteCategory }.
- * @returns {Promise<Object>} Loan structure, eligibility, and quarterly amortization schedule.
+ * NSFDC loan and quarterly schedule.
+ * @param {number} projectCost - Total project cost in INR (USER INPUT).
+ * @param {number} familyIncome - Annual family income in INR (USER INPUT).
+ * @param {Object} options - { isSc } (USER INPUT, self-declared).
+ * @returns {Promise<Object>} the server reply; offline: the same rules in the browser, with offline: true.
  */
 export async function calculateNSFDCLoan(projectCost, familyIncome = 0, options = {}) {
-  const payload = {
-    projectCost: Number(projectCost),
-    familyIncome: Number(familyIncome),
-    isSc: options.isSc !== undefined ? options.isSc : true,
-    promoterEquityOffered: options.promoterEquityOffered !== undefined ? options.promoterEquityOffered : null,
-    ...options
-  };
-
+  const payload = { projectCost: Number(projectCost), familyIncome: Number(familyIncome), isSc: options.isSc };
   try {
-    const res = await fetch('/api/engine/nsfdc/calculate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      const errJson = await res.json().catch(() => null);
-      throw new Error(errJson?.error || `HTTP ${res.status}`);
-    }
-    return await res.json();
+    return await getJson('/api/engine/nsfdc/calculate', { method: 'POST', body: payload });
   } catch (err) {
-    console.warn('[GraminAI API] Backend calculateNSFDCLoan request failed, falling back to engine.js:', err?.message || err);
-
-    const cost = Number(projectCost);
-    const income = Number(familyIncome);
-    const eligibility = checkNSFDCEligibility({
-      isSC: payload.isSc,
-      casteCategory: options.casteCategory || (payload.isSc ? 'SC' : 'GENERAL'),
-      annualFamilyIncome: income,
-      projectCost: cost
-    });
-
-    if (!eligibility.isEligible) {
-      return {
-        isEligible: false,
-        is_eligible: false,
-        rejectionReasons: eligibility.rejectionReasons,
-        rejection_reasons: eligibility.rejectionReasons,
-        recommendedAlternatives: eligibility.recommendedAlternatives,
-        recommended_alternatives: eligibility.recommendedAlternatives,
-        projectCost: cost,
-        familyIncome: income,
-        _fallback: true
-      };
-    }
-
-    const structure = calculateNSFDCLoanStructure({
-      projectCost: cost,
-      promoterEquityOffered: payload.promoterEquityOffered
-    });
-
-    const amortizationScheduleResult = generateNSFDCAmortizationSchedule(structure);
-
-    return {
-      isEligible: true,
-      is_eligible: true,
-      tier: structure.tier,
-      schemeName: structure.schemeName,
-      scheme_name: structure.schemeName,
-      projectCost: structure.projectCost,
-      project_cost: structure.projectCost,
-      maxLoanAmount: structure.loanAmount,
-      loanAmount: structure.loanAmount,
-      loan_amount: structure.loanAmount,
-      promoterContribution: structure.promoterEquity,
-      promoterEquity: structure.promoterEquity,
-      promoter_equity: structure.promoterEquity,
-      promoterEquityPct: structure.promoterEquityPct,
-      promoter_equity_pct: structure.promoterEquityPct,
-      interestRatePa: structure.interestRatePA,
-      interest_rate_pa: structure.interestRatePA,
-      quarterlyInterestRate: structure.quarterlyInterestRate,
-      quarterly_interest_rate: structure.quarterlyInterestRate,
-      termYears: structure.tenureYears,
-      tenureYears: structure.tenureYears,
-      tenure_years: structure.tenureYears,
-      totalQuarters: structure.totalQuarters,
-      total_quarters: structure.totalQuarters,
-      moratoriumQuarters: structure.moratoriumQuarters,
-      moratorium_quarters: structure.moratoriumQuarters,
-      repaymentQuarters: structure.repaymentQuarters,
-      repayment_quarters: structure.repaymentQuarters,
-      equatedQuarterlyInstallment: amortizationScheduleResult.equatedQuarterlyInstallment,
-      equated_quarterly_installment: amortizationScheduleResult.equatedQuarterlyInstallment,
-      totalPrincipalPaid: amortizationScheduleResult.totalPrincipalPaid,
-      total_principal_paid: amortizationScheduleResult.totalPrincipalPaid,
-      totalInterestPaid: amortizationScheduleResult.totalInterestPaid,
-      total_interest_paid: amortizationScheduleResult.totalInterestPaid,
-      totalDebtService: amortizationScheduleResult.totalDebtService,
-      total_debt_service: amortizationScheduleResult.totalDebtService,
-      amortizationSchedule: amortizationScheduleResult.quarters,
-      amortization_schedule: amortizationScheduleResult.quarters,
-      _fallback: true
-    };
+    if (err instanceof ServerOfflineError) return offlineNsfdcLoan(payload);
+    throw err;
   }
 }
 
+const OFFLINE_NO_FIGURES = { offline: true, status: 'server_offline', error: 'Server offline: no figures shown.' };
+
 /**
- * Evaluate Mode A enterprise incubation project feasibility across archetypes.
- * @param {string} [archetypeKey='archetype_1'] - Key of the archetype (archetype_1 to archetype_6).
- * @param {number} [scale=1.0] - Scale multiplier.
- * @param {Object} [options] - Additional parameters { state, capexOverride, monthlyOpexOverride, etc. }.
- * @returns {Promise<Object>} Feasibility appraisal, CapEx, OpEx, seasonal DSCR array, and subsidies.
+ * Mode A (team's archetype engine; every reply is tagged ASSUMED by the server).
+ * Offline: no figures.
  */
 export async function evaluateModeA(archetypeKey = 'archetype_1', scale = 1.0, options = {}) {
-  const payload = {
-    archetypeKey,
-    scale: Number(scale) || 1.0,
-    ...options
-  };
-
   try {
-    const res = await fetch('/api/engine/mode-a/evaluate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
+    return await getJson('/api/engine/mode-a/evaluate', {
+      method: 'POST', body: { archetypeKey, scale: Number(scale) || 1.0, ...options }
     });
-    if (!res.ok) {
-      const errJson = await res.json().catch(() => null);
-      throw new Error(errJson?.error || `HTTP ${res.status}`);
-    }
-    return await res.json();
   } catch (err) {
-    console.warn('[GraminAI API] Backend evaluateModeA request failed, falling back to engine.js:', err?.message || err);
-
-    const clientResult = evaluateIncubation({
-      archetypeId: archetypeKey,
-      state: options.state || 'Uttar Pradesh',
-      scale: payload.scale,
-      capexOverride: options.capexOverride,
-      workingCapitalOverride: options.workingCapitalOverride,
-      monthlyRevenueOverride: options.monthlyRevenueOverride,
-      monthlyOpexOverride: options.monthlyOpexOverride,
-      promoterCategory: options.promoterCategory || 'special',
-      locationType: options.locationType || 'rural',
-      customLoanTenureMonths: options.customLoanTenureMonths || 60,
-      baseInterestRatePct: options.baseInterestRatePct || 9.5
-    });
-
-    const seasonalDscr = (clientResult.monthlyBreakdown || []).map(m => m.dscr || 0);
-
-    return {
-      capex: clientResult.capex,
-      totalProjectCost: clientResult.totalProjectCost,
-      monthlyOpex: clientResult.monthlyBreakdown?.[0]?.opex || 0,
-      revenue: clientResult.monthlyBreakdown?.[0]?.revenue || 0,
-      seasonalDscr,
-      grantSubsidy: clientResult.subsidyAmount,
-      promoterEquity: clientResult.promoterEquity,
-      bankLoanPrincipal: clientResult.loanAmount,
-      monthlyEmi: clientResult.monthlyEMI,
-      archetypeId: archetypeKey,
-      archetypeName: clientResult.archetype?.name,
-      state: clientResult.state,
-      rawResult: clientResult,
-      _fallback: true
-    };
+    if (err instanceof ServerOfflineError) return { ...OFFLINE_NO_FIGURES };
+    throw err;
   }
 }
 
 /**
- * Restructure informal moneylender debt into formal credit with Damdupat legal audit.
- * @param {number} principal - Principal debt amount in INR.
- * @param {number} [monthlyRatePct=3.0] - Monthly interest rate percentage (e.g. 3% per month).
- * @param {number} [durationMonths=36] - Months debt has been active.
- * @param {Object} [options] - Additional parameters { debts, householdIncome, pathway, tenureMonths }.
- * @returns {Promise<Object>} Restructuring plan, Damdupat violation flag, and monthly savings.
+ * Mode B moneylender debt restructuring (team's engine; tagged ASSUMED by the server).
+ * Offline: no figures.
  */
 export async function restructureDebt(principal, monthlyRatePct = 3.0, durationMonths = 36, options = {}) {
-  const payload = {
-    principal: Number(principal),
-    monthlyRatePct: Number(monthlyRatePct),
-    durationMonths: Number(durationMonths),
-    ...options
-  };
-
   try {
-    const res = await fetch('/api/engine/mode-b/restructure', {
+    return await getJson('/api/engine/mode-b/restructure', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
+      body: { principal: Number(principal), monthlyRatePct: Number(monthlyRatePct), durationMonths: Number(durationMonths), ...options }
     });
-    if (!res.ok) {
-      const errJson = await res.json().catch(() => null);
-      throw new Error(errJson?.error || `HTTP ${res.status}`);
-    }
-    return await res.json();
   } catch (err) {
-    console.warn('[GraminAI API] Backend restructureDebt request failed, falling back to engine.js:', err?.message || err);
-
-    const clientResult = evaluateRestructuring({
-      debts: options.debts || [
-        {
-          principal: payload.principal,
-          rateQuote: options.rateQuote || `${payload.monthlyRatePct} senkda`,
-          monthsActive: payload.durationMonths,
-          lenderType: options.lenderType || 'Village Moneylender'
-        }
-      ],
-      householdIncome: options.householdIncome || 35000,
-      pathway: options.refinancingPathway || options.pathway || 'MUDRA_KISHOR',
-      tenureMonths: options.refinanceTenureMonths || options.tenureMonths || payload.durationMonths
-    });
-
-    const oldMonthlyInterest = clientResult.totalMonthlyInterestBleed;
-    const newMonthlyEmi = clientResult.newEMI;
-    const monthlySavings = clientResult.monthlyCashRelief;
-    const damdupatViolated = clientResult.damdupatViolationsCount > 0;
-
-    return {
-      oldMonthlyInterest,
-      old_monthly_interest: oldMonthlyInterest,
-      newMonthlyEmi,
-      new_monthly_emi: newMonthlyEmi,
-      monthlySavings,
-      monthly_savings: monthlySavings,
-      damdupatViolated,
-      damdupat_violated: damdupatViolated,
-      totalDebtConsolidated: clientResult.totalPrincipal,
-      weightedInformalAprPct: clientResult.weightedApr,
-      auditedDebts: clientResult.auditedDebts,
-      liberationMetrics: {
-        monthly_cash_flow_relief: monthlySavings,
-        cumulative_interest_saved: clientResult.totalInterestSaved,
-        cash_flow_liberation_ratio_pct: clientResult.cflrPct
-      },
-      rawResult: clientResult,
-      _fallback: true
-    };
+    if (err instanceof ServerOfflineError) return { ...OFFLINE_NO_FIGURES };
+    throw err;
   }
 }
 
 /**
- * Fetch all 24 empirical rural micro-enterprise dossiers.
- * @returns {Promise<Object>} List of dossiers and metadata.
+ * The 24 businesses (code, name, verification status).
+ * @returns {Promise<Object>} {count, dossiers}; offline: {count:0, dossiers:[], offline:true}
  */
 export async function fetchDossiers() {
   try {
-    const res = await fetch('/api/dossiers', {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
+    return await getJson('/api/dossiers');
   } catch (err) {
-    console.warn('[GraminAI API] Backend fetchDossiers request failed, falling back to local dataset:', err?.message || err);
-    const dossiersList = Object.values(dossiersData.dossiers || {});
-    return {
-      count: dossiersList.length,
-      dossiers: dossiersList,
-      metadata: dossiersData.metadata || {},
-      _fallback: true
-    };
+    if (err instanceof ServerOfflineError) return { count: 0, dossiers: [], offline: true };
+    throw err;
   }
 }
 
 /**
- * Fetch a specific empirical dossier by its code (e.g. 'D01', 'D08', 'D18').
- * @param {string} code - Dossier code.
- * @returns {Promise<Object|null>} Dossier details or null if not found.
+ * One business by code (e.g. 'D20').
+ * @returns {Promise<Object|null>} verified data, {code, status:'not_yet_verified'}, null if unknown,
+ *   or {code, status:'server_offline', offline:true}
  */
 export async function fetchDossier(code) {
   if (!code) throw new Error('Dossier code is required');
   const upperCode = code.toString().trim().toUpperCase();
-
+  if (!CODE.test(upperCode)) return null; // only D01-D24 exist; the server would answer 404
   try {
-    const res = await fetch(`/api/dossiers/${encodeURIComponent(upperCode)}`, {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!res.ok) {
-      if (res.status === 404) return null;
-      throw new Error(`HTTP ${res.status}`);
-    }
-    return await res.json();
+    return await getJson(`/api/dossiers/${encodeURIComponent(upperCode)}`);
   } catch (err) {
-    console.warn(`[GraminAI API] Backend fetchDossier(${upperCode}) failed, falling back to local dataset:`, err?.message || err);
-    const dossier = dossiersData.dossiers?.[upperCode];
-    if (!dossier) return null;
-
-    const mcfTier = dossier.capex_financing?.micro_finance_tier || {};
-    const termTier = dossier.capex_financing?.term_loan_tier || {};
-    const capexVal = mcfTier.project_cost || termTier.project_cost || 0;
-    const opexVal = dossier.opex_and_working_capital?.monthly_cash_opex || 0;
-
-    return {
-      ...dossier,
-      title: dossier.name,
-      capex: capexVal,
-      opex: opexVal,
-      _fallback: true
-    };
+    if (err instanceof ServerOfflineError) return { code: upperCode, status: 'server_offline', offline: true };
+    if (err instanceof ServerError && err.status === 404) return null;
+    throw err;
   }
 }
 
+/**
+ * Feasibility report (market, pricing, season, compliance, SWOT + gaps) for a business.
+ */
+export async function fetchFeasibility(code) {
+  const upperCode = String(code || '').trim().toUpperCase();
+  try {
+    return await getJson(`/api/feasibility/${encodeURIComponent(upperCode)}`);
+  } catch (err) {
+    if (err instanceof ServerOfflineError) return { code: upperCode, status: 'server_offline', offline: true };
+    throw err;
+  }
+}
+
+/**
+ * 1-page DPR PDF made by the server.
+ * @param {{code, projectCost, familyIncome, isSc, answers?, applicantName?}} payload
+ * @returns {Promise<Blob>} the PDF. Throws ServerOfflineError or ServerError (the server's message).
+ */
+export async function downloadDpr(payload) {
+  const res = await call('/api/dpr', { method: 'POST', body: payload, accept: 'application/pdf' });
+  return res.blob();
+}
+
+/**
+ * Chat with the GraminAI assistant. The whole conversation is sent each time; the server keeps nothing.
+ * @param {Array<{role:'user'|'assistant', content:string}>} messages
+ * @returns {Promise<Object>} {status, reply, tool_results, guard, model}; offline: {status:'server_offline', reply:null, offline:true}
+ */
+export const CHAT_MAX_MESSAGES = 30; // backend/chat.py MAX_TURNS
+
+export async function sendChat(messages) {
+  try {
+    return await getJson('/api/chat', { method: 'POST', body: { messages: messages.slice(-CHAT_MAX_MESSAGES) } });
+  } catch (err) {
+    if (err instanceof ServerOfflineError) return { status: 'server_offline', reply: null, offline: true };
+    throw err;
+  }
+}
+
+/**
+ * What the dashboard should do after a chat reply, from the server's tool results:
+ * select the business the assistant found, open the matching tab, and fill the loan boxes.
+ * Only fields the tools returned are used; nothing is guessed.
+ * @returns {{code?, tab?, loanInputs?, answers?}}
+ */
+export function chatRoute(toolResults) {
+  const out = {};
+  for (const item of Array.isArray(toolResults) ? toolResults : []) {
+    const r = item && item.result;
+    if (!r || typeof r !== 'object' || r.error) continue;
+    if (typeof r.code === 'string' && CODE.test(r.code)) out.code = r.code;
+    if (item.tool === 'calculate_loan' && typeof r.projectCost === 'number') {
+      out.tab = 'amortizer';
+      out.loanInputs = { projectCost: r.projectCost };
+      if (typeof r.familyIncome === 'number') out.loanInputs.familyIncome = r.familyIncome;
+      if (typeof r.isSc === 'boolean') out.loanInputs.isSc = r.isSc;
+    } else if (item.tool === 'feasibility' && out.code) {
+      out.tab = 'feasibility';
+    } else if (item.tool === 'dpr_link' && r.action === 'download_dpr' && r.body && CODE.test(r.body.code)) {
+      const b = r.body;
+      out.code = b.code;
+      out.tab = 'dpr';
+      out.loanInputs = { projectCost: b.projectCost, familyIncome: b.familyIncome, isSc: b.isSc };
+      if (b.answers && typeof b.answers === 'object') out.answers = b.answers;
+    }
+  }
+  return out;
+}
+
+/**
+ * Body for POST /api/dpr. Answers collected by the chat are kept with the business they belong to
+ * ({code, answers}) and sent only for that business: another business's question ids are rejected.
+ */
+export function dprPayload({ code, projectCost, familyIncome, isSc, answers = null, applicantName = null }) {
+  const out = { code, projectCost, familyIncome, isSc, answers: answers && answers.code === code ? { ...answers.answers } : {} };
+  if (applicantName) out.applicantName = applicantName;
+  return out;
+}
+
 export default {
+  chatRoute,
+  dprPayload,
   fetchHealth,
   calculateNSFDCLoan,
   evaluateModeA,
   restructureDebt,
   fetchDossiers,
-  fetchDossier
+  fetchDossier,
+  fetchFeasibility,
+  downloadDpr,
+  sendChat
 };

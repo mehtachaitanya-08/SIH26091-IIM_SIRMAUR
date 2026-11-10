@@ -292,27 +292,26 @@ describe('CHALLENGER 2: EMPIRICAL DEEP STRESS & SSOT PARITY HARNESS (M3)', () =>
   describe('5. API Client Fallback & LocalStorage Isolation', () => {
 
     it('Frontend API client methods all resolve cleanly in offline mode', async () => {
+      // Offline: only the NSFDC loan is worked out (same rules as the server); the rest says offline, no figures.
       const health = await fetchHealth();
-      assert.ok(health.status === 'ok');
+      assert.ok(health.status === 'offline');
 
       const loan = await calculateNSFDCLoan(680000, 300000, { isSc: true });
+      assert.ok(loan.offline === true);
       assert.ok(loan.loanAmount === 612000);
       assert.ok(loan.promoterContribution === 68000);
 
       const modeA = await evaluateModeA('archetype_1', 1.0);
-      assert.ok(modeA.capex === 650000);
-      assert.ok(modeA.seasonalDscr.length === 12);
+      assert.ok(modeA.offline === true && modeA.capex === undefined);
 
       const d08 = await fetchDossier('D08');
-      assert.ok(d08);
-      assert.ok(d08.code === 'D08');
-      assert.ok(d08.capex > 0);
+      assert.ok(d08 && d08.code === 'D08' && d08.offline === true && d08.capex === undefined);
 
       const modeB = await restructureDebt(120000, 3.0, 36);
-      assert.strictEqual(modeB.damdupatViolated, true);
+      assert.strictEqual(modeB.damdupatViolated, undefined);
 
       const dossiers = await fetchDossiers();
-      assert.strictEqual(dossiers.count, 24);
+      assert.strictEqual(dossiers.count, 0);
     });
 
     it('ProductionDashboard safely handles localStorage unavailability without throwing', () => {

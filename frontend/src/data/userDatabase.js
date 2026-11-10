@@ -16,7 +16,7 @@ const SEED_USERS = [
     phone: '9876543210',
     pin: '2026',
     category: 'Scheduled Caste (SC)',
-    trade: 'D08 Mustard & Edible Oil Expeller Mill',
+    trade: 'D20 Metal Smithy',
     district: 'Sitapur District, UP',
     income: '≤ ₹5,00,000',
     verified: true,
