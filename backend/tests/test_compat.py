@@ -202,6 +202,14 @@ def test_mode_b_his_values_tagged_assumed():
     assert d["damdupatViolated"] is False
 
 
+def test_mode_b_damdupat_boundary_interest_equal_to_principal_counts():
+    # Moved here from the website's tests (which now run with the server offline):
+    # 100,000 at 10% a month -> 10,000 a month; 9 months = 90,000 (no), 10 = 100,000 (yes, equal counts), 11 = 110,000 (yes)
+    for months, expected in ((9, False), (10, True), (11, True)):
+        d = post("/api/engine/mode-b/restructure", {"principal": 100000, "monthlyRatePct": 10.0, "durationMonths": months}).json()
+        assert d["damdupatViolated"] is expected, months
+
+
 def test_mode_b_missing_principal():
     r = post("/api/engine/mode-b/restructure", {"monthlyRatePct": 3.0})
     assert r.status_code == 400 and r.json()["error"] == "Missing or invalid 'principal' amount"

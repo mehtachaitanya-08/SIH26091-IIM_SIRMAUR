@@ -106,13 +106,17 @@ def _t_calculate_loan(project_cost, family_income, is_sc):
     out = loan.build_loan(LoanRequest(project_cost=cost, is_sc=is_sc, annual_family_income=income))
     if out["status"] != "eligible":
         return {"isEligible": False, "status": out["status"],
+                "projectCost": cost, "familyIncome": income, "isSc": is_sc,
                 "reasons": [{"text": r["text"], "quote": r["quote"], "tag": r["tag"]} for r in out["reasons"]],
+                "tags": {"projectCost": "USER INPUT", "familyIncome": "USER INPUT", "isSc": "USER INPUT"},
                 "notes": notes}
     L, S = out["loan"], out["summary"]
     return {
         "isEligible": True,
         "scheme": L["scheme"]["value"],
         "projectCost": cost,
+        "familyIncome": income,
+        "isSc": is_sc,
         "loanAmount": L["loan_amount"]["value"],
         "ownContribution": L["own_contribution"]["value"],
         "interestRatePa": L["interest_rate_pa"]["value"],
@@ -122,7 +126,8 @@ def _t_calculate_loan(project_cost, family_income, is_sc):
         "quarterlyInstalment": S["equated_quarterly_instalment"]["value"],
         "interestAddedDuringPause": S["interest_added_during_pause"]["value"],
         "totalPaid": S["total_paid"]["value"],
-        "tags": {"projectCost": "USER INPUT", "loanAmount": L["loan_amount"]["tag"],
+        "tags": {"projectCost": "USER INPUT", "familyIncome": "USER INPUT", "isSc": "USER INPUT",
+                 "loanAmount": L["loan_amount"]["tag"],
                  "ownContribution": L["own_contribution"]["tag"], "interestRatePa": L["interest_rate_pa"]["tag"],
                  "tenureYears": L["tenure_years"]["tag"], "pauseQuarters": L["moratorium_quarters"]["tag"],
                  "repaymentQuarters": L["repayment_quarters"]["tag"], "quarterlyInstalment": "CALCULATED",

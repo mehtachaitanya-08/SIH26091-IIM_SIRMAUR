@@ -267,3 +267,13 @@ def test_loan_tool_tags_every_number():
     r = chat._t_calculate_loan(140000, 150000, True)
     nums = [k for k, v in r.items() if isinstance(v, (int, float)) and not isinstance(v, bool)]
     assert nums and all(k in r["tags"] for k in nums), [k for k in nums if k not in r["tags"]]
+
+
+def test_calculate_loan_tool_returns_the_income_and_sc_it_used():
+    # The website fills its loan boxes from this result, so it must carry all three inputs.
+    ok = chat._t_calculate_loan(140000, 200000, True)
+    assert (ok["projectCost"], ok["familyIncome"], ok["isSc"]) == (140000, 200000, True)
+    assert ok["tags"]["familyIncome"] == "USER INPUT" and ok["tags"]["isSc"] == "USER INPUT"
+    no = chat._t_calculate_loan(140000, 600000, True)
+    assert no["isEligible"] is False
+    assert (no["projectCost"], no["familyIncome"], no["isSc"]) == (140000, 600000, True)
