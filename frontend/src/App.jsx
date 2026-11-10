@@ -567,12 +567,12 @@ export default function App() {
       {/* ============================================================== */}
       {/* SCENE 5: PLATFORM IN 4 PILLARS                                 */}
       {/* ============================================================== */}
-      <section id="scene-cards" ref={cardsRef} className="py-28 px-6 sm:px-12 max-w-7xl mx-auto bg-[#F4F1EA]">
-        <div className="max-w-2xl mb-12">
+      <section id="scene-cards" ref={cardsRef} className="py-24 sm:py-32 px-6 sm:px-12 max-w-7xl mx-auto bg-[#F4F1EA]">
+        <div className="max-w-3xl mb-14 sm:mb-16">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#111311] tracking-tight leading-[1.08]">
             The Four Pillars.
           </h2>
-          <p className="text-sm sm:text-base text-[#686D65] mt-3 font-sans-ui leading-relaxed">
+          <p className="text-sm sm:text-base text-[#686D65] mt-4 font-sans-ui leading-relaxed">
             Translating statutory NSFDC credit guidelines and empirical rural cash flows into a unified advisory platform.
           </p>
         </div>
@@ -581,57 +581,65 @@ export default function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Card 1 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#0E7A53] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
+          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#0E7A53] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 01</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">NSFDC Dual-Tier Credit</h4>
+              <span className="text-[11px] font-mono-num text-[#0E7A53] font-bold uppercase tracking-wider block">PILLAR 01</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+                NSFDC Dual-Tier Credit
+              </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).
               </p>
             </div>
-            <div className="mt-6 pt-3 border-t border-black/5 text-xs font-mono-num font-bold text-[#0E7A53]">
-              ₹1,40,000 → ₹1,25,000 Loan + ₹15k Equity
+            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#0E7A53] whitespace-nowrap overflow-hidden text-ellipsis">
+              ₹1.40L Cap · ₹1.25L Loan + ₹15k Equity
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#D49B5A] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
+          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#D49B5A] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 02</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">12-Month Solvency Simulator</h4>
+              <span className="text-[11px] font-mono-num text-[#B47228] font-bold uppercase tracking-wider block">PILLAR 02</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+                12-Month Solvency Model
+              </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.
               </p>
             </div>
-            <div className="mt-6 pt-3 border-t border-black/5 text-xs font-mono-num font-bold text-[#111311]">
+            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#B47228] whitespace-nowrap overflow-hidden text-ellipsis">
               Annual DSCR ≥ 1.50 Guaranteed
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#E86043] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
+          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#E86043] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 03</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">Mode B Debt Liberation</h4>
+              <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider block">PILLAR 03</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+                Mode B Debt Liberation
+              </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.
               </p>
             </div>
-            <div className="mt-6 pt-3 border-t border-black/5 text-xs font-mono-num font-bold text-[#E86043]">
+            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#E86043] whitespace-nowrap overflow-hidden text-ellipsis">
               Damdupat & Usurious Loans Relief
             </div>
           </div>
 
           {/* Card 4 */}
-          <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#4A6274] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
+          <div className="pillar-card bg-white rounded-3xl p-6 sm:p-7 border-t-4 border-t-[#4A6274] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 04</span>
-              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">1-Page Lead-Bank DPR</h4>
+              <span className="text-[11px] font-mono-num text-[#4A6274] font-bold uppercase tracking-wider block">PILLAR 04</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight min-h-[1.75rem] flex items-center">
+                1-Page Lead-Bank DPR
+              </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.
               </p>
             </div>
-            <div className="mt-6 pt-3 border-t border-black/5 text-xs font-mono-num font-bold text-[#0E7A53]">
+            <div className="mt-6 pt-3.5 border-t border-black/5 text-xs font-mono-num font-bold text-[#4A6274] whitespace-nowrap overflow-hidden text-ellipsis">
               Instant Bank Appraisal Proposal
             </div>
           </div>
