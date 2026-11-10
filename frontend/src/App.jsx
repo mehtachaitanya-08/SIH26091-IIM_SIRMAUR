@@ -405,35 +405,35 @@ export default function App() {
         className="min-h-screen py-24 sm:py-32 px-6 sm:px-12 flex flex-col items-center justify-center bg-[#F8F6F0] relative"
       >
         {/* Proportioned Vertical Line Drop with Terminal Dot */}
-        <div className="flex flex-col items-center mb-6">
+        <div className="flex flex-col items-center mb-10 sm:mb-12">
           <div id="thesis-line" className="w-[1.5px] h-8 bg-[#111311] relative origin-top">
             <div id="thesis-dot" className="w-2 h-2 rounded-full bg-[#111311] absolute -bottom-1 -left-[3.25px]"></div>
           </div>
         </div>
 
         {/* Master Thesis Statement */}
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-editorial text-center text-[#111311] max-w-4xl leading-[1.14] tracking-tight">
+        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-editorial text-center text-[#111311] max-w-4xl leading-[1.18] tracking-tight">
           Statutory credit enables rural producers to fulfill their highest potential.
         </h2>
 
         {/* Editorial Sub-Thesis Context */}
-        <p className="text-sm sm:text-base text-[#686D65] text-center max-w-2xl mt-5 leading-relaxed font-sans-ui">
+        <p className="text-sm sm:text-base text-[#686D65] text-center max-w-2xl mt-8 sm:mt-10 leading-[1.75] font-sans-ui">
           To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core trade domains.
         </p>
 
         {/* Architectural 3-Column Ledger */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-12 max-w-4xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
-          <div className="px-4 pt-4 sm:pt-0 flex flex-col items-center justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-16 sm:mt-20 max-w-4xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
+          <div className="px-6 py-4 sm:py-2 flex flex-col items-center justify-center">
             <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">≤ ₹1.40 Lakh</span>
-            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">MCF Concessional @ 6.5%</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">MCF Concessional @ 6.5%</span>
           </div>
-          <div className="px-4 pt-4 sm:pt-0 flex flex-col items-center justify-center">
+          <div className="px-6 py-4 sm:py-2 flex flex-col items-center justify-center">
             <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">Up to ₹50 Lakh</span>
-            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">Term Loan Facility @ 8.0%</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">Term Loan Facility @ 8.0%</span>
           </div>
-          <div className="px-4 pt-4 sm:pt-0 flex flex-col items-center justify-center">
+          <div className="px-6 py-4 sm:py-2 flex flex-col items-center justify-center">
             <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">Lead-Bank Standard</span>
-            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">Statutory 1-Page DPR</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">Statutory 1-Page DPR</span>
           </div>
         </div>
       </section>
