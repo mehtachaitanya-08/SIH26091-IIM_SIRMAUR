@@ -241,9 +241,11 @@ export default function SetoDashboard() {
             <div className="space-y-6">
               {/* Brand Lockup: GraminAI */}
               <div className="flex items-center space-x-2.5 px-2">
-                <div className="w-7 h-7 rounded-lg bg-[#111311] text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                  G
-                </div>
+                <img 
+                  src="/images/logo.png" 
+                  alt="GraminAI Emblem" 
+                  className="w-8 h-8 object-contain rounded-md"
+                />
                 <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">GraminAI</span>
               </div>
 

@@ -302,20 +302,16 @@ export default function App() {
         {/* Left: Spacer to balance layout */}
         <div className="w-24 pointer-events-none"></div>
 
-        {/* Center: Brand Emblem "ग" with 4 Colored Accent Dots */}
+        {/* Center: Official Brand Emblem */}
         <div 
           onClick={() => scrollToTarget('#hero-pinned-scene')}
-          className="pointer-events-auto flex flex-col items-center cursor-pointer group"
+          className="pointer-events-auto flex items-center justify-center cursor-pointer group"
         >
-          <div className="w-9 h-9 rounded-full bg-[#111311] text-white flex items-center justify-center font-bold text-sm tracking-widest shadow-md group-hover:scale-105 transition-transform">
-            ग
-          </div>
-          <div className="flex items-center space-x-1 mt-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#E86043]"></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A53]"></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D49B5A]"></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#4A6274]"></span>
-          </div>
+          <img 
+            src="/images/logo.png" 
+            alt="GraminAI Emblem" 
+            className="h-10 sm:h-11 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
+          />
         </div>
 
         {/* Right: Dashboard Action */}
