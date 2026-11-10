@@ -11,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend import businesses, compat, loan
+from backend import businesses, compat, feasibility, loan
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
 
 app = FastAPI(
@@ -102,6 +102,7 @@ def business_advice(code: str, req: businesses.AdviceRequest):
         raise HTTPException(status_code=422, detail=str(exc))
 
 
+app.include_router(feasibility.router)
 
 # The teammate's /api addresses, served from verified sources. Included LAST: it ends with a catch-all 404.
 app.include_router(compat.router)
