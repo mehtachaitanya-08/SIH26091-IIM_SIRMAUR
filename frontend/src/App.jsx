@@ -215,7 +215,7 @@ export default function App() {
         });
       });
 
-    }, containerRef);
+    }, containerRef.current);
 
     return () => {
       if (rafId) {
