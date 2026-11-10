@@ -3,8 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { 
-  ArrowRight, 
-  ChevronRight 
+  ArrowRight
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
 
@@ -313,7 +312,7 @@ export default function App() {
       >
         {/* Giant Condensed Serif Typography Behind Imagery */}
         <div id="hero-headline-wrap" className="absolute inset-0 flex flex-col items-center justify-center text-center select-none z-10 pointer-events-none px-4">
-          <h1 className="hero-big-title font-cinzel font-extrabold uppercase text-[#111311] tracking-tight">
+          <h1 className="hero-big-title font-editorial font-normal uppercase text-[#111311]">
             <div>WHERE</div>
             <div>OPPORTUNITY</div>
             <div>TAKES</div>
@@ -547,7 +546,7 @@ export default function App() {
         {/* Bottom Headline & Action Button */}
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
           <div className="max-w-xl">
-            <h3 className="text-3xl sm:text-5xl font-cinzel font-bold text-[#FACC15] tracking-tight leading-none">
+            <h3 className="text-3xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#FACC15] tracking-tight leading-tight">
               67% of rural producers
             </h3>
             <p className="text-base sm:text-xl text-white/90 mt-3 font-editorial italic leading-relaxed">
@@ -570,13 +569,10 @@ export default function App() {
       {/* ============================================================== */}
       <section id="scene-cards" ref={cardsRef} className="py-28 px-6 sm:px-12 max-w-7xl mx-auto bg-[#F4F1EA]">
         <div className="max-w-2xl mb-12">
-          <span className="text-xs font-mono-num uppercase text-[#E86043] font-bold tracking-widest block mb-2">
-            05 · ARCHITECTURE OF RESILIENCE
-          </span>
-          <h2 className="text-4xl sm:text-5xl font-cinzel font-bold uppercase tracking-tight text-[#111311]">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#111311] tracking-tight leading-[1.08]">
             The Four Pillars.
           </h2>
-          <p className="text-sm text-[#686D65] mt-3 font-sans-ui leading-relaxed">
+          <p className="text-sm sm:text-base text-[#686D65] mt-3 font-sans-ui leading-relaxed">
             Translating statutory NSFDC credit guidelines and empirical rural cash flows into a unified advisory platform.
           </p>
         </div>
@@ -587,9 +583,9 @@ export default function App() {
           {/* Card 1 */}
           <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#0E7A53] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider">PILLAR 01</span>
-              <h4 className="font-bold text-lg text-[#111311] mt-2 font-sans-ui">NSFDC Dual-Tier Credit</h4>
-              <p className="text-xs text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 01</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">NSFDC Dual-Tier Credit</h4>
+              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).
               </p>
             </div>
@@ -601,9 +597,9 @@ export default function App() {
           {/* Card 2 */}
           <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#D49B5A] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider">PILLAR 02</span>
-              <h4 className="font-bold text-lg text-[#111311] mt-2 font-sans-ui">12-Month Solvency Simulator</h4>
-              <p className="text-xs text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 02</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">12-Month Solvency Simulator</h4>
+              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.
               </p>
             </div>
@@ -615,9 +611,9 @@ export default function App() {
           {/* Card 3 */}
           <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#E86043] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider">PILLAR 03</span>
-              <h4 className="font-bold text-lg text-[#111311] mt-2 font-sans-ui">Mode B Debt Liberation</h4>
-              <p className="text-xs text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 03</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">Mode B Debt Liberation</h4>
+              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.
               </p>
             </div>
@@ -629,9 +625,9 @@ export default function App() {
           {/* Card 4 */}
           <div className="pillar-card bg-white rounded-3xl p-6 border-t-4 border-t-[#4A6274] border border-black/5 shadow-md flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl transition-all">
             <div>
-              <span className="text-[11px] font-mono-num text-[#E86043] font-bold uppercase tracking-wider">PILLAR 04</span>
-              <h4 className="font-bold text-lg text-[#111311] mt-2 font-sans-ui">1-Page Lead-Bank DPR</h4>
-              <p className="text-xs text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
+              <span className="text-[11px] font-mono-num text-[#E86043] font-semibold uppercase tracking-wider">PILLAR 04</span>
+              <h4 className="font-semibold text-lg text-[#111311] mt-2 font-sans-ui tracking-tight">1-Page Lead-Bank DPR</h4>
+              <p className="text-xs sm:text-sm text-[#686D65] mt-2.5 leading-relaxed font-sans-ui">
                 Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.
               </p>
             </div>
@@ -640,17 +636,6 @@ export default function App() {
             </div>
           </div>
 
-        </div>
-
-        {/* Transition Anchor to Scene 6 */}
-        <div className="mt-16 flex flex-col items-center">
-          <button 
-            onClick={() => scrollToTarget('#dashboard-section')}
-            className="group flex flex-col items-center text-[#686D65] hover:text-[#111311] transition-colors cursor-pointer"
-          >
-            <span className="text-xs font-mono-num uppercase tracking-wider font-semibold">Proceed to SETO Minimal Dashboard</span>
-            <ChevronRight className="w-5 h-5 rotate-90 mt-1 transform group-hover:translate-y-1 transition-transform" />
-          </button>
         </div>
       </section>
 

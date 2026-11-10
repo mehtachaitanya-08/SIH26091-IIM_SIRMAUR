@@ -70,11 +70,18 @@ body {
   background: #94a3b8;
 }
 
-/* Giant condensed serif display */
+/* Master Editorial Font System:
+   Header / Display: 'Instrument Serif' (French transitional editorial display serif)
+   Sub-Header / Card / Body: 'Plus Jakarta Sans' (Clean humanist geometric sans)
+   Data / Metric / Code: 'Space Grotesk' (Tabular mono figures)
+   Dashboard Viewport: 'Inter Tight' (Dense metric data)
+*/
 .hero-big-title {
-  font-size: clamp(3.2rem, 11.5vw, 11.5rem);
-  line-height: 0.86;
-  letter-spacing: -0.04em;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(3.2rem, 11vw, 10.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
 }
 
 /* Radial Arc Gauge Animation */
