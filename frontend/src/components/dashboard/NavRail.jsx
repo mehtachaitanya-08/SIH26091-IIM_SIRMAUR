@@ -31,24 +31,33 @@ export default function NavRail({
   const presetList = Object.values(presets);
 
   return (
-    <aside className="lg:col-span-3 bg-[#F8F9FA] p-6 flex flex-col justify-between border-r border-[#E9ECEF]">
+    <aside className="lg:col-span-3 bg-[#F8F9FA] p-5 sm:p-6 flex flex-col justify-between border-r border-[#E9ECEF] overflow-y-auto">
       <div className="space-y-6">
-        {/* Brand Lockup: GraminAI */}
-        <div className="flex items-center space-x-2.5 px-2">
-          <img 
-            src="/images/logo.png" 
-            alt="GraminAI Emblem" 
-            className="w-8 h-8 object-contain rounded-md"
-          />
-          <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">
-            GraminAI
-          </span>
-          {mode === 'production' && (
-            <span className="ml-auto text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-emerald-100 text-[#0E7A53] font-bold">
-              Live
+        {/* Brand Lockup: Only on mockup/landing preview where no global top bar exists */}
+        {mode !== 'production' ? (
+          <div className="flex items-center space-x-2.5 px-2">
+            <img 
+              src="/images/logo.png" 
+              alt="GraminAI Emblem" 
+              className="w-8 h-8 object-contain rounded-md"
+            />
+            <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">
+              GraminAI
             </span>
-          )}
-        </div>
+            <span className="ml-auto text-[10px] font-mono-num font-bold px-2 py-0.5 rounded-md bg-slate-200 text-[#686D65] uppercase">
+              Preview
+            </span>
+          </div>
+        ) : (
+          <div className="px-3 pt-1 pb-1 flex items-center justify-between border-b border-[#E9ECEF]">
+            <span className="text-[11px] font-semibold text-[#686D65] uppercase tracking-wider font-sans-ui">
+              Navigation
+            </span>
+            <span className="text-[11px] font-mono-num text-[#0E7A53] font-medium">
+              Sitapur, UP
+            </span>
+          </div>
+        )}
 
         {/* Nav Tabs List with Active White Pill */}
         <nav className="space-y-1">

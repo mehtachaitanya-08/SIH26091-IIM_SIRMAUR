@@ -4,7 +4,8 @@ import {
   evaluateModeA,
   restructureDebt,
   fetchDossiers,
-  fetchHealth
+  fetchHealth,
+  fetchMandiPrices
 } from '../services/api';
 import { calculateEMI } from '../engine';
 
@@ -144,6 +145,7 @@ export default function ProductionDashboard({
   const [searchQuery, setSearchQuery] = useState('');
   const [recentChecks, setRecentChecks] = useState({ D08: true, D18: false, debt: false });
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [mandiPriceData, setMandiPriceData] = useState(null);
   const [scenariosList, setScenariosList] = useState(() => {
     try {
       const saved = localStorage.getItem('graminai_production_scenarios');
@@ -267,6 +269,33 @@ export default function ProductionDashboard({
 
     return () => { isMounted = false; };
   }, [debtPrincipal, debtRateSenkda, debtMonthsActive]);
+
+  // Query Daily Agmarknet Mandi Spot Prices via data.gov.in API
+  useEffect(() => {
+    let isMounted = true;
+    const commodityMap = {
+      D08: 'Mustard',
+      D07: 'Wheat',
+      D04: 'Wheat',
+      D01: 'Wheat',
+      D02: 'Paddy',
+      D05: 'Maize',
+      D09: 'Gram',
+      D18: 'Cotton',
+      D11: 'Paddy',
+      D15: 'Mustard'
+    };
+    const commodity = commodityMap[selectedDomainCode] || 'Mustard';
+
+    fetchMandiPrices('Uttar Pradesh', commodity).then((data) => {
+      if (!isMounted) return;
+      setMandiPriceData(data);
+    }).catch((err) => {
+      console.warn('[ProductionDashboard] Mandi price fetch warning:', err);
+    });
+
+    return () => { isMounted = false; };
+  }, [selectedDomainCode]);
 
   // Helper Toast
   const showToast = useCallback((msg) => {
@@ -463,7 +492,7 @@ export default function ProductionDashboard({
       mode="production"
       id="production-dashboard"
       toastMessage={toastMessage}
-      showTitle={true}
+      showTitle={false}
     >
       {/* Statutory Beneficiary Verification Modal */}
       <StatutoryVerificationModal
@@ -511,6 +540,7 @@ export default function ProductionDashboard({
         onShowToast={showToast}
         onDownloadPdf={handleDownloadDprPdf}
         formatINR={formatINR}
+        mandiPriceData={mandiPriceData}
         mode="production"
       />
 

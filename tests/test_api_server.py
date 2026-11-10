@@ -381,6 +381,17 @@ class TestGraminAIServer(unittest.TestCase):
         self.assertEqual(status, 404)
         self.assertIn("not found", data["error"].lower())
 
+    def test_17_get_mandi_prices(self):
+        """GET /api/mandi-prices returns Agmarknet spot commodity records."""
+        status, data, _ = self._send_request("GET", "/api/mandi-prices?commodity=Mustard&state=Uttar+Pradesh")
+        self.assertEqual(status, 200)
+        self.assertEqual(data["commodity"], "Mustard")
+        self.assertEqual(data["state"], "Uttar Pradesh")
+        self.assertIn("modalPrice", data)
+        self.assertGreater(data["modalPrice"], 0)
+        self.assertIn("records", data)
+        self.assertGreater(len(data["records"]), 0)
+
 
 if __name__ == "__main__":
     unittest.main()

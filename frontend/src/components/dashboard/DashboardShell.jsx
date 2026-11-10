@@ -14,10 +14,18 @@ export default function DashboardShell({
   showTitle = true,
   className = ''
 }) {
+  const isProduction = mode === 'production';
   const headline = language === 'hi' ? 'उद्यमी कार्यक्षेत्र.' : 'The Entrepreneur Workspace.';
 
   return (
-    <section id={id} className={`py-16 px-4 sm:px-8 max-w-[1500px] mx-auto font-sans ${className}`}>
+    <section 
+      id={id} 
+      className={
+        isProduction
+          ? `w-full flex-1 flex flex-col font-sans ${className}`
+          : `py-16 px-4 sm:px-8 max-w-[1500px] mx-auto font-sans ${className}`
+      }
+    >
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -31,8 +39,8 @@ export default function DashboardShell({
         </div>
       )}
 
-      {/* Section Header */}
-      {showTitle && (
+      {/* Section Header (Only for mockup/landing preview, never in production) */}
+      {showTitle && !isProduction && (
         <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#111311] tracking-tight leading-[1.08]">
             {headline}
@@ -40,15 +48,18 @@ export default function DashboardShell({
         </div>
       )}
 
-      {/* Enterprise Advisory Workspace Enclosure with SETO Diffused Ambient Canvas */}
-      <div className="bg-[#E9ECEF] diffused-backdrop rounded-[32px] p-3 sm:p-6 border border-[#DEE2E6] soft-shadow">
-        
-        {/* Main 3-Column White Shell */}
-        <div className="bg-white rounded-[24px] overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 min-h-[760px] border border-[#E9ECEF]">
+      {/* Enterprise Advisory Workspace Enclosure */}
+      {isProduction ? (
+        <div className="w-full flex-1 bg-white rounded-2xl shadow-sm border border-[#E9ECEF] grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-80px)] overflow-hidden">
           {children}
         </div>
-
-      </div>
+      ) : (
+        <div className="bg-[#E9ECEF] diffused-backdrop rounded-[32px] p-3 sm:p-6 border border-[#DEE2E6] soft-shadow">
+          <div className="bg-white rounded-[24px] overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 min-h-[760px] border border-[#E9ECEF]">
+            {children}
+          </div>
+        </div>
+      )}
 
     </section>
   );
