@@ -1,0 +1,4 @@
+# Checker only (not needed to run the server):
+#   backend/.venv/bin/pip install -r backend/requirements-checker.txt
+# pymupdf reads the saved PDFs for backend/check_dossier.py. Licence: AGPL-3.0.
+pymupdf==2.1

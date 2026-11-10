@@ -1,0 +1,16 @@
+{
+ "D15": [],
+ "D16": [
+  {
+   "line": 333,
+   "kind": "rule",
+   "text": "| Electrical shock / fire while testing | NOT FOUND | — | IF the shop tests motors on live supply THEN show the electrical-safety check (⚠) | — |",
+   "reason": "The dossier gives this app rule no tag (no source and no 'our design choice'); left out of the server until Person C tags it."
+  }
+ ],
+ "D17": [],
+ "D19": [],
+ "D20": [],
+ "D21": [],
+ "D22": []
+}
