@@ -32,6 +32,7 @@ export default function App() {
   // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization
   useEffect(() => {
     let lenis;
+    let updateTicker;
     let rafId;
     let refreshTimer;
 
@@ -84,13 +85,10 @@ export default function App() {
 
       tlHero
         .to("#hero-center-card", { scale: 0.62, opacity: 0, y: -40, duration: 1 })
-        .to("#hero-sat-1", { x: 280, y: -200, scale: 0.35, opacity: 0, duration: 1 }, 0)
-        .to("#hero-sat-2", { x: -300, y: 180, scale: 0.35, opacity: 0, duration: 1 }, 0)
-        .to("#hero-sat-3", { x: 320, y: 200, scale: 0.35, opacity: 0, duration: 1 }, 0)
-        .to("#hero-sat-4", { x: -260, y: -180, scale: 0.35, opacity: 0, duration: 1 }, 0)
-        .to("#hero-chip-ochre", { x: 150, y: -110, opacity: 0, duration: 0.8 }, 0)
-        .to("#hero-chip-olive", { x: -150, y: 110, opacity: 0, duration: 0.8 }, 0)
-        .to("#hero-chip-slate", { x: -190, opacity: 0, duration: 0.8 }, 0)
+        .to("#hero-sat-1", { x: 260, y: -180, scale: 0.35, opacity: 0, duration: 1 }, 0)
+        .to("#hero-sat-2", { x: -280, y: 160, scale: 0.35, opacity: 0, duration: 1 }, 0)
+        .to("#hero-sat-3", { x: 300, y: 180, scale: 0.35, opacity: 0, duration: 1 }, 0)
+        .to("#hero-sat-4", { x: -240, y: -160, scale: 0.35, opacity: 0, duration: 1 }, 0)
         .fromTo("#hero-headline-wrap", { scale: 0.96 }, { scale: 1.04, duration: 1 }, 0)
         .to("#hero-headline-wrap", { opacity: 0.15, y: -60, duration: 0.8 }, 0.6);
 
@@ -135,30 +133,33 @@ export default function App() {
           start: "top top",
           end: "+=150%",
           pin: "#orbit-pinned-wrap",
-          scrub: 1.4
+          scrub: 1.0
         }
       });
 
       tlOrbit
         .from(".orbit-tile", {
-          scale: 0.2,
+          scale: 0.3,
           opacity: 0,
-          stagger: {
-            each: 0.05,
-            from: "random"
-          },
-          duration: 1
+          stagger: 0.04,
+          duration: 0.8,
+          ease: "power2.out"
         })
         .from("#orbit-center-text", {
           opacity: 0,
-          scale: 0.88,
+          scale: 0.92,
           duration: 0.8
-        }, 0.2)
+        }, 0.15)
         .to("#orbit-ring", {
-          rotation: 45,
+          rotation: 60,
           duration: 2,
           ease: "none"
-        }, 0.4);
+        }, 0.3)
+        .to(".orbit-tile-inner", {
+          rotation: -60,
+          duration: 2,
+          ease: "none"
+        }, 0.3);
 
       // -------------------------------------------------------------
       // SCENE 4: IMMERSIVE ARC GAUGE (FILLS TO 67%)
@@ -218,6 +219,9 @@ export default function App() {
     }, containerRef.current);
 
     return () => {
+      if (updateTicker) {
+        gsap.ticker.remove(updateTicker);
+      }
       if (rafId) {
         cancelAnimationFrame(rafId);
       }
@@ -248,10 +252,10 @@ export default function App() {
       {/* ============================================================== */}
       <header className="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 flex items-center justify-between pointer-events-none">
         
-        {/* Left: Statutory Tag */}
+        {/* Left: Statutory Editorial Masthead (No Pill Capsule) */}
         <div className="pointer-events-auto flex items-center space-x-2">
-          <span className="text-[11px] font-mono-num font-semibold tracking-widest uppercase bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-black/10 shadow-sm text-[#111311] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A53] animate-pulse"></span>
+          <span className="text-xs font-mono-num font-semibold tracking-widest uppercase text-[#111311]/75 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A53]"></span>
             MoSJE · NSFDC · SIH26091
           </span>
         </div>
@@ -272,19 +276,19 @@ export default function App() {
           </div>
         </div>
 
-        {/* Right: Sound & Dashboard Action Pill */}
-        <div className="pointer-events-auto flex items-center space-x-3">
+        {/* Right: Sound & Dashboard Action */}
+        <div className="pointer-events-auto flex items-center space-x-4">
           <button 
             onClick={() => setIsAudioPlaying(!isAudioPlaying)}
-            className="w-9 h-9 rounded-full bg-white/85 backdrop-blur-md border border-black/10 flex items-center justify-center text-xs text-[#111311] hover:bg-white shadow-sm transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full border border-black/15 flex items-center justify-center text-xs text-[#111311] hover:bg-black/5 transition-all cursor-pointer"
             title="Toggle Ambient Audio"
           >
-            {isAudioPlaying ? <Volume2 className="w-4 h-4 text-[#0E7A53]" /> : <VolumeX className="w-4 h-4 text-[#686D65]" />}
+            {isAudioPlaying ? <Volume2 className="w-3.5 h-3.5 text-[#0E7A53]" /> : <VolumeX className="w-3.5 h-3.5 text-[#686D65]" />}
           </button>
 
           <button 
             onClick={() => scrollToTarget('#dashboard-section')} 
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono-num font-bold tracking-tight text-[#111311] uppercase bg-white/85 backdrop-blur-md px-4 py-2 rounded-full border border-black/10 shadow-sm hover:bg-white hover:scale-105 transition-all cursor-pointer"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono-num font-bold tracking-wider text-[#111311] uppercase hover:underline cursor-pointer"
           >
             <span>Dashboard</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -293,28 +297,31 @@ export default function App() {
       </header>
 
       {/* ============================================================== */}
-      {/* PERSISTENT FLOATING NAVIGATION CAPSULE                         */}
+      {/* MINIMAL FLOATING GUIDE INDICATOR                               */}
       {/* ============================================================== */}
-      <aside className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 bg-[#111311]/90 backdrop-blur-xl border border-white/20 rounded-full py-4 px-2 shadow-2xl flex flex-col items-center gap-3">
-        <span className="text-[10px] text-[#A0A59D] font-bold mb-1 select-none">☰</span>
+      <aside className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-4 pointer-events-auto">
         {[
-          { idx: 1, label: 'Hero', target: '#hero-pinned-scene' },
-          { idx: 2, label: 'Thesis', target: '#scene-thesis' },
-          { idx: 3, label: 'Orbit', target: '#scene-orbit' },
-          { idx: 4, label: 'Solvency', target: '#scene-immersive' },
-          { idx: 5, label: 'Pillars', target: '#scene-cards' },
-          { idx: 6, label: 'SETO Dashboard', target: '#dashboard-section' }
+          { idx: 1, label: '01', target: '#hero-pinned-scene' },
+          { idx: 2, label: '02', target: '#scene-thesis' },
+          { idx: 3, label: '03', target: '#scene-orbit' },
+          { idx: 4, label: '04', target: '#scene-immersive' },
+          { idx: 5, label: '05', target: '#scene-cards' },
+          { idx: 6, label: '06', target: '#dashboard-section' }
         ].map((item) => (
           <button
             key={item.idx}
             onClick={() => scrollToTarget(item.target)}
-            aria-label={item.label}
-            className={`transition-all duration-300 rounded-full cursor-pointer ${
+            aria-label={`Go to section ${item.label}`}
+            className="group flex items-center cursor-pointer p-1"
+          >
+            <span className={`text-[10px] font-mono-num transition-all duration-300 ${
               activeSection === item.idx 
-                ? 'w-1.5 h-6 bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)]' 
-                : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/70'
-            }`}
-          />
+                ? 'text-[#111311] font-bold scale-125' 
+                : 'text-[#686D65]/40 hover:text-[#111311]'
+            }`}>
+              {item.label}
+            </span>
+          </button>
         ))}
       </aside>
 
@@ -339,81 +346,70 @@ export default function App() {
         {/* Floating Photo Cluster Dispersing Outward on Scrub */}
         <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
           
-          {/* Central Card: Ramesh Kumar & Partner (D08 Mustard Expeller) */}
+          {/* Central Card: Rural Advisory in Action (Farmer + Extension Advisor with Tablet) */}
           <div 
             id="hero-center-card" 
-            className="absolute w-[320px] sm:w-[420px] md:w-[460px] h-[230px] sm:h-[290px] md:h-[320px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 pointer-events-auto"
+            className="absolute w-[320px] sm:w-[420px] md:w-[480px] h-[220px] sm:h-[280px] md:h-[310px] rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-900 pointer-events-auto"
           >
             <img 
               src="/images/hero_center.jpg" 
-              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=900&q=80"; }}
-              alt="Ramesh Kumar Agro Processing Workshop" 
-              className="w-full h-full object-cover filter brightness-[0.92] contrast-[1.05]"
+              onError={(e) => { e.currentTarget.src = "/images/landing/2.jpg"; }}
+              alt="Rural producer receiving credit and enterprise advisory" 
+              className="w-full h-full object-cover filter brightness-[0.96] contrast-[1.05]"
             />
-            <div className="absolute bottom-2.5 left-2.5 right-2.5 bg-black/65 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-[11px] flex justify-between items-center font-mono-num border border-white/10">
-              <span className="font-semibold">Ramesh Kumar (D08)</span>
-              <span className="text-[#10B981] font-bold flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> NSFDC Verified
-              </span>
-            </div>
           </div>
 
-          {/* Satellite 1: Top-Right (Aerial Mustard Fields) */}
+          {/* Satellite 1: Top-Right (Two Tractors Plowing at Sunrise) */}
           <div 
             id="hero-sat-1" 
-            className="absolute -top-6 sm:top-14 right-4 sm:right-24 md:right-32 w-28 sm:w-36 md:w-44 h-20 sm:h-28 md:h-32 rounded-xl overflow-hidden shadow-xl border-2 border-white/90 bg-amber-900/30"
+            className="absolute -top-4 sm:top-14 right-4 sm:right-24 md:right-32 w-28 sm:w-36 md:w-44 h-20 sm:h-26 md:h-32 rounded-xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
           >
             <img 
               src="/images/hero_sat_1.jpg" 
-              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80"; }}
-              alt="Mustard harvest fields" 
+              onError={(e) => { e.currentTarget.src = "/images/landing/1.jpg"; }}
+              alt="Agro-mechanization and farm harvesting" 
               className="w-full h-full object-cover" 
             />
           </div>
 
-          {/* Satellite 2: Bottom-Left (Sunita Devi Tailoring) */}
+          {/* Satellite 2: Bottom-Left (Rural Retail Kirana Store) */}
           <div 
             id="hero-sat-2" 
-            className="absolute bottom-12 sm:bottom-20 left-4 sm:left-24 md:left-32 w-32 sm:w-44 md:w-52 h-24 sm:h-32 md:h-36 rounded-xl overflow-hidden shadow-xl border-2 border-white/90 bg-indigo-900/30"
+            className="absolute bottom-12 sm:bottom-20 left-4 sm:left-24 md:left-32 w-32 sm:w-44 md:w-52 h-22 sm:h-30 md:h-36 rounded-xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
           >
             <img 
               src="/images/hero_sat_2.jpg" 
-              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=400&q=80"; }}
-              alt="Sunita Devi Tailoring Workshop" 
+              onError={(e) => { e.currentTarget.src = "/images/landing/3.jpg"; }}
+              alt="Rural retail and kirana enterprise" 
               className="w-full h-full object-cover" 
             />
           </div>
 
-          {/* Satellite 3: Bottom-Right (Manoj Paswan Garage) */}
+          {/* Satellite 3: Bottom-Right (Commercial Dairy Producer) */}
           <div 
             id="hero-sat-3" 
-            className="absolute bottom-10 sm:bottom-16 right-6 sm:right-28 md:right-36 w-30 sm:w-40 md:w-48 h-22 sm:h-28 md:h-34 rounded-xl overflow-hidden shadow-xl border-2 border-white/90 bg-slate-900/30"
+            className="absolute bottom-10 sm:bottom-16 right-6 sm:right-28 md:right-36 w-30 sm:w-40 md:w-48 h-22 sm:h-28 md:h-34 rounded-xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
           >
             <img 
               src="/images/hero_sat_3.jpg" 
-              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=400&q=80"; }}
-              alt="Manoj Paswan Rural Tractor Garage" 
+              onError={(e) => { e.currentTarget.src = "/images/landing/8.jpg"; }}
+              alt="Commercial dairy enterprise" 
               className="w-full h-full object-cover" 
             />
           </div>
 
-          {/* Satellite 4: Top-Left (Handloom Weaving Artisan) */}
+          {/* Satellite 4: Top-Left (Tailoring Enterprise with Daughter) */}
           <div 
             id="hero-sat-4" 
-            className="absolute top-12 sm:top-20 left-6 sm:left-28 md:left-36 w-28 sm:w-38 md:w-44 h-20 sm:h-26 md:h-32 rounded-xl overflow-hidden shadow-xl border-2 border-white/90 bg-emerald-900/30"
+            className="absolute top-12 sm:top-20 left-6 sm:left-28 md:left-36 w-28 sm:w-38 md:w-44 h-20 sm:h-26 md:h-32 rounded-xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
           >
             <img 
               src="/images/hero_sat_4.jpg" 
-              onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80"; }}
-              alt="Handloom Weaving Artisan" 
+              onError={(e) => { e.currentTarget.src = "/images/landing/5.jpg"; }}
+              alt="Village tailoring and apparel craftsmanship" 
               className="w-full h-full object-cover" 
             />
           </div>
-
-          {/* Color Accent Chips */}
-          <div id="hero-chip-ochre" className="absolute top-36 right-1/4 w-8 h-8 rounded-md bg-[#D49B5A] shadow-md"></div>
-          <div id="hero-chip-olive" className="absolute bottom-32 left-1/4 w-7 h-7 rounded-md bg-[#5A7352] shadow-md"></div>
-          <div id="hero-chip-slate" className="absolute top-1/2 left-16 w-6 h-6 rounded-md bg-[#4A6274] shadow-md"></div>
         </div>
 
         {/* Bottom Scroll Cue */}
@@ -438,9 +434,9 @@ export default function App() {
           </div>
         </div>
 
-        {/* Chapter Marker [ 01 ] */}
+        {/* Chapter Marker */}
         <span className="text-xs font-mono-num uppercase text-[#686D65] font-semibold tracking-[0.25em] mb-4">
-          [ 01 ]
+          02 · THE STATUTORY CHARTER
         </span>
 
         {/* Master Thesis Statement */}
@@ -453,17 +449,20 @@ export default function App() {
           To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core trade domains.
         </p>
 
-        {/* 3 Metric Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mt-10">
-          <span className="px-4 py-2 rounded-full bg-white border border-black/10 text-xs font-mono-num font-semibold text-[#111311] shadow-sm">
-            MCF: ≤ ₹1.40L @ 6.5%
-          </span>
-          <span className="px-4 py-2 rounded-full bg-white border border-black/10 text-xs font-mono-num font-semibold text-[#111311] shadow-sm">
-            Term Loan: Up to ₹50L @ 8.0%
-          </span>
-          <span className="px-4 py-2 rounded-full bg-white border border-black/10 text-xs font-mono-num font-semibold text-[#0E7A53] shadow-sm">
-            RBI Lead-Bank Standard DPR
-          </span>
+        {/* Architectural 3-Column Ledger (No Capsules) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-14 max-w-3xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
+          <div className="px-4 pt-4 sm:pt-0">
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311]">≤ ₹1.40 Lakh</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">MCF Concessional @ 6.5%</span>
+          </div>
+          <div className="px-4 pt-4 sm:pt-0">
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311]">Up to ₹50 Lakh</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">Term Loan Facility @ 8.0%</span>
+          </div>
+          <div className="px-4 pt-4 sm:pt-0">
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#0E7A53]">Lead-Bank Standard</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">Statutory 1-Page DPR</span>
+          </div>
         </div>
       </section>
 
@@ -473,74 +472,56 @@ export default function App() {
       <section id="scene-orbit" ref={orbitRef} className="relative w-full h-[180vh] bg-[#F4F1EA]">
         <div id="orbit-pinned-wrap" className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-4">
           
-          {/* Central Narrative Block */}
-          <div id="orbit-center-text" className="text-center max-w-xl z-20 pointer-events-none px-4">
+          {/* Central Narrative Block (Tight Envelope Clear of Orbit Radius) */}
+          <div id="orbit-center-text" className="text-center max-w-md z-20 pointer-events-none px-4">
             <span className="text-xs font-mono-num uppercase text-[#686D65] font-semibold tracking-widest block mb-3">
-              [ 02 ]
+              03 · THE LIVING ECOSYSTEM
             </span>
-            <h3 className="text-4xl sm:text-6xl lg:text-7xl font-editorial text-[#111311] leading-[1.05]">
+            <h3 className="text-4xl sm:text-5xl lg:text-6xl font-editorial text-[#111311] leading-[1.05]">
               What does <span className="italic font-normal">opportunity</span><br />
               mean today?
             </h3>
-            <p className="text-xs sm:text-sm text-[#686D65] mt-5 max-w-md mx-auto leading-relaxed font-sans-ui">
+            <p className="text-xs sm:text-sm text-[#686D65] mt-4 max-w-sm mx-auto leading-relaxed font-sans-ui">
               It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and instant bank-sanction DPRs.
             </p>
-            <div className="mt-5 inline-flex items-center gap-2 bg-[#111311] text-white text-[11px] font-mono-num px-3 py-1 rounded-full">
-              <span>NSFDC · MoSJE</span>
-              <span className="w-1 h-1 rounded-full bg-[#10B981]"></span>
-              <span>24 Trade Dossiers</span>
-            </div>
+            <p className="mt-4 text-[11px] font-mono-num text-[#0E7A53] uppercase tracking-widest font-semibold">
+              NSFDC · MoSJE · 24 Trade Dossiers
+            </p>
           </div>
 
-          {/* Orbiting Constellation Ring (8 Photos + 4 Chips) */}
+          {/* Symmetrical Orbiting Constellation Ring (8 Authentic Beneficiary Photos) */}
           <div id="orbit-ring" className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-            
-            {/* Tile 1: Top (0°, R=250px) */}
-            <div className="orbit-tile absolute -translate-y-64 w-24 h-24 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_1.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=300&q=80"; }} alt="Oil expeller machine" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 2: Top-Right (45°, x=180, y=-180) */}
-            <div className="orbit-tile absolute translate-x-48 -translate-y-48 w-20 h-20 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_2.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80"; }} alt="Farmland crops" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 3: Right (90°, x=270, y=0) */}
-            <div className="orbit-tile absolute translate-x-68 w-28 h-20 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_3.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=300&q=80"; }} alt="Garment cooperative" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 4: Bottom-Right (135°, x=190, y=190) */}
-            <div className="orbit-tile absolute translate-x-52 translate-y-48 w-24 h-24 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_4.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&q=80"; }} alt="Agro-machinery station" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 5: Bottom (180°, y=250) */}
-            <div className="orbit-tile absolute translate-y-64 w-28 h-20 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_5.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80"; }} alt="Artisan pottery" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 6: Bottom-Left (225°, x=-190, y=190) */}
-            <div className="orbit-tile absolute -translate-x-52 translate-y-48 w-20 h-20 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_6.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80"; }} alt="Livestock goat husbandry" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 7: Left (270°, x=-270) */}
-            <div className="orbit-tile absolute -translate-x-68 w-24 h-24 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_7.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=300&q=80"; }} alt="Agro input store" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Tile 8: Top-Left (315°, x=-180, y=-180) */}
-            <div className="orbit-tile absolute -translate-x-48 -translate-y-48 w-20 h-20 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-slate-800">
-              <img src="/images/orbit_8.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1595278069441-2cf29f8005a4?auto=format&fit=crop&w=300&q=80"; }} alt="Organic vermicompost" className="w-full h-full object-cover" />
-            </div>
-
-            {/* Orbit Color Chips */}
-            <div className="orbit-tile absolute -translate-x-28 -translate-y-60 w-5 h-5 rounded-md bg-[#D49B5A] shadow-md"></div>
-            <div className="orbit-tile absolute translate-x-32 -translate-y-60 w-6 h-6 rounded-md bg-[#E86043] shadow-md"></div>
-            <div className="orbit-tile absolute translate-x-60 translate-y-20 w-5 h-5 rounded-md bg-[#5A7352] shadow-md"></div>
-            <div className="orbit-tile absolute -translate-x-60 translate-y-20 w-6 h-6 rounded-md bg-[#4A6274] shadow-md"></div>
+            {[
+              { id: 1, angle: '0deg', x: '0', y: '-1', src: '/images/orbit_1.jpg', fallback: '/images/landing/6.jpg', alt: 'SHG Women Collective Celebration' },
+              { id: 2, angle: '45deg', x: '0.7071', y: '-0.7071', src: '/images/orbit_2.jpg', fallback: '/images/landing/11.jpg', alt: 'PM Vishwakarma Artisan Carpentry' },
+              { id: 3, angle: '90deg', x: '1', y: '0', src: '/images/orbit_3.jpg', fallback: '/images/landing/3.jpg', alt: 'Rural Kirana General Store' },
+              { id: 4, angle: '135deg', x: '0.7071', y: '0.7071', src: '/images/orbit_4.jpg', fallback: '/images/landing/13.jpg', alt: 'Poultry Farm Entrepreneur' },
+              { id: 5, angle: '180deg', x: '0', y: '1', src: '/images/orbit_5.jpg', fallback: '/images/landing/7.jpg', alt: 'Village Capacity Building Training Camp' },
+              { id: 6, angle: '225deg', x: '-0.7071', y: '0.7071', src: '/images/orbit_6.jpg', fallback: '/images/landing/8.jpg', alt: 'Commercial Dairy Unit' },
+              { id: 7, angle: '270deg', x: '-1', y: '0', src: '/images/orbit_7.jpg', fallback: '/images/landing/4.jpg', alt: 'Market Vendor Liquidity and Profit' },
+              { id: 8, angle: '315deg', x: '-0.7071', y: '-0.7071', src: '/images/orbit_8.jpg', fallback: '/images/landing/5.jpg', alt: 'Intergenerational Tailoring Workshop' }
+            ].map((tile) => (
+              <div 
+                key={tile.id}
+                className="orbit-tile w-28 h-20 sm:w-32 sm:h-24 md:w-36 md:h-26 rounded-2xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
+                style={{
+                  '--x-factor': tile.x,
+                  '--y-factor': tile.y,
+                  '--angle': tile.angle
+                }}
+              >
+                <div className="orbit-tile-inner">
+                  <img 
+                    src={tile.src} 
+                    onError={(e) => { e.currentTarget.src = tile.fallback; }} 
+                    alt={tile.alt} 
+                    className="w-full h-full object-cover filter brightness-[0.94] contrast-[1.05]" 
+                  />
+                </div>
+              </div>
+            ))}
           </div>
+
         </div>
       </section>
 
@@ -552,27 +533,27 @@ export default function App() {
         ref={immersiveRef} 
         className="relative w-full h-screen overflow-hidden flex flex-col justify-between p-8 sm:p-14 bg-black text-white"
       >
-        {/* Full-Bleed Panoramic Harvest Backdrop */}
+        {/* Full-Bleed Panoramic Agrarian Roots Backdrop */}
         <div className="absolute inset-0 z-0">
           <img 
             src="/images/harvest_immersion.jpg" 
-            onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80"; }}
-            alt="Panoramic Rural Harvest Sunset" 
-            className="w-full h-full object-cover filter brightness-[0.55] contrast-[1.15]"
+            onError={(e) => { e.currentTarget.src = "/images/landing/9.jpg"; }}
+            alt="Traditional Agrarian Roots in Golden Morning Light" 
+            className="w-full h-full object-cover filter brightness-[0.45] contrast-[1.15]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/60"></div>
         </div>
 
-        {/* Top Breadcrumb */}
-        <div className="relative z-10 flex items-center justify-between">
-          <span className="text-xs font-mono-num uppercase tracking-widest text-[#10B981] font-bold flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping"></span>
-            02 / 04 · STATUTORY SOLVENCY RATING
+        {/* Top Header Eyebrow (No Pill Capsules) */}
+        <div className="relative z-10 flex items-center justify-between text-xs font-mono-num text-white/70 uppercase tracking-widest">
+          <span className="flex items-center gap-2 text-[#10B981] font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+            04 · STATUTORY SOLVENCY RATING
           </span>
-          <span className="text-xs font-mono-num text-white/60">SIH26091 VERIFIED</span>
+          <span className="hidden sm:inline text-white/50">LEAN-SEASON STRESS MODEL</span>
         </div>
 
-        {/* Center Circular Radial Arc Gauge */}
+        {/* Center Circular Radial Arc Gauge with Pure Typography (No Pill Badge) */}
         <div className="relative z-10 my-auto flex flex-col items-center justify-center">
           <div className="relative w-56 h-56 sm:w-72 sm:h-72 flex items-center justify-center">
             {/* SVG Arc Ring */}
@@ -591,18 +572,18 @@ export default function App() {
               />
             </svg>
 
-            {/* Center Percentage Badge (Yellow Pill) */}
-            <div className="absolute w-16 h-16 rounded-full bg-[#FACC15] text-[#111311] flex flex-col items-center justify-center font-bold text-xs shadow-2xl font-mono-num">
-              <span className="text-base font-black leading-none">67%</span>
-              <span className="text-[9px] uppercase tracking-wider text-[#111311]/70">AT RISK</span>
+            {/* Center Percentage Display (Clean Typography, No Pill Badge) */}
+            <div className="absolute flex flex-col items-center justify-center text-center">
+              <span className="text-4xl sm:text-5xl font-editorial font-bold text-white tracking-tight">67%</span>
+              <span className="text-[10px] font-mono-num uppercase tracking-widest text-[#FACC15] mt-1 font-semibold">LEAN-SEASON RISK</span>
             </div>
 
             {/* Dot on Top Arc */}
-            <div className="absolute top-2 w-3 h-3 rounded-full bg-white shadow-lg"></div>
+            <div className="absolute top-2 w-2.5 h-2.5 rounded-full bg-white shadow-lg"></div>
           </div>
         </div>
 
-        {/* Bottom Headline & Action Pill */}
+        {/* Bottom Headline & Action Button */}
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
           <div className="max-w-xl">
             <h3 className="text-3xl sm:text-5xl font-cinzel font-bold text-[#FACC15] tracking-tight leading-none">
@@ -615,11 +596,10 @@ export default function App() {
 
           <button 
             onClick={() => scrollToTarget('#dashboard-section')} 
-            className="px-6 py-3.5 rounded-full bg-white text-[#111311] font-bold text-xs uppercase tracking-wider font-mono-num flex items-center space-x-3 shadow-2xl hover:bg-[#FACC15] hover:scale-105 transition-all duration-300 cursor-pointer pointer-events-auto"
+            className="px-7 py-4 rounded-xl bg-white text-[#111311] font-bold text-xs uppercase tracking-wider font-mono-num flex items-center space-x-2 shadow-2xl hover:bg-[#F4F1EA] hover:scale-105 transition-all duration-300 cursor-pointer pointer-events-auto"
           >
-            <span>02 / 04</span>
-            <span className="h-3 w-[1px] bg-black/20"></span>
-            <span>OPEN DASHBOARD ↗</span>
+            <span>EXPLORE ADVISORY DASHBOARD</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </section>
@@ -630,7 +610,7 @@ export default function App() {
       <section id="scene-cards" ref={cardsRef} className="py-28 px-6 sm:px-12 max-w-7xl mx-auto bg-[#F4F1EA]">
         <div className="max-w-2xl mb-12">
           <span className="text-xs font-mono-num uppercase text-[#E86043] font-bold tracking-widest block mb-2">
-            [ 03 ] · ARCHITECTURE OF RESILIENCE
+            05 · ARCHITECTURE OF RESILIENCE
           </span>
           <h2 className="text-4xl sm:text-5xl font-cinzel font-bold uppercase tracking-tight text-[#111311]">
             The Four Pillars.
