@@ -1,10 +1,16 @@
-# Loan server packages (install into backend/.venv, which git ignores):
+# Server packages (install into backend/.venv, which git ignores):
 #   python3 -m venv backend/.venv
 #   backend/.venv/bin/pip install -r backend/requirements.txt
 fastapi==0.162.2
 pydantic==2.14.3
 starlette==1.10.0
 uvicorn==0.54.0
+# chatbot: calls the Groq API
+httpx==0.28.1
+# 1-page DPR PDF (versions as in the root requirements.txt); fonts in backend/fonts
+reportlab==5.1.0
+pillow==13.0.0
+charset-normalizer==3.5.2
 # tests only
 pytest==9.2.0
-httpx==0.28.1
+pypdf==6.21.4
