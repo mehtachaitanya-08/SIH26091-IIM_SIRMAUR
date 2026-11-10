@@ -405,9 +405,9 @@ export default function App() {
         className="min-h-screen py-24 sm:py-32 px-6 sm:px-12 flex flex-col items-center justify-center bg-[#F8F6F0] relative"
       >
         {/* Proportioned Vertical Line Drop with Terminal Dot */}
-        <div className="flex flex-col items-center mb-8">
-          <div id="thesis-line" className="w-[1.5px] h-16 bg-[#111311] relative origin-top">
-            <div id="thesis-dot" className="w-2.5 h-2.5 rounded-full bg-[#111311] absolute -bottom-1 -left-[4.5px]"></div>
+        <div className="flex flex-col items-center mb-6">
+          <div id="thesis-line" className="w-[1.5px] h-8 bg-[#111311] relative origin-top">
+            <div id="thesis-dot" className="w-2 h-2 rounded-full bg-[#111311] absolute -bottom-1 -left-[3.25px]"></div>
           </div>
         </div>
 
@@ -422,17 +422,17 @@ export default function App() {
         </p>
 
         {/* Architectural 3-Column Ledger */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 max-w-3xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
-          <div className="px-4 pt-4 sm:pt-0">
-            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311]">≤ ₹1.40 Lakh</span>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-12 max-w-4xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
+          <div className="px-4 pt-4 sm:pt-0 flex flex-col items-center justify-center">
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">≤ ₹1.40 Lakh</span>
             <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">MCF Concessional @ 6.5%</span>
           </div>
-          <div className="px-4 pt-4 sm:pt-0">
-            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311]">Up to ₹50 Lakh</span>
+          <div className="px-4 pt-4 sm:pt-0 flex flex-col items-center justify-center">
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">Up to ₹50 Lakh</span>
             <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">Term Loan Facility @ 8.0%</span>
           </div>
-          <div className="px-4 pt-4 sm:pt-0">
-            <span className="block text-2xl sm:text-3xl font-editorial text-[#0E7A53]">Lead-Bank Standard</span>
+          <div className="px-4 pt-4 sm:pt-0 flex flex-col items-center justify-center">
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">Lead-Bank Standard</span>
             <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">Statutory 1-Page DPR</span>
           </div>
         </div>
