@@ -4,64 +4,255 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { 
   ArrowRight,
-  X
+  X,
+  LogIn,
+  LogOut,
+  User,
+  Globe,
+  Phone,
+  Lock,
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// ============================================================================
+// BILINGUAL STATIC TRANSLATIONS DICTIONARY
+// ============================================================================
+const TRANSLATIONS = {
+  en: {
+    // Header
+    loginRegister: 'Login / Register',
+    workspace: 'Workspace',
+    logout: 'Logout',
+    // Hero
+    heroTitle: ['WHERE', 'OPPORTUNITY', 'TAKES', 'ROOT'],
+    scrollExplore: 'SCROLL TO EXPLORE',
+    // Thesis
+    thesisHeading: 'Statutory credit enables rural producers to fulfill their highest potential.',
+    thesisBody: 'To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core trade domains.',
+    mcfAmount: '≤ ₹1.40 Lakh',
+    mcfLabel: 'MCF Concessional @ 6.5%',
+    termAmount: 'Up to ₹50 Lakh',
+    termLabel: 'Term Loan Facility @ 8.0%',
+    dprAmount: 'Lead-Bank Standard',
+    dprLabel: 'Statutory 1-Page DPR',
+    // Orbit
+    orbitTitlePre: 'What does ',
+    orbitTitleItalic: 'opportunity',
+    orbitTitlePost: ' mean today?',
+    orbitBody: 'It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and instant bank-sanction DPRs.',
+    // Immersion
+    riskGaugeLabel: 'LEAN-SEASON RISK',
+    immersionHeading: '67% of rural producers',
+    immersionBody: 'face catastrophic cash flow collapse during the August lean season without structured statutory amortisation.',
+    exploreDashboard: 'EXPLORE ADVISORY DASHBOARD',
+    // Pillars
+    pillarsHeading: 'The Four Pillars.',
+    pillarsBody: 'Translating statutory NSFDC credit guidelines and empirical rural cash flows into a unified advisory platform.',
+    card1Title: 'NSFDC Dual-Tier Credit',
+    card1Body: 'Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).',
+    card2Title: '12-Month Solvency Model',
+    card2Body: 'August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.',
+    card3Title: 'Mode B Debt Liberation',
+    card3Body: 'Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.',
+    card4Title: '1-Page Lead-Bank DPR',
+    card4Body: 'Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.',
+    viewDetails: 'View details',
+    closeDossier: 'Close Statutory Dossier',
+    // Auth Modal
+    modalTitleLogin: 'Beneficiary Sign In',
+    modalTitleRegister: 'New Enterprise Registration',
+    tabLogin: 'Sign In',
+    tabRegister: 'Register New',
+    demoLoginBtn: '⚡ 1-Click Demo Login: Ramesh Kumar (Mustard Mill · SC)',
+    phoneLabel: 'Registered Mobile Number',
+    phonePlaceholder: 'Enter 10-digit mobile number',
+    pinLabel: '4-Digit Security PIN',
+    pinPlaceholder: 'Enter 4-digit PIN',
+    nameLabel: 'Entrepreneur Full Name',
+    namePlaceholder: 'e.g. Ramesh Kumar',
+    tradeLabel: 'Enterprise Domain / Trade',
+    categoryLabel: 'Beneficiary Social Category',
+    submitLogin: 'Sign In & Open Workspace',
+    submitRegister: 'Register & Launch Workspace',
+    orDivider: 'OR',
+    statutoryNotice: '🔒 Conforms to Ministry of Social Justice and Empowerment (MoSJE) & NSFDC statutory eligibility verification.'
+  },
+  hi: {
+    // Header
+    loginRegister: 'लॉगिन / रजिस्टर',
+    workspace: 'कार्यक्षेत्र',
+    logout: 'लॉगआउट',
+    // Hero
+    heroTitle: ['जहाँ', 'अवसर', 'जड़', 'पकड़ता है'],
+    scrollExplore: 'आगे देखने के लिए स्क्रॉल करें',
+    // Thesis
+    thesisHeading: 'सांविधिक ऋण ग्रामीण उत्पादकों को उनकी उच्चतम क्षमता तक पहुँचने में सक्षम बनाता है।',
+    thesisBody: 'साहूकारों के 36% शोषणकारी ब्याज चक्र को तोड़कर पीढ़ियों की समृद्धि का निर्माण। 24 मुख्य व्यावसायिक क्षेत्रों में अनुसूचित जाति के सूक्ष्म उद्यमियों हेतु सामाजिक न्याय और अधिकारिता मंत्रालय के तत्वावधान में।',
+    mcfAmount: '≤ ₹1.40 लाख',
+    mcfLabel: 'एमसीएफ रियायती ऋण @ 6.5%',
+    termAmount: '₹50 लाख तक',
+    termLabel: 'सावधि ऋण सुविधा @ 8.0%',
+    dprAmount: 'अग्रणी बैंक मानक',
+    dprLabel: 'सांविधिक 1-पृष्ठीय डीपीआर',
+    // Orbit
+    orbitTitlePre: 'आज ',
+    orbitTitleItalic: 'अवसर',
+    orbitTitlePost: ' का क्या अर्थ है?',
+    orbitBody: 'इसका अर्थ है 3-सेंकड़ा साहूकार के बजाय 6.5% संस्थागत ऋण, 12 महीने का सॉल्वेंसी स्ट्रेस टेस्ट और तत्काल बैंक स्वीकृति डीपीआर तक सीधी पहुँच।',
+    // Immersion
+    riskGaugeLabel: 'मंदी-मौसम जोखिम',
+    immersionHeading: '67% ग्रामीण उत्पादक',
+    immersionBody: 'संरचित सांविधिक ऋण चुकौती के बिना अगस्त के मंदी मौसम में गंभीर नकदी संकट का सामना करते हैं।',
+    exploreDashboard: 'सलाहकार डैशबोर्ड देखें',
+    // Pillars
+    pillarsHeading: 'चार प्रमुख स्तंभ.',
+    pillarsBody: 'सांविधिक एनएसएफडीसी ऋण दिशानिर्देशों और ग्रामीण नकदी प्रवाह को एक एकीकृत सलाहकार मंच में परिवर्तित करना।',
+    card1Title: 'एनएसएफडीसी द्वि-स्तरीय ऋण',
+    card1Body: 'सांविधिक माइक्रो क्रेडिट (≤ ₹1.40 लाख @ 6.5%, 11 तिमाही) एवं सावधि ऋण (₹50 लाख तक @ 8.0%, 26 तिमाही)।',
+    card2Title: '12-माह सॉल्वेंसी मॉडल',
+    card2Body: '24 वास्तविक व्यापार क्षेत्रों में अगस्त मानसून मंदी के महीनों का तनाव परीक्षण, जिससे डिफ़ॉल्ट जोखिम रुकता है।',
+    card3Title: 'मोड बी साहूकारी ऋण मुक्ति',
+    card3Body: 'अनौपचारिक 3-सेंकड़ा (36% वार्षिक) साहूकार ऋण को कम ब्याज वाली संस्थागत बैंकिंग सुविधा में बदलना।',
+    card4Title: '1-पृष्ठीय लीड-बैंक डीपीआर',
+    card4Body: 'आरबीआई लीड बैंक योजना मानकों के अनुरूप क्यूआर सत्यापन युक्त एकल-पृष्ठीय बैंक स्वीकृति प्रस्ताव।',
+    viewDetails: 'विवरण देखें',
+    closeDossier: 'सांविधिक दस्तावेज बंद करें',
+    // Auth Modal
+    modalTitleLogin: 'लाभार्थी लॉगिन',
+    modalTitleRegister: 'नया उद्यम पंजीकरण',
+    tabLogin: 'लॉगिन',
+    tabRegister: 'नया पंजीकरण',
+    demoLoginBtn: '⚡ 1-क्लिक डेमो लॉगिन: रमेश कुमार (सरसों तेल मिल · SC)',
+    phoneLabel: 'पंजीकृत मोबाइल नंबर',
+    phonePlaceholder: '10 अंकों का मोबाइल नंबर दर्ज करें',
+    pinLabel: '4-अंकीय सुरक्षा पिन',
+    pinPlaceholder: '4-अंकीय पिन दर्ज करें',
+    nameLabel: 'उद्यमी का पूरा नाम',
+    namePlaceholder: 'उदा. रमेश कुमार',
+    tradeLabel: 'उद्यम क्षेत्र / व्यापार',
+    categoryLabel: 'लाभार्थी सामाजिक श्रेणी',
+    submitLogin: 'लॉगिन करें और कार्यक्षेत्र खोलें',
+    submitRegister: 'पंजीकरण करें और कार्यक्षेत्र खोलें',
+    orDivider: 'अथवा',
+    statutoryNotice: '🔒 सामाजिक न्याय एवं अधिकारिता मंत्रालय (MoSJE) एवं NSFDC सांविधिक पात्रता सत्यापन मानकों के अनुरूप।'
+  }
+};
+
+// ============================================================================
+// BILINGUAL PILLAR DOSSIERS (MODAL CONTENTS)
+// ============================================================================
 const PILLAR_DOSSIERS = {
-  1: {
-    number: 'PILLAR 01',
-    title: 'NSFDC Dual-Tier Credit Architecture',
-    color: '#0E7A53',
-    mandate: 'MoSJE Mandate · Concessional Lending Framework',
-    summary: 'Direct institutional credit structuring conforming to statutory National Scheduled Castes Finance and Development Corporation guidelines.',
-    specifications: [
-      { label: 'Micro Credit Facility (MCF)', value: 'Up to ₹1,40,000 @ 6.5% p.a. (11 quarters tenure, 1 moratorium quarter)' },
-      { label: 'Term Loan Facility', value: 'Up to ₹50,00,000 @ 8.0% p.a. (26 quarters tenure, 2 moratorium quarters)' },
-      { label: 'Beneficiary Eligibility', value: 'Scheduled Caste (SC) micro-entrepreneurs; household income ≤ ₹5,00,000' },
-      { label: 'Margin Money Structure', value: 'Up to 90% concessional loan routing with 10% entrepreneur margin contribution' }
-    ]
+  en: {
+    1: {
+      number: 'PILLAR 01',
+      title: 'NSFDC Dual-Tier Credit Architecture',
+      color: '#0E7A53',
+      mandate: 'MoSJE Mandate · Concessional Lending Framework',
+      summary: 'Direct institutional credit structuring conforming to statutory National Scheduled Castes Finance and Development Corporation guidelines.',
+      specifications: [
+        { label: 'Micro Credit Facility (MCF)', value: 'Up to ₹1,40,000 @ 6.5% p.a. (11 quarters tenure, 1 moratorium quarter)' },
+        { label: 'Term Loan Facility', value: 'Up to ₹50,00,000 @ 8.0% p.a. (26 quarters tenure, 2 moratorium quarters)' },
+        { label: 'Beneficiary Eligibility', value: 'Scheduled Caste (SC) micro-entrepreneurs; household income ≤ ₹5,00,000' },
+        { label: 'Margin Money Structure', value: 'Up to 90% concessional loan routing with 10% entrepreneur margin contribution' }
+      ]
+    },
+    2: {
+      number: 'PILLAR 02',
+      title: '12-Month Solvency Stress Simulator',
+      color: '#B47228',
+      mandate: 'Monsoon Cash-Flow Resilience & DSCR Verification',
+      summary: 'Dynamic month-by-month cash flow modeling across 24 empirical trade dossiers to prevent debt distress during seasonal contractions.',
+      specifications: [
+        { label: 'Lean Season Simulation', value: 'Simulates August monsoon revenue drops (-35% to -45%) across rural trades' },
+        { label: 'Solvency Benchmark', value: 'Enforces statutory Debt Service Coverage Ratio (DSCR ≥ 1.50) across all 12 operating cycles' },
+        { label: 'Empirical Coverage', value: '24 validated trade dossiers spanning agro-processing, tailoring, retail, and artisanal crafts' },
+        { label: 'Stress Buffer Alert', value: 'Calculates operational working capital reserve thresholds before loan sanction' }
+      ]
+    },
+    3: {
+      number: 'PILLAR 03',
+      title: 'Mode B Debt Liberation (Sahukar Refinance)',
+      color: '#E86043',
+      mandate: 'Usurious Loans Act & Rule of Damdupat Statutory Relief',
+      summary: 'Systematic consolidation of informal high-interest moneylender debt into low-cost institutional banking facilities.',
+      specifications: [
+        { label: 'Informal Debt Conversion', value: 'Refinances 3-senkda to 5-senkda (36% to 60% APR) compounding debt to 6.5% p.a.' },
+        { label: 'Rule of Damdupat Threshold', value: 'Automatically triggers legal violation alerts when total interest paid equals or exceeds principal' },
+        { label: 'Statutory Shield', value: 'Leverages Section 3 of the Usurious Loans Act to halt compound interest penalties' },
+        { label: 'Household Cash Liberation', value: 'Releases up to ₹4,800/month in predatory servicing charges back into working capital' }
+      ]
+    },
+    4: {
+      number: 'PILLAR 04',
+      title: 'Statutory 1-Page Lead-Bank DPR',
+      color: '#4A6274',
+      mandate: 'RBI Lead Bank Scheme Standardized Appraisal Format',
+      summary: 'Instant generation of an auditable, single-page bank sanction appraisal conforming to Lead Bank Scheme standards.',
+      specifications: [
+        { label: 'Appraisal Layout', value: 'Single-page concise lead-bank appraisal with QR code verification hash' },
+        { label: 'Statutory Financial Metrics', value: 'Embedded CAPEX, OPEX, Break-Even, Sensitivity, and DSCR amortization tables' },
+        { label: 'Branch Approval Routing', value: 'Pre-formatted for Lead District Managers (LDMs) and District Industry Centres (DICs)' },
+        { label: 'Scheme Alignment', value: 'Full statutory mapping to NSFDC Term Loan / MCF and PM Vishwakarma craft guidelines' }
+      ]
+    }
   },
-  2: {
-    number: 'PILLAR 02',
-    title: '12-Month Solvency Stress Simulator',
-    color: '#B47228',
-    mandate: 'Monsoon Cash-Flow Resilience & DSCR Verification',
-    summary: 'Dynamic month-by-month cash flow modeling across 24 empirical trade dossiers to prevent debt distress during seasonal contractions.',
-    specifications: [
-      { label: 'Lean Season Simulation', value: 'Simulates August monsoon revenue drops (-35% to -45%) across rural trades' },
-      { label: 'Solvency Benchmark', value: 'Enforces statutory Debt Service Coverage Ratio (DSCR ≥ 1.50) across all 12 operating cycles' },
-      { label: 'Empirical Coverage', value: '24 validated trade dossiers spanning agro-processing, tailoring, retail, and artisanal crafts' },
-      { label: 'Stress Buffer Alert', value: 'Calculates operational working capital reserve thresholds before loan sanction' }
-    ]
-  },
-  3: {
-    number: 'PILLAR 03',
-    title: 'Mode B Debt Liberation (Sahukar Refinance)',
-    color: '#E86043',
-    mandate: 'Usurious Loans Act & Rule of Damdupat Statutory Relief',
-    summary: 'Systematic consolidation of informal high-interest moneylender debt into low-cost institutional banking facilities.',
-    specifications: [
-      { label: 'Informal Debt Conversion', value: 'Refinances 3-senkda to 5-senkda (36% to 60% APR) compounding debt to 6.5% p.a.' },
-      { label: 'Rule of Damdupat Threshold', value: 'Automatically triggers legal violation alerts when total interest paid equals or exceeds principal' },
-      { label: 'Statutory Shield', value: 'Leverages Section 3 of the Usurious Loans Act to halt compound interest penalties' },
-      { label: 'Household Cash Liberation', value: 'Releases up to ₹4,800/month in predatory servicing charges back into working capital' }
-    ]
-  },
-  4: {
-    number: 'PILLAR 04',
-    title: 'Statutory 1-Page Lead-Bank DPR',
-    color: '#4A6274',
-    mandate: 'RBI Lead Bank Scheme Standardized Appraisal Format',
-    summary: 'Instant generation of an auditable, single-page bank sanction appraisal conforming to Lead Bank Scheme standards.',
-    specifications: [
-      { label: 'Appraisal Layout', value: 'Single-page concise lead-bank appraisal with QR code verification hash' },
-      { label: 'Statutory Financial Metrics', value: 'Embedded CAPEX, OPEX, Break-Even, Sensitivity, and DSCR amortization tables' },
-      { label: 'Branch Approval Routing', value: 'Pre-formatted for Lead District Managers (LDMs) and District Industry Centres (DICs)' },
-      { label: 'Scheme Alignment', value: 'Full statutory mapping to NSFDC Term Loan / MCF and PM Vishwakarma craft guidelines' }
-    ]
+  hi: {
+    1: {
+      number: 'स्तंभ 01',
+      title: 'एनएसएफडीसी द्वि-स्तरीय ऋण संरचना',
+      color: '#0E7A53',
+      mandate: 'सामाजिक न्याय मंत्रालय शासनादेश · रियायती ऋण ढाँचा',
+      summary: 'राष्ट्रीय अनुसूचित जाति वित्त एवं विकास निगम (NSFDC) के सांविधिक दिशानिर्देशों के अनुरूप प्रत्यक्ष संस्थागत ऋण संरचना।',
+      specifications: [
+        { label: 'माइक्रो क्रेडिट सुविधा (MCF)', value: '₹1,40,000 तक @ 6.5% वार्षिक (11 तिमाही अवधि, 1 मोराटोरियम तिमाही)' },
+        { label: 'सावधि ऋण सुविधा (Term Loan)', value: '₹50,00,000 तक @ 8.0% वार्षिक (26 तिमाही अवधि, 2 मोराटोरियम तिमाही)' },
+        { label: 'लाभार्थी पात्रता', value: 'अनुसूचित जाति (SC) सूक्ष्म-उद्यमी; वार्षिक पारिवारिक आय ≤ ₹5,00,000' },
+        { label: 'मार्जिन मनी संरचना', value: '90% तक रियायती ऋण सुविधा एवं 10% उद्यमी स्वयं का अंशदान' }
+      ]
+    },
+    2: {
+      number: 'स्तंभ 02',
+      title: '12-माह सॉल्वेंसी स्ट्रेस सिम्युलेटर',
+      color: '#B47228',
+      mandate: 'मानसून नकदी प्रवाह संवहनीयता एवं डीएससीआर सत्यापन',
+      summary: 'मौसमी मंदी के दौरान ऋण संकट रोकने के लिए 24 वास्तविक व्यापार डोज़ियर में माह-दर-माह नकदी प्रवाह मॉडलिंग।',
+      specifications: [
+        { label: 'मंदी मौसम सिमुलेशन', value: 'अगस्त मानसून में ग्रामीण व्यवसायों में राजस्व में 35% से 45% की गिरावट का अनुकरण' },
+        { label: 'सॉल्वेंसी मानक', value: 'सभी 12 परिचालन चक्रों में अनिवार्य ऋण सेवा कवरेज अनुपात (DSCR ≥ 1.50) लागू' },
+        { label: 'व्यावहारिक कवरेज', value: 'कृषि-प्रसंस्करण, सिलाई, किराना और हस्तशिल्प में 24 सत्यापित व्यापार प्रोफाइल' },
+        { label: 'स्ट्रेस बफर अलर्ट', value: 'ऋण स्वीकृति से पूर्व परिचालन कार्यशील पूंजी आरक्षित सीमा का सटीक निर्धारण' }
+      ]
+    },
+    3: {
+      number: 'स्तंभ 03',
+      title: 'मोड बी साहूकारी ऋण मुक्ति (साहूकार पुनर्वित्त)',
+      color: '#E86043',
+      mandate: 'शोषक ऋण अधिनियम एवं दामदुपत नियम के तहत सांविधिक राहत',
+      summary: 'अनौपचारिक अत्यधिक ब्याज वाले साहूकारी कर्ज को व्यवस्थित रूप से कम लागत वाले संस्थागत बैंक ऋण में परिवर्तित करना।',
+      specifications: [
+        { label: 'अनौपचारिक ऋण परिवर्तन', value: '3-सेंकड़ा से 5-सेंकड़ा (36% से 60% वार्षिक) चक्रवृद्धिकारी कर्ज को 6.5% वार्षिक में पुनर्वित्त' },
+        { label: 'दामदुपत नियम सीमा', value: 'जब चुकाया गया कुल ब्याज मूलधन के बराबर या उससे अधिक हो जाए तो स्वतः कानूनी चेतावनी' },
+        { label: 'सांविधिक सुरक्षा कवच', value: 'चक्रवृद्धि ब्याज दंड को रोकने के लिए शोषक ऋण अधिनियम (धारा 3) का उपयोग' },
+        { label: 'मासिक नकदी मुक्ति', value: 'साहूकार को दिए जाने वाले प्रति माह ₹4,800 तक के शोषणकारी ब्याज से राहत' }
+      ]
+    },
+    4: {
+      number: 'स्तंभ 04',
+      title: 'सांविधिक 1-पृष्ठीय लीड-बैंक डीपीआर',
+      color: '#4A6274',
+      mandate: 'आरबीआई लीड बैंक योजना मानकीकृत मूल्यांकन प्रारूप',
+      summary: 'लीड बैंक योजना के मानकों के अनुसार क्यूआर कोड सत्यापन युक्त एक-पृष्ठीय बैंक स्वीकृति डीपीआर का त्वरित निर्माण।',
+      specifications: [
+        { label: 'मूल्यांकन प्रारूप', value: 'क्यूआर कोड सत्यापन हैश के साथ एकल-पृष्ठीय संक्षिप्त बैंक स्वीकृति प्रस्ताव' },
+        { label: 'सांविधिक वित्तीय मापदंड', value: 'कैपेक्स, ओपेक्स, ब्रेक-ईवन, संवेदनशीलता और डीएससीआर परिशोधन सारणी सम्मिलित' },
+        { label: 'शाखा अनुमोदन रूटिंग', value: 'लीड डिस्ट्रिक्ट मैनेजर्स (LDMs) और जिला उद्योग केंद्र (DICs) के लिए पूर्व-प्रारूपित' },
+        { label: 'योजना संरेखण', value: 'एनएसएफडीसी सावधि ऋण / एमसीएफ और पीएम विश्वकर्मा शिल्प दिशानिर्देशों के साथ पूर्ण मैपिंग' }
+      ]
+    }
   }
 };
 
@@ -76,6 +267,79 @@ export default function App() {
   const [activeSection, setActiveSection] = useState(1);
   const [lenisInstance, setLenisInstance] = useState(null);
   const [selectedPillarModal, setSelectedPillarModal] = useState(null);
+
+  // Global Language State ('en' | 'hi')
+  const [language, setLanguage] = useState('en');
+  const t = TRANSLATIONS[language] || TRANSLATIONS.en;
+
+  // Authentication State & Modal
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Auth Form Fields
+  const [loginPhone, setLoginPhone] = useState('9876543210');
+  const [loginPin, setLoginPin] = useState('2026');
+  const [regName, setRegName] = useState('');
+  const [regPhone, setRegPhone] = useState('');
+  const [regTrade, setRegTrade] = useState('D08 Mustard & Edible Oil Expeller Mill');
+  const [regCategory, setRegCategory] = useState('Scheduled Caste (SC)');
+
+  // Quick 1-Click Demo Login
+  const handleDemoLogin = () => {
+    setCurrentUser({
+      name: language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar',
+      category: 'Scheduled Caste (SC)',
+      trade: 'D08 Mustard & Edible Oil Expeller Mill',
+      phone: '9876543210',
+      id: 'UP-STP-008129',
+      income: '≤ ₹5,00,000'
+    });
+    setIsAuthModalOpen(false);
+    setTimeout(() => {
+      scrollToTarget('#dashboard-section');
+    }, 200);
+  };
+
+  // Custom User Sign In
+  const handleCustomLogin = (e) => {
+    e.preventDefault();
+    setCurrentUser({
+      name: loginPhone === '9876543210' 
+        ? (language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar')
+        : (language === 'hi' ? 'पंजीकृत उद्यमी' : 'Registered Entrepreneur'),
+      category: 'Scheduled Caste (SC)',
+      trade: 'D08 Mustard & Edible Oil Expeller Mill',
+      phone: loginPhone || '9876543210',
+      id: 'UP-STP-008129',
+      income: '≤ ₹5,00,000'
+    });
+    setIsAuthModalOpen(false);
+    setTimeout(() => {
+      scrollToTarget('#dashboard-section');
+    }, 200);
+  };
+
+  // Registration Handler
+  const handleRegister = (e) => {
+    e.preventDefault();
+    setCurrentUser({
+      name: regName || (language === 'hi' ? 'नया उद्यमी' : 'New Entrepreneur'),
+      category: regCategory,
+      trade: regTrade,
+      phone: regPhone || '9876543210',
+      id: `UP-REG-${Math.floor(100000 + Math.random() * 900000)}`,
+      income: '≤ ₹5,00,000'
+    });
+    setIsAuthModalOpen(false);
+    setTimeout(() => {
+      scrollToTarget('#dashboard-section');
+    }, 200);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+  };
 
   // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization
   useEffect(() => {
@@ -227,7 +491,7 @@ export default function App() {
       );
 
       // -------------------------------------------------------------
-      // SCENE 5: 4 PILLARS STAGGERED REVEAL (Always visible, subtle entrance)
+      // SCENE 5: 4 PILLARS STAGGERED REVEAL
       // -------------------------------------------------------------
       gsap.from(".pillar-card", {
         y: 30,
@@ -299,8 +563,19 @@ export default function App() {
       {/* ============================================================== */}
       <header className="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 flex items-center justify-between pointer-events-none">
         
-        {/* Left: Spacer to balance layout */}
-        <div className="w-24 pointer-events-none"></div>
+        {/* Left: Tactile Language Toggle Switch */}
+        <div className="pointer-events-auto flex items-center">
+          <button
+            onClick={() => setLanguage(prev => prev === 'en' ? 'hi' : 'en')}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white/90 hover:bg-white text-xs font-mono-num font-bold text-[#111311] shadow-sm border border-black/10 transition-all hover:scale-105 cursor-pointer backdrop-blur-sm"
+            aria-label="Toggle language between English and Hindi"
+          >
+            <Globe className="w-3.5 h-3.5 text-[#0E7A53]" />
+            <span className={language === 'en' ? 'text-[#0E7A53] font-extrabold' : 'text-[#686D65]'}>EN</span>
+            <span className="text-black/30 font-normal">|</span>
+            <span className={language === 'hi' ? 'text-[#0E7A53] font-extrabold' : 'text-[#686D65]'}>हिन्दी</span>
+          </button>
+        </div>
 
         {/* Center: Official Brand Emblem */}
         <div 
@@ -314,15 +589,36 @@ export default function App() {
           />
         </div>
 
-        {/* Right: Dashboard Action */}
-        <div className="pointer-events-auto flex items-center justify-end w-24">
-          <button 
-            onClick={() => scrollToTarget('#dashboard-section')} 
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono-num font-bold tracking-wider text-[#111311] uppercase hover:underline cursor-pointer"
-          >
-            <span>Dashboard</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+        {/* Right: Authentication or Active User Session */}
+        <div className="pointer-events-auto flex items-center justify-end">
+          {!currentUser ? (
+            <button 
+              onClick={() => setIsAuthModalOpen(true)} 
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111311] text-white hover:bg-black text-xs font-mono-num font-semibold shadow-md transition-all hover:scale-105 cursor-pointer"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>{t.loginRegister}</span>
+            </button>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => scrollToTarget('#dashboard-section')} 
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 text-[#111311] hover:bg-white text-xs font-mono-num font-bold shadow-sm border border-black/10 transition-all hover:scale-105 cursor-pointer"
+                title={currentUser.name}
+              >
+                <span className="w-2 h-2 rounded-full bg-[#0E7A53]"></span>
+                <span className="max-w-[110px] truncate">{currentUser.name}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#0E7A53]" />
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="p-1.5 rounded-full bg-white/90 hover:bg-white text-slate-500 hover:text-red-600 shadow-sm border border-black/10 transition-all cursor-pointer"
+                title={t.logout}
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -366,10 +662,9 @@ export default function App() {
         {/* Giant Condensed Serif Typography Behind Imagery */}
         <div id="hero-headline-wrap" className="absolute inset-0 flex flex-col items-center justify-center text-center select-none z-10 pointer-events-none px-4">
           <h1 className="hero-big-title font-editorial font-normal uppercase text-[#111311]">
-            <div>WHERE</div>
-            <div>OPPORTUNITY</div>
-            <div>TAKES</div>
-            <div>ROOT</div>
+            {t.heroTitle.map((line, idx) => (
+              <div key={idx}>{line}</div>
+            ))}
           </h1>
         </div>
 
@@ -444,7 +739,7 @@ export default function App() {
 
         {/* Bottom Scroll Cue */}
         <div className="absolute bottom-8 z-30 flex flex-col items-center text-[#686D65] text-[11px] font-mono-num tracking-widest uppercase">
-          <span>SCROLL TO EXPLORE</span>
+          <span>{t.scrollExplore}</span>
           <span className="mt-1 animate-bounce text-sm">↓</span>
         </div>
       </section>
@@ -466,27 +761,27 @@ export default function App() {
 
         {/* Master Thesis Statement */}
         <h2 className="text-3xl sm:text-5xl lg:text-6xl font-editorial text-center text-[#111311] max-w-4xl leading-[1.18] tracking-tight">
-          Statutory credit enables rural producers to fulfill their highest potential.
+          {t.thesisHeading}
         </h2>
 
         {/* Editorial Sub-Thesis Context */}
         <p className="text-sm sm:text-base text-[#686D65] text-center max-w-2xl mt-8 sm:mt-10 leading-[1.75] font-sans-ui">
-          To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core trade domains.
+          {t.thesisBody}
         </p>
 
         {/* Architectural 3-Column Ledger */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-16 sm:mt-20 max-w-4xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
           <div className="px-6 py-4 sm:py-2 flex flex-col items-center justify-center">
-            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">≤ ₹1.40 Lakh</span>
-            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">MCF Concessional @ 6.5%</span>
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">{t.mcfAmount}</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">{t.mcfLabel}</span>
           </div>
           <div className="px-6 py-4 sm:py-2 flex flex-col items-center justify-center">
-            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">Up to ₹50 Lakh</span>
-            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">Term Loan Facility @ 8.0%</span>
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">{t.termAmount}</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">{t.termLabel}</span>
           </div>
           <div className="px-6 py-4 sm:py-2 flex flex-col items-center justify-center">
-            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">Lead-Bank Standard</span>
-            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">Statutory 1-Page DPR</span>
+            <span className="block text-2xl sm:text-3xl font-editorial text-[#111311] whitespace-nowrap">{t.dprAmount}</span>
+            <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-3 block">{t.dprLabel}</span>
           </div>
         </div>
       </section>
@@ -497,14 +792,13 @@ export default function App() {
       <section id="scene-orbit" ref={orbitRef} className="relative w-full h-[180vh] bg-[#F4F1EA]">
         <div id="orbit-pinned-wrap" className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-4">
           
-          {/* Central Narrative Block (Tight Envelope Clear of Orbit Radius) */}
+          {/* Central Narrative Block */}
           <div id="orbit-center-text" className="text-center max-w-md z-20 pointer-events-none px-4">
             <h3 className="text-4xl sm:text-5xl lg:text-6xl font-editorial text-[#111311] leading-[1.05]">
-              What does <span className="italic font-normal">opportunity</span><br />
-              mean today?
+              {t.orbitTitlePre}<span className="italic font-normal">{t.orbitTitleItalic}</span>{t.orbitTitlePost}
             </h3>
             <p className="text-xs sm:text-sm text-[#686D65] mt-4 max-w-sm mx-auto leading-relaxed font-sans-ui">
-              It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and instant bank-sanction DPRs.
+              {t.orbitBody}
             </p>
           </div>
 
@@ -566,7 +860,7 @@ export default function App() {
         {/* Top Header Eyebrow Spacer */}
         <div className="relative z-10 h-4"></div>
 
-        {/* Center Circular Radial Arc Gauge with Pure Typography (No Pill Badge) */}
+        {/* Center Circular Radial Arc Gauge with Pure Typography */}
         <div className="relative z-10 my-auto flex flex-col items-center justify-center">
           <div className="relative w-56 h-56 sm:w-72 sm:h-72 flex items-center justify-center">
             {/* SVG Arc Ring */}
@@ -585,10 +879,10 @@ export default function App() {
               />
             </svg>
 
-            {/* Center Percentage Display (Clean Typography, No Pill Badge) */}
+            {/* Center Percentage Display */}
             <div className="absolute flex flex-col items-center justify-center text-center">
               <span className="text-4xl sm:text-5xl font-editorial font-bold text-white tracking-tight">67%</span>
-              <span className="text-[10px] font-mono-num uppercase tracking-widest text-[#FACC15] mt-1 font-semibold">LEAN-SEASON RISK</span>
+              <span className="text-[10px] font-mono-num uppercase tracking-widest text-[#FACC15] mt-1 font-semibold">{t.riskGaugeLabel}</span>
             </div>
 
             {/* Dot on Top Arc */}
@@ -600,10 +894,10 @@ export default function App() {
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6">
           <div className="max-w-xl">
             <h3 className="text-3xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#FACC15] tracking-tight leading-tight">
-              67% of rural producers
+              {t.immersionHeading}
             </h3>
             <p className="text-base sm:text-xl text-white/90 mt-3 font-editorial italic leading-relaxed">
-              face catastrophic cash flow collapse during the August lean season without structured statutory amortisation.
+              {t.immersionBody}
             </p>
           </div>
 
@@ -611,7 +905,7 @@ export default function App() {
             onClick={() => scrollToTarget('#dashboard-section')} 
             className="px-7 py-4 rounded-xl bg-white text-[#111311] font-bold text-xs uppercase tracking-wider font-mono-num flex items-center space-x-2 shadow-2xl hover:bg-[#F4F1EA] hover:scale-105 transition-all duration-300 cursor-pointer pointer-events-auto"
           >
-            <span>EXPLORE ADVISORY DASHBOARD</span>
+            <span>{t.exploreDashboard}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -623,10 +917,10 @@ export default function App() {
       <section id="scene-cards" ref={cardsRef} className="py-24 sm:py-32 px-6 sm:px-12 max-w-7xl mx-auto bg-[#F4F1EA]">
         <div className="max-w-3xl mb-14 sm:mb-16">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#111311] tracking-tight leading-[1.08]">
-            The Four Pillars.
+            {t.pillarsHeading}
           </h2>
           <p className="text-sm sm:text-base text-[#686D65] mt-4 font-sans-ui leading-relaxed">
-            Translating statutory NSFDC credit guidelines and empirical rural cash flows into a unified advisory platform.
+            {t.pillarsBody}
           </p>
         </div>
 
@@ -640,14 +934,14 @@ export default function App() {
           >
             <div>
               <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#0E7A53] transition-colors">
-                NSFDC Dual-Tier Credit
+                {t.card1Title}
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
-                Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).
+                {t.card1Body}
               </p>
             </div>
             <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
-              <span>View details</span>
+              <span>{t.viewDetails}</span>
               <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -659,14 +953,14 @@ export default function App() {
           >
             <div>
               <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#B47228] transition-colors">
-                12-Month Solvency Model
+                {t.card2Title}
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
-                August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.
+                {t.card2Body}
               </p>
             </div>
             <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
-              <span>View details</span>
+              <span>{t.viewDetails}</span>
               <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -678,14 +972,14 @@ export default function App() {
           >
             <div>
               <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#E86043] transition-colors">
-                Mode B Debt Liberation
+                {t.card3Title}
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
-                Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.
+                {t.card3Body}
               </p>
             </div>
             <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
-              <span>View details</span>
+              <span>{t.viewDetails}</span>
               <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -697,14 +991,14 @@ export default function App() {
           >
             <div>
               <h4 className="font-semibold text-lg text-[#111311] font-sans-ui tracking-tight group-hover:text-[#4A6274] transition-colors">
-                1-Page Lead-Bank DPR
+                {t.card4Title}
               </h4>
               <p className="text-xs sm:text-sm text-[#686D65] mt-3 leading-relaxed font-sans-ui">
-                Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.
+                {t.card4Body}
               </p>
             </div>
             <div className="mt-6 pt-3.5 border-t border-black/5 flex items-center justify-between text-xs font-sans-ui text-[#686D65] group-hover:text-[#111311] transition-colors">
-              <span>View details</span>
+              <span>{t.viewDetails}</span>
               <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
@@ -712,7 +1006,7 @@ export default function App() {
         </div>
 
         {/* Statutory Pillar Modal Dialog */}
-        {selectedPillarModal && PILLAR_DOSSIERS[selectedPillarModal] && (
+        {selectedPillarModal && PILLAR_DOSSIERS[language] && PILLAR_DOSSIERS[language][selectedPillarModal] && (
           <div 
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
             onClick={() => setSelectedPillarModal(null)}
@@ -726,15 +1020,15 @@ export default function App() {
                 <div>
                   <span 
                     className="text-[11px] font-mono-num font-bold uppercase tracking-wider block"
-                    style={{ color: PILLAR_DOSSIERS[selectedPillarModal].color }}
+                    style={{ color: PILLAR_DOSSIERS[language][selectedPillarModal].color }}
                   >
-                    {PILLAR_DOSSIERS[selectedPillarModal].number}
+                    {PILLAR_DOSSIERS[language][selectedPillarModal].number}
                   </span>
                   <h3 className="font-sans-ui font-bold text-xl text-[#111311] mt-1">
-                    {PILLAR_DOSSIERS[selectedPillarModal].title}
+                    {PILLAR_DOSSIERS[language][selectedPillarModal].title}
                   </h3>
                   <span className="text-[11px] font-mono-num text-[#686D65] uppercase tracking-wider block mt-1">
-                    {PILLAR_DOSSIERS[selectedPillarModal].mandate}
+                    {PILLAR_DOSSIERS[language][selectedPillarModal].mandate}
                   </span>
                 </div>
                 <button 
@@ -747,12 +1041,12 @@ export default function App() {
 
               {/* Narrative Description */}
               <p className="text-xs sm:text-sm text-[#686D65] font-sans-ui leading-relaxed">
-                {PILLAR_DOSSIERS[selectedPillarModal].summary}
+                {PILLAR_DOSSIERS[language][selectedPillarModal].summary}
               </p>
 
               {/* Statutory Specifications List */}
               <div className="space-y-3 bg-[#F8F6F0] p-4 rounded-2xl border border-black/5 text-xs font-sans-ui">
-                {PILLAR_DOSSIERS[selectedPillarModal].specifications.map((spec, i) => (
+                {PILLAR_DOSSIERS[language][selectedPillarModal].specifications.map((spec, i) => (
                   <div key={i} className="flex flex-col sm:flex-row sm:items-start justify-between gap-1 border-b border-black/5 last:border-0 pb-2 last:pb-0">
                     <span className="font-bold text-[#111311]">{spec.label}:</span>
                     <span className="text-[#686D65] sm:text-right">{spec.value}</span>
@@ -765,7 +1059,7 @@ export default function App() {
                 onClick={() => setSelectedPillarModal(null)}
                 className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider"
               >
-                Close Statutory Dossier
+                {t.closeDossier}
               </button>
             </div>
           </div>
@@ -775,7 +1069,235 @@ export default function App() {
       {/* ============================================================== */}
       {/* SCENE 6: SETO MINIMAL DASHBOARD MOCKUP CONTAINER              */}
       {/* ============================================================== */}
-      <SetoDashboard />
+      <SetoDashboard language={language} currentUser={currentUser} />
+
+      {/* ============================================================== */}
+      {/* AUTHENTICATION / REGISTRATION MODAL DIALOG                     */}
+      {/* ============================================================== */}
+      {isAuthModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
+          onClick={() => setIsAuthModalOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-black/10 space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-black/5 pb-4">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-[#0E7A53]/10 flex items-center justify-center text-[#0E7A53]">
+                  <Lock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-sans-ui font-bold text-lg text-[#111311]">
+                    {authTab === 'login' ? t.modalTitleLogin : t.modalTitleRegister}
+                  </h3>
+                  <span className="text-[11px] font-mono-num text-[#686D65] block">
+                    MoSJE / NSFDC Concessional Portal
+                  </span>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsAuthModalOpen(false)}
+                className="p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Tab Switcher */}
+            <div className="grid grid-cols-2 gap-1 p-1 bg-[#F4F1EA] rounded-2xl">
+              <button
+                type="button"
+                onClick={() => setAuthTab('login')}
+                className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
+                  authTab === 'login'
+                    ? 'bg-white text-[#111311] shadow-sm'
+                    : 'text-[#686D65] hover:text-[#111311]'
+                }`}
+              >
+                {t.tabLogin}
+              </button>
+              <button
+                type="button"
+                onClick={() => setAuthTab('register')}
+                className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer font-sans-ui ${
+                  authTab === 'register'
+                    ? 'bg-white text-[#111311] shadow-sm'
+                    : 'text-[#686D65] hover:text-[#111311]'
+                }`}
+              >
+                {t.tabRegister}
+              </button>
+            </div>
+
+            {/* Quick 1-Click Demo Login Banner */}
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              className="w-full py-3 px-4 rounded-2xl bg-emerald-50 hover:bg-emerald-100/80 border border-[#0E7A53]/30 text-[#0E7A53] text-xs font-semibold flex items-center justify-between transition-all group cursor-pointer text-left shadow-xs"
+            >
+              <div className="flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-[#0E7A53] flex-shrink-0" />
+                <span className="font-bold">{t.demoLoginBtn}</span>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+            </button>
+
+            <div className="relative flex items-center justify-center">
+              <div className="border-t border-black/10 w-full"></div>
+              <span className="bg-white px-3 text-[10px] font-mono-num uppercase tracking-wider text-[#686D65] absolute">
+                {t.orDivider}
+              </span>
+            </div>
+
+            {/* Form Fields: Login */}
+            {authTab === 'login' ? (
+              <form onSubmit={handleCustomLogin} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
+                    {t.phoneLabel}
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="tel"
+                      required
+                      value={loginPhone}
+                      onChange={(e) => setLoginPhone(e.target.value)}
+                      placeholder={t.phonePlaceholder}
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1.5">
+                    {t.pinLabel}
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="password"
+                      required
+                      maxLength={6}
+                      value={loginPin}
+                      onChange={(e) => setLoginPin(e.target.value)}
+                      placeholder={t.pinPlaceholder}
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md"
+                >
+                  {t.submitLogin}
+                </button>
+              </form>
+            ) : (
+              /* Form Fields: Register */
+              <form onSubmit={handleRegister} className="space-y-3.5">
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                    {t.nameLabel}
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="text"
+                      required
+                      value={regName}
+                      onChange={(e) => setRegName(e.target.value)}
+                      placeholder={t.namePlaceholder}
+                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                    {t.phoneLabel}
+                  </label>
+                  <div className="relative">
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="tel"
+                      required
+                      value={regPhone}
+                      onChange={(e) => setRegPhone(e.target.value)}
+                      placeholder={t.phonePlaceholder}
+                      className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-300 text-xs font-mono-num text-[#111311] focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                    {t.tradeLabel}
+                  </label>
+                  <select
+                    value={regTrade}
+                    onChange={(e) => setRegTrade(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                  >
+                    <option value="D08 Mustard & Edible Oil Expeller Mill">
+                      {language === 'hi' ? 'D08 सरसों एवं खाद्य तेल स्पेलर मिल' : 'D08 Mustard & Edible Oil Expeller Mill'}
+                    </option>
+                    <option value="D18 Village Tailoring & Garments">
+                      {language === 'hi' ? 'D18 ग्रामीण सिलाई एवं वस्त्र निर्माण' : 'D18 Village Tailoring & Garments'}
+                    </option>
+                    <option value="D15 Tractor & Farm Equipment Garage">
+                      {language === 'hi' ? 'D15 ट्रैक्टर एवं कृषि उपकरण गैराज' : 'D15 Tractor & Farm Equipment Garage'}
+                    </option>
+                    <option value="D04 Commercial Dairy Unit">
+                      {language === 'hi' ? 'D04 ग्रामीण वाणिज्यिक डेयरी यूनिट' : 'D04 Commercial Dairy Unit'}
+                    </option>
+                    <option value="D01 Kirana & General Provision">
+                      {language === 'hi' ? 'D01 ग्रामीण किराना एवं प्रोविजन स्टोर' : 'D01 Kirana & General Provision'}
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#111311] font-sans-ui mb-1">
+                    {t.categoryLabel}
+                  </label>
+                  <select
+                    value={regCategory}
+                    onChange={(e) => setRegCategory(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53]"
+                  >
+                    <option value="Scheduled Caste (SC)">
+                      {language === 'hi' ? 'अनुसूचित जाति (SC) · 100% पात्रता' : 'Scheduled Caste (SC) · Verified Eligibility'}
+                    </option>
+                    <option value="Scheduled Tribe (ST)">
+                      {language === 'hi' ? 'अनुसूचित जनजाति (ST)' : 'Scheduled Tribe (ST)'}
+                    </option>
+                    <option value="Other Backward Classes (OBC)">
+                      {language === 'hi' ? 'अन्य पिछड़ा वर्ग (OBC)' : 'Other Backward Classes (OBC)'}
+                    </option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#111311] text-white font-mono-num font-bold text-xs py-3 rounded-xl hover:bg-black transition-all cursor-pointer uppercase tracking-wider shadow-md mt-2"
+                >
+                  {t.submitRegister}
+                </button>
+              </form>
+            )}
+
+            {/* Statutory Footnote */}
+            <p className="text-[10px] text-center text-[#686D65] font-sans-ui leading-tight pt-2 border-t border-black/5">
+              {t.statutoryNotice}
+            </p>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -78,7 +78,7 @@ const RECENT_SCENARIOS = [
   }
 ];
 
-export default function SetoDashboard() {
+export default function SetoDashboard({ language = 'en', currentUser = null }) {
   // Navigation & Viewport State
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'simulator' | 'amortizer' | 'restructure' | 'dpr'
   const [selectedDomainCode, setSelectedDomainCode] = useState('D08');
@@ -223,7 +223,7 @@ export default function SetoDashboard() {
       {/* Section Header */}
       <div className="text-center mb-10 sm:mb-14">
         <h2 className="text-4xl sm:text-5xl lg:text-6xl font-editorial font-normal text-[#111311] tracking-tight leading-[1.08]">
-          The Entrepreneur Workspace.
+          {language === 'hi' ? 'उद्यमी कार्यक्षेत्र.' : 'The Entrepreneur Workspace.'}
         </h2>
       </div>
 
@@ -374,7 +374,9 @@ export default function SetoDashboard() {
                   className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0"
                 />
                 <div className="overflow-hidden">
-                  <p className="text-xs font-bold text-[#111311] truncate font-sans-ui">Ramesh Kumar</p>
+                  <p className="text-xs font-bold text-[#111311] truncate font-sans-ui">
+                    {currentUser?.name || (language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar')}
+                  </p>
                   <p className="text-[11px] text-[#686D65] font-mono truncate">SC · Income ≤ ₹5.00L</p>
                 </div>
               </div>
