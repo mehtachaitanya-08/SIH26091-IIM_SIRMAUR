@@ -4,14 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { 
   ArrowRight, 
-  ExternalLink, 
-  Volume2, 
-  VolumeX, 
-  ShieldCheck, 
-  CheckCircle2, 
-  ChevronRight, 
-  Menu,
-  Sparkles
+  ChevronRight 
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
 
@@ -26,7 +19,6 @@ export default function App() {
   const cardsRef = useRef(null);
   
   const [activeSection, setActiveSection] = useState(1);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [lenisInstance, setLenisInstance] = useState(null);
 
   // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization
@@ -179,17 +171,16 @@ export default function App() {
       );
 
       // -------------------------------------------------------------
-      // SCENE 5: 4 PILLARS STAGGERED REVEAL
+      // SCENE 5: 4 PILLARS STAGGERED REVEAL (Always visible, subtle entrance)
       // -------------------------------------------------------------
       gsap.from(".pillar-card", {
-        opacity: 0,
-        y: 40,
-        stagger: 0.15,
+        y: 30,
+        stagger: 0.12,
         duration: 0.8,
         ease: "power2.out",
         scrollTrigger: {
           trigger: cardsRef.current,
-          start: "top 70%",
+          start: "top 85%",
           toggleActions: "play none none reverse"
         }
       });
@@ -252,13 +243,8 @@ export default function App() {
       {/* ============================================================== */}
       <header className="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 flex items-center justify-between pointer-events-none">
         
-        {/* Left: Statutory Editorial Masthead (No Pill Capsule) */}
-        <div className="pointer-events-auto flex items-center space-x-2">
-          <span className="text-xs font-mono-num font-semibold tracking-widest uppercase text-[#111311]/75 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0E7A53]"></span>
-            MoSJE · NSFDC · SIH26091
-          </span>
-        </div>
+        {/* Left: Spacer to balance layout */}
+        <div className="w-24 pointer-events-none"></div>
 
         {/* Center: Brand Emblem "ग" with 4 Colored Accent Dots */}
         <div 
@@ -276,16 +262,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* Right: Sound & Dashboard Action */}
-        <div className="pointer-events-auto flex items-center space-x-4">
-          <button 
-            onClick={() => setIsAudioPlaying(!isAudioPlaying)}
-            className="w-8 h-8 rounded-full border border-black/15 flex items-center justify-center text-xs text-[#111311] hover:bg-black/5 transition-all cursor-pointer"
-            title="Toggle Ambient Audio"
-          >
-            {isAudioPlaying ? <Volume2 className="w-3.5 h-3.5 text-[#0E7A53]" /> : <VolumeX className="w-3.5 h-3.5 text-[#686D65]" />}
-          </button>
-
+        {/* Right: Dashboard Action */}
+        <div className="pointer-events-auto flex items-center justify-end w-24">
           <button 
             onClick={() => scrollToTarget('#dashboard-section')} 
             className="hidden sm:inline-flex items-center gap-1.5 text-xs font-mono-num font-bold tracking-wider text-[#111311] uppercase hover:underline cursor-pointer"
@@ -425,19 +403,14 @@ export default function App() {
       <section 
         id="scene-thesis" 
         ref={thesisRef} 
-        className="min-h-screen py-36 px-6 sm:px-12 flex flex-col items-center justify-center bg-[#F8F6F0] relative"
+        className="min-h-screen py-24 sm:py-32 px-6 sm:px-12 flex flex-col items-center justify-center bg-[#F8F6F0] relative"
       >
-        {/* Vertical Line Drop with Terminal Dot */}
-        <div className="flex flex-col items-center mb-10">
-          <div id="thesis-line" className="w-[1.5px] h-32 bg-[#111311] relative origin-top">
+        {/* Proportioned Vertical Line Drop with Terminal Dot */}
+        <div className="flex flex-col items-center mb-8">
+          <div id="thesis-line" className="w-[1.5px] h-16 bg-[#111311] relative origin-top">
             <div id="thesis-dot" className="w-2.5 h-2.5 rounded-full bg-[#111311] absolute -bottom-1 -left-[4.5px]"></div>
           </div>
         </div>
-
-        {/* Chapter Marker */}
-        <span className="text-xs font-mono-num uppercase text-[#686D65] font-semibold tracking-[0.25em] mb-4">
-          02 · THE STATUTORY CHARTER
-        </span>
 
         {/* Master Thesis Statement */}
         <h2 className="text-3xl sm:text-5xl lg:text-6xl font-editorial text-center text-[#111311] max-w-4xl leading-[1.14] tracking-tight">
@@ -445,12 +418,12 @@ export default function App() {
         </h2>
 
         {/* Editorial Sub-Thesis Context */}
-        <p className="text-sm sm:text-base text-[#686D65] text-center max-w-2xl mt-6 leading-relaxed font-sans-ui">
+        <p className="text-sm sm:text-base text-[#686D65] text-center max-w-2xl mt-5 leading-relaxed font-sans-ui">
           To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core trade domains.
         </p>
 
-        {/* Architectural 3-Column Ledger (No Capsules) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-14 max-w-3xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
+        {/* Architectural 3-Column Ledger */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 max-w-3xl w-full text-center divide-y sm:divide-y-0 sm:divide-x divide-black/10">
           <div className="px-4 pt-4 sm:pt-0">
             <span className="block text-2xl sm:text-3xl font-editorial text-[#111311]">≤ ₹1.40 Lakh</span>
             <span className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65] mt-1.5 block">MCF Concessional @ 6.5%</span>
@@ -474,18 +447,12 @@ export default function App() {
           
           {/* Central Narrative Block (Tight Envelope Clear of Orbit Radius) */}
           <div id="orbit-center-text" className="text-center max-w-md z-20 pointer-events-none px-4">
-            <span className="text-xs font-mono-num uppercase text-[#686D65] font-semibold tracking-widest block mb-3">
-              03 · THE LIVING ECOSYSTEM
-            </span>
             <h3 className="text-4xl sm:text-5xl lg:text-6xl font-editorial text-[#111311] leading-[1.05]">
               What does <span className="italic font-normal">opportunity</span><br />
               mean today?
             </h3>
             <p className="text-xs sm:text-sm text-[#686D65] mt-4 max-w-sm mx-auto leading-relaxed font-sans-ui">
               It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and instant bank-sanction DPRs.
-            </p>
-            <p className="mt-4 text-[11px] font-mono-num text-[#0E7A53] uppercase tracking-widest font-semibold">
-              NSFDC · MoSJE · 24 Trade Dossiers
             </p>
           </div>
 
@@ -544,14 +511,8 @@ export default function App() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/60"></div>
         </div>
 
-        {/* Top Header Eyebrow (No Pill Capsules) */}
-        <div className="relative z-10 flex items-center justify-between text-xs font-mono-num text-white/70 uppercase tracking-widest">
-          <span className="flex items-center gap-2 text-[#10B981] font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
-            04 · STATUTORY SOLVENCY RATING
-          </span>
-          <span className="hidden sm:inline text-white/50">LEAN-SEASON STRESS MODEL</span>
-        </div>
+        {/* Top Header Eyebrow Spacer */}
+        <div className="relative z-10 h-4"></div>
 
         {/* Center Circular Radial Arc Gauge with Pure Typography (No Pill Badge) */}
         <div className="relative z-10 my-auto flex flex-col items-center justify-center">

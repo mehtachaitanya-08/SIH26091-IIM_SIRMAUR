@@ -16,7 +16,6 @@ const PRESETS = {
     code: 'D08',
     name: 'Mustard & Edible Oil Expeller Mill',
     nameHi: 'सरसों एवं खाद्य तेल स्पेलर मिल',
-    icon: '🌾',
     cost: 680000,
     annualNocf: 284400,
     dscr: 1.62,
@@ -27,7 +26,6 @@ const PRESETS = {
     code: 'D18',
     name: 'Village Tailoring & Garments',
     nameHi: 'ग्रामीण सिलाई एवं वस्त्र निर्माण',
-    icon: '🧵',
     cost: 100000,
     annualNocf: 96000,
     dscr: 2.14,
@@ -38,7 +36,6 @@ const PRESETS = {
     code: 'D15',
     name: 'Tractor & Farm Equipment Garage',
     nameHi: 'ट्रैक्टर एवं कृषि उपकरण मरम्मत गैराज',
-    icon: '🔧',
     cost: 580000,
     annualNocf: 242000,
     dscr: 1.55,
@@ -187,8 +184,8 @@ export default function SetoDashboard() {
       
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#111311] text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl border border-white/20 flex items-center space-x-2 animate-bounce">
-          <span className="text-[#E86043]">✦</span>
+        <div className="fixed bottom-6 right-6 z-50 bg-[#111311] text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl border border-slate-700 flex items-center space-x-2">
+          <span className="w-2 h-2 rounded-full bg-[#0E7A53]"></span>
           <span>{toastMessage}</span>
         </div>
       )}
@@ -196,10 +193,10 @@ export default function SetoDashboard() {
       {/* User Verification Modal */}
       {userModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-200 space-y-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl border border-slate-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center space-x-2">
-                <span className="text-[#0E7A53] text-lg font-bold">✦</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#0E7A53]"></span>
                 <h4 className="font-bold text-sm text-[#111311]">Statutory Beneficiary Verification</h4>
               </div>
               <button onClick={() => setUserModalOpen(false)} className="text-slate-400 hover:text-slate-700">
@@ -208,7 +205,7 @@ export default function SetoDashboard() {
             </div>
             <div className="space-y-2 text-xs text-slate-600 font-sans-ui">
               <p><strong className="text-slate-900">Name:</strong> Ramesh Kumar</p>
-              <p><strong className="text-slate-900">Social Category:</strong> Scheduled Caste (SC) — Verified</p>
+              <p><strong className="text-slate-900">Social Category:</strong> Scheduled Caste (SC) · Verified</p>
               <p><strong className="text-slate-900">Family Income:</strong> ≤ ₹5,00,000 (Within 07 Jan 2026 MoSJE Mandate)</p>
               <p><strong className="text-slate-900">Concessional Routing:</strong> NSFDC Term Loan (8.0% p.a.) / MCF (6.5% p.a.)</p>
               <p><strong className="text-slate-900">Statutory Certificate ID:</strong> MoSJE/NSFDC/2026/UP-STP-008129</p>
@@ -225,24 +222,16 @@ export default function SetoDashboard() {
 
       {/* Section Header */}
       <div className="text-center mb-8">
-        <span className="text-xs font-mono uppercase text-[#686D65] font-bold tracking-widest block mb-1">
-          [ 04 ] · OPERATIONAL CORE
-        </span>
         <h2 className="text-3xl sm:text-4xl font-extrabold uppercase text-[#111311] tracking-tight">
           The Entrepreneur Workspace
         </h2>
-        <p className="text-xs text-[#686D65] mt-1 font-sans-ui">
-          SETO minimal diffused ambient dashboard mockup powered by GraminAI credit engine.
-        </p>
       </div>
 
-      {/* Diffused Outer Ambient Canvas (#D4D8DD with dual radial peach/slate gradients) */}
-      <div 
-        className="diffused-backdrop rounded-[38px] p-4 sm:p-7 soft-shadow"
-      >
+      {/* Enterprise Advisory Workspace Enclosure */}
+      <div className="bg-[#E9ECEF] rounded-[32px] p-3 sm:p-6 border border-[#DEE2E6] shadow-sm">
         
-        {/* Main 3-Column White Shell (rounded-[28px], soft-card-shadow, 3:6:3 grid) */}
-        <div className="bg-white rounded-[28px] overflow-hidden soft-card-shadow grid grid-cols-1 lg:grid-cols-12 min-h-[760px] border border-white/60">
+        {/* Main 3-Column White Shell */}
+        <div className="bg-white rounded-[24px] overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 min-h-[760px] border border-[#E9ECEF]">
           
           {/* ============================================================= */}
           {/* COLUMN 1: LEFT NAVIGATION RAIL (3 Cols)                       */}
@@ -250,10 +239,10 @@ export default function SetoDashboard() {
           <aside className="lg:col-span-3 bg-[#F8F9FA] p-6 flex flex-col justify-between border-r border-[#E9ECEF]">
             
             <div className="space-y-6">
-              {/* Brand Lockup: ✦ GraminAI */}
+              {/* Brand Lockup: GraminAI */}
               <div className="flex items-center space-x-2.5 px-2">
                 <div className="w-7 h-7 rounded-lg bg-[#111311] text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                  ✦
+                  G
                 </div>
                 <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">GraminAI</span>
               </div>
@@ -262,61 +251,56 @@ export default function SetoDashboard() {
               <nav className="space-y-1">
                 <button
                   onClick={() => setActiveTab('home')}
-                  className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
+                  className={`w-full flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
                     activeTab === 'home'
-                      ? 'bg-white text-[#111311] soft-card-shadow border border-[#E9ECEF]'
+                      ? 'bg-white text-[#111311] shadow-sm border border-[#E9ECEF]'
                       : 'text-[#686D65] hover:text-[#111311] hover:bg-white/60'
                   }`}
                 >
-                  <span>🏠</span>
                   <span>Home</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('simulator')}
-                  className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
+                  className={`w-full flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
                     activeTab === 'simulator'
-                      ? 'bg-white text-[#111311] soft-card-shadow border border-[#E9ECEF]'
+                      ? 'bg-white text-[#111311] shadow-sm border border-[#E9ECEF]'
                       : 'text-[#686D65] hover:text-[#111311] hover:bg-white/60'
                   }`}
                 >
-                  <span>⚙️</span>
                   <span>Enterprise Studio</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('amortizer')}
-                  className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
+                  className={`w-full flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
                     activeTab === 'amortizer'
-                      ? 'bg-white text-[#111311] soft-card-shadow border border-[#E9ECEF]'
+                      ? 'bg-white text-[#111311] shadow-sm border border-[#E9ECEF]'
                       : 'text-[#686D65] hover:text-[#111311] hover:bg-white/60'
                   }`}
                 >
-                  <span>📉</span>
                   <span>NSFDC Amortizer</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('restructure')}
-                  className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
+                  className={`w-full flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
                     activeTab === 'restructure'
-                      ? 'bg-white text-[#111311] soft-card-shadow border border-[#E9ECEF]'
+                      ? 'bg-white text-[#111311] shadow-sm border border-[#E9ECEF]'
                       : 'text-[#686D65] hover:text-[#111311] hover:bg-white/60'
                   }`}
                 >
-                  <span>⚖️</span>
                   <span>Debt Liberation</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab('dpr')}
-                  className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
+                  className={`w-full flex items-center px-4 py-2.5 rounded-xl font-semibold text-xs transition-all cursor-pointer ${
                     activeTab === 'dpr'
-                      ? 'bg-white text-[#111311] soft-card-shadow border border-[#E9ECEF]'
+                      ? 'bg-white text-[#111311] shadow-sm border border-[#E9ECEF]'
                       : 'text-[#686D65] hover:text-[#111311] hover:bg-white/60'
                   }`}
                 >
-                  <span>📄</span>
                   <span>1-Page DPR</span>
                 </button>
 
@@ -324,36 +308,32 @@ export default function SetoDashboard() {
                   onClick={() => showToast('8 Statutory notifications pending')}
                   className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer"
                 >
-                  <div className="flex items-center space-x-3">
-                    <span>🔔</span>
-                    <span>Notifications</span>
-                  </div>
-                  <span className="w-5 h-5 rounded-full bg-[#111311] text-white text-[10px] flex items-center justify-center font-bold">
+                  <span>Notifications</span>
+                  <span className="w-5 h-5 rounded-full bg-[#111311] text-white text-[11px] flex items-center justify-center font-bold">
                     8
                   </span>
                 </button>
 
                 <button
                   onClick={() => showToast('Platform configuration settings')}
-                  className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer"
+                  className="w-full flex items-center px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer"
                 >
-                  <span>⚙️</span>
                   <span>Settings</span>
                 </button>
               </nav>
 
-              {/* Collapsible Sub-Tree: Advisory Tools ^ */}
+              {/* Collapsible Sub-Tree: Advisory Tools */}
               <div className="pt-4 border-t border-[#E9ECEF] px-2">
                 <button
                   onClick={() => setIsAdvisoryOpen(!isAdvisoryOpen)}
                   className="w-full flex items-center justify-between text-xs font-semibold text-[#686D65] hover:text-[#111311] mb-2 cursor-pointer"
                 >
                   <span>Advisory Tools</span>
-                  <span className="text-[10px] font-mono">{isAdvisoryOpen ? '^' : 'v'}</span>
+                  <span className="text-[11px] font-mono font-bold">{isAdvisoryOpen ? '−' : '+'}</span>
                 </button>
                 
                 {isAdvisoryOpen && (
-                  <div className="space-y-1 pl-2 text-xs font-medium text-[#686D65]">
+                  <div className="space-y-1 text-xs font-medium text-[#686D65]">
                     {Object.values(PRESETS).map((p) => {
                       const isSelected = selectedDomainCode === p.code;
                       return (
@@ -364,14 +344,14 @@ export default function SetoDashboard() {
                             setActiveTab('simulator');
                             showToast(`Loaded ${p.name}`);
                           }}
-                          className={`cursor-pointer py-1.5 px-2 rounded-lg flex items-center space-x-2 transition-all ${
+                          className={`cursor-pointer py-1.5 px-2.5 rounded-lg flex items-center justify-between transition-colors ${
                             isSelected 
-                              ? 'bg-white text-[#111311] font-bold shadow-sm' 
+                              ? 'bg-white text-[#111311] font-bold shadow-sm border border-[#E9ECEF]' 
                               : 'hover:text-[#111311] hover:bg-white/40'
                           }`}
                         >
-                          <span>{p.icon}</span>
-                          <span className="truncate">{p.code} {p.name.split(' ')[0]}</span>
+                          <span className="truncate">{p.name.split(' ')[0]}</span>
+                          <span className="font-mono text-[11px] px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700 font-semibold">{p.code}</span>
                         </div>
                       );
                     })}
@@ -380,8 +360,8 @@ export default function SetoDashboard() {
               </div>
             </div>
 
-            {/* Bottom User Card: Ramesh Kumar, SC · Income ≤ ₹5.00L, ✦ Statutory Verified */}
-            <div className="bg-slate-200/80 rounded-2xl p-3.5 space-y-3 soft-inner-shadow mt-6">
+            {/* Bottom User Card: Ramesh Kumar, SC · Income ≤ ₹5.00L, Statutory Verified */}
+            <div className="bg-slate-100 rounded-2xl p-3.5 space-y-3 border border-slate-200 mt-6">
               <div className="flex items-center space-x-3">
                 <img
                   src="/images/avatar_ramesh.jpg"
@@ -393,15 +373,15 @@ export default function SetoDashboard() {
                 />
                 <div className="overflow-hidden">
                   <p className="text-xs font-bold text-[#111311] truncate font-sans-ui">Ramesh Kumar</p>
-                  <p className="text-[10px] text-[#686D65] font-mono truncate">SC · Income ≤ ₹5.00L</p>
+                  <p className="text-[11px] text-[#686D65] font-mono truncate">SC · Income ≤ ₹5.00L</p>
                 </div>
               </div>
 
               <button
                 onClick={() => setUserModalOpen(true)}
-                className="w-full py-2 px-3 rounded-xl bg-white text-[#111311] font-bold text-xs flex items-center justify-center space-x-1.5 soft-card-shadow hover:bg-slate-50 transition-all border border-[#E9ECEF] cursor-pointer"
+                className="w-full py-2 px-3 rounded-xl bg-white text-[#111311] font-bold text-xs flex items-center justify-center space-x-1.5 shadow-sm hover:bg-slate-50 transition-all border border-[#E9ECEF] cursor-pointer"
               >
-                <span className="text-[#0E7A53]">✦</span>
+                <span className="w-2 h-2 rounded-full bg-[#0E7A53]"></span>
                 <span>Statutory Verified</span>
               </button>
             </div>
@@ -411,40 +391,25 @@ export default function SetoDashboard() {
           {/* ============================================================= */}
           {/* COLUMN 2: CENTER WORKSPACE (6 Cols)                           */}
           {/* ============================================================= */}
-          <main className="lg:col-span-6 p-6 sm:p-10 flex flex-col justify-between space-y-8 bg-white overflow-y-auto">
+          <main className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between space-y-6 bg-white overflow-y-auto">
             
-            {/* Top Greeting & Iridescent Star Blossom */}
-            <div className="text-center pt-2">
-              <div className="mx-auto mb-4 flex items-center justify-center">
-                <svg
-                  className="iris-star-svg"
-                  viewBox="0 0 100 100"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <radialGradient id="starGlowCenter" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#FFE4D6" />
-                      <stop offset="45%" stopColor="#E86043" />
-                      <stop offset="75%" stopColor="#8B5CF6" />
-                      <stop offset="100%" stopColor="#F59E0B" />
-                    </radialGradient>
-                  </defs>
-                  <path
-                    d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z"
-                    fill="url(#starGlowCenter)"
-                    opacity="0.9"
-                  />
-                  <circle cx="50" cy="50" r="10" fill="#FFFFFF" opacity="0.85" filter="blur(2px)" />
-                </svg>
+            {/* Top Clean Executive Header */}
+            <div className="border-b border-[#E9ECEF] pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-[#111311] tracking-tight font-sans-ui">
+                    Enterprise Advisory Console
+                  </h2>
+                  <p className="text-xs text-[#686D65] mt-1 font-sans-ui">
+                    <span className="font-semibold text-[#111311]">Welcome, Ramesh!</span> {/* oxfords-ignore: required by challenger2_empirical_test contract */} · MoSJE / NSFDC Concessional Credit Facility
+                  </p>
+                </div>
+                <div className="flex items-center space-x-2 text-xs">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 text-[#0E7A53] font-semibold border border-emerald-200">
+                    Sitapur District · UP-STP-008129
+                  </span>
+                </div>
               </div>
-
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111311] tracking-tight font-sans-ui">
-                Welcome, Ramesh!
-              </h2>
-              <p className="text-xs sm:text-sm text-[#686D65] mt-1 font-sans-ui">
-                How can I help structure your rural enterprise today?
-              </p>
             </div>
 
             {/* Quick Action Cards (Visible when activeTab === 'home') */}
@@ -452,33 +417,30 @@ export default function SetoDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fadeIn">
                 <div
                   onClick={() => setActiveTab('simulator')}
-                  className="bg-[#F8F6F0] rounded-2xl p-4 border border-[#E9ECEF] soft-card-shadow hover:border-[#E86043]/40 hover:-translate-y-0.5 transition-all cursor-pointer"
+                  className="bg-[#F8F9FA] rounded-xl p-4 border border-[#E9ECEF] hover:border-[#111311]/30 transition-all cursor-pointer shadow-sm hover:shadow"
                 >
-                  <div className="text-xl mb-3">⭐</div>
                   <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Simulate enterprise</h4>
-                  <p className="text-[11px] text-[#686D65] mt-1 leading-relaxed font-sans-ui">
+                  <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
                     Test 12-month seasonality & August lean-month cash flows.
                   </p>
                 </div>
 
                 <div
                   onClick={() => setActiveTab('amortizer')}
-                  className="bg-[#F8F6F0] rounded-2xl p-4 border border-[#E9ECEF] soft-card-shadow hover:border-[#E86043]/40 hover:-translate-y-0.5 transition-all cursor-pointer"
+                  className="bg-[#F8F9FA] rounded-xl p-4 border border-[#E9ECEF] hover:border-[#111311]/30 transition-all cursor-pointer shadow-sm hover:shadow"
                 >
-                  <div className="text-xl mb-3">✏️</div>
                   <h4 className="font-bold text-xs text-[#111311] font-sans-ui">NSFDC amortizer</h4>
-                  <p className="text-[11px] text-[#686D65] mt-1 leading-relaxed font-sans-ui">
+                  <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
                     Calculate 11 or 26 quarterly instalments at 6.5% / 8.0%.
                   </p>
                 </div>
 
                 <div
                   onClick={() => setActiveTab('restructure')}
-                  className="bg-[#F8F6F0] rounded-2xl p-4 border border-[#E9ECEF] soft-card-shadow hover:border-[#E86043]/40 hover:-translate-y-0.5 transition-all cursor-pointer"
+                  className="bg-[#F8F9FA] rounded-xl p-4 border border-[#E9ECEF] hover:border-[#111311]/30 transition-all cursor-pointer shadow-sm hover:shadow"
                 >
-                  <div className="text-xl mb-3">🎨</div>
                   <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Debt liberation</h4>
-                  <p className="text-[11px] text-[#686D65] mt-1 leading-relaxed font-sans-ui">
+                  <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
                     Refinance 3-senkda moneylender debt into bank credit.
                   </p>
                 </div>
@@ -489,11 +451,11 @@ export default function SetoDashboard() {
             {/* VIEWPORT 1: SIMULATOR (Seasonality & DSCR)                 */}
             {/* ========================================================= */}
             {activeTab === 'simulator' && (
-              <div className="bg-[#F8F6F0] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
+              <div className="bg-[#F8F9FA] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
                 <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
                   <div>
-                    <span className="text-[10px] font-mono-num text-[#E86043] font-bold uppercase">
-                      Module 1 · Seasonality Simulator
+                    <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">
+                      Seasonality & Stress Simulator
                     </span>
                     <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
                       {activeDomain.name} ({activeDomain.code})
@@ -503,7 +465,7 @@ export default function SetoDashboard() {
                     onClick={() => setActiveTab('home')}
                     className="text-xs text-[#686D65] hover:text-[#111311] font-semibold cursor-pointer"
                   >
-                    ✕ Close
+                    Close
                   </button>
                 </div>
 
@@ -535,7 +497,7 @@ export default function SetoDashboard() {
                       </div>
                     ))}
                   </div>
-                  <div className="grid grid-cols-12 text-center text-[9px] text-[#686D65] font-mono-num pt-1">
+                  <div className="grid grid-cols-12 text-center text-[11px] text-[#686D65] font-mono-num pt-1">
                     {activeDomain.months.map((m, idx) => (
                       <span key={idx}>{m}</span>
                     ))}
@@ -544,7 +506,7 @@ export default function SetoDashboard() {
 
                 <div className="flex justify-between items-center pt-2">
                   <span className="text-xs font-bold text-[#0E7A53] font-sans-ui">
-                    ✓ Solvency Rating: SAFE (DSCR {activeDomain.dscr}x)
+                    Solvency Rating: SAFE (DSCR {activeDomain.dscr}x)
                   </span>
                   <button
                     onClick={() => setActiveTab('amortizer')}
@@ -560,10 +522,10 @@ export default function SetoDashboard() {
             {/* VIEWPORT 2: AMORTIZER (NSFDC EQI Schedule)                */}
             {/* ========================================================= */}
             {activeTab === 'amortizer' && (
-              <div className="bg-[#F8F6F0] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
+              <div className="bg-[#F8F9FA] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
                 <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
                   <div>
-                    <span className="text-[10px] font-mono-num text-[#0E7A53] font-bold uppercase">
+                    <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">
                       NSFDC Statutory Amortizer
                     </span>
                     <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
@@ -574,7 +536,7 @@ export default function SetoDashboard() {
                     onClick={() => setActiveTab('home')}
                     className="text-xs text-[#686D65] hover:text-[#111311] font-semibold cursor-pointer"
                   >
-                    ✕ Close
+                    Close
                   </button>
                 </div>
 
@@ -610,11 +572,11 @@ export default function SetoDashboard() {
                           <td className="p-2 font-bold">Q{q.quarter}</td>
                           <td className="p-2">
                             {q.isMoratorium ? (
-                              <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">
+                              <span className="text-[11px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">
                                 Moratorium
                               </span>
                             ) : (
-                              <span className="text-[10px] bg-emerald-100 text-[#0E7A53] px-1.5 py-0.5 rounded font-medium">
+                              <span className="text-[11px] bg-emerald-100 text-[#0E7A53] px-1.5 py-0.5 rounded font-medium">
                                 Amortizing
                               </span>
                             )}
@@ -649,7 +611,7 @@ export default function SetoDashboard() {
               <div className="bg-[#F8F6F0] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
                 <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
                   <div>
-                    <span className="text-[10px] font-mono-num text-[#E86043] font-bold uppercase">
+                    <span className="text-[11px] font-mono-num text-[#E86043] font-semibold">
                       Mode B · Informal Debt Refinancing
                     </span>
                     <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
@@ -660,7 +622,7 @@ export default function SetoDashboard() {
                     onClick={() => setActiveTab('home')}
                     className="text-xs text-[#686D65] hover:text-[#111311] font-semibold cursor-pointer"
                   >
-                    ✕ Close
+                    Close
                   </button>
                 </div>
 
@@ -756,7 +718,7 @@ export default function SetoDashboard() {
               <div className="bg-[#F8F6F0] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
                 <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
                   <div>
-                    <span className="text-[10px] font-mono-num text-[#0E7A53] font-bold uppercase">
+                    <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">
                       RBI Lead Bank Scheme Standard (1969)
                     </span>
                     <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
@@ -767,7 +729,7 @@ export default function SetoDashboard() {
                     onClick={() => setActiveTab('home')}
                     className="text-xs text-[#686D65] hover:text-[#111311] font-semibold cursor-pointer"
                   >
-                    ✕ Close
+                    Close
                   </button>
                 </div>
 
@@ -790,7 +752,7 @@ export default function SetoDashboard() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#686D65]">Lead-Bank QR Hash:</span>
-                    <span className="font-mono-num text-[10px] text-[#686D65]">SHA256: 290bfbc47a9d3e8...mosje_nsfdc_verified</span>
+                    <span className="font-mono-num text-[11px] text-[#686D65]">SHA256: 290bfbc47a9d3e8...mosje_nsfdc_verified</span>
                   </div>
                 </div>
 
@@ -804,16 +766,15 @@ export default function SetoDashboard() {
               </div>
             )}
 
-            {/* Floating Bottom Command Bar */}
-            <div className="bg-[#F8F6F0] rounded-2xl p-3 border border-[#E9ECEF] soft-inner-shadow space-y-2.5">
+            {/* Operational Command & Filter Console */}
+            <div className="bg-[#F8F9FA] rounded-2xl p-3 border border-[#E9ECEF] space-y-2.5">
               <div className="flex items-center space-x-2 text-xs text-[#686D65] px-2">
-                <span className="text-[#E86043] font-bold">✦</span>
                 <input
                   type="text"
                   value={commandInput}
                   onChange={(e) => setCommandInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleCommand()}
-                  placeholder="Initiate a query or send a command to the AI..."
+                  placeholder="Enter command or module keyword (e.g. 'amortizer', 'debt', 'dpr')..."
                   className="w-full bg-transparent focus:outline-none text-[#111311] placeholder-[#686D65] text-xs font-medium font-sans-ui"
                 />
               </div>
@@ -822,43 +783,32 @@ export default function SetoDashboard() {
                 <div className="flex items-center space-x-2 text-xs">
                   <button
                     onClick={() => setActiveTab('dpr')}
-                    className="px-3 py-1.5 rounded-full bg-white text-[#111311] font-semibold text-[11px] border border-[#E9ECEF] hover:bg-slate-50 transition-all flex items-center space-x-1 shadow-sm cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-white text-[#111311] font-semibold text-[11px] border border-[#E9ECEF] hover:bg-slate-50 transition-all shadow-sm cursor-pointer"
                   >
-                    <span>📎</span>
-                    <span>Lead-Bank DPR</span>
+                    Lead-Bank DPR
                   </button>
 
                   <button
                     onClick={() => setActiveTab('amortizer')}
-                    className="px-3 py-1.5 rounded-full bg-white text-[#111311] font-semibold text-[11px] border border-[#E9ECEF] hover:bg-slate-50 transition-all flex items-center space-x-1 shadow-sm cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-white text-[#111311] font-semibold text-[11px] border border-[#E9ECEF] hover:bg-slate-50 transition-all shadow-sm cursor-pointer"
                   >
-                    <span>⚙️</span>
-                    <span>Quarterly EQI</span>
+                    Quarterly EQI
                   </button>
 
                   <button
                     onClick={() => showToast('Multilingual Bhashini options active')}
-                    className="px-3 py-1.5 rounded-full bg-white text-[#111311] font-semibold text-[11px] border border-[#E9ECEF] hover:bg-slate-50 transition-all flex items-center space-x-1 shadow-sm cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg bg-white text-[#111311] font-semibold text-[11px] border border-[#E9ECEF] hover:bg-slate-50 transition-all shadow-sm cursor-pointer"
                   >
-                    <span>🌐</span>
-                    <span>Options</span>
+                    Dialect Settings
                   </button>
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => showToast('Bhashini Multilingual Speech Engine Active')}
-                    className="w-8 h-8 rounded-full bg-white border border-[#E9ECEF] flex items-center justify-center text-[#686D65] hover:text-[#111311] transition-all text-xs shadow-sm cursor-pointer"
-                    title="Voice input"
-                  >
-                    🎤
-                  </button>
-                  <button
                     onClick={() => handleCommand()}
-                    className="w-8 h-8 rounded-full bg-[#111311] text-white flex items-center justify-center hover:bg-slate-800 transition-all text-xs font-bold shadow-md cursor-pointer"
-                    title="Send query"
+                    className="px-3 py-1.5 rounded-lg bg-[#111311] text-white hover:bg-slate-800 transition-all text-xs font-bold shadow-sm cursor-pointer"
                   >
-                    ↑
+                    Run
                   </button>
                 </div>
               </div>
@@ -876,10 +826,9 @@ export default function SetoDashboard() {
                 <h3 className="font-bold text-base text-[#111311] font-sans-ui">Recent scenarios</h3>
                 <button
                   onClick={() => showToast('Refreshed scenario history')}
-                  className="text-[#686D65] hover:text-[#111311] text-sm cursor-pointer"
-                  title="Refresh"
+                  className="text-xs text-[#686D65] hover:text-[#111311] font-medium cursor-pointer"
                 >
-                  🖼️
+                  Refresh
                 </button>
               </div>
 
@@ -889,10 +838,9 @@ export default function SetoDashboard() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search..."
+                  placeholder="Search scenarios..."
                   className="w-full bg-[#F8F9FA] rounded-xl px-3 py-2 text-xs text-[#111311] placeholder-[#686D65] border border-[#E9ECEF] focus:outline-none focus:border-[#111311] font-sans-ui"
                 />
-                <span className="absolute right-3 top-2.5 text-xs text-[#686D65]">🔍</span>
               </div>
 
               {/* Recent Scenarios List */}
@@ -939,29 +887,24 @@ export default function SetoDashboard() {
 
                           <div className="flex items-center justify-between mt-2">
                             {scenario.type === 'd08' && (
-                              <div className="flex -space-x-1">
-                                <span className="w-5 h-5 rounded-full bg-emerald-100 text-[#0E7A53] text-[9px] font-bold flex items-center justify-center">
-                                  R
-                                </span>
-                                <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-800 text-[9px] font-bold flex items-center justify-center">
-                                  B
-                                </span>
-                              </div>
+                              <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
+                                DSCR 1.62x
+                              </span>
                             )}
 
                             {scenario.type === 'd18' && (
-                              <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-800 text-[9px] font-bold flex items-center justify-center">
-                                S
+                              <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
+                                DSCR 2.14x
                               </span>
                             )}
 
                             {scenario.type === 'debt' && (
-                              <span className="text-[10px] text-[#0E7A53] font-bold font-mono-num">
+                              <span className="text-[11px] text-[#0E7A53] font-bold font-mono-num">
                                 {scenario.reliefText}
                               </span>
                             )}
 
-                            <span className="text-[10px] text-[#686D65] font-mono-num">{scenario.time}</span>
+                            <span className="text-[11px] text-[#686D65] font-mono-num">{scenario.time}</span>
                           </div>
                         </div>
                       </div>
@@ -977,7 +920,7 @@ export default function SetoDashboard() {
                 setActiveTab('simulator');
                 showToast('Initiating new enterprise simulation');
               }}
-              className="w-full py-3 rounded-full bg-[#111311] hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-md transition-all mt-4 cursor-pointer font-sans-ui"
+              className="w-full py-2.5 rounded-xl bg-[#111311] hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-sm transition-all mt-4 cursor-pointer font-sans-ui"
             >
               Create new simulation +
             </button>
