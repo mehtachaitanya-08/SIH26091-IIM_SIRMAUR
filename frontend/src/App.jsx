@@ -32,30 +32,42 @@ export default function App() {
   // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization
   useEffect(() => {
     let lenis;
-    let updateTicker;
+    let rafId;
+    let refreshTimer;
+
     try {
       lenis = new Lenis({
-        duration: 1.3,
+        duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         smoothWheel: true,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 2.0,
       });
 
       setLenisInstance(lenis);
 
       lenis.on('scroll', ScrollTrigger.update);
 
-      updateTicker = (time) => {
-        lenis.raf(time * 1000);
-      };
-      gsap.ticker.add(updateTicker);
-      gsap.ticker.lagSmoothing(0);
+      function raf(time) {
+        lenis.raf(time);
+        rafId = requestAnimationFrame(raf);
+      }
+      rafId = requestAnimationFrame(raf);
+
+      // Refresh ScrollTrigger after DOM & images settle
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 250);
     } catch (err) {
       console.warn("Lenis initialization error:", err);
     }
 
     // GSAP Context with strict cleanup
     const ctx = gsap.context(() => {
+      // Pin center card exactly in center before animating
+      gsap.set("#hero-center-card", { left: "50%", top: "50%", xPercent: -50, yPercent: -50 });
+
       // -------------------------------------------------------------
       // SCENE 1: HERO DISPERSION TIMELINE
       // -------------------------------------------------------------
@@ -206,8 +218,11 @@ export default function App() {
     }, containerRef);
 
     return () => {
-      if (updateTicker) {
-        gsap.ticker.remove(updateTicker);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      if (refreshTimer) {
+        clearTimeout(refreshTimer);
       }
       ctx.revert();
       ScrollTrigger.getAll().forEach((t) => t.kill());
