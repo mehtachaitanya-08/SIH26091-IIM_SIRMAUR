@@ -1,45 +1,17 @@
 /**
  * Client-Side Local Database for User Authentication & Persistent Sessions
  * Uses browser localStorage with in-memory fallback for SSR compatibility.
+ * Pure real user storage with zero mock data or hardcoded profiles.
  */
 
 const STORAGE_USERS_KEY = 'graminai_users_db_v1';
 const STORAGE_SESSION_KEY = 'graminai_active_session_v1';
 
-// Seed default accounts
-const SEED_USERS = [
-  {
-    id: 'UP-STP-008129',
-    name: 'Ramesh Kumar',
-    email: 'ramesh.kumar@graminai.org',
-    phone: '9876543210',
-    pin: '2026',
-    category: 'Scheduled Caste (SC)',
-    trade: 'D08 Mustard & Edible Oil Expeller Mill',
-    district: 'Sitapur District, UP',
-    income: '≤ ₹5,00,000',
-    verified: true,
-    authProvider: 'phone',
-    createdAt: '2026-01-10T00:00:00.000Z'
-  },
-  {
-    id: 'UP-STP-004312',
-    name: 'Sunita Devi',
-    email: 'sunita.devi@graminai.org',
-    phone: '9876543211',
-    pin: '2026',
-    category: 'Scheduled Caste (SC)',
-    trade: 'D18 Village Tailoring & Garments',
-    district: 'Sitapur District, UP',
-    income: '≤ ₹5,00,000',
-    verified: true,
-    authProvider: 'phone',
-    createdAt: '2026-01-12T00:00:00.000Z'
-  }
-];
+// Pure production store: zero hardcoded seed accounts
+const SEED_USERS = [];
 
 // In-memory fallback for SSR
-let inMemoryUsers = [...SEED_USERS];
+let inMemoryUsers = [];
 let inMemorySession = null;
 
 function hasLocalStorage() {
@@ -55,8 +27,7 @@ export function getAllUsers() {
   try {
     const raw = window.localStorage.getItem(STORAGE_USERS_KEY);
     if (!raw) {
-      window.localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(SEED_USERS));
-      return SEED_USERS;
+      return [];
     }
     return JSON.parse(raw);
   } catch (err) {
@@ -86,9 +57,16 @@ export function getUserByEmail(email) {
 }
 
 export function authenticateByCredentials(phone, pin) {
+  if (!phone || !phone.trim()) {
+    return { success: false, error: 'Mobile number is required.' };
+  }
+  if (!pin || !pin.trim()) {
+    return { success: false, error: 'PIN is required.' };
+  }
+
   const user = getUserByPhone(phone);
   if (!user) {
-    return { success: false, error: 'User not found with this mobile number.' };
+    return { success: false, error: 'User not found with this mobile number. Please register first.' };
   }
   if (user.pin && user.pin !== pin?.trim()) {
     return { success: false, error: 'Incorrect 4-digit PIN.' };
@@ -98,25 +76,24 @@ export function authenticateByCredentials(phone, pin) {
 }
 
 export function authenticateByGoogle(googleProfile = null) {
-  const profile = googleProfile || {
-    name: 'Ramesh Kumar',
-    email: 'ramesh.kumar.sc@gmail.com',
-    avatar: 'https://lh3.googleusercontent.com/a/ACg8ocIqK_demo=s96-c'
-  };
+  if (!googleProfile || !googleProfile.email) {
+    return { success: false, error: 'No Google profile credentials provided.' };
+  }
 
+  const profile = googleProfile;
   const users = getAllUsers();
   let user = getUserByEmail(profile.email);
 
   if (!user) {
-    // Auto-register new Google user with default verified SC status for platform demo
+    // Auto-register genuine Google authenticated user
     user = {
       id: `UP-GOOG-${Math.floor(100000 + Math.random() * 900000)}`,
-      name: profile.name || 'Google User',
+      name: profile.name || 'Google Beneficiary',
       email: profile.email,
       avatar: profile.avatar || null,
-      phone: profile.phone || '9876543210',
+      phone: profile.phone || '',
       category: 'Scheduled Caste (SC)',
-      trade: 'D08 Mustard & Edible Oil Expeller Mill',
+      trade: 'Rural Enterprise',
       district: 'Sitapur District, UP',
       income: '≤ ₹5,00,000',
       verified: true,
@@ -129,6 +106,7 @@ export function authenticateByGoogle(googleProfile = null) {
     // Update existing user with Google provider flag and avatar
     user.authProvider = 'google';
     if (profile.avatar) user.avatar = profile.avatar;
+    if (profile.name) user.name = profile.name;
     persistUsers(users);
   }
 
@@ -137,20 +115,27 @@ export function authenticateByGoogle(googleProfile = null) {
 }
 
 export function registerUser({ name, phone, pin, trade, category, email }) {
+  if (!phone || !phone.trim()) {
+    return { success: false, error: 'Mobile number is required for registration.' };
+  }
+  if (!pin || !pin.trim()) {
+    return { success: false, error: '4-digit security PIN is required.' };
+  }
+
   const users = getAllUsers();
   
-  if (phone && getUserByPhone(phone)) {
+  if (getUserByPhone(phone)) {
     return { success: false, error: 'A user with this mobile number is already registered.' };
   }
 
   const newUser = {
     id: `UP-REG-${Math.floor(100000 + Math.random() * 900000)}`,
     name: name?.trim() || 'Rural Entrepreneur',
-    email: email || `${phone || 'user'}@graminai.org`,
-    phone: phone?.trim() || '9876543210',
-    pin: pin?.trim() || '2026',
+    email: email?.trim() || `${phone.trim()}@graminai.org`,
+    phone: phone.trim(),
+    pin: pin.trim(),
     category: category || 'Scheduled Caste (SC)',
-    trade: trade || 'D08 Mustard & Edible Oil Expeller Mill',
+    trade: trade || 'Rural Enterprise',
     district: 'Sitapur District, UP',
     income: '≤ ₹5,00,000',
     verified: true,

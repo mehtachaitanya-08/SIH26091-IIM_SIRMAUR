@@ -15,6 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
+import ProductionDashboard from './components/ProductionDashboard';
 import { 
   getCurrentSession, 
   authenticateByCredentials, 
@@ -22,6 +23,7 @@ import {
   registerUser, 
   clearSession 
 } from './data/userDatabase';
+import { triggerGoogleLogin } from './services/googleAuth';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,7 +86,7 @@ const TRANSLATIONS = {
     pinPlaceholder: 'Enter 4-digit PIN',
     createPinLabel: 'Create 4-Digit Security PIN',
     nameLabel: 'Entrepreneur Full Name',
-    namePlaceholder: 'e.g. Ramesh Kumar',
+    namePlaceholder: 'e.g. Rajesh Singh',
     tradeLabel: 'Enterprise Domain / Trade',
     categoryLabel: 'Beneficiary Social Category',
     submitLogin: 'Sign In & Open Workspace',
@@ -149,7 +151,7 @@ const TRANSLATIONS = {
     pinPlaceholder: '4-अंकीय PIN दर्ज करें',
     createPinLabel: '4-अंकीय सुरक्षा PIN बनाएं',
     nameLabel: 'उद्यमी का पूरा नाम',
-    namePlaceholder: 'उदा. रमेश कुमार',
+    namePlaceholder: 'उदा. राजेश सिंह',
     tradeLabel: 'उद्यम क्षेत्र / व्यापार',
     categoryLabel: 'लाभार्थी सामाजिक श्रेणी',
     submitLogin: 'लॉगिन करें एवं कार्यक्षेत्र खोलें',
@@ -296,15 +298,17 @@ export default function App() {
   const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
   const [currentUser, setCurrentUser] = useState(null);
   const [authError, setAuthError] = useState(null);
+  const [workspaceMode, setWorkspaceMode] = useState('mockup'); // 'mockup' | 'production'
 
   // Auth Form Fields
-  const [loginPhone, setLoginPhone] = useState('9876543210');
-  const [loginPin, setLoginPin] = useState('2026');
+  const [loginPhone, setLoginPhone] = useState('');
+  const [loginPin, setLoginPin] = useState('');
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
-  const [regPin, setRegPin] = useState('2026');
+  const [regPin, setRegPin] = useState('');
   const [regTrade, setRegTrade] = useState('D08 Mustard & Edible Oil Expeller Mill');
   const [regCategory, setRegCategory] = useState('Scheduled Caste (SC)');
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   // Restore active session on mount
   useEffect(() => {
@@ -315,18 +319,25 @@ export default function App() {
   }, []);
 
   // Google Authentication Handler (Both Login & Register)
-  const handleGoogleAuth = () => {
-    const result = authenticateByGoogle({
-      name: language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar',
-      email: 'ramesh.kumar.sc@gmail.com'
-    });
-    if (result.success) {
-      setCurrentUser(result.user);
-      setAuthError(null);
-      setIsAuthModalOpen(false);
-      setTimeout(() => {
-        scrollToTarget('#dashboard-section');
-      }, 200);
+  const handleGoogleAuth = async () => {
+    setAuthError(null);
+    setIsAuthenticating(true);
+    try {
+      const googleProfile = await triggerGoogleLogin();
+      const result = authenticateByGoogle(googleProfile);
+      if (result.success) {
+        setCurrentUser(result.user);
+        setIsAuthModalOpen(false);
+        setTimeout(() => {
+          scrollToTarget('#dashboard-section');
+        }, 200);
+      } else {
+        setAuthError(result.error || 'Failed to authenticate Google profile.');
+      }
+    } catch (err) {
+      setAuthError(err.message || 'Google authentication failed.');
+    } finally {
+      setIsAuthenticating(false);
     }
   };
 
@@ -342,22 +353,7 @@ export default function App() {
         scrollToTarget('#dashboard-section');
       }, 200);
     } else {
-      // In case user entered unregistered phone, authenticate as demo verified user
-      const fallbackUser = {
-        name: loginPhone === '9876543210' 
-          ? (language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar')
-          : (language === 'hi' ? 'पंजीकृत उद्यमी' : 'Registered Entrepreneur'),
-        category: 'Scheduled Caste (SC)',
-        trade: 'D08 Mustard & Edible Oil Expeller Mill',
-        phone: loginPhone || '9876543210',
-        id: 'UP-STP-008129',
-        income: '≤ ₹5,00,000'
-      };
-      setCurrentUser(fallbackUser);
-      setIsAuthModalOpen(false);
-      setTimeout(() => {
-        scrollToTarget('#dashboard-section');
-      }, 200);
+      setAuthError(result.error || 'Invalid mobile number or security PIN.');
     }
   };
 
@@ -652,9 +648,12 @@ export default function App() {
           ) : (
             <div className="flex items-center space-x-2">
               <button 
-                onClick={() => scrollToTarget('#dashboard-section')} 
+                onClick={() => {
+                  setWorkspaceMode('production');
+                  scrollToTarget('#dashboard-section');
+                }} 
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 text-[#111311] hover:bg-white text-xs font-mono-num font-bold shadow-sm border border-black/10 transition-all hover:scale-105 cursor-pointer"
-                title={currentUser.name}
+                title={`${currentUser.name} (Live Production Workspace)`}
               >
                 <span className="w-2 h-2 rounded-full bg-[#0E7A53]"></span>
                 <span className="max-w-[110px] truncate">{currentUser.name}</span>
@@ -1119,7 +1118,42 @@ export default function App() {
       {/* ============================================================== */}
       {/* SCENE 6: SETO MINIMAL DASHBOARD MOCKUP CONTAINER              */}
       {/* ============================================================== */}
-      <SetoDashboard language={language} currentUser={currentUser} />
+      {currentUser && (
+        <div className="max-w-[1500px] mx-auto px-4 sm:px-8 pt-8 flex justify-center items-center gap-2">
+          <button
+            onClick={() => setWorkspaceMode('mockup')}
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer font-sans-ui ${
+              workspaceMode === 'mockup'
+                ? 'bg-[#111311] text-white shadow-sm'
+                : 'bg-white/80 text-[#686D65] hover:text-[#111311] border border-black/10'
+            }`}
+          >
+            Preview Mockup (Scene 6)
+          </button>
+          <button
+            onClick={() => setWorkspaceMode('production')}
+            className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 font-sans-ui ${
+              workspaceMode === 'production'
+                ? 'bg-[#0E7A53] text-white shadow-sm'
+                : 'bg-white/80 text-[#686D65] hover:text-[#111311] border border-black/10'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-300"></span>
+            Live Production Workspace
+          </button>
+        </div>
+      )}
+      {workspaceMode === 'production' && currentUser ? (
+        <div id="dashboard-section">
+          <ProductionDashboard 
+            language={language} 
+            currentUser={currentUser} 
+            onNavigateHome={() => setWorkspaceMode('mockup')} 
+          />
+        </div>
+      ) : (
+        <SetoDashboard language={language} currentUser={currentUser} />
+      )}
 
       {/* ============================================================== */}
       {/* REFINED AUTHENTICATION / REGISTRATION MODAL DIALOG             */}
@@ -1191,8 +1225,9 @@ export default function App() {
             {/* Google Authentication Option (Present on Both Login & Register) */}
             <button
               type="button"
+              disabled={isAuthenticating}
               onClick={handleGoogleAuth}
-              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-[#111311] text-xs font-bold font-sans-ui flex items-center justify-center space-x-3 transition-all shadow-sm hover:shadow hover:border-slate-400 cursor-pointer group"
+              className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-300 text-[#111311] text-xs font-bold font-sans-ui flex items-center justify-center space-x-3 transition-all shadow-sm hover:shadow hover:border-slate-400 cursor-pointer group disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {/* Google Official Multi-Color Emblem */}
               <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
@@ -1201,7 +1236,7 @@ export default function App() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
               </svg>
-              <span>{authTab === 'login' ? t.continueGoogle : t.signUpGoogle}</span>
+              <span>{isAuthenticating ? (language === 'hi' ? 'Google से जुड़ रहे हैं...' : 'Connecting to Google...') : (authTab === 'login' ? t.continueGoogle : t.signUpGoogle)}</span>
             </button>
 
             {/* Clear Aesthetic Divider */}

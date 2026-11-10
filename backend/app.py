@@ -9,6 +9,7 @@ Interactive docs: http://127.0.0.1:8000/docs
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend import businesses, loan
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
@@ -19,6 +20,14 @@ app = FastAPI(
     description="Eligibility, loan amount and quarterly repayment schedule under NSFDC's "
                 "Micro Finance Scheme and Term Loan. Every number carries a tag: "
                 "[S#] (source), USER INPUT, CALCULATED or ASSUMED.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

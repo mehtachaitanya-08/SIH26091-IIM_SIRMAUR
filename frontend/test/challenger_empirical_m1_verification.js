@@ -287,8 +287,17 @@ describe('CHALLENGER EMPIRICAL VERIFICATION SUITE — MILESTONE 1 FIX', () => {
       assert.ok(appCode.includes('lenis.destroy()'), 'lenis.destroy() must be called on unmount');
     });
 
-    it('SSR renders SetoDashboard component with zero runtime exceptions', () => {
-      const html = renderToString(React.createElement(SetoDashboard));
+    it('SSR renders SetoDashboard component with zero runtime exceptions and supports dynamic user profile', () => {
+      // Default render
+      const htmlDefault = renderToString(React.createElement(SetoDashboard));
+      assert.ok(htmlDefault.length > 5000);
+      assert.ok(htmlDefault.includes('GraminAI'));
+      assert.ok(htmlDefault.includes('Welcome'));
+
+      // Dynamic profile fixture render
+      const html = renderToString(React.createElement(SetoDashboard, {
+        currentUser: { name: 'Ramesh Kumar', category: 'SC', id: 'UP-STP-008129' }
+      }));
       assert.ok(html.length > 5000);
       assert.ok(html.includes('GraminAI'));
       assert.ok(html.includes('Ramesh Kumar'));

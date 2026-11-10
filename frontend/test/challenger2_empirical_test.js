@@ -61,10 +61,11 @@ describe('1. Mockup Boundaries & Offline Independence', () => {
   });
 
   it('SetoDashboard renders offline without network dependencies via React SSR', () => {
+    // Default render without active session
     const html = renderToString(React.createElement(SetoDashboard));
     assert.ok(html.length > 5000, 'Rendered HTML output is surprisingly short');
     assert.ok(html.includes('The Entrepreneur Workspace'), 'Missing main section headline');
-    assert.ok(html.includes('Welcome, Ramesh!'), 'Missing center greeting');
+    assert.ok(html.includes('Welcome'), 'Missing center greeting');
     assert.ok(html.includes('GraminAI'), 'Missing GraminAI brand lockup');
     assert.ok(html.includes('Simulate enterprise'), 'Missing quick card Simulate');
     assert.ok(html.includes('NSFDC amortizer'), 'Missing quick card Amortizer');
@@ -73,6 +74,13 @@ describe('1. Mockup Boundaries & Offline Independence', () => {
     assert.ok(html.includes('D08 Mustard Oil Mill'), 'Missing D08 scenario item');
     assert.ok(html.includes('D18 Tailoring Workshop'), 'Missing D18 scenario item');
     assert.ok(html.includes('Sahukar Debt Relief'), 'Missing Sahukar debt relief item');
+
+    // Dynamic user profile fixture render
+    const htmlWithUser = renderToString(React.createElement(SetoDashboard, {
+      currentUser: { name: 'Ramesh Kumar', category: 'Scheduled Caste (SC)', id: 'UP-STP-008129' }
+    }));
+    assert.ok(htmlWithUser.includes('Welcome, Ramesh!'), 'Missing dynamic center greeting with user fixture');
+    assert.ok(htmlWithUser.includes('Ramesh Kumar'), 'Missing dynamic user name');
   });
 });
 
