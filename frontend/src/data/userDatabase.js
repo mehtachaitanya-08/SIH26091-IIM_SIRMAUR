@@ -7,11 +7,26 @@
 const STORAGE_USERS_KEY = 'graminai_users_db_v1';
 const STORAGE_SESSION_KEY = 'graminai_active_session_v1';
 
-// Pure production store: zero hardcoded seed accounts
-const SEED_USERS = [];
+// Verified evaluation account for instant access
+const SEED_USERS = [
+  {
+    id: 'UP-STP-008129',
+    name: 'Gramin Entrepreneur',
+    email: 'entrepreneur@graminai.org',
+    phone: '9876543210',
+    pin: '2026',
+    category: 'Scheduled Caste (SC)',
+    trade: 'D08 Mustard & Edible Oil Expeller Mill',
+    district: 'Sitapur District, UP',
+    income: '≤ ₹5,00,000',
+    verified: true,
+    authProvider: 'local',
+    createdAt: '2026-01-10T00:00:00.000Z'
+  }
+];
 
 // In-memory fallback for SSR
-let inMemoryUsers = [];
+let inMemoryUsers = [...SEED_USERS];
 let inMemorySession = null;
 
 function hasLocalStorage() {
@@ -27,7 +42,8 @@ export function getAllUsers() {
   try {
     const raw = window.localStorage.getItem(STORAGE_USERS_KEY);
     if (!raw) {
-      return [];
+      window.localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(SEED_USERS));
+      return SEED_USERS;
     }
     return JSON.parse(raw);
   } catch (err) {
