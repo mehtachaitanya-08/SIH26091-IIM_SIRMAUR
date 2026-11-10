@@ -1,0 +1,341 @@
+{
+  "loanStructures": {
+    "50000": {
+      "tier": "MCF",
+      "schemeName": "NSFDC Micro Credit Finance (MCF / Mahila Samriddhi Yojana)",
+      "projectCost": 50000,
+      "loanAmount": 45000,
+      "promoterEquity": 5000,
+      "promoterEquityPct": 10,
+      "interestRatePA": 6.5,
+      "quarterlyInterestRate": 0.01625,
+      "tenureYears": 3,
+      "totalQuarters": 12,
+      "moratoriumQuarters": 1,
+      "repaymentQuarters": 11
+    },
+    "100000": {
+      "tier": "MCF",
+      "schemeName": "NSFDC Micro Credit Finance (MCF / Mahila Samriddhi Yojana)",
+      "projectCost": 100000,
+      "loanAmount": 90000,
+      "promoterEquity": 10000,
+      "promoterEquityPct": 10,
+      "interestRatePA": 6.5,
+      "quarterlyInterestRate": 0.01625,
+      "tenureYears": 3,
+      "totalQuarters": 12,
+      "moratoriumQuarters": 1,
+      "repaymentQuarters": 11
+    },
+    "140000": {
+      "tier": "MCF",
+      "schemeName": "NSFDC Micro Credit Finance (MCF / Mahila Samriddhi Yojana)",
+      "projectCost": 140000,
+      "loanAmount": 125000,
+      "promoterEquity": 15000,
+      "promoterEquityPct": 10.71,
+      "interestRatePA": 6.5,
+      "quarterlyInterestRate": 0.01625,
+      "tenureYears": 3,
+      "totalQuarters": 12,
+      "moratoriumQuarters": 1,
+      "repaymentQuarters": 11
+    },
+    "150000": {
+      "tier": "TERM_LOAN",
+      "schemeName": "NSFDC Term Loan Scheme",
+      "projectCost": 150000,
+      "loanAmount": 135000,
+      "promoterEquity": 15000,
+      "promoterEquityPct": 10,
+      "interestRatePA": 8,
+      "quarterlyInterestRate": 0.02,
+      "tenureYears": 7,
+      "totalQuarters": 28,
+      "moratoriumQuarters": 2,
+      "repaymentQuarters": 26
+    },
+    "680000": {
+      "tier": "TERM_LOAN",
+      "schemeName": "NSFDC Term Loan Scheme",
+      "projectCost": 680000,
+      "loanAmount": 612000,
+      "promoterEquity": 68000,
+      "promoterEquityPct": 10,
+      "interestRatePA": 8,
+      "quarterlyInterestRate": 0.02,
+      "tenureYears": 7,
+      "totalQuarters": 28,
+      "moratoriumQuarters": 2,
+      "repaymentQuarters": 26
+    },
+    "2500000": {
+      "tier": "TERM_LOAN",
+      "schemeName": "NSFDC Term Loan Scheme",
+      "projectCost": 2500000,
+      "loanAmount": 2250000,
+      "promoterEquity": 250000,
+      "promoterEquityPct": 10,
+      "interestRatePA": 8,
+      "quarterlyInterestRate": 0.02,
+      "tenureYears": 7,
+      "totalQuarters": 28,
+      "moratoriumQuarters": 2,
+      "repaymentQuarters": 26
+    },
+    "5000000": {
+      "tier": "TERM_LOAN",
+      "schemeName": "NSFDC Term Loan Scheme",
+      "projectCost": 5000000,
+      "loanAmount": 4500000,
+      "promoterEquity": 500000,
+      "promoterEquityPct": 10,
+      "interestRatePA": 8,
+      "quarterlyInterestRate": 0.02,
+      "tenureYears": 7,
+      "totalQuarters": 28,
+      "moratoriumQuarters": 2,
+      "repaymentQuarters": 26
+    }
+  },
+  "amortizationSchedules": {
+    "50000": {
+      "eqi": 4500.48,
+      "totalQuarters": 12,
+      "moratoriumQuartersCount": 1,
+      "firstQuarterInterest": 731.25,
+      "firstAmortQuarterPrincipal": 3769.23,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 45000,
+      "totalInterestPaid": 5236.55,
+      "totalDebtService": 50236.55
+    },
+    "100000": {
+      "eqi": 9000.97,
+      "totalQuarters": 12,
+      "moratoriumQuartersCount": 1,
+      "firstQuarterInterest": 1462.5,
+      "firstAmortQuarterPrincipal": 7538.47,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 90000,
+      "totalInterestPaid": 10473.14,
+      "totalDebtService": 100473.14
+    },
+    "140000": {
+      "eqi": 12501.34,
+      "totalQuarters": 12,
+      "moratoriumQuartersCount": 1,
+      "firstQuarterInterest": 2031.25,
+      "firstAmortQuarterPrincipal": 10470.09,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 125000,
+      "totalInterestPaid": 14546.01,
+      "totalDebtService": 139546.01
+    },
+    "150000": {
+      "eqi": 6709.4,
+      "totalQuarters": 28,
+      "moratoriumQuartersCount": 2,
+      "firstQuarterInterest": 2700,
+      "firstAmortQuarterPrincipal": 4009.4,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 135000,
+      "totalInterestPaid": 44844.26,
+      "totalDebtService": 179844.26
+    },
+    "680000": {
+      "eqi": 30415.93,
+      "totalQuarters": 28,
+      "moratoriumQuartersCount": 2,
+      "firstQuarterInterest": 12240,
+      "firstAmortQuarterPrincipal": 18175.93,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 612000,
+      "totalInterestPaid": 203294.15,
+      "totalDebtService": 815294.15
+    },
+    "2500000": {
+      "eqi": 111823.27,
+      "totalQuarters": 28,
+      "moratoriumQuartersCount": 2,
+      "firstQuarterInterest": 45000,
+      "firstAmortQuarterPrincipal": 66823.27,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 2250000,
+      "totalInterestPaid": 747404.98,
+      "totalDebtService": 2997404.98
+    },
+    "5000000": {
+      "eqi": 223646.54,
+      "totalQuarters": 28,
+      "moratoriumQuartersCount": 2,
+      "firstQuarterInterest": 90000,
+      "firstAmortQuarterPrincipal": 133646.54,
+      "finalClosingBalance": 0,
+      "totalPrincipalPaid": 4500000,
+      "totalInterestPaid": 1494810.01,
+      "totalDebtService": 5994810.01
+    }
+  },
+  "eqiValues": {},
+  "eligibility": [
+    {
+      "isEligible": true,
+      "rejectionReasons": [],
+      "recommendedAlternatives": [],
+      "applicableTier": "MCF"
+    },
+    {
+      "isEligible": false,
+      "rejectionReasons": [
+        "Beneficiary must belong to Scheduled Caste (SC) community with valid caste certificate under MoSJE / NSFDC guidelines."
+      ],
+      "recommendedAlternatives": [
+        "Pradhan Mantri Mudra Yojana (PMMY) - Shishu/Kishore/Tarun for non-SC micro-enterprises.",
+        "PMEGP (Prime Minister Employment Generation Programme) - 15% to 35% margin money subsidy.",
+        "PM SVANidhi for urban/peri-urban micro-vendors."
+      ],
+      "applicableTier": null
+    },
+    {
+      "isEligible": false,
+      "rejectionReasons": [
+        "Annual family income (₹5,50,000) exceeds NSFDC statutory ceiling of ₹5,00,000 (effective 07 Jan 2026)."
+      ],
+      "recommendedAlternatives": [
+        "PMEGP - No upper income ceiling for eligible individuals.",
+        "PMMY (Mudra Scheme) - Commercial bank credit up to ₹10 Lakh without family income cap."
+      ],
+      "applicableTier": null
+    },
+    {
+      "isEligible": false,
+      "rejectionReasons": [
+        "Project cost (₹60,00,000) exceeds maximum NSFDC scheme limit of ₹50,00,000."
+      ],
+      "recommendedAlternatives": [
+        "NABARD / SIDBI MSME Term Loan or Stand-Up India Scheme (₹10L–₹100L)."
+      ],
+      "applicableTier": null
+    }
+  ],
+  "artisanFit": {
+    "D18": {
+      "withoutPMEGP": {
+        "isEligible": true,
+        "trade": "Tailor (Darzi) - Trade 17",
+        "exclusionReason": null,
+        "toolkitVoucher": 15000,
+        "stipendPerDay": 500,
+        "concessionalRate": 5,
+        "tranche1Limit": 100000,
+        "tranche2Limit": 200000
+      },
+      "withPMEGP": {
+        "isEligible": false,
+        "trade": "Tailor (Darzi) - Trade 17",
+        "exclusionReason": "Statutory exclusion: Beneficiary or family member availed PMEGP credit/subsidy within the past 5 years.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      }
+    },
+    "D19": {
+      "withoutPMEGP": {
+        "isEligible": true,
+        "trade": "Carpenter (Suthar) - Trade 1",
+        "exclusionReason": null,
+        "toolkitVoucher": 15000,
+        "stipendPerDay": 500,
+        "concessionalRate": 5,
+        "tranche1Limit": 100000,
+        "tranche2Limit": 200000
+      },
+      "withPMEGP": {
+        "isEligible": false,
+        "trade": "Carpenter (Suthar) - Trade 1",
+        "exclusionReason": "Statutory exclusion: Beneficiary or family member availed PMEGP credit/subsidy within the past 5 years.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      }
+    },
+    "D20": {
+      "withoutPMEGP": {
+        "isEligible": true,
+        "trade": "Blacksmith (Lohar) - Trade 3",
+        "exclusionReason": null,
+        "toolkitVoucher": 15000,
+        "stipendPerDay": 500,
+        "concessionalRate": 5,
+        "tranche1Limit": 100000,
+        "tranche2Limit": 200000
+      },
+      "withPMEGP": {
+        "isEligible": false,
+        "trade": "Blacksmith (Lohar) - Trade 3",
+        "exclusionReason": "Statutory exclusion: Beneficiary or family member availed PMEGP credit/subsidy within the past 5 years.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      }
+    },
+    "D21": {
+      "withoutPMEGP": {
+        "isEligible": true,
+        "trade": "Potter (Kumhar) - Trade 5",
+        "exclusionReason": null,
+        "toolkitVoucher": 15000,
+        "stipendPerDay": 500,
+        "concessionalRate": 5,
+        "tranche1Limit": 100000,
+        "tranche2Limit": 200000
+      },
+      "withPMEGP": {
+        "isEligible": false,
+        "trade": "Potter (Kumhar) - Trade 5",
+        "exclusionReason": "Statutory exclusion: Beneficiary or family member availed PMEGP credit/subsidy within the past 5 years.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      }
+    },
+    "D08": {
+      "withoutPMEGP": {
+        "isEligible": false,
+        "trade": "Not an artisanal trade",
+        "exclusionReason": "Domain is outside designated 18 PM Vishwakarma craft trades.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      },
+      "withPMEGP": {
+        "isEligible": false,
+        "trade": "Not an artisanal trade",
+        "exclusionReason": "Domain is outside designated 18 PM Vishwakarma craft trades.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      }
+    },
+    "D15": {
+      "withoutPMEGP": {
+        "isEligible": false,
+        "trade": "Not an artisanal trade",
+        "exclusionReason": "Domain is outside designated 18 PM Vishwakarma craft trades.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      },
+      "withPMEGP": {
+        "isEligible": false,
+        "trade": "Not an artisanal trade",
+        "exclusionReason": "Domain is outside designated 18 PM Vishwakarma craft trades.",
+        "toolkitVoucher": 0,
+        "concessionalRate": 0
+      }
+    }
+  },
+  "vernacularQuotes": {
+    "3 senkda": 36,
+    "2.5 senkda": 30,
+    "4 senkda": 48,
+    "5 senkda": 60,
+    "3 saikda": 36,
+    "3 per 100": 36
+  }
+}

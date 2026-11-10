@@ -1,55 +1,52 @@
-Ideate and plan the UI/UX architecture and design specifications for the SIH26091 platform (AI-Driven Hyper-Local Business Advisory & Financial Restructuring Platform for rural Scheduled Caste micro-entrepreneurs). This is a planning-only phase producing comprehensive UI/UX specifications, screen architectures, component hierarchies, design token systems, and user flows for a minimal, interactive, and alive public landing page and an extremely functional authenticated dashboard.
+Use gsd-ui-phase to build the front end. Build the production landing page and limited mockup dashboard for GraminAI (Hyper-Local Business Advisory & Concessional Credit Platform for Scheduled Caste rural micro-entrepreneurs, SIH 2026: SIH26091 — MoSJE / NSFDC) in `frontend/src/` with top-tier visual polish, editorial typography, high-refinement imagery, and smooth scroll interactions, following `gsd-ui-phase` workflow standards.
 
-Working directory: c:\Users\LENOVO\Desktop\IPL 2 Project Research
 Integrity mode: development
+
+Reference material:
+- Design reference: https://opportunity.waltonfamilyfoundation.org/
+- Video breakdown: `Access to Opportunity_ Gallup Research _ Walton Family Foundation - Brave 2026-11-10 03-01-07.mp4`
+- Prototype reference: `interactive_platform_prototype.html`
+- Core engine: `engine/nsfdc_calculator.py` and `frontend/src/engine.js`
+- Dossiers dataset: `data/dossiers_db.json`
 
 ## Requirements
 
-### R1. Public Landing Page UI/UX Specification ("Nuvo Rural Split-Hero" Direction)
-Plan and specify a minimal, interactive, alive, premium, and institutional public landing page introducing the mission, statutory schemes (NSFDC, PM Vishwakarma, PMEGP, PMMSY), 24 domain exploration preview (across 6 operational baskets: Agro-Processing, Rural Retail & Trade, Technical Services & Repair, Livestock & Allied Farming, Traditional Artisans/PM Vishwakarma, and Green Micro-Units), live mandi market pulse ticker, eligibility explainer, and registration / login gateway. The specification must define:
-- Split-screen hero layout:
-  - Left panel (~46% width): Tall rounded media panel featuring an atmospheric ambient living loop tailored to Rural Indian MSME/enterprise contexts, layered with floating translucent advisory/credit cards with soft depth (e.g., Total NSFDC Credit Limit ₹1,25,000 @ 6.5%, Lead-Bank DPR status, statutory margin ₹15,000 / 10.71%, Agmarknet spot price chip), subtle ambient floating particles, and bold typographic greeting.
-  - Right column: Calm, warm off-white surface with high-end editorial typography mixing structured sans (Instrument Sans / Inter) with elegant serif italics for focal terms, tight-leading headline, concise lede, bold primary CTA with micro-interaction, and light footer trust facts (MoSJE / NSFDC mandate, Lead Bank Scheme compliance, ₹0 hidden fees).
-- Information architecture for subsequent sections: 24-domain interactive browser by operational basket, statutory scheme comparison matrix, mandi price pulse ribbon, eligibility checker, and registration entry point.
+### R1. UI Design Phase Contract
+Execute the UI phase following `gsd-ui-phase` workflow standards. Establish the UI design specification covering editorial typography, high-refinement imagery composition, palette, and interactive states before implementing code.
 
-### R2. Authenticated Dashboard UI/UX Specification ("Glass Iris AI Financial OS" Direction)
-Plan and specify a deeply functional, minimal, and alive authenticated dashboard workspace for registered micro-entrepreneurs who have onboarded their enterprise idea. The specification must detail screen layouts, visual hierarchies, and interactive states for:
-- Left navigation rail: Grouped modular tool tiles (Overview, 24-Domain Simulator, NSFDC Amortization, Mode B Debt Restructuring, 1-Page DPR Studio, Regulatory Checklist).
-- Top utility bar: Breadcrumbs, active statutory scheme pill (e.g. "NSFDC MCF Active: 11 Quarters"), English / Hindi bilingual toggle, and live mandi price pulse.
-- Central functional workspace & smart composer: Prompts for voice and quick actions (Stress test cash flows, refinance moneylender debt, generate QR-verified DPR, check Udyam/pollution compliance), accompanied by an interactive glowing AI advisory core / status orb.
-- Analytical and operational modules:
-  1. Enterprise Viability & Solvency Simulator: Quarterly cash flow projections, lean month stress testing, and interactive DSCR gauges.
-  2. NSFDC Dual-Tier Credit & Debt Restructuring Engine: Full 11-quarter (Micro Credit Finance <= ₹1.40L @ 6.5%) and 26-quarter (Term Loan <= ₹50L @ 8.0%) amortization schedules, plus Mode B moneylender refinancing & cash flow liberation calculator.
-  3. Statutory Scheme Matching & 1-Page Lead-Bank Ready DPR Generator: Preview layout, statutory subsidy/margin computation, and QR code verification block.
-  4. Regulatory Compliance & Licensing Checklist: Step-by-step statutory progress tracking (Udyam, FSSAI, Pollution White Category, GST).
+### R2. High-Refinement Photography & Asset Integration
+Source or generate high-refinement photographic assets of real rural Indian Scheduled Caste micro-entrepreneurs (artisans, handloom weavers, agri-entrepreneurs) and rural harvest environments, integrating them directly into project assets (`frontend/public/` or `frontend/src/assets/`) with proper optimization.
 
-### R3. End-to-End User Flows & Navigation Architecture
-Map the complete end-to-end user journeys with emphasis on user flows:
-- Public visitor discovery -> 24-domain preview & scheme exploration -> Enterprise onboarding & registration gateway.
-- Authenticated user workspace navigation -> Invoking smart composer actions, interacting with the solvency waterfall, adjusting debt restructuring parameters, generating DPRs, and reviewing compliance milestones.
-- Contextual bilingual state transitions between English and Hindi across both landing page and dashboard views.
-
-### R4. Design Tokens, Oxford Typography, and Component Hierarchy
-Establish formal design token specifications (spacing scale, typography scale pairing structured sans with serif accents, warm off-white neutral surfaces, translucent glass layers with soft elevation, and status indicator palettes) and reusable component contracts adhering to Oxford interface design principles (clean, plain, polished, readable, uncluttered) and the "Glass Iris / Nuvo" design aesthetic.
+### R3. Production Landing Page (6 Scroll Scenes)
+Implement the production landing page in `frontend/src/` using Vite + React 19 + Tailwind CSS + Lucide React, GSAP ScrollTrigger, and Lenis smooth scrolling, featuring the 6 scenes:
+- Scene 1 (Pinned Hero Dispersion): Giant 4-line condensed serif text (`WHERE OPPORTUNITY TAKES ROOT` in Cinzel / Instrument Serif) overlaid with layered, high-refinement photo cards of real rural Indian entrepreneurs and small color accent blocks. On scroll scrub, pinned photo cards disperse outward to corners and scale down to cleanly reveal typography.
+- Scene 2 (Vertical Line Drop): Animated thin vertical line drawing downward with a terminal dot, unlocking chapter `[ 01 ]` with the thesis statement on statutory credit.
+- Scene 3 (Orbital Vortex): Multi-photo cluster flying inward to form an orbiting circular ring around `[ 02 ] What does opportunity mean today?`.
+- Scene 4 (Full-Bleed Immersion & Arc Gauge): Full-bleed high-res rural harvest photography with a glowing circular SVG radial arc gauge (animating to 67%), metric text, and action pill `02 / 04 OPEN DASHBOARD ↗`.
+- Scene 5 (Platform in 4 Pillars): 4 clean cards summarizing:
+  1. NSFDC Dual-Tier Credit (MCF ≤ ₹1.40L @ 6.5%, Term Loan up to ₹50L @ 8.0%)
+  2. 12-Month Solvency Simulator (August lean-month stress test)
+  3. Mode B Moneylender Debt Liberation (Refinancing 3-senkda debt)
+  4. 1-Page Lead-Bank DPR (RBI Lead Bank Scheme standard)
+- Scene 6 (SETO Minimal Dashboard Mockup): Replicate the SETO aesthetic at the end of the landing page:
+  * Diffused ambient canvas (`#D4D8DD` with warm peach/slate radial gradients).
+  * Rounded white 3-column container (`rounded-[28px]`, soft-neumorphic shadow).
+  * Left navigation rail with `✦ GraminAI` lockup, active white pill, collapsible `Advisory Tools ^`, and bottom user card ("Ramesh Kumar", SC · Income ≤ ₹5.00L, with "Statutory Verified" badge).
+  * Center workspace with top 4-pointed iridescent star SVG blossom, "Welcome, Ramesh! How can I help you today?", 3 quick action cards, and floating bottom command bar with mic and arrow.
+  * Right sidebar with "Recent scenarios", search, and history cards with avatars and image previews.
+  * Keep dashboard functionality strictly limited as a mockup per user instructions.
 
 ## Acceptance Criteria
 
-### Specification Completeness & Structure
-- [ ] UI/UX planning document (`UI_UX_PLAN.md` or `UI-SPEC.md`) is created in the repository.
-- [ ] Public Landing Page specification defines the split-screen hero layout (left media panel ~46% with floating credit cards, living ambient loop; right warm off-white editorial typography column) and all required public sections (mission, statutory schemes, 24 domains across 6 baskets, mandi ticker, eligibility explainer, registration gateway).
-- [ ] Authenticated Dashboard specification defines the complete workspace architecture: left navigation rail, top utility bar with bilingual toggle and scheme status pill, central smart composer with glowing AI status orb, and all 4 core analytical tool modules.
-- [ ] Simulator and restructuring specifications include layout definitions for the quarterly solvency waterfall, interactive DSCR gauges, 11/26 quarter amortization schedules, and Mode B moneylender debt refinancing calculator.
-- [ ] 1-Page DPR Studio specification details the layout for single-page bank-ready export with QR verification.
+### Build & Syntax Verification
+- [ ] `npm run build` executed in `frontend/` succeeds with exit code 0 and zero TypeScript/JSX/bundling errors.
+- [ ] All imported assets (images, fonts, stylesheets) resolve cleanly without broken paths or missing files.
 
-### User Flow & Interaction Design
-- [ ] End-to-end user flow diagrams/specifications document user transitions from landing page exploration through registration, onboarding, and dashboard tool execution.
-- [ ] Bilingual (English / Hindi) interaction guidelines, typography handling, and layout responsiveness are explicitly defined.
-
-### Design Tokens & Component Hierarchy
-- [ ] Design token definitions specify font pairings (structured sans + serif italics), color tokens (warm off-white backgrounds, translucent card surfaces, glowing accents), spacing units, and elevation rules.
-- [ ] Component contracts specify reusable UI elements (smart composer, navigation rail tiles, floating financial cards, metric gauges, and statutory status badges).
-
-## Verification Resources
-- Repository research and technical dossiers: `Deterministic_Financial_Engine_Spec.md`, `Mode_B_Debt_Restructuring_Refinancing_Engine_Dossier.md`, `Rural_MSME_Business_Taxonomy_Framework.md`, and `Regulatory_Compliance_Matrix.md`.
-- Design direction references: "Nuvo freelance-banking split hero" (adapted for rural Indian MSME) and "Glass Iris AI Financial OS".
-- Oxford interface guidelines (`oxfords`) and UI specification methodology (`gsd-ui-phase`).
+### Visual & Interactive Scene Verification
+- [ ] Scene 1 hero renders giant 4-line condensed serif typography (`WHERE OPPORTUNITY TAKES ROOT`) overlaid with layered photo cards; on scroll scrub via GSAP ScrollTrigger + Lenis, cards disperse to corners and scale down smoothly without jitter or layout shifts.
+- [ ] Scene 2 displays the vertical line draw animation with terminal dot unlocking chapter `[ 01 ]` and statutory credit thesis text.
+- [ ] Scene 3 animates multi-photo cluster inward into an orbiting circular formation around `[ 02 ] What does opportunity mean today?`.
+- [ ] Scene 4 displays full-bleed rural harvest photography with SVG radial arc gauge animating to 67%, metric display, and action pill `02 / 04 OPEN DASHBOARD ↗`.
+- [ ] Scene 5 displays the 4 platform pillars (NSFDC Dual-Tier Credit, 12-Month Solvency Simulator, Mode B Moneylender Debt Liberation, 1-Page Lead-Bank DPR) with clean card styling.
+- [ ] Scene 6 renders the SETO mockup dashboard with diffused `#D4D8DD` ambient canvas, rounded 3-column container (`rounded-[28px]`), left nav rail with user card, center workspace with 4-pointed iridescent star blossom and action cards, and right sidebar with recent scenarios.
+- [ ] Dashboard interactivity remains strictly limited to mockup interactions without unbuilt backend dependencies.

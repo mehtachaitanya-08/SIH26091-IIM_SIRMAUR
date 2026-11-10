@@ -1,0 +1,22 @@
+--- frontend/src/components/SetoDashboard.jsx
++++ frontend/src/components/SetoDashboard.jsx
+@@ -100,7 +100,7 @@
+     const monthlyBleed = Math.round(p * (apr / 100 / 12));
+ 
+     // Concessional 6.5% NSFDC Refinancing (Term Loan structure equivalent)
+-    const prototypeEmi = 1140; // Concessional monthly service
++    const prototypeEmi = calculateEMI(p, 6.5, 36);
+     const monthlyCashRelief = monthlyBleed - prototypeEmi;
+ 
+     const monthsActive = 16;
+@@ -679,7 +679,9 @@
+                   </div>
+                   <div className="flex justify-between pt-1 border-t border-emerald-200 font-bold">
+                     <span className="text-[#111311]">Net Monthly Cash Relief:</span>
+-                    <span className="text-[#0E7A53] font-mono-num">+{formatINR(debtRefinanceData.monthlyCashRelief)} / month</span>
++                    <span className={`font-mono-num ${debtRefinanceData.monthlyCashRelief >= 0 ? 'text-[#0E7A53]' : 'text-amber-600'}`}>
++                      {debtRefinanceData.monthlyCashRelief >= 0 ? '+' : ''}{formatINR(debtRefinanceData.monthlyCashRelief)} / month
++                    </span>
+                   </div>
+                 </div>
+ 

@@ -1,50 +1,56 @@
 # Original User Request
 
-## Initial Request — 2026-11-07T13:00:25Z
+## Initial Request — 2026-11-09T21:58:52Z
 
-# Mission: Deep Research Sprint — 9 Parallel Workstreams
+Use gsd-ui-phase to build the front end. Build the production landing page and limited mockup dashboard for GraminAI (Hyper-Local Business Advisory & Concessional Credit Platform for Scheduled Caste rural micro-entrepreneurs, SIH 2026: SIH26091 — MoSJE / NSFDC) in `frontend/src/` with top-tier visual polish, editorial typography, high-refinement imagery, and smooth scroll interactions, following `gsd-ui-phase` workflow standards.
 
-You are coordinating a comprehensive pre-build research sprint for a Smart India Hackathon (SIH) project: **"AI-Driven Hyper-Local Business Advisory and Financial Structuring Assistant for Rural Micro-Entrepreneurs"**, focused on the niche of **Rural Agro-Processing & Food Value-Addition Micro-Enterprises** (oil expellers, mini flour/dal mills, spice grinding units, solar dairy chilling).
+Integrity mode: development
 
-## Context
-The team has already completed:
-- Macro market sizing (TAM/SAM/SOM), credit gap analysis
-- 18+ competitor deep profiles with whitespace matrix
-- 5-tier AI architecture design with failure modes
-- Deterministic financial engine with Python implementation
-- Technical architecture & data pipeline spec
-- WhatsApp conversational flow and DPR wireframe
-- Sample bank-ready 1-page DPR (bilingual)
-- 12 grounded citations in ledger
+Reference material:
+- Design reference: https://opportunity.waltonfamilyfoundation.org/
+- Video breakdown: `Access to Opportunity_ Gallup Research _ Walton Family Foundation - Brave 2026-11-10 03-01-07.mp4`
+- Prototype reference: `interactive_platform_prototype.html`
+- Core engine: `engine/nsfdc_calculator.py` and `frontend/src/engine.js`
+- Dossiers dataset: `data/dossiers_db.json`
 
-All existing research is at: `c:\Users\LENOVO\Desktop\IPL 2 Project Research`
+## Requirements
 
-## Your Task
-Launch **9 parallel research agents** to fill the remaining gaps. Each agent should conduct deep web research and produce a comprehensive, well-structured markdown report saved to the workspace directory.
+### R1. UI Design Phase Contract
+Execute the UI phase following `gsd-ui-phase` workflow standards. Establish the UI design specification covering editorial typography, high-refinement imagery composition, palette, and interactive states before implementing code.
 
-### Workstream 1: FSSAI & Regulatory Compliance Deep-Dive
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\Regulatory_Compliance_Matrix.md`
+### R2. High-Refinement Photography & Asset Integration
+Source or generate high-refinement photographic assets of real rural Indian Scheduled Caste micro-entrepreneurs (artisans, handloom weavers, agri-entrepreneurs) and rural harvest environments, integrating them directly into project assets (`frontend/public/` or `frontend/src/assets/`) with proper optimization.
 
-### Workstream 2: Machinery & Equipment Vendor Ecosystem
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\Machinery_Vendor_Database.md`
+### R3. Production Landing Page (6 Scroll Scenes)
+Implement the production landing page in `frontend/src/` using Vite + React 19 + Tailwind CSS + Lucide React, GSAP ScrollTrigger, and Lenis smooth scrolling, featuring the 6 scenes:
+- Scene 1 (Pinned Hero Dispersion): Giant 4-line condensed serif text (`WHERE OPPORTUNITY TAKES ROOT` in Cinzel / Instrument Serif) overlaid with layered, high-refinement photo cards of real rural Indian entrepreneurs and small color accent blocks. On scroll scrub, pinned photo cards disperse outward to corners and scale down to cleanly reveal typography.
+- Scene 2 (Vertical Line Drop): Animated thin vertical line drawing downward with a terminal dot, unlocking chapter `[ 01 ]` with the thesis statement on statutory credit.
+- Scene 3 (Orbital Vortex): Multi-photo cluster flying inward to form an orbiting circular ring around `[ 02 ] What does opportunity mean today?`.
+- Scene 4 (Full-Bleed Immersion & Arc Gauge): Full-bleed high-res rural harvest photography with a glowing circular SVG radial arc gauge (animating to 67%), metric text, and action pill `02 / 04 OPEN DASHBOARD ↗`.
+- Scene 5 (Platform in 4 Pillars): 4 clean cards summarizing:
+  1. NSFDC Dual-Tier Credit (MCF ≤ ₹1.40L @ 6.5%, Term Loan up to ₹50L @ 8.0%)
+  2. 12-Month Solvency Simulator (August lean-month stress test)
+  3. Mode B Moneylender Debt Liberation (Refinancing 3-senkda debt)
+  4. 1-Page Lead-Bank DPR (RBI Lead Bank Scheme standard)
+- Scene 6 (SETO Minimal Dashboard Mockup): Replicate the SETO aesthetic at the end of the landing page:
+  * Diffused ambient canvas (`#D4D8DD` with warm peach/slate radial gradients).
+  * Rounded white 3-column container (`rounded-[28px]`, soft-neumorphic shadow).
+  * Left navigation rail with `✦ GraminAI` lockup, active white pill, collapsible `Advisory Tools ^`, and bottom user card ("Ramesh Kumar", SC · Income ≤ ₹5.00L, with "Statutory Verified" badge).
+  * Center workspace with top 4-pointed iridescent star SVG blossom, "Welcome, Ramesh! How can I help you today?", 3 quick action cards, and floating bottom command bar with mic and arrow.
+  * Right sidebar with "Recent scenarios", search, and history cards with avatars and image previews.
+  * Keep dashboard functionality strictly limited as a mockup per user instructions.
 
-### Workstream 3: State-Specific ODOP & PMFME Mapping
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\ODOP_PMFME_State_Mapping.md`
+## Acceptance Criteria
 
-### Workstream 4: FPO Ecosystem & Aggregation Models
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\FPO_Ecosystem_Analysis.md`
+### Build & Syntax Verification
+- [ ] `npm run build` executed in `frontend/` succeeds with exit code 0 and zero TypeScript/JSX/bundling errors.
+- [ ] All imported assets (images, fonts, stylesheets) resolve cleanly without broken paths or missing files.
 
-### Workstream 5: User Persona & Behavioral Research
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\User_Persona_Ethnographic_Report.md`
-
-### Workstream 6: Impact Metrics & M&E Framework
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\Impact_Measurement_Framework.md`
-
-### Workstream 7: Technology Stack Benchmarking
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\Technology_Stack_Benchmark.md`
-
-### Workstream 8: Partnership & Distribution Channel Strategy
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\Partnership_Channel_Strategy.md`
-
-### Workstream 9: Academic Literature Deep Sweep
-**Output file:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\Academic_Literature_Review.md`
+### Visual & Interactive Scene Verification
+- [ ] Scene 1 hero renders giant 4-line condensed serif typography (`WHERE OPPORTUNITY TAKES ROOT`) overlaid with layered photo cards; on scroll scrub via GSAP ScrollTrigger + Lenis, cards disperse to corners and scale down smoothly without jitter or layout shifts.
+- [ ] Scene 2 displays the vertical line draw animation with terminal dot unlocking chapter `[ 01 ]` and statutory credit thesis text.
+- [ ] Scene 3 animates multi-photo cluster inward into an orbiting circular formation around `[ 02 ] What does opportunity mean today?`.
+- [ ] Scene 4 displays full-bleed rural harvest photography with SVG radial arc gauge animating to 67%, metric display, and action pill `02 / 04 OPEN DASHBOARD ↗`.
+- [ ] Scene 5 displays the 4 platform pillars (NSFDC Dual-Tier Credit, 12-Month Solvency Simulator, Mode B Moneylender Debt Liberation, 1-Page Lead-Bank DPR) with clean card styling.
+- [ ] Scene 6 renders the SETO mockup dashboard with diffused `#D4D8DD` ambient canvas, rounded 3-column container (`rounded-[28px]`), left nav rail with user card, center workspace with 4-pointed iridescent star blossom and action cards, and right sidebar with recent scenarios.
+- [ ] Dashboard interactivity remains strictly limited to mockup interactions without unbuilt backend dependencies.

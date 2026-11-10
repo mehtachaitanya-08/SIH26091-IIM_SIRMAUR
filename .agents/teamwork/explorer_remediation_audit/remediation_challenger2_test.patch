@@ -1,0 +1,29 @@
+--- frontend/test/challenger2_empirical_test.js
++++ frontend/test/challenger2_empirical_test.js
+@@ -221,13 +221,18 @@
+     assert.strictEqual(hasDynamicFilter, false, 'Expected static scenario list (CONFIRMED DEFECT: search bar does not filter items)');
+   });
+ 
+-  it('[DEFECT IDENTIFIED] Hardcoded Prototype EMI in Debt Refinance Slider Viewport', () => {
+-    assert.ok(setoCode.includes('const prototypeEmi = 1140;'), 'SetoDashboard.jsx contains hardcoded prototypeEmi = 1140');
++  it('[REMEDIATED] Dynamic EMI in Debt Refinance Slider Viewport via calculateEMI', () => {
++    assert.ok(setoCode.includes('calculateEMI(p, 6.5, 36)'), 'SetoDashboard.jsx must invoke calculateEMI(p, 6.5, 36)');
++    assert.strictEqual(setoCode.includes('const prototypeEmi = 1140;'), false, 'Hardcoded mock 1140 must be removed');
+     
+-    // When slider changes debtPrincipal to ₹20,000 or ₹3,00,000, prototypeEmi remains 1140!
+-    // For p = 20000, monthlyBleed = 600. Relief = 600 - 1140 = -540 (negative relief!)
+-    const pLow = 20000;
+-    const bleedLow = Math.round(pLow * (36 / 100 / 12)); // 600
+-    const reliefLow = bleedLow - 1140; // -540
+-    assert.strictEqual(reliefLow, -540, 'At ₹20,000 principal slider, fixed ₹1,140 EMI causes negative relief');
++    // Dynamic calculation verification across slider bounds
++    const emiLow = calculateEMI(20000, 6.5, 36);
++    assert.strictEqual(emiLow, 613, 'At ₹20,000 principal, 6.5% 36m EMI must be ₹613');
++    
++    const emiDefault = calculateEMI(120000, 6.5, 36);
++    assert.strictEqual(emiDefault, 3678, 'At ₹120,000 principal, 6.5% 36m EMI must be ₹3,678');
++    
++    const emiHigh = calculateEMI(300000, 6.5, 36);
++    assert.strictEqual(emiHigh, 9195, 'At ₹300,000 principal, 6.5% 36m EMI must be ₹9,195');
+   });
+ 
