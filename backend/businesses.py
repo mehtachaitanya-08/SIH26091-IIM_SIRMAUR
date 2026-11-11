@@ -2,7 +2,9 @@
 Verified business data (data/businesses/Dxx.json) and the yes/no advice rules.
 
 - The data files are built from Person C's verified dossiers and checked by backend/check_data.py.
-- Only the businesses in VERIFIED are served; the rest of D01-D24 answer "not_yet_verified".
+- All 24 businesses are verified (team decision: the dossier .md files are the data; their figures are
+  served by backend/dossier_figures.py). The 7 in VERIFIED (named for history: they have a checked
+  data file) also have yes/no questions and advice rules; the other 17 have none yet.
 - Nothing here reads the team's data/dossiers_db.json.
 """
 
@@ -16,7 +18,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 DATA = Path(__file__).resolve().parents[1] / "data" / "businesses"
 
 ALL_CODES = [f"D{i:02d}" for i in range(1, 25)]
-VERIFIED = ["D15", "D16", "D17", "D19", "D20", "D21", "D22"]
+VERIFIED = ["D15", "D16", "D17", "D19", "D20", "D21", "D22"]  # have a data file with yes/no questions
+NO_QUESTIONS = "No yes/no questions have been built for this business yet; its dossier figures are available."
 
 # Keys used only by the checker; never sent to the app.
 INTERNAL_KEYS = {"line", "tag_line", "same_as", "text_numbers", "cell", "dossier", "quote_line"}
@@ -64,13 +67,13 @@ def listing() -> dict:
         if code in VERIFIED:
             rows.append({"code": code, "status": "verified", "name": _load(code)["name"]})
         else:
-            rows.append({"code": code, "status": "not_yet_verified"})
+            rows.append({"code": code, "status": "verified", "questions_available": False})
     return {"businesses": rows}
 
 
 def detail(code: str) -> dict:
     if not check_code(code):
-        return {"code": code, "status": "not_yet_verified"}
+        return {"code": code, "status": "verified", "questions": [], "note": NO_QUESTIONS}
     d = _load(code)
     return {
         "code": d["code"],
@@ -146,7 +149,10 @@ def _run(rule, answers):
 
 def advice(code: str, answers: dict) -> dict:
     if not check_code(code):
-        return {"code": code, "status": "not_yet_verified"}
+        if answers:
+            raise BadAnswer(f"{code} has no yes/no questions yet, so no answers are accepted")
+        return {"code": code, "status": "verified", "results": [], "unanswered": [], "questions": [],
+                "note": NO_QUESTIONS}
     d = _load(code)
     questions = {q["id"]: q for q in d["questions"]}
     for k, v in answers.items():

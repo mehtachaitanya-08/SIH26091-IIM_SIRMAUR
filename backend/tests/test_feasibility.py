@@ -62,9 +62,10 @@ def test_d20_contains_the_red_pickling_row_and_sources():
 
 
 @pytest.mark.parametrize("code", ["D01", "D18"])
-def test_unverified(code):
+def test_built_from_the_dossier(code):
+    # team decision: all 24 verified; without a checked data file the report is copied from the dossier
     r = client.get(f"/api/feasibility/{code}")
-    assert r.status_code == 200 and r.json() == {"code": code, "status": "not_yet_verified"}
+    assert r.status_code == 200 and r.json()["status"] == "verified" and r.json()["sections"]
 
 
 def test_unknown_code_404_his_format():

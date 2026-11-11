@@ -44,9 +44,9 @@ def test_not_eligible_still_a_pdf_with_reason():
     assert "Not eligible" in t and "₹5.00 Lakhs" in t
 
 
-def test_unverified_business_loan_only():
+def test_business_without_questions_still_gets_loan_and_dossier_figures():
     _, t = text_of(dpr({"code": "D18", "projectCost": 140000, "familyIncome": 100000, "isSc": True}))
-    assert "not yet verified" in t and "₹1,25,000" in t
+    assert "not yet verified" not in t and "₹1,25,000" in t and "D18 dossier" in t
 
 
 @pytest.mark.parametrize("body,status", [

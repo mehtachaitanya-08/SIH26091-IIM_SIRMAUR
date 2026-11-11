@@ -119,8 +119,8 @@ def health():
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "engines": {
             "nsfdc_calculator": "verified (backend/loan.py)",
-            "dossiers": "verified (data/businesses)",
-            "verified_dossiers": len(businesses.VERIFIED),
+            "dossiers": "verified (research_dossiers .md files, team decision; checked figures in backend/dossier_figures.py)",
+            "verified_dossiers": len(NAMES),
             "total_dossiers": len(NAMES),
         },
     }
@@ -152,20 +152,40 @@ def _is_sc(body, notes):
 
 
 def _row(code):
-    return {"code": code, "name": NAMES[code], "title": NAMES[code],
-            "status": "verified" if code in businesses.VERIFIED else "not_yet_verified"}
+    return {"code": code, "name": NAMES[code], "title": NAMES[code], "status": "verified",
+            "questionsAvailable": code in businesses.VERIFIED}
+
+
+_CHECKER_ONLY = {"line", "as_written", "source_tag"}  # used to check figures against the dossier; never sent
+
+
+def _public(x):
+    if isinstance(x, dict):
+        return {k: _public(v) for k, v in x.items() if k not in _CHECKER_ONLY}
+    if isinstance(x, list):
+        return [_public(v) for v in x]
+    return x
+
+
+def _figures(code):
+    from backend import dossier_figures  # imported here: dossier_figures itself imports this module
+    return _public(dossier_figures.figures(code))
 
 
 @router.get("/api/dossiers")
 def dossiers():
-    rows = [_row(c) for c in businesses.ALL_CODES]
+    rows = []
+    for c in businesses.ALL_CODES:
+        f = _figures(c)
+        rows.append(dict(_row(c), tiers=[{"label": t["label"], "project_cost": t["project_cost"]} for t in f["tiers"]]))
     return {
         "count": len(rows),
         "dossiers": rows,
         "metadata": {
-            "verified": list(businesses.VERIFIED),
-            "note": "Project cost, running cost, sales and seasonality are NOT FOUND in the verified "
-                    "dossiers for a village-size unit, so none are sent.",
+            "verified": list(businesses.ALL_CODES),
+            "withQuestions": list(businesses.VERIFIED),
+            "note": "Figures are from each business's research dossier (research_dossiers/), tagged '<code> dossier'. "
+                    "Full figures: GET /api/dossiers/{code}.",
         },
     }
 
@@ -175,10 +195,9 @@ def dossier(code: str):
     code = code.strip().upper()
     if code not in NAMES:
         return _error(f"Dossier '{code}' not found", 404, details={"availableCodes": list(NAMES)})
-    if code not in businesses.VERIFIED:
-        return _row(code)
+    f = _figures(code)
+    out = dict(_row(code), tiers=f["tiers"], seasonality=f["seasonality"], dossier=f["dossier"])
     d = businesses.detail(code)
-    out = _row(code)
     out.update({k: v for k, v in d.items() if k not in ("code", "status", "name")})
     return out
 

@@ -237,16 +237,18 @@ def test_list_all_24():
     for r in rows:
         if r["code"] in VERIFIED:
             assert r["status"] == "verified" and r["name"]
-        else:
-            assert r == {"code": r["code"], "status": "not_yet_verified"}
+        else:  # team decision: all 24 dossiers are verified; these have no yes/no questions yet
+            assert r == {"code": r["code"], "status": "verified", "questions_available": False}
 
 
 @pytest.mark.parametrize("code", ["D01", "D18"])
-def test_unverified_shows_no_data(code):
-    assert client.get(f"/businesses/{code}").json() == {"code": code, "status": "not_yet_verified"}
+def test_no_questions_yet(code):
+    # team decision: verified (dossier figures), but no yes/no questions built yet
+    assert client.get(f"/businesses/{code}").json() == {"code": code, "status": "verified", "questions": [],
+                                                        "note": businesses.NO_QUESTIONS}
     r = client.post(f"/businesses/{code}/advice", json={"answers": {}})
     assert r.status_code == 200
-    assert r.json() == {"code": code, "status": "not_yet_verified"}
+    assert r.json()["status"] == "verified" and r.json()["results"] == []
 
 
 @pytest.mark.parametrize("code", ["D99", "d20", "D0", "20"])

@@ -26,7 +26,7 @@ from pathlib import Path
 import httpx
 from fastapi import APIRouter, Request
 
-from backend import businesses, feasibility, loan
+from backend import businesses, dossier_figures, feasibility, loan
 from backend.compat import NAMES, _body, _error, _whole_rupees
 from backend.schemas import LoanRequest
 
@@ -46,7 +46,7 @@ Your job: find the user's business, ask that business's yes/no questions, work o
 Hard rules:
 1. NEVER state a number (amount, rate, count, year, percentage) unless it appears in a tool result in this conversation or the user said it. Do not do arithmetic yourself. If you need a figure, call a tool.
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
-3. Verified businesses are listed by list_businesses with status "verified". For any other business, say its details are "not yet verified", but you can still calculate the NSFDC loan (the loan rules do not depend on the business).
+3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so.
 4. Use question ids and answer choices exactly as get_questions returns them.
 5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy.
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
@@ -58,9 +58,36 @@ Hard rules:
 # ---------------------------------------------------------------------------
 
 def _t_list_businesses():
-    return {"businesses": [{"code": c, "name": NAMES[c],
-                            "status": "verified" if c in businesses.VERIFIED else "not_yet_verified"}
+    return {"businesses": [{"code": c, "name": NAMES[c], "status": "verified",
+                            "has_questions": c in businesses.VERIFIED}
                            for c in businesses.ALL_CODES]}
+
+
+# Keys only for checking figures against the dossier: never sent to the model (line numbers would
+# otherwise become "allowed" numbers for the number guard).
+_HIDDEN = {"line", "as_written", "source_tag", "dossier", "raw"}
+
+
+def _public(x):
+    if isinstance(x, dict):
+        return {k: _public(v) for k, v in x.items() if k not in _HIDDEN}
+    if isinstance(x, list):
+        return [_public(v) for v in x]
+    return x
+
+
+def _t_dossier_figures(code, project_cost=None):
+    code = str(code).strip().upper()
+    if code not in NAMES:
+        return {"error": f"unknown code {code}"}
+    f = dossier_figures.figures(code)
+    if project_cost is None:
+        return _public({"code": code, "name": NAMES[code], "tiers": f["tiers"], "seasonality": f["seasonality"]})
+    notes = []
+    cost = _whole_rupees(project_cost, "project_cost", notes)
+    out = dossier_figures.cashflow(code, LoanRequest(project_cost=cost, is_sc=True, annual_family_income=0))
+    out["assumptions"] = notes + out.get("assumptions", [])
+    return _public(out)
 
 
 def _t_business_summary(code):
@@ -68,7 +95,9 @@ def _t_business_summary(code):
     if code not in NAMES:
         return {"error": f"unknown code {code}"}
     if code not in businesses.VERIFIED:
-        return {"code": code, "name": NAMES[code], "status": "not_yet_verified"}
+        f = dossier_figures.figures(code)
+        return _public({"code": code, "name": NAMES[code], "status": "verified", "questions": [],
+                        "tiers": [{"label": t["label"], "project_cost": t["project_cost"]} for t in f["tiers"]]})
     d = businesses._load(code)
     return {"code": code, "name": NAMES[code], "description": d["name"], "status": "verified",
             "sections": [s["title"] for s in d["sections"]],
@@ -77,8 +106,10 @@ def _t_business_summary(code):
 
 def _t_get_questions(code):
     code = str(code).strip().upper()
+    if code not in NAMES:
+        return {"code": code, "status": "unknown"}
     if code not in businesses.VERIFIED:
-        return {"code": code, "status": "not_yet_verified" if code in NAMES else "unknown"}
+        return {"code": code, "questions": [], "note": businesses.NO_QUESTIONS}
     return {"code": code, "questions": businesses.detail(code)["questions"]}
 
 
@@ -171,13 +202,16 @@ TOOLS = {
     "calculate_loan": (_t_calculate_loan, "NSFDC eligibility and loan for a project cost, family income and SC status.",
                        {"project_cost": {"type": "number"}, "family_income": {"type": "number"},
                         "is_sc": {"type": "boolean"}}),
+    "dossier_figures": (_t_dossier_figures, "A business's dossier figures: sizes with project cost, surplus, the dossier's own "
+                        "cash-flow cover (DSCR) and season. Give project_cost to get the matching (or nearest) size.",
+                        {"code": {"type": "string"}, "project_cost": {"type": "number"}}),
     "feasibility": (_t_feasibility, "Feasibility report summary (sections and gaps) for a verified business.",
                     {"code": {"type": "string"}}),
     "dpr_link": (_t_dpr_link, "Prepare the 1-page DPR download for the user.",
                  {"code": {"type": "string"}, "project_cost": {"type": "number"}, "family_income": {"type": "number"},
                   "is_sc": {"type": "boolean"}, "answers": {"type": "object"}}),
 }
-REQUIRED = {"business_summary": ["code"], "get_questions": ["code"], "run_advice": ["code"],
+REQUIRED = {"dossier_figures": ["code"], "business_summary": ["code"], "get_questions": ["code"], "run_advice": ["code"],
             "calculate_loan": ["project_cost", "family_income", "is_sc"], "feasibility": ["code"],
             "dpr_link": ["code", "project_cost", "family_income", "is_sc"]}
 
@@ -295,6 +329,16 @@ def _plain_summary(tool_results):
             lines += [x["text"] for x in r.get("reasons", [])]
         elif t["tool"] == "run_advice":
             lines += [x["text"] for x in r.get("results", []) if x.get("status") == "result"]
+        elif t["tool"] == "dossier_figures" and r.get("tier"):
+            from backend.dpr import inr
+            pc = r["tier"]["project_cost"]
+            if pc.get("value"):
+                lines.append(f"{r['code']} dossier, {r['tier']['label']}: project cost {inr(pc['value'])}.")
+            if r.get("status") == "ok":
+                yrs = [f"Year {y['year']} {y['value']}" for y in r["dscr"]["years"] if y.get("value") is not None]
+                lines.append(f"The dossier's own cash-flow cover (DSCR): {', '.join(yrs)}.")
+            elif r.get("reason"):
+                lines.append(f"Cash-flow cover: NOT FOUND ({r['reason']})")
     if not lines:
         lines = ["I can only give figures that the server has calculated. Please tell me your business and project cost."]
     return " ".join(lines)

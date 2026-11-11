@@ -22,7 +22,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
-from backend import businesses, feasibility, loan
+from backend import businesses, dossier_figures, feasibility, loan
 from backend.compat import NAMES, _body, _error, _validation_message, _whole_rupees
 from backend.schemas import LoanRequest
 
@@ -107,13 +107,49 @@ class _Page:
         self.y -= 2
 
 
+def _dossier_block(pg, code, req):
+    """Section 4: the dossier's figures for the size matching the project cost (or the nearest, ASSUMED)."""
+    tag = f"[{code} dossier]"
+    pg.heading("4. Dossier figures for this business")
+    out = dossier_figures.cashflow(code, req)
+    tier = out.get("tier")
+    if tier is None:
+        pg.text(f"Project cost by size: NOT FOUND. {out['reason']} {tag}", size=7.5, indent=4)
+    else:
+        sizes = "; ".join(f"{t['label']}: " + (inr(t['project_cost']['value']) if t['project_cost'].get('value') else "NOT FOUND")
+                          for t in dossier_figures.figures(code)["tiers"])
+        pg.text(f"Sizes in the dossier: {sizes} {tag}", size=7.5, indent=4)
+        pg.text(f"Size used: {tier['label']} ({inr(tier['project_cost']['value'])}) {tag}", size=7.5, indent=4)
+        for a in out["assumptions"]:
+            pg.text(f"{a['text']} [{a['tag']}]", size=7.5, indent=4)
+        s = tier["surplus"]
+        if s.get("value") is not None:
+            per = "a year (Year 3, stabilised)" if s["period"] == "year" else "a month"
+            pg.text(f"Surplus before loan repayments: {inr(s['value'])} {per} {tag}", size=7.5, indent=4)
+        else:
+            pg.text(f"Surplus before loan repayments: NOT FOUND {tag}", size=7.5, indent=4)
+        if out.get("status") == "ok":
+            yrs = ", ".join(f"Year {y['year']}: " + (f"{y['value']:.2f}" if y.get("value") is not None else "NOT FOUND")
+                            for y in out["dscr"]["years"])
+            pg.text(f"Cash-flow cover (DSCR) as printed in the dossier: {yrs} {tag}. It uses the dossier's own "
+                    f"loan instalment, which can differ from section 3.", size=7.5, indent=4)
+        else:
+            pg.text(f"Cash-flow cover (DSCR): NOT FOUND. {out.get('reason', '')} {tag}", size=7.5, indent=4)
+    season = dossier_figures.figures(code)["seasonality"]
+    if season.get("status") == "NOT FOUND":
+        pg.text(f"Season pattern: NOT FOUND {tag}", size=7.5, indent=4)
+    else:
+        low = sorted(season["months"], key=lambda m: m["value"])[:3]
+        pg.text("Leanest months: " + ", ".join(f"{m['month']} ({m['value']:.2f})" for m in low) + f" {tag}", size=7.5, indent=4)
+
+
 class PageOverflow(RuntimeError):
     pass
 
 
 def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
-    verified = businesses.check_code(code)  # raises UnknownCode
-    adv = businesses.advice(code, answers) if verified else None   # raises BadAnswer
+    has_rules = businesses.check_code(code)  # raises UnknownCode; True = has yes/no questions
+    adv = businesses.advice(code, answers)   # raises BadAnswer (the 17 without questions accept no answers)
     out = loan.build_loan(req)
 
     buf = io.BytesIO()
@@ -124,14 +160,13 @@ def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
     pg.text(f"Detailed Project Report (1 page) — {NAMES[code]} ({code})", size=13, bold=True)
     pg.text(f"Prepared {date.today().isoformat()} by the GraminAI advisory server. Advisory document only: "
             f"this is not a loan sanction. Tags: [S#] = official source (list below), CALCULATED = worked out "
-            f"from tagged figures, ASSUMED = our stated assumption, USER INPUT = entered by the applicant.", size=7.5)
+            f"from tagged figures, ASSUMED = our stated assumption, USER INPUT = entered by the applicant, "
+            f"{code} dossier = figure from the team's research dossier for this business.", size=7.5)
 
     pg.heading("1. Applicant and business")
     if applicant:
         pg.text(f"Applicant: {applicant} [USER INPUT]")
-    pg.text(f"Business: {NAMES[code]} ({code})" + (f" — {businesses._load(code)['name']}" if verified else ""))
-    if not verified:
-        pg.text("Business details: not yet verified. Only the NSFDC loan figures below apply.", bold=True)
+    pg.text(f"Business: {NAMES[code]} ({code})" + (f" — {businesses._load(code)['name']}" if has_rules else ""))
     pg.text(f"Scheduled Caste: {'yes' if req.is_sc else 'no'} [USER INPUT, self-declared; certificate to be shown to the SCA]"
             f"   ·   Annual family income: {inr(req.annual_family_income)} [USER INPUT]"
             f"   ·   Project cost: {inr(req.project_cost)} [USER INPUT]")
@@ -174,9 +209,11 @@ def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
         for w in out["warnings"]:
             pg.text(f"Warning: {w['text']} {_t(w['tag'])}", size=7.5, indent=4)
 
-    pg.heading("4. Checks for this business")
-    if adv is None:
-        pg.text("Not yet verified: no business checks available.")
+    _dossier_block(pg, code, req)
+
+    pg.heading("5. Checks for this business")
+    if not has_rules:
+        pg.text(businesses.NO_QUESTIONS, size=7.5)
     else:
         done = [r for r in adv["results"] if r["status"] == "result"]
         if not done:
@@ -190,18 +227,18 @@ def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
         for r in dk:
             pg.text(f"• You said 'don't know': {r['ask']}", size=7.5, indent=4)
 
-    if verified:
-        g = feasibility.gaps(code)
-        pg.heading(f"5. Gaps: {len(g)} items NOT FOUND or VENDOR QUOTE NEEDED in official sources")
-        for x in g[:MAX_GAPS_SHOWN]:
-            pg.text(f"• [{x['section']}] {_cut(_plain(x['reason']), 150)}", size=7, indent=4)
-        if len(g) > MAX_GAPS_SHOWN:
-            pg.text(f"…and {len(g) - MAX_GAPS_SHOWN} more: see the feasibility report (/api/feasibility/{code}).", size=7, indent=4)
+    g = feasibility.report(code)["gaps"]
+    pg.heading(f"6. Gaps: {len(g)} items NOT FOUND or still open in the dossier")
+    for x in g[:MAX_GAPS_SHOWN]:
+        pg.text(f"• [{x['section']}] {_cut(_plain(x['reason']), 150)}", size=7, indent=4)
+    if len(g) > MAX_GAPS_SHOWN:
+        pg.text(f"…and {len(g) - MAX_GAPS_SHOWN} more: see the feasibility report (/api/feasibility/{code}).", size=7, indent=4)
 
     pg.heading("Sources")
     s1 = out["sources"]["[S1]"]
     pg.text(f"[S1] {s1['document']} — {s1['url']} ({s1['note']})", size=7)
-    if verified:
+    pg.text(f"{code} dossier: {dossier_figures.figures(code)['dossier']} (team research dossier).", size=7)
+    if has_rules:
         used = {e["tag"] for r in (adv["results"] if adv else []) if r["status"] == "result" for e in r["evidence"]}
         for s in businesses._load(code)["sources"]:
             if s["tag"] in used and s["tag"] != "[S1]":

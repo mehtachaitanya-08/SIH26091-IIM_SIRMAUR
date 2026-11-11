@@ -141,11 +141,13 @@ def test_bad_tool_name_or_args_are_reported_to_model_not_crash(fake):
     assert len(errs) == 2
 
 
-def test_unverified_business_says_so(fake):
-    fake([call("business_summary", code="D18"), say("Tailoring is not yet verified, but I can still work out the NSFDC loan.")])
+def test_business_without_questions_gives_its_dossier_sizes(fake):
+    # team decision: all 24 verified; D18 has dossier figures but no yes/no questions yet
+    fake([call("business_summary", code="D18"), say("Tailoring has no yes/no questions yet.")])
     d = ask("I am a tailor")
     t = next(t for t in d["tool_results"] if t["tool"] == "business_summary")
-    assert t["result"]["status"] == "not_yet_verified"
+    assert t["result"]["status"] == "verified" and t["result"]["questions"] == []
+    assert "tiers" in t["result"]
 
 
 def test_advice_tool_runs_rules(fake):

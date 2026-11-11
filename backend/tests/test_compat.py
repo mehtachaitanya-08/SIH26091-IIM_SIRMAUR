@@ -69,11 +69,14 @@ def test_dossiers_list_24_named_no_invented_numbers():
     for r in rows:
         assert r["name"] and isinstance(r["name"], str)
         assert not (INVENTED_KEYS & set(r)), r
-    assert sorted(r["code"] for r in rows if r["status"] == "verified") == VERIFIED
+        assert r["status"] == "verified"  # team decision: all 24 dossiers are verified
+        assert all(t["project_cost"].get("tag", "").endswith("dossier") or t["project_cost"].get("status") == "NOT FOUND"
+                   for t in r["tiers"]), r
+    assert sorted(r["code"] for r in rows if r["questionsAvailable"]) == VERIFIED
     by = {r["code"]: r for r in rows}
     assert by["D20"]["name"] == "Metal Smithy"
     assert by["D01"]["name"] == "Village FMCG Retail"
-    assert by["D18"]["status"] == "not_yet_verified"
+    assert by["D18"]["status"] == "verified" and by["D18"]["questionsAvailable"] is False
 
 
 def test_name_list_matches_dossier_folder():
@@ -97,13 +100,15 @@ def test_one_verified_dossier_from_verified_data():
 
 
 @pytest.mark.parametrize("code", ["D08", "D18", "d18"])
-def test_one_unverified_dossier_normal_reply(code):
+def test_dossier_without_questions_reply(code):
     r = client.get(f"/api/dossiers/{code}")
     assert r.status_code == 200
     d = r.json()
-    assert d["status"] == "not_yet_verified"
+    # team decision: verified from the dossier; figures under "tiers"/"seasonality", no yes/no questions yet
+    assert d["status"] == "verified" and d["questionsAvailable"] is False
     assert d["code"] == code.upper() and d["name"]
-    assert not (INVENTED_KEYS & set(d)) and "sections" not in d
+    assert not (INVENTED_KEYS & set(d)) and "sections" not in d and d["questions"] == []
+    assert d["tiers"] and '"line":' not in json.dumps(d)
 
 
 def test_one_dossier_unknown_code_his_error_format():
