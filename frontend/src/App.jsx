@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -284,9 +284,9 @@ export default function App() {
   const orbitRef = useRef(null);
   const immersiveRef = useRef(null);
   const cardsRef = useRef(null);
+  const lenisRef = useRef(null);
   
   const [activeSection, setActiveSection] = useState(1);
-  const [lenisInstance, setLenisInstance] = useState(null);
   const [selectedPillarModal, setSelectedPillarModal] = useState(null);
 
   // Global Language State ('en' | 'hi')
@@ -305,31 +305,69 @@ export default function App() {
     return 'landing';
   });
 
-  const navigateToDashboard = () => {
+  // Strict Synchronous Reversion of GSAP DOM Modifications & Lenis Smooth Scroll
+  const cleanupLandingAnimations = useCallback(() => {
+    try {
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.getAll().forEach((st) => {
+          try {
+            st.revert();
+            st.kill(true);
+          } catch (e) {
+            // Ignore individual trigger cleanup warnings
+          }
+        });
+      }
+      if (lenisRef.current) {
+        try {
+          lenisRef.current.destroy();
+        } catch (e) {}
+        lenisRef.current = null;
+      }
+      if (typeof document !== 'undefined') {
+        if (document.documentElement) {
+          document.documentElement.classList.remove('lenis', 'lenis-smooth', 'lenis-stopped');
+          document.documentElement.style.overflow = '';
+          document.documentElement.style.height = '';
+          document.documentElement.scrollTop = 0;
+        }
+        if (document.body) {
+          document.body.classList.remove('lenis', 'lenis-smooth', 'lenis-stopped');
+          document.body.style.overflow = '';
+          document.body.style.height = '';
+          document.body.scrollTop = 0;
+        }
+      }
+    } catch (err) {
+      console.warn('[GraminAI] Clean up landing animations warning:', err);
+    }
+  }, []);
+
+  const navigateToDashboard = useCallback(() => {
+    cleanupLandingAnimations();
     setCurrentView('dashboard');
     if (typeof window !== 'undefined') {
       window.history.pushState(null, '', '/dashboard');
       window.scrollTo(0, 0);
     }
-  };
+  }, [cleanupLandingAnimations]);
 
-  const navigateToLanding = () => {
+  const navigateToLanding = useCallback(() => {
+    cleanupLandingAnimations();
     setCurrentView('landing');
     if (typeof window !== 'undefined') {
       window.history.pushState(null, '', '/');
       window.scrollTo(0, 0);
     }
-  };
+  }, [cleanupLandingAnimations]);
 
   useEffect(() => {
     const handleLocationChange = () => {
       const p = window.location.pathname;
       const h = window.location.hash;
-      if (p === '/dashboard' || p.startsWith('/dashboard') || h === '#/dashboard' || h === '#dashboard') {
-        setCurrentView('dashboard');
-      } else {
-        setCurrentView('landing');
-      }
+      const isDash = p === '/dashboard' || p.startsWith('/dashboard') || h === '#/dashboard' || h === '#dashboard';
+      cleanupLandingAnimations();
+      setCurrentView(isDash ? 'dashboard' : 'landing');
     };
     window.addEventListener('popstate', handleLocationChange);
     window.addEventListener('hashchange', handleLocationChange);
@@ -337,7 +375,7 @@ export default function App() {
       window.removeEventListener('popstate', handleLocationChange);
       window.removeEventListener('hashchange', handleLocationChange);
     };
-  }, []);
+  }, [cleanupLandingAnimations]);
 
   // Ensure scroll reset and clean viewport whenever switching views
   useEffect(() => {
@@ -462,7 +500,7 @@ export default function App() {
         touchMultiplier: 2.0,
       });
 
-      setLenisInstance(lenis);
+      lenisRef.current = lenis;
 
       lenis.on('scroll', ScrollTrigger.update);
 
@@ -643,16 +681,27 @@ export default function App() {
       if (refreshTimer) {
         clearTimeout(refreshTimer);
       }
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-      if (lenis) lenis.destroy();
-      setLenisInstance(null);
+      try {
+        ctx.revert();
+        ScrollTrigger.getAll().forEach((t) => {
+          try {
+            t.revert();
+            t.kill(true);
+          } catch (e) {}
+        });
+      } catch (e) {}
+      if (lenis) {
+        try {
+          lenis.destroy();
+        } catch (e) {}
+      }
+      lenisRef.current = null;
     };
   }, [currentView]);
 
   const scrollToTarget = (targetId) => {
-    if (lenisInstance) {
-      lenisInstance.scrollTo(targetId, { duration: 1.4 });
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(targetId, { duration: 1.4 });
     } else {
       const el = document.querySelector(targetId);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -962,56 +1011,52 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#F4F1EA] text-[#111311] font-sans-ui flex flex-col antialiased selection:bg-[#111311] selection:text-white">
         {/* Dedicated Standalone Dashboard Top Navigation */}
-        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/10 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-sm">
-          {/* Left: Brand Identity & Subtitle */}
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-black/10 px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-sm">
+          {/* Left: Brand Identity */}
           <div className="flex items-center space-x-3.5">
             <button
               onClick={navigateToLanding}
-              className="flex items-center space-x-3 cursor-pointer group text-left"
+              className="flex items-center space-x-2.5 cursor-pointer group text-left"
               title="Return to GraminAI Landing Page"
             >
               <img
                 src="/images/logo.png"
                 alt="GraminAI Emblem"
-                className="h-9 sm:h-10 w-auto object-contain group-hover:scale-105 transition-transform"
+                className="h-8 sm:h-9 w-auto object-contain group-hover:scale-105 transition-transform"
               />
-              <div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-editorial text-lg sm:text-xl font-bold tracking-tight text-[#111311]">
-                    GraminAI
-                  </span>
-                  <span className="text-[10px] font-mono-num font-bold px-2 py-0.5 rounded-full bg-[#0E7A53]/10 text-[#0E7A53] uppercase border border-[#0E7A53]/20">
-                    Production Workspace
-                  </span>
-                </div>
-                <p className="text-[10px] font-mono-num text-[#686D65] hidden md:block">
-                  MoSJE & NSFDC Concessional Credit · Statutory Advisory Suite
-                </p>
-              </div>
+              <span className="font-extrabold text-lg sm:text-xl text-[#111311] tracking-tight font-sans-ui">
+                GraminAI
+              </span>
             </button>
           </div>
 
-          {/* Right: Controls & User Pill */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Right: Controls & User Profile */}
+          <div className="flex items-center space-x-2 sm:space-x-2.5">
+            {/* MyGov data.gov.in Live Status */}
+            <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              <span className="text-[11px] font-mono-num">data.gov.in connected</span>
+            </div>
+
             {/* Language Toggle */}
             <button
               onClick={() => setLanguage(prev => prev === 'en' ? 'hi' : 'en')}
-              className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-mono-num font-bold text-[#111311] transition-colors cursor-pointer"
+              className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 text-xs font-medium text-slate-700 border border-slate-200 transition-colors cursor-pointer"
             >
-              <Globe className="w-3.5 h-3.5 text-[#0E7A53]" />
+              <Globe className="w-3.5 h-3.5 text-slate-500" />
               <span>{language === 'en' ? 'हिन्दी' : 'EN'}</span>
             </button>
 
             {/* User Profile / Status */}
             {currentUser ? (
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#111311] text-white text-xs font-mono-num shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  <span className="max-w-[120px] sm:max-w-[180px] truncate">{currentUser.name}</span>
+              <div className="flex items-center space-x-1.5">
+                <div className="flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-100 text-[#111311] text-xs font-medium border border-slate-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  <span className="max-w-[120px] sm:max-w-[160px] truncate">{currentUser.name}</span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 rounded-full bg-white hover:bg-red-50 text-slate-500 hover:text-red-600 border border-black/10 transition-colors cursor-pointer"
+                  className="p-1 rounded-lg bg-white hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 transition-colors cursor-pointer"
                   title={t.logout}
                 >
                   <LogOut className="w-4 h-4" />
@@ -1023,7 +1068,7 @@ export default function App() {
                   setAuthError(null);
                   setIsAuthModalOpen(true);
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#111311] text-white text-xs font-mono-num font-bold hover:bg-black transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#111311] text-white text-xs font-semibold hover:bg-black transition-colors cursor-pointer"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>{t.loginRegister}</span>
@@ -1033,7 +1078,7 @@ export default function App() {
             {/* Back to Landing Page Button */}
             <button
               onClick={navigateToLanding}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-black/15 bg-white hover:bg-slate-50 text-xs font-mono-num font-bold text-[#111311] shadow-sm transition-all hover:scale-105 cursor-pointer ml-1"
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 shadow-sm transition-colors cursor-pointer"
             >
               <span>{language === 'hi' ? '← मुख्य पृष्ठ' : '← Landing Page'}</span>
             </button>
@@ -1041,7 +1086,7 @@ export default function App() {
         </header>
 
         {/* Dedicated Standalone Production Dashboard Container */}
-        <main className="flex-1 w-full max-w-[1700px] mx-auto p-2 sm:p-6">
+        <main className="flex-1 w-full p-2 sm:p-4 flex flex-col">
           <ProductionDashboard
             language={language}
             currentUser={currentUser}
@@ -1157,11 +1202,12 @@ export default function App() {
       {/* ============================================================== */}
       {/* SCENE 1: PINNED HERO DISPERSION                                */}
       {/* ============================================================== */}
-      <section 
-        id="hero-pinned-scene" 
-        ref={heroRef} 
-        className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-[#F4F1EA]"
-      >
+      <div className="hero-pin-outer w-full relative">
+        <section 
+          id="hero-pinned-scene" 
+          ref={heroRef} 
+          className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-[#F4F1EA]"
+        >
         {/* Giant Condensed Serif Typography Behind Imagery */}
         <div id="hero-headline-wrap" className="absolute inset-0 flex flex-col items-center justify-center text-center select-none z-10 pointer-events-none px-4">
           <h1 className="hero-big-title font-editorial font-normal uppercase text-[#111311]">
@@ -1246,6 +1292,7 @@ export default function App() {
           <span className="mt-1 animate-bounce text-sm">↓</span>
         </div>
       </section>
+    </div>
 
       {/* ============================================================== */}
       {/* SCENE 2: THE THESIS & VERTICAL LINE DROP                       */}
@@ -1293,51 +1340,53 @@ export default function App() {
       {/* SCENE 3: PINNED ORBITAL VORTEX                                 */}
       {/* ============================================================== */}
       <section id="scene-orbit" ref={orbitRef} className="relative w-full h-[180vh] bg-[#F4F1EA]">
-        <div id="orbit-pinned-wrap" className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-4">
-          
-          {/* Central Narrative Block */}
-          <div id="orbit-center-text" className="text-center max-w-md z-20 pointer-events-none px-4">
-            <h3 className="text-4xl sm:text-5xl lg:text-6xl font-editorial text-[#111311] leading-[1.05]">
-              {t.orbitTitlePre}<span className="italic font-normal">{t.orbitTitleItalic}</span>{t.orbitTitlePost}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#686D65] mt-4 max-w-sm mx-auto leading-relaxed font-sans-ui">
-              {t.orbitBody}
-            </p>
-          </div>
+        <div className="orbit-pin-outer w-full h-full relative">
+          <div id="orbit-pinned-wrap" className="sticky top-0 w-full h-screen overflow-hidden flex items-center justify-center px-4">
+            
+            {/* Central Narrative Block */}
+            <div id="orbit-center-text" className="text-center max-w-md z-20 pointer-events-none px-4">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-editorial text-[#111311] leading-[1.05]">
+                {t.orbitTitlePre}<span className="italic font-normal">{t.orbitTitleItalic}</span>{t.orbitTitlePost}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#686D65] mt-4 max-w-sm mx-auto leading-relaxed font-sans-ui">
+                {t.orbitBody}
+              </p>
+            </div>
 
-          {/* Symmetrical Orbiting Constellation Ring (8 Authentic Beneficiary Photos) */}
-          <div id="orbit-ring" className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-            {[
-              { id: 1, angle: '0deg', x: '0', y: '-1', src: '/images/orbit_1.jpg', fallback: '/images/landing/6.jpg', alt: 'SHG Women Collective Celebration' },
-              { id: 2, angle: '45deg', x: '0.7071', y: '-0.7071', src: '/images/orbit_2.jpg', fallback: '/images/landing/11.jpg', alt: 'PM Vishwakarma Artisan Carpentry' },
-              { id: 3, angle: '90deg', x: '1', y: '0', src: '/images/orbit_3.jpg', fallback: '/images/landing/3.jpg', alt: 'Rural Kirana General Store' },
-              { id: 4, angle: '135deg', x: '0.7071', y: '0.7071', src: '/images/orbit_4.jpg', fallback: '/images/landing/13.jpg', alt: 'Poultry Farm Entrepreneur' },
-              { id: 5, angle: '180deg', x: '0', y: '1', src: '/images/orbit_5.jpg', fallback: '/images/landing/7.jpg', alt: 'Village Capacity Building Training Camp' },
-              { id: 6, angle: '225deg', x: '-0.7071', y: '0.7071', src: '/images/orbit_6.jpg', fallback: '/images/landing/8.jpg', alt: 'Commercial Dairy Unit' },
-              { id: 7, angle: '270deg', x: '-1', y: '0', src: '/images/orbit_7.jpg', fallback: '/images/landing/4.jpg', alt: 'Market Vendor Liquidity and Profit' },
-              { id: 8, angle: '315deg', x: '-0.7071', y: '-0.7071', src: '/images/orbit_8.jpg', fallback: '/images/landing/5.jpg', alt: 'Intergenerational Tailoring Workshop' }
-            ].map((tile) => (
-              <div 
-                key={tile.id}
-                className="orbit-tile w-28 h-20 sm:w-32 sm:h-24 md:w-36 md:h-26 rounded-2xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
-                style={{
-                  '--x-factor': tile.x,
-                  '--y-factor': tile.y,
-                  '--angle': tile.angle
-                }}
-              >
-                <div className="orbit-tile-inner">
-                  <img 
-                    src={tile.src} 
-                    onError={(e) => { e.currentTarget.src = tile.fallback; }} 
-                    alt={tile.alt} 
-                    className="w-full h-full object-cover filter brightness-[0.94] contrast-[1.05]" 
-                  />
+            {/* Symmetrical Orbiting Constellation Ring (8 Authentic Beneficiary Photos) */}
+            <div id="orbit-ring" className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+              {[
+                { id: 1, angle: '0deg', x: '0', y: '-1', src: '/images/orbit_1.jpg', fallback: '/images/landing/6.jpg', alt: 'SHG Women Collective Celebration' },
+                { id: 2, angle: '45deg', x: '0.7071', y: '-0.7071', src: '/images/orbit_2.jpg', fallback: '/images/landing/11.jpg', alt: 'PM Vishwakarma Artisan Carpentry' },
+                { id: 3, angle: '90deg', x: '1', y: '0', src: '/images/orbit_3.jpg', fallback: '/images/landing/3.jpg', alt: 'Rural Kirana General Store' },
+                { id: 4, angle: '135deg', x: '0.7071', y: '0.7071', src: '/images/orbit_4.jpg', fallback: '/images/landing/13.jpg', alt: 'Poultry Farm Entrepreneur' },
+                { id: 5, angle: '180deg', x: '0', y: '1', src: '/images/orbit_5.jpg', fallback: '/images/landing/7.jpg', alt: 'Village Capacity Building Training Camp' },
+                { id: 6, angle: '225deg', x: '-0.7071', y: '0.7071', src: '/images/orbit_6.jpg', fallback: '/images/landing/8.jpg', alt: 'Commercial Dairy Unit' },
+                { id: 7, angle: '270deg', x: '-1', y: '0', src: '/images/orbit_7.jpg', fallback: '/images/landing/4.jpg', alt: 'Market Vendor Liquidity and Profit' },
+                { id: 8, angle: '315deg', x: '-0.7071', y: '-0.7071', src: '/images/orbit_8.jpg', fallback: '/images/landing/5.jpg', alt: 'Intergenerational Tailoring Workshop' }
+              ].map((tile) => (
+                <div 
+                  key={tile.id}
+                  className="orbit-tile w-28 h-20 sm:w-32 sm:h-24 md:w-36 md:h-26 rounded-2xl overflow-hidden shadow-xl border-2 border-white/95 bg-slate-900 pointer-events-auto"
+                  style={{
+                    '--x-factor': tile.x,
+                    '--y-factor': tile.y,
+                    '--angle': tile.angle
+                  }}
+                >
+                  <div className="orbit-tile-inner">
+                    <img 
+                      src={tile.src} 
+                      onError={(e) => { e.currentTarget.src = tile.fallback; }} 
+                      alt={tile.alt} 
+                      className="w-full h-full object-cover filter brightness-[0.94] contrast-[1.05]" 
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
+          </div>
         </div>
       </section>
 
@@ -1604,7 +1653,18 @@ export default function App() {
             </button>
           </div>
         </div>
-        <SetoDashboard language={language} currentUser={currentUser} />
+        <SetoDashboard 
+          language={language} 
+          currentUser={currentUser} 
+          onLaunchWorkspace={() => {
+            if (currentUser) {
+              navigateToDashboard();
+            } else {
+              setAuthError(null);
+              setIsAuthModalOpen(true);
+            }
+          }}
+        />
       </div>
 
       {/* Global Authentication Modal */}

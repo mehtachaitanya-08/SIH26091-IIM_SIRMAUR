@@ -8,7 +8,9 @@ import {
   downloadDpr,
   sendChat,
   chatRoute,
-  dprPayload
+  dprPayload,
+  fetchMandiPrices,
+  fetchDossierCashflow
 } from '../services/api';
 
 // Import SSOT Modular Dashboard Components
@@ -124,6 +126,7 @@ export default function ProductionDashboard({
   const [searchQuery, setSearchQuery] = useState('');
   const [recentChecks, setRecentChecks] = useState({ D20: true, D18: false, debt: false });
   const [userModalOpen, setUserModalOpen] = useState(false);
+  const [mandiPriceData, setMandiPriceData] = useState(null);
   const [scenariosList, setScenariosList] = useState(loadScenarios);
 
   // Every reply updates the banner: it shows while replies are offline and clears once the server answers.
@@ -230,6 +233,40 @@ export default function ProductionDashboard({
     });
     return () => { isMounted = false; };
   }, [debtPrincipal, debtRateSenkda, debtMonthsActive, debtEntered, noteOffline]);
+
+  // Query Daily Agmarknet Mandi Spot Prices via data.gov.in API
+  useEffect(() => {
+    let isMounted = true;
+    const commodityMap = {
+      D08: 'Mustard',
+      D07: 'Wheat',
+      D04: 'Wheat',
+      D01: 'Wheat',
+      D02: 'Paddy',
+      D05: 'Maize',
+      D09: 'Gram',
+      D18: 'Cotton',
+      D11: 'Paddy',
+      D15: 'Mustard'
+    };
+    // ASSUMED: the teammate's business-to-crop list (not from any source). A business not on the
+    // list has no crop, so no mandi price is asked for (it used to fall back to mustard).
+    const commodity = commodityMap[selectedDomainCode];
+    if (!commodity) {
+      setMandiPriceData({ status: 'no_crop', isLive: false, modalPrice: null, records: [],
+        reason: 'No crop is linked to this business, so there is no mandi price.' });
+      return () => { isMounted = false; };
+    }
+    setMandiPriceData(null);
+    fetchMandiPrices('Uttar Pradesh', commodity).then((data) => {
+      if (!isMounted) return;
+      setMandiPriceData({ ...data, commodityTag: "ASSUMED: team's business-to-crop list" });
+    }).catch((err) => {
+      if (isMounted) setMandiPriceData({ status: 'no_live_data', isLive: false, modalPrice: null, records: [], reason: err.message });
+    });
+
+    return () => { isMounted = false; };
+  }, [selectedDomainCode]);
 
   // Helper Toast
   const showToast = useCallback((msg) => {
@@ -374,7 +411,7 @@ export default function ProductionDashboard({
       mode="production"
       id="production-dashboard"
       toastMessage={toastMessage}
-      showTitle={true}
+      showTitle={false}
       banner={banner}
     >
       {/* Statutory Beneficiary Verification Modal */}
@@ -429,6 +466,7 @@ export default function ProductionDashboard({
         onShowToast={showToast}
         onDownloadPdf={handleDownloadDprPdf}
         formatINR={formatINR}
+        mandiPriceData={mandiPriceData}
         mode="production"
       />
 

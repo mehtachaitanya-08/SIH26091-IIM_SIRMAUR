@@ -17,7 +17,7 @@ export default function ScenariosSidebar({
   mode = 'mockup'
 }) {
   return (
-    <aside className="lg:col-span-3 bg-white p-6 border-l border-[#E9ECEF] flex flex-col justify-between">
+    <aside className="lg:col-span-3 bg-white p-5 sm:p-6 border-l border-[#E9ECEF] flex flex-col justify-between overflow-y-auto">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-base text-[#111311] font-sans-ui">

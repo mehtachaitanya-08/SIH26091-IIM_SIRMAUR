@@ -137,8 +137,10 @@ export default function NsfdcAmortizerView({
     <div className="bg-[#F8F9FA] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
       <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
         <div>
-          <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">NSFDC Statutory Amortizer [S1]</span>
-          <h4 className="font-bold text-sm text-[#111311] font-sans-ui">Quarterly Repayment Schedule</h4>
+          <span className="text-[11px] font-mono-num text-[#686D65] font-semibold uppercase tracking-wider">
+            NSFDC Statutory Amortizer [S1]
+          </span>
+          <h4 className="font-bold text-sm text-[#111311] font-sans-ui mt-0.5">Quarterly Repayment Schedule</h4>
         </div>
         <button
           type="button"

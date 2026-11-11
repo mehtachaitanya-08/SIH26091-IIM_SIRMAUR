@@ -11,7 +11,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend import businesses, chat, compat, dossier_figures, dpr, feasibility, loan
+from backend import businesses, chat, compat, dossier_figures, dpr, feasibility, loan, mandi
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
 
 app = FastAPI(
@@ -103,6 +103,7 @@ def business_advice(code: str, req: businesses.AdviceRequest):
 
 
 app.include_router(dossier_figures.router)
+app.include_router(mandi.router)
 app.include_router(feasibility.router)
 app.include_router(dpr.router)
 app.include_router(chat.router)

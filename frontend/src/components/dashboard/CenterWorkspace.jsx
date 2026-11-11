@@ -1,5 +1,4 @@
 import React from 'react';
-import StarBlossom from './StarBlossom';
 import SeasonalitySimulatorView from './SeasonalitySimulatorView';
 import NsfdcAmortizerView from './NsfdcAmortizerView';
 import DebtLiberationView from './DebtLiberationView';
@@ -9,7 +8,7 @@ import CommandBar from './CommandBar';
 
 /**
  * CenterWorkspace — Central Operational Console
- * Integrates StarBlossom emblem, executive greeting, quick action cards,
+ * Executive greeting, quick action cards,
  * dynamic viewports (Simulator, Amortizer, Debt, DPR), and command bar.
  */
 export default function CenterWorkspace({
@@ -39,6 +38,7 @@ export default function CenterWorkspace({
   onShowToast,
   onDownloadPdf,
   formatINR,
+  mandiPriceData = null,
   mode = 'mockup'
 }) {
   const userGreeting = currentUser?.name 
@@ -50,22 +50,19 @@ export default function CenterWorkspace({
   return (
     <main className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between space-y-6 bg-white overflow-y-auto">
       
-      {/* Top Clean Executive Header with StarBlossom Emblem */}
+      {/* Top Clean Executive Header */}
       <div className="border-b border-[#E9ECEF] pb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="flex items-center space-x-3">
-            <StarBlossom size={36} className="iris-star-svg flex-shrink-0" />
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-[#111311] tracking-tight font-sans-ui">
-                Enterprise Advisory Console
-              </h2>
-              <p className="text-xs text-[#686D65] mt-0.5 font-sans-ui">
-                <span className="font-semibold text-[#111311]">{userGreeting}</span> · MoSJE / NSFDC Concessional Credit Facility
-              </p>
-            </div>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#111311] tracking-tight font-sans-ui">
+              Enterprise Advisory Console
+            </h2>
+            <p className="text-xs text-[#686D65] mt-0.5 font-sans-ui">
+              <span className="font-semibold text-[#111311]">{userGreeting}</span> · MoSJE / NSFDC Concessional Credit Facility
+            </p>
           </div>
           <div className="flex items-center space-x-2 text-xs">
-            <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 text-[#0E7A53] font-semibold border border-emerald-200">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 text-[#495057] font-mono-num text-[11px] font-medium border border-slate-200">
               {districtBadge}
             </span>
           </div>
@@ -103,6 +100,93 @@ export default function CenterWorkspace({
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
               Refinance 3-senkda moneylender debt into bank credit.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Live Agmarknet Mandi Intelligence & ML Models (Production Mode Only) */}
+      {activeTab === 'home' && mode === 'production' && (
+        <div className="space-y-4 animate-fadeIn">
+          {/* Live Government Agmarknet Data Bar */}
+          <div className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E9ECEF] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#E9ECEF] pb-2.5">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                <span className="text-xs font-semibold text-[#111311] font-mono-num uppercase tracking-wider">
+                  Open Government Data (data.gov.in / Agmarknet API)
+                </span>
+              </div>
+              <span className="text-[11px] font-mono-num font-medium text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 self-start sm:self-auto">
+                {mandiPriceData?.isLive ? 'Live Mandi Feed' : 'No live data'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div className="bg-white p-3 rounded-lg border border-[#E9ECEF]">
+                <span className="text-[#686D65] block text-[11px] font-medium">Commodity & Market</span>
+                <p className="font-bold text-[#111311] text-xs font-sans-ui mt-0.5">
+                  {mandiPriceData?.status === 'no_crop' || !mandiPriceData?.commodity
+                    ? 'No crop linked to this business'
+                    : `${mandiPriceData.commodity}${mandiPriceData.market ? ` (${mandiPriceData.market})` : ''}`}
+                </p>
+                <span className="text-[10px] text-[#686D65] font-mono-num">
+                  {mandiPriceData?.commodity && mandiPriceData?.status !== 'no_crop'
+                    ? `State: ${mandiPriceData.state} · crop link ASSUMED (team's list)` : '—'}
+                </span>
+              </div>
+
+              <div className="bg-white p-3 rounded-lg border border-[#E9ECEF]">
+                <span className="text-[#686D65] block text-[11px] font-medium">Modal Spot Price</span>
+                {mandiPriceData?.isLive && typeof mandiPriceData.modalPrice === 'number' ? (
+                  <>
+                    <p className="font-bold text-[#0E7A53] text-base font-mono-num mt-0.5">
+                      ₹{mandiPriceData.modalPrice.toLocaleString('en-IN')} <span className="text-[11px] font-normal text-[#686D65]">/ qtl</span>
+                    </p>
+                    <span className="text-[10px] text-[#0E7A53] font-semibold">{mandiPriceData.tag}</span>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-bold text-[#111311] text-base font-mono-num mt-0.5">NOT FOUND</p>
+                    <span className="text-[10px] text-[#686D65]">{mandiPriceData?.reason || 'Loading…'}</span>
+                  </>
+                )}
+              </div>
+
+              <div className="bg-white p-3 rounded-lg border border-[#E9ECEF]">
+                <span className="text-[#686D65] block text-[11px] font-medium">API Integration Status</span>
+                <p className="font-bold text-[#111311] text-xs font-mono-num mt-0.5 flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${mandiPriceData?.apiKeyConfigured ? 'bg-emerald-600' : 'bg-red-500'}`}></span>
+                  <span>DATA_GOV_IN_API_KEY {mandiPriceData?.apiKeyConfigured ? 'set' : 'not set'}</span>
+                </p>
+                <span className="text-[10px] text-[#686D65] truncate block">Resource: 9ef84268...Agmarknet</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Active ML & Deterministic Financial Models Panel */}
+          <div className="p-4 rounded-xl bg-white border border-[#E9ECEF] space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#111311] font-sans-ui uppercase tracking-wider flex items-center gap-1.5">
+                <span className="text-slate-400 font-mono-num text-[11px]">[03 Engines Active]</span>
+                <span>Financial & Solvency Models</span>
+              </span>
+              <span className="text-[11px] font-mono-num text-slate-500 font-medium">Deterministic Core</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px]">
+              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="font-bold text-[#111311] block">1. NSFDC Dual-Tier Amortizer</span>
+                <span className="text-[#686D65] mt-0.5 block">Micro & Term loan optimization at 6.5%/8.0%</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="font-bold text-[#111311] block">2. 12-Mo Seasonality Stress</span>
+                <span className="text-[#686D65] mt-0.5 block">August lean-month cash flow simulation</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="font-bold text-[#111311] block">3. Rule of Damdupat Audit</span>
+                <span className="text-[#686D65] mt-0.5 block">Usurious Loans Act 1918 statutory legal shield</span>
+              </div>
+            </div>
           </div>
         </div>
       )}

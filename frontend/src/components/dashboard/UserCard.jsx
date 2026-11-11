@@ -14,7 +14,7 @@ export default function UserCard({
   const avatarSrc = currentUser?.avatar || '/images/default_avatar.svg';
 
   return (
-    <div className="bg-slate-100 rounded-2xl p-3.5 space-y-3 border border-slate-200 mt-6">
+    <div className="bg-slate-100/80 rounded-xl p-3.5 space-y-3 border border-slate-200 mt-6">
       <div className="flex items-center space-x-3">
         <img
           src={avatarSrc}
@@ -22,7 +22,7 @@ export default function UserCard({
           onError={(e) => {
             e.currentTarget.src = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=80';
           }}
-          className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm flex-shrink-0"
+          className="w-9 h-9 rounded-full object-cover border border-white shadow-sm flex-shrink-0"
         />
         <div className="overflow-hidden">
           <p className="text-xs font-bold text-[#111311] truncate font-sans-ui">
@@ -37,10 +37,10 @@ export default function UserCard({
       <button
         type="button"
         onClick={onVerifyClick}
-        className="w-full py-2 px-3 rounded-xl bg-white text-[#111311] font-bold text-xs flex items-center justify-center space-x-1.5 shadow-sm hover:bg-slate-50 transition-all border border-[#E9ECEF] cursor-pointer font-sans-ui"
+        className="w-full py-2 px-3 rounded-lg bg-white text-[#111311] font-semibold text-xs flex items-center justify-center space-x-1.5 shadow-sm hover:bg-slate-50 transition-colors border border-slate-200 cursor-pointer font-sans-ui"
       >
-        <span className="w-2 h-2 rounded-full bg-[#0E7A53]"></span>
-        <span>Statutory Verified</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+        <span>Statutory Profile Verified</span>
       </button>
     </div>
   );

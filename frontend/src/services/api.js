@@ -238,6 +238,42 @@ export function dprPayload({ code, projectCost, familyIncome, isSc, answers = nu
   return out;
 }
 
+/**
+ * Mandi spot prices (data.gov.in / Agmarknet), from the server's GET /api/mandi-prices.
+ * Teammate's feature. Only live data is shown: with no live answer (no DATA_GOV_IN_API_KEY,
+ * the call failed, or the server is offline) the reply says so and carries no price.
+ * (His version showed 7 fixed prices labelled "Verified Daily Mandi Rate" in that case.)
+ * @param {string} [state='Uttar Pradesh']
+ * @param {string} [commodity='Mustard']
+ */
+export async function fetchMandiPrices(state = 'Uttar Pradesh', commodity = 'Mustard') {
+  try {
+    return await getJson(`/api/mandi-prices?state=${encodeURIComponent(state)}&commodity=${encodeURIComponent(commodity)}`);
+  } catch (err) {
+    if (err instanceof ServerOfflineError) {
+      return { status: 'no_live_data', isLive: false, state, commodity, modalPrice: null, records: [], offline: true,
+        reason: 'Server offline: no live mandi price. NOT FOUND.' };
+    }
+    throw err;
+  }
+}
+
+/**
+ * A business's dossier figures for a project cost: the matching size (or the nearest, ASSUMED)
+ * with the dossier's own printed cash-flow cover (DSCR). POST /api/dossiers/{code}/cashflow.
+ */
+export async function fetchDossierCashflow(code, projectCost, familyIncome, isSc) {
+  const upperCode = String(code || '').trim().toUpperCase();
+  try {
+    return await getJson(`/api/dossiers/${encodeURIComponent(upperCode)}/cashflow`, {
+      method: 'POST', body: { projectCost: Number(projectCost), familyIncome: Number(familyIncome), isSc }
+    });
+  } catch (err) {
+    if (err instanceof ServerOfflineError) return { code: upperCode, status: 'server_offline', offline: true };
+    throw err;
+  }
+}
+
 export default {
   chatRoute,
   dprPayload,
@@ -249,5 +285,7 @@ export default {
   fetchDossier,
   fetchFeasibility,
   downloadDpr,
-  sendChat
+  sendChat,
+  fetchMandiPrices,
+  fetchDossierCashflow
 };

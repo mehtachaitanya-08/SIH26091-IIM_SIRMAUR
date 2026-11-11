@@ -15,6 +15,31 @@ export default class ErrorBoundary extends React.Component {
     this.setState({ errorInfo });
   }
 
+  handleRetry = () => {
+    try {
+      if (typeof window !== 'undefined' && window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(t => {
+          try { t.revert(); t.kill(true); } catch (e) {}
+        });
+      }
+    } catch (e) {}
+    this.setState({ hasError: false, error: null, errorInfo: null });
+    if (this.props.onReset) {
+      this.props.onReset();
+    }
+  };
+
+  handleReturnHome = () => {
+    try {
+      if (typeof window !== 'undefined' && window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(t => {
+          try { t.revert(); t.kill(true); } catch (e) {}
+        });
+      }
+    } catch (e) {}
+    window.location.href = '/';
+  };
+
   render() {
     if (this.state.hasError) {
       return (
@@ -32,12 +57,22 @@ export default class ErrorBoundary extends React.Component {
             <div className="p-4 rounded-xl bg-red-50 text-red-800 text-xs font-mono overflow-auto max-h-48 border border-red-100">
               {this.state.error?.toString()}
             </div>
-            <button
-              onClick={() => { window.location.href = '/'; }}
-              className="w-full py-2.5 rounded-xl bg-[#111311] text-white text-xs font-bold font-mono uppercase tracking-wider hover:bg-black transition-all cursor-pointer"
-            >
-              ← Return to Landing Page
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={this.handleRetry}
+                className="flex-1 py-2.5 rounded-xl bg-[#0E7A53] hover:bg-[#0c6846] text-white text-xs font-bold font-mono uppercase tracking-wider transition-all cursor-pointer"
+              >
+                ↻ Retry Workspace
+              </button>
+              <button
+                type="button"
+                onClick={this.handleReturnHome}
+                className="flex-1 py-2.5 rounded-xl bg-[#111311] text-white text-xs font-bold font-mono uppercase tracking-wider hover:bg-black transition-all cursor-pointer"
+              >
+                ← Return to Landing Page
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -45,3 +80,4 @@ export default class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
