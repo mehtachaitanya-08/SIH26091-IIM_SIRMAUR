@@ -1,0 +1,33 @@
+{
+  // GitHub Codespaces: on the repo page, Code -> Codespaces -> Create codespace on main.
+  // First start installs everything and builds the website (a few minutes); then the one server
+  // runs on port 8000 and the dashboard opens. Keys come from your GitHub Codespaces secrets.
+  "name": "GraminAI (SIH26091)",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
+
+  "postCreateCommand": "python3 -m venv backend/.venv && backend/.venv/bin/pip install -r backend/requirements.txt && cd frontend && npm install && npm run build",
+  "postStartCommand": "nohup backend/.venv/bin/uvicorn backend.app:app --host 0.0.0.0 --port 8000 > /tmp/graminai-server.log 2>&1 &",
+
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "GraminAI dashboard", "onAutoForward": "openPreview" }
+  },
+
+  "secrets": {
+    "GROQ_API_KEY": {
+      "description": "Groq API key for the chat assistant (free at console.groq.com -> API Keys).",
+      "documentationUrl": "https://console.groq.com/keys"
+    },
+    "DATA_GOV_IN_API_KEY": {
+      "description": "Optional: data.gov.in key for live mandi prices. Without it the panel says 'no live data'.",
+      "documentationUrl": "https://data.gov.in"
+    }
+  },
+
+  "customizations": {
+    "codespaces": { "openFiles": ["HOW_TO_RUN.md"] }
+  }
+}
