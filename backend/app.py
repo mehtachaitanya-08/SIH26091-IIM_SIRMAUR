@@ -3,6 +3,7 @@ NSFDC loan server (FastAPI).
 
 Start it from the repo root:
     backend/.venv/bin/uvicorn backend.app:app --port 8000
+Then open http://127.0.0.1:8000 (the built website; build it once: cd frontend && npm install && npm run build).
 Interactive docs: http://127.0.0.1:8000/docs
 """
 
@@ -11,7 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend import businesses, chat, compat, dossier_figures, dpr, feasibility, loan, mandi
+from backend import businesses, chat, compat, dossier_figures, dpr, feasibility, loan, mandi, site
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
 
 app = FastAPI(
@@ -108,5 +109,9 @@ app.include_router(feasibility.router)
 app.include_router(dpr.router)
 app.include_router(chat.router)
 
-# The teammate's /api addresses, served from verified sources. Included LAST: it ends with a catch-all 404.
+# The teammate's /api addresses, served from verified sources. It ends with a catch-all 404 for /api.
 app.include_router(compat.router)
+
+# The built website (frontend/dist) at every other address, so one program serves everything at
+# http://127.0.0.1:8000. Included LAST: it catches every path no route above matched.
+app.include_router(site.router)

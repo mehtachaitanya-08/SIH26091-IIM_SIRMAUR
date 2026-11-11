@@ -350,3 +350,9 @@ def test_groq_request_uses_low_reasoning(monkeypatch):
     monkeypatch.setattr(chat, "_api_key", lambda: "k")
     chat._call_model([{"role": "user", "content": "hi"}], [])
     assert seen["reasoning_effort"] == "low" and seen["model"] == chat.MODEL
+
+
+def test_prompt_says_to_calculate_the_loan_as_soon_as_the_three_inputs_are_known():
+    s = chat.SYSTEM
+    assert "calculate_loan immediately" in s and "before any business questions" in s
+    assert "only for what is missing" in s

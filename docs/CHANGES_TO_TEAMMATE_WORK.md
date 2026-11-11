@@ -33,9 +33,9 @@ changes below are about where numbers come from.
 
 ## How to run everything
 
-- Server: `backend/.venv/bin/uvicorn backend.app:app --port 8000`. It serves all your `/api` addresses plus `/api/dpr`, `/api/chat`, `/api/feasibility/{code}`, `/api/dossiers/{code}/cashflow` and `/api/mandi-prices`.
-- Keys go in the repo's `.env` (gitignored):
-  - `DATA_GOV_IN_API_KEY=` for mandi prices;
-  - `GROQ_API_KEY=` for the chat.
-- Website: `cd frontend && npm run dev` (the dev proxy sends `/api` to port 8000).
-- `engine/server.py` is no longer used by the website. It was not changed or deleted.
+See `HOW_TO_RUN.md`. In short: build the website once (`cd frontend && npm install && npm run build`), then run one
+program, `backend/.venv/bin/uvicorn backend.app:app --port 8000`, and open http://127.0.0.1:8000/dashboard. The server
+serves the website and all `/api` addresses (yours plus `/api/dpr`, `/api/chat`, `/api/feasibility/{code}`,
+`/api/dossiers/{code}/cashflow`, `/api/mandi-prices`). Keys go in `.env`: `GROQ_API_KEY`, `DATA_GOV_IN_API_KEY`.
+`npm run dev` on port 5173 still works for editing the website. `engine/server.py` is no longer used; it was not
+changed or deleted.
