@@ -35,8 +35,16 @@ log = logging.getLogger("graminai.chat")
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"   # gitignored; GROQ_API_KEY=...
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-MODEL = "llama-3.3-70b-versatile"  # NOT YET CONFIRMED: to be checked against Groq's model list once the key is added
+# Checked against the team key's Groq model list on 11 Nov 2026: no Llama chat model is offered on it.
+# Chosen by the team: OpenAI's open-weight 120B model, which called the chat's tools correctly for a Hindi request.
+MODEL = "openai/gpt-oss-120b"
 MAX_TOOL_ROUNDS = 5
+# Groq's free tier on the team key allows 8,000 tokens a minute for this model, and every tool round
+# re-sends the whole conversation, so the model gets only recent messages and compact tool results.
+MAX_HISTORY = 8          # most recent user/assistant messages sent to the model
+MAX_TOOL_CHARS = 2500    # each tool result, as compact JSON
+MAX_ASSISTANT_CHARS = 500  # earlier assistant replies, shortened in the history sent to the model
+MAX_RATE_WAIT_S = 30.0   # longest wait after a 429 before the one retry
 MAX_TURNS = 30
 TIMEOUT_S = 30.0
 
@@ -48,7 +56,7 @@ Hard rules:
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
 3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so.
 4. Use question ids and answer choices exactly as get_questions returns them.
-5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy.
+5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy. Keep each reply under 80 words and ask at most 2 questions at a time.
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
 7. To give the DPR, call dpr_link and tell the user to press the Download DPR button."""
 
@@ -305,9 +313,14 @@ def allowed_numbers(tool_results, user_texts):
     return allowed
 
 
+LIST_MARKER = re.compile(r"(?m)^(\s*(?:\*\*)?)\d{1,2}[.)](?=\s)")
+
+
 def unsupported(text, allowed):
-    """Numbers in the AI's text that the tools or the user did not give. Number words always count as unsupported."""
-    bad = [m.group(0) for m in NUM_WORDS.finditer(str(text))]
+    """Numbers in the AI's text that the tools or the user did not give. Number words always count as unsupported.
+    List numbering at the start of a line ("1." or "2)") is not a figure; everything after it is still checked."""
+    text = LIST_MARKER.sub(lambda m: m.group(1) + "•", str(text))
+    bad = [m.group(0) for m in NUM_WORDS.finditer(text)]
     for v, _ in numbers_in(text):
         if v in allowed or round(v, 2) in allowed:
             continue
@@ -372,9 +385,25 @@ def _call_model(messages, tools):
     r = httpx.post(GROQ_URL, timeout=TIMEOUT_S,
                    headers={"Authorization": f"Bearer {_api_key()}", "Content-Type": "application/json"},
                    json={"model": MODEL, "messages": messages, "tools": tools, "tool_choice": "auto",
-                         "temperature": 0.2, "max_tokens": 600})
+                         "temperature": 0.2, "max_tokens": 600, "reasoning_effort": "low"})
     r.raise_for_status()
     return r.json()["choices"][0]["message"]
+
+
+def _rate_limit_wait(headers):
+    """Seconds to wait after a 429: Groq's retry-after, else its token reset time ("12.5s", "1m3.2s"), capped."""
+    def seconds(v):
+        m = re.fullmatch(r"(?:(\d+)m)?(\d+(?:\.\d+)?)s", str(v).strip())
+        if m:
+            return int(m.group(1) or 0) * 60 + float(m.group(2))
+        return float(v)
+    for key in ("retry-after", "x-ratelimit-reset-tokens"):
+        if headers.get(key):
+            try:
+                return min(max(seconds(headers[key]), 0.5), MAX_RATE_WAIT_S)
+            except ValueError:
+                pass
+    return 2.0
 
 
 def _model_with_retry(messages, tools):
@@ -388,11 +417,7 @@ def _model_with_retry(messages, tools):
             raise KeyRejected() from exc
         log.warning("Groq HTTP %s; retrying once", code)
         if code == 429:
-            try:
-                wait = float(exc.response.headers.get("retry-after", "2"))
-            except ValueError:
-                wait = 2.0
-            time.sleep(min(max(wait, 0.5), 5.0))
+            time.sleep(_rate_limit_wait(exc.response.headers))
     except Exception as exc:
         log.warning("Groq call failed (%s); retrying once", type(exc).__name__)
     return _call_model(messages, tools)  # a second failure propagates
@@ -420,7 +445,9 @@ async def chat_endpoint(request: Request):
     if not _api_key():
         return {"status": "ai_offline", "reply": OFFLINE, "tool_results": [], "guard": {"replaced": False}, "model": None}
 
-    messages = [{"role": "system", "content": SYSTEM}] + convo
+    history = [dict(m, content=m["content"][:MAX_ASSISTANT_CHARS] + ("…" if len(m["content"]) > MAX_ASSISTANT_CHARS else ""))
+               if m["role"] == "assistant" else m for m in convo[-MAX_HISTORY:]]
+    messages = [{"role": "system", "content": SYSTEM}] + history
     tools = tool_specs()
     results = []
     reply = None
@@ -440,7 +467,8 @@ async def chat_endpoint(request: Request):
                 name = c.get("function", {}).get("name")
                 res = run_tool(name, c.get("function", {}).get("arguments"))
                 results.append({"tool": name, "result": res})
-                messages.append({"role": "tool", "tool_call_id": c.get("id", ""), "content": json.dumps(res)[:6000]})
+                messages.append({"role": "tool", "tool_call_id": c.get("id", ""),
+                                 "content": json.dumps(res, separators=(",", ":"), ensure_ascii=False)[:MAX_TOOL_CHARS]})
     except KeyRejected:
         return {"status": "ai_key_rejected", "reply": "The AI key was rejected. Ask the team to check GROQ_API_KEY. "
                 "You can still use the dashboard's loan calculator.", "tool_results": results,

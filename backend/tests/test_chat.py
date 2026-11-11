@@ -279,3 +279,74 @@ def test_calculate_loan_tool_returns_the_income_and_sc_it_used():
     no = chat._t_calculate_loan(140000, 600000, True)
     assert no["isEligible"] is False
     assert (no["projectCost"], no["familyIncome"], no["isSc"]) == (140000, 600000, True)
+
+
+# --- fitting Groq's free tier (8,000 tokens a minute on the team key) and list numbering -----------
+
+def test_list_numbering_is_not_a_figure(fake):
+    fake([say("To check your business:\n1. Do you pickle, plate or galvanise?\n2. What brings in most of your income?")])
+    d = ask("I am a blacksmith")
+    assert d["guard"]["replaced"] is False and "1. Do you pickle" in d["reply"]
+
+
+def test_a_number_after_a_list_marker_is_still_checked(fake):
+    fake([say("Your loan:\n1. Loan amount ₹99,999 for you.")])
+    d = ask("I am a blacksmith")
+    assert d["guard"]["replaced"] is True and 99999 in d["guard"]["unsupported"]
+
+
+def test_tool_results_are_sent_compact_and_capped(fake):
+    f = fake([call("list_businesses"), say("Which business do you run?")])
+    ask("hello")
+    tool_msgs = [m for m in f.sent[-1] if m["role"] == "tool"]
+    assert tool_msgs and all(len(m["content"]) <= chat.MAX_TOOL_CHARS for m in tool_msgs)
+    assert '", "' not in tool_msgs[0]["content"]   # no spaces after separators
+
+
+def test_only_recent_messages_go_to_the_model(fake):
+    f = fake([say("ok")])
+    msgs = []
+    for i in range(20):
+        msgs.append({"role": "user" if i % 2 == 0 else "assistant", "content": f"m{i}"})
+    client.post("/api/chat", json={"messages": msgs})
+    sent = f.sent[0]
+    assert sent[0]["role"] == "system"
+    assert [m["content"] for m in sent[1:]] == [f"m{i}" for i in range(20 - chat.MAX_HISTORY, 20)]
+
+
+@pytest.mark.parametrize("headers,expected", [
+    ({"retry-after": "7"}, 7.0),
+    ({"x-ratelimit-reset-tokens": "12.5s"}, 12.5),
+    ({"x-ratelimit-reset-tokens": "1m3.2s"}, 30.0),   # capped
+    ({}, 2.0),
+])
+def test_rate_limit_waits_as_groq_says(headers, expected):
+    assert chat._rate_limit_wait(headers) == expected
+
+
+def test_older_assistant_replies_are_shortened_for_the_model(fake):
+    f = fake([say("ok")])
+    long_reply = "क" * 3000
+    client.post("/api/chat", json={"messages": [{"role": "user", "content": "hi"},
+                                                {"role": "assistant", "content": long_reply},
+                                                {"role": "user", "content": "next"}]})
+    sent_assistant = [m for m in f.sent[0] if m["role"] == "assistant"]
+    assert len(sent_assistant[0]["content"]) <= chat.MAX_ASSISTANT_CHARS + 1
+
+
+def test_prompt_asks_for_short_replies_and_few_questions():
+    assert "at most 2 questions" in chat.SYSTEM and "80 words" in chat.SYSTEM
+
+
+def test_groq_request_uses_low_reasoning(monkeypatch):
+    seen = {}
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"choices": [{"message": {"role": "assistant", "content": "ok"}}]}
+    def fake_post(url, timeout, headers, json):
+        seen.update(json)
+        return R()
+    monkeypatch.setattr(chat.httpx, "post", fake_post)
+    monkeypatch.setattr(chat, "_api_key", lambda: "k")
+    chat._call_model([{"role": "user", "content": "hi"}], [])
+    assert seen["reasoning_effort"] == "low" and seen["model"] == chat.MODEL
