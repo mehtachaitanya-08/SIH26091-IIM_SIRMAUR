@@ -62,13 +62,13 @@ const TRANSLATIONS = {
     pillarsHeading: 'The Four Pillars.',
     pillarsBody: 'Translating statutory NSFDC credit guidelines and empirical rural cash flows into a unified advisory platform.',
     card1Title: 'NSFDC Dual-Tier Credit',
-    card1Body: 'Statutory micro credit (≤ ₹1.40L @ 6.5% with 11 quarters) and term loans (up to ₹50L @ 8.0% with 26 quarters).',
+    card1Body: 'NSFDC Micro Finance (project cost up to ₹1.40 lakh, 6.5%) and Term Loan (up to ₹50 lakh, 8%) [S1].',
     card2Title: '12-Month Solvency Model',
     card2Body: 'August monsoon lean-month stress testing across 24 empirical trade domains, preventing default risk.',
     card3Title: 'Mode B Debt Liberation',
     card3Body: 'Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.',
     card4Title: '1-Page Lead-Bank DPR',
-    card4Body: 'Single-page bank sanction appraisal conforming to RBI Lead Bank Scheme standards with QR verification.',
+    card4Body: 'One-page advisory DPR made by the server from the verified loan rules and the business dossier; not a loan sanction.',
     viewDetails: 'View details',
     closeDossier: 'Close Statutory Dossier',
     // Auth Modal
@@ -127,13 +127,13 @@ const TRANSLATIONS = {
     pillarsHeading: 'चार प्रमुख स्तंभ.',
     pillarsBody: 'सांविधिक एनएसएफडीसी ऋण दिशानिर्देशों और ग्रामीण नकदी प्रवाह को एक एकीकृत सलाहकार मंच में परिवर्तित करना।',
     card1Title: 'एनएसएफडीसी द्वि-स्तरीय ऋण',
-    card1Body: 'सांविधिक माइक्रो क्रेडिट (≤ ₹1.40 लाख @ 6.5%, 11 तिमाही) एवं सावधि ऋण (₹50 लाख तक @ 8.0%, 26 तिमाही)।',
+    card1Body: 'NSFDC माइक्रो फाइनेंस (परियोजना लागत ₹1.40 लाख तक, 6.5%) एवं सावधि ऋण (₹50 लाख तक, 8%) [S1]।',
     card2Title: '12-माह सॉल्वेंसी मॉडल',
     card2Body: '24 वास्तविक व्यापार क्षेत्रों में अगस्त मानसून मंदी के महीनों का तनाव परीक्षण, जिससे डिफ़ॉल्ट जोखिम रुकता है।',
     card3Title: 'मोड बी साहूकारी ऋण मुक्ति',
     card3Body: 'अनौपचारिक 3-सेंकड़ा (36% वार्षिक) साहूकार ऋण को कम ब्याज वाली संस्थागत बैंकिंग सुविधा में बदलना।',
     card4Title: '1-पृष्ठीय लीड-बैंक डीपीआर',
-    card4Body: 'आरबीआई लीड बैंक योजना मानकों के अनुरूप क्यूआर सत्यापन युक्त एकल-पृष्ठीय बैंक स्वीकृति प्रस्ताव।',
+    card4Body: 'सत्यापित ऋण नियमों एवं व्यवसाय डोज़ियर से सर्वर द्वारा बना एक-पृष्ठीय सलाहकारी डीपीआर; ऋण स्वीकृति नहीं।',
     viewDetails: 'विवरण देखें',
     closeDossier: 'सांविधिक दस्तावेज बंद करें',
     // Auth Modal
@@ -175,8 +175,8 @@ const PILLAR_DOSSIERS = {
       mandate: 'MoSJE Mandate · Concessional Lending Framework',
       summary: 'Direct institutional credit structuring conforming to statutory National Scheduled Castes Finance and Development Corporation guidelines.',
       specifications: [
-        { label: 'Micro Credit Facility (MCF)', value: 'Up to ₹1,40,000 @ 6.5% p.a. (11 quarters tenure, 1 moratorium quarter)' },
-        { label: 'Term Loan Facility', value: 'Up to ₹50,00,000 @ 8.0% p.a. (26 quarters tenure, 2 moratorium quarters)' },
+        { label: 'Micro Credit Facility (MCF)', value: 'Project cost up to ₹1,40,000; loan up to ₹1,25,000 at 6.5% p.a.; repaid in quarterly instalments within 3 years, including a 3-month pause [S1]' },
+        { label: 'Term Loan Facility', value: 'Project cost up to ₹50,00,000; loan up to ₹45,00,000 at 8% p.a.; repaid within 7 years, including a 6-month pause [S1]' },
         { label: 'Beneficiary Eligibility', value: 'Scheduled Caste (SC) micro-entrepreneurs; household income ≤ ₹5,00,000' },
         { label: 'Margin Money Structure', value: 'Up to 90% concessional loan routing with 10% entrepreneur margin contribution' }
       ]
@@ -188,10 +188,10 @@ const PILLAR_DOSSIERS = {
       mandate: 'Monsoon Cash-Flow Resilience & DSCR Verification',
       summary: 'Dynamic month-by-month cash flow modeling across 24 empirical trade dossiers to prevent debt distress during seasonal contractions.',
       specifications: [
-        { label: 'Lean Season Simulation', value: 'Simulates August monsoon revenue drops (-35% to -45%) across rural trades' },
-        { label: 'Solvency Benchmark', value: 'Enforces statutory Debt Service Coverage Ratio (DSCR ≥ 1.50) across all 12 operating cycles' },
+        { label: 'Lean Season Simulation', value: 'Shows each business\'s 12-month season pattern from its research dossier, with the leanest months marked' },
+        { label: 'Solvency Benchmark', value: 'Shows the cash-flow cover (DSCR) printed in each business\'s dossier, Year 1 to 3, or NOT FOUND' },
         { label: 'Empirical Coverage', value: '24 validated trade dossiers spanning agro-processing, tailoring, retail, and artisanal crafts' },
-        { label: 'Stress Buffer Alert', value: 'Calculates operational working capital reserve thresholds before loan sanction' }
+        { label: 'Stress Buffer Alert', value: 'Lists what each dossier leaves open (gaps and remaining questions) before you apply' }
       ]
     },
     3: {
@@ -201,21 +201,21 @@ const PILLAR_DOSSIERS = {
       mandate: 'Usurious Loans Act & Rule of Damdupat Statutory Relief',
       summary: 'Systematic consolidation of informal high-interest moneylender debt into low-cost institutional banking facilities.',
       specifications: [
-        { label: 'Informal Debt Conversion', value: 'Refinances 3-senkda to 5-senkda (36% to 60% APR) compounding debt to 6.5% p.a.' },
+        { label: 'Informal Debt Conversion', value: 'Compares 3- to 5-senkda moneylender debt (36% to 60% a year) with a bank loan EMI (team\'s refinancing engine, ASSUMED)' },
         { label: 'Rule of Damdupat Threshold', value: 'Automatically triggers legal violation alerts when total interest paid equals or exceeds principal' },
-        { label: 'Statutory Shield', value: 'Leverages Section 3 of the Usurious Loans Act to halt compound interest penalties' },
-        { label: 'Household Cash Liberation', value: 'Releases up to ₹4,800/month in predatory servicing charges back into working capital' }
+        { label: 'Statutory Shield', value: 'Flags debts where the Usurious Loans Act, 1918 may help; check with legal aid' },
+        { label: 'Household Cash Liberation', value: 'Shows the monthly moneylender interest next to the bank EMI for your own debt figures' }
       ]
     },
     4: {
       number: 'PILLAR 04',
       title: 'Statutory 1-Page Lead-Bank DPR',
       color: '#4A6274',
-      mandate: 'RBI Lead Bank Scheme Standardized Appraisal Format',
-      summary: 'Instant generation of an auditable, single-page bank sanction appraisal conforming to Lead Bank Scheme standards.',
+      mandate: '1-page advisory DPR for the bank and the State Channelising Agency',
+      summary: 'A one-page Detailed Project Report made from the verified loan rules and the business dossier, every figure tagged. Advisory only: not a loan sanction.',
       specifications: [
-        { label: 'Appraisal Layout', value: 'Single-page concise lead-bank appraisal with QR code verification hash' },
-        { label: 'Statutory Financial Metrics', value: 'Embedded CAPEX, OPEX, Break-Even, Sensitivity, and DSCR amortization tables' },
+        { label: 'Appraisal Layout', value: 'One page, made by the server; advisory only, not a loan sanction' },
+        { label: 'Statutory Financial Metrics', value: 'NSFDC loan and quarterly repayments, dossier figures (sizes, surplus, DSCR, season), checks and gaps; every figure tagged' },
         { label: 'Branch Approval Routing', value: 'Pre-formatted for Lead District Managers (LDMs) and District Industry Centres (DICs)' },
         { label: 'Scheme Alignment', value: 'Full statutory mapping to NSFDC Term Loan / MCF and PM Vishwakarma craft guidelines' }
       ]
@@ -229,8 +229,8 @@ const PILLAR_DOSSIERS = {
       mandate: 'सामाजिक न्याय मंत्रालय शासनादेश · रियायती ऋण ढाँचा',
       summary: 'राष्ट्रीय अनुसूचित जाति वित्त एवं विकास निगम (NSFDC) के सांविधिक दिशानिर्देशों के अनुरूप प्रत्यक्ष संस्थागत ऋण संरचना।',
       specifications: [
-        { label: 'माइक्रो क्रेडिट सुविधा (MCF)', value: '₹1,40,000 तक @ 6.5% वार्षिक (11 तिमाही अवधि, 1 मोराटोरियम तिमाही)' },
-        { label: 'सावधि ऋण सुविधा (Term Loan)', value: '₹50,00,000 तक @ 8.0% वार्षिक (26 तिमाही अवधि, 2 मोराटोरियम तिमाही)' },
+        { label: 'माइक्रो क्रेडिट सुविधा (MCF)', value: 'परियोजना लागत ₹1,40,000 तक; ऋण ₹1,25,000 तक, 6.5% वार्षिक; 3 वर्ष के भीतर तिमाही किस्तों में वापसी, 3 माह की छूट सहित [S1]' },
+        { label: 'सावधि ऋण सुविधा (Term Loan)', value: 'परियोजना लागत ₹50,00,000 तक; ऋण ₹45,00,000 तक, 8% वार्षिक; 7 वर्ष के भीतर वापसी, 6 माह की छूट सहित [S1]' },
         { label: 'लाभार्थी पात्रता', value: 'अनुसूचित जाति (SC) सूक्ष्म-उद्यमी; वार्षिक पारिवारिक आय ≤ ₹5,00,000' },
         { label: 'मार्जिन मनी संरचना', value: '90% तक रियायती ऋण सुविधा एवं 10% उद्यमी स्वयं का अंशदान' }
       ]
@@ -242,10 +242,10 @@ const PILLAR_DOSSIERS = {
       mandate: 'मानसून नकदी प्रवाह संवहनीयता एवं डीएससीआर सत्यापन',
       summary: 'मौसमी मंदी के दौरान ऋण संकट रोकने के लिए 24 वास्तविक व्यापार डोज़ियर में माह-दर-माह नकदी प्रवाह मॉडलिंग।',
       specifications: [
-        { label: 'मंदी मौसम सिमुलेशन', value: 'अगस्त मानसून में ग्रामीण व्यवसायों में राजस्व में 35% से 45% की गिरावट का अनुकरण' },
-        { label: 'सॉल्वेंसी मानक', value: 'सभी 12 परिचालन चक्रों में अनिवार्य ऋण सेवा कवरेज अनुपात (DSCR ≥ 1.50) लागू' },
+        { label: 'मंदी मौसम सिमुलेशन', value: 'हर व्यवसाय के शोध डोज़ियर से 12 महीने का मौसमी पैटर्न, सबसे कमज़ोर महीने चिह्नित' },
+        { label: 'सॉल्वेंसी मानक', value: 'हर व्यवसाय के डोज़ियर में छपा ऋण चुकाने की क्षमता (DSCR), वर्ष 1 से 3, या NOT FOUND' },
         { label: 'व्यावहारिक कवरेज', value: 'कृषि-प्रसंस्करण, सिलाई, किराना और हस्तशिल्प में 24 सत्यापित व्यापार प्रोफाइल' },
-        { label: 'स्ट्रेस बफर अलर्ट', value: 'ऋण स्वीकृति से पूर्व परिचालन कार्यशील पूंजी आरक्षित सीमा का सटीक निर्धारण' }
+        { label: 'स्ट्रेस बफर अलर्ट', value: 'आवेदन से पहले हर डोज़ियर में बचे खुले प्रश्न और कमियाँ' }
       ]
     },
     3: {
@@ -255,21 +255,21 @@ const PILLAR_DOSSIERS = {
       mandate: 'शोषक ऋण अधिनियम एवं दामदुपत नियम के तहत सांविधिक राहत',
       summary: 'अनौपचारिक अत्यधिक ब्याज वाले साहूकारी कर्ज को व्यवस्थित रूप से कम लागत वाले संस्थागत बैंक ऋण में परिवर्तित करना।',
       specifications: [
-        { label: 'अनौपचारिक ऋण परिवर्तन', value: '3-सेंकड़ा से 5-सेंकड़ा (36% से 60% वार्षिक) चक्रवृद्धिकारी कर्ज को 6.5% वार्षिक में पुनर्वित्त' },
+        { label: 'अनौपचारिक ऋण परिवर्तन', value: '3 से 5 सेंकड़ा (36% से 60% वार्षिक) साहूकारी कर्ज की बैंक ऋण की मासिक किस्त से तुलना (टीम का पुनर्वित्त मॉडल, ASSUMED)' },
         { label: 'दामदुपत नियम सीमा', value: 'जब चुकाया गया कुल ब्याज मूलधन के बराबर या उससे अधिक हो जाए तो स्वतः कानूनी चेतावनी' },
-        { label: 'सांविधिक सुरक्षा कवच', value: 'चक्रवृद्धि ब्याज दंड को रोकने के लिए शोषक ऋण अधिनियम (धारा 3) का उपयोग' },
-        { label: 'मासिक नकदी मुक्ति', value: 'साहूकार को दिए जाने वाले प्रति माह ₹4,800 तक के शोषणकारी ब्याज से राहत' }
+        { label: 'सांविधिक सुरक्षा कवच', value: 'जहाँ शोषक ऋण अधिनियम, 1918 मदद कर सकता है वे कर्ज चिह्नित; कानूनी सहायता से पुष्टि करें' },
+        { label: 'मासिक नकदी मुक्ति', value: 'आपके अपने कर्ज के आँकड़ों पर साहूकार का मासिक ब्याज और बैंक किस्त साथ-साथ' }
       ]
     },
     4: {
       number: 'स्तंभ 04',
       title: 'सांविधिक 1-पृष्ठीय लीड-बैंक डीपीआर',
       color: '#4A6274',
-      mandate: 'आरबीआई लीड बैंक योजना मानकीकृत मूल्यांकन प्रारूप',
-      summary: 'लीड बैंक योजना के मानकों के अनुसार क्यूआर कोड सत्यापन युक्त एक-पृष्ठीय बैंक स्वीकृति डीपीआर का त्वरित निर्माण।',
+      mandate: 'बैंक एवं राज्य चैनलाइज़िंग एजेंसी के लिए 1-पृष्ठीय सलाहकारी डीपीआर',
+      summary: 'सत्यापित ऋण नियमों एवं व्यवसाय डोज़ियर से बना एक-पृष्ठीय डीपीआर, हर आँकड़ा टैग सहित। केवल सलाह: ऋण स्वीकृति नहीं।',
       specifications: [
-        { label: 'मूल्यांकन प्रारूप', value: 'क्यूआर कोड सत्यापन हैश के साथ एकल-पृष्ठीय संक्षिप्त बैंक स्वीकृति प्रस्ताव' },
-        { label: 'सांविधिक वित्तीय मापदंड', value: 'कैपेक्स, ओपेक्स, ब्रेक-ईवन, संवेदनशीलता और डीएससीआर परिशोधन सारणी सम्मिलित' },
+        { label: 'मूल्यांकन प्रारूप', value: 'एक पृष्ठ, सर्वर द्वारा तैयार; केवल सलाह, ऋण स्वीकृति नहीं' },
+        { label: 'सांविधिक वित्तीय मापदंड', value: 'NSFDC ऋण एवं तिमाही किस्तें, डोज़ियर आँकड़े (आकार, बचत, DSCR, मौसम), जाँच एवं कमियाँ; हर आँकड़ा टैग सहित' },
         { label: 'शाखा अनुमोदन रूटिंग', value: 'लीड डिस्ट्रिक्ट मैनेजर्स (LDMs) और जिला उद्योग केंद्र (DICs) के लिए पूर्व-प्रारूपित' },
         { label: 'योजना संरेखण', value: 'एनएसएफडीसी सावधि ऋण / एमसीएफ और पीएम विश्वकर्मा शिल्प दिशानिर्देशों के साथ पूर्ण मैपिंग' }
       ]

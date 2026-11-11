@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import {
   calculateNSFDCLoan,
   restructureDebt,
@@ -10,8 +10,10 @@ import {
   chatRoute,
   dprPayload,
   fetchMandiPrices,
-  fetchDossierCashflow
+  fetchDossierCashflow,
+  fetchDossier
 } from '../services/api';
+import { tierOptions, defaultTierCost, flowSteps } from '../services/dossierView';
 
 // Import SSOT Modular Dashboard Components
 import DashboardShell from './dashboard/DashboardShell';
@@ -36,7 +38,7 @@ const DEFAULT_PRODUCTION_SCENARIOS = [
     domainCode: 'D18',
     tab: 'amortizer',
     name: 'D18 Tailoring Workshop',
-    subtitle: 'Not yet verified · NSFDC loan only: enter your cost',
+    subtitle: 'Dossier sizes and season · no yes/no questions yet',
     image: '/images/scenario_tailoring.jpg',
     imageAlt: 'Tailoring craftsmanship',
     imageFallback: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
@@ -163,6 +165,37 @@ export default function ProductionDashboard({
     return () => { isMounted = false; };
   }, [selectedDomainCode, noteOffline]);
 
+  // The business's dossier figures (sizes, season). The loan tab starts with the first size that has
+  // a cost (Micro first), unless the chat has just given a cost for this business.
+  const [dossierDetail, setDossierDetail] = useState(null);
+  const costFromChat = useRef(false);
+  useEffect(() => {
+    let isMounted = true;
+    setDossierDetail(null);
+    fetchDossier(selectedDomainCode).then((res) => {
+      if (!isMounted) return;
+      noteOffline(res);
+      setDossierDetail(res && !res.offline ? res : null);
+      if (costFromChat.current) { costFromChat.current = false; return; }
+      const start = res && !res.offline ? defaultTierCost(res) : null;
+      setProjectCost(start == null ? '' : String(start));
+    }).catch(() => { if (isMounted) setDossierDetail(null); });
+    return () => { isMounted = false; };
+  }, [selectedDomainCode, noteOffline]);
+
+  // The dossier's own printed cash-flow cover (DSCR) for the size matching the cost (or the nearest, ASSUMED)
+  const [dossierCashflow, setDossierCashflow] = useState(null);
+  useEffect(() => {
+    let isMounted = true;
+    setDossierCashflow(null);
+    if (!isPositiveNumber(projectCost)) return undefined;
+    fetchDossierCashflow(selectedDomainCode, Number(projectCost),
+      isNonNegativeNumber(familyIncome) ? Number(familyIncome) : 0, typeof isSc === 'boolean' ? isSc : true)
+      .then((res) => { if (isMounted) setDossierCashflow(noteOffline(res)); })
+      .catch((err) => { if (isMounted) setDossierCashflow({ status: 'NOT FOUND', reason: err.message }); });
+    return () => { isMounted = false; };
+  }, [selectedDomainCode, projectCost, familyIncome, isSc, noteOffline]);
+
   // NSFDC loan: only once the user has entered cost, income and SC status
   const loanReady = isPositiveNumber(projectCost) && isNonNegativeNumber(familyIncome) && typeof isSc === 'boolean';
   useEffect(() => {
@@ -203,8 +236,11 @@ export default function ProductionDashboard({
     onIsScChange: setIsSc,
     ready: loanReady,
     result: loanResult,
-    error: loanError
+    error: loanError,
+    tiers: tierOptions(dossierDetail),
+    onPickTier: (cost) => setProjectCost(String(cost))
   };
+  const steps = flowSteps({ code: selectedDomainCode, projectCost, familyIncome, isSc, loanReady });
 
   // Mode B Debt Restructuring: the server's figures only (team's engine, tagged ASSUMED by the server)
   useEffect(() => {
@@ -347,7 +383,10 @@ export default function ProductionDashboard({
       const route = chatRoute(res.tool_results);
       if (route.code) setSelectedDomainCode(route.code);
       if (route.loanInputs) {
-        if (route.loanInputs.projectCost !== undefined) setProjectCost(String(route.loanInputs.projectCost));
+        if (route.loanInputs.projectCost !== undefined) {
+          if (route.code && route.code !== selectedDomainCode) costFromChat.current = true;
+          setProjectCost(String(route.loanInputs.projectCost));
+        }
         if (route.loanInputs.familyIncome !== undefined) setFamilyIncome(String(route.loanInputs.familyIncome));
         if (typeof route.loanInputs.isSc === 'boolean') setIsSc(route.loanInputs.isSc);
       }
@@ -449,6 +488,9 @@ export default function ProductionDashboard({
         amortizationSchedule={amortizationSchedule}
         loanInputs={loanInputs}
         feasibility={feasibility}
+        dossierDetail={dossierDetail}
+        dossierCashflow={dossierCashflow}
+        flowSteps={steps}
         debtPrincipal={debtPrincipal}
         onPrincipalChange={enterDebt(setDebtPrincipal)}
         debtRateSenkda={debtRateSenkda}

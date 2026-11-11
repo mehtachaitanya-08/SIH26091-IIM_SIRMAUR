@@ -21,6 +21,9 @@ export default function CenterWorkspace({
   amortizationSchedule,
   loanInputs = null,
   feasibility = null,
+  dossierDetail = null,
+  dossierCashflow = null,
+  flowSteps = null,
   debtPrincipal = 120000,
   onPrincipalChange,
   debtRateSenkda = 3.0,
@@ -102,6 +105,26 @@ export default function CenterWorkspace({
             </p>
           </div>
         </div>
+      )}
+
+      {/* Step-by-step flow (production): business -> size -> details -> results -> DPR */}
+      {activeTab === 'home' && mode === 'production' && Array.isArray(flowSteps) && (
+        <ol className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-[11px] font-sans-ui" aria-label="Steps">
+          {flowSteps.map((st) => (
+            <li key={st.n}>
+              <button
+                type="button"
+                onClick={() => onSelectTab && onSelectTab(st.tab)}
+                className={`w-full h-full text-left p-2.5 rounded-xl border transition-all cursor-pointer ${
+                  st.done ? 'bg-emerald-50 border-emerald-200 text-[#0E7A53]' : 'bg-white border-[#E9ECEF] text-[#111311] hover:border-[#111311]/30'
+                }`}
+              >
+                <span className="font-mono-num font-bold">{st.done ? '✓' : st.n}</span>{' '}
+                <span className="font-semibold">{st.label}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
       )}
 
       {/* Live Agmarknet Mandi Intelligence & ML Models (Production Mode Only) */}
@@ -198,6 +221,8 @@ export default function CenterWorkspace({
           onClose={() => onSelectTab && onSelectTab('home')}
           onNavigateAmortizer={() => onSelectTab && onSelectTab('amortizer')}
           onNavigateFeasibility={() => onSelectTab && onSelectTab('feasibility')}
+          dossierDetail={dossierDetail}
+          dossierCashflow={dossierCashflow}
           formatINR={formatINR}
           mode={mode}
         />

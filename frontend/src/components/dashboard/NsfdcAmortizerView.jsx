@@ -31,8 +31,8 @@ export default function NsfdcAmortizerView({
   } else if (!loanInputs.ready) {
     body = (
       <p className="text-xs text-[#111311]">
-        Loan and repayment schedule: NOT FOUND until you enter your project cost, family income and SC status above.
-        The business data has no verified project cost, so the loan is worked out from your own figures.
+        Loan and repayment schedule: NOT FOUND until you pick a size (or type your project cost) and enter
+        your family income and SC status above.
       </p>
     );
   } else if (!result) {
@@ -150,6 +150,35 @@ export default function NsfdcAmortizerView({
           Close
         </button>
       </div>
+
+      {mode === 'production' && loanInputs && (loanInputs.tiers || []).length > 0 && (
+        <div className="space-y-1 text-xs">
+          <span className="font-semibold text-[#111311]">Sizes in this business's dossier (pick one, or type your own cost):</span>
+          <div className="flex flex-wrap gap-2">
+            {loanInputs.tiers.map((t) => {
+              const picked = !t.disabled && String(t.cost) === String(loanInputs.projectCost);
+              return (
+                <button
+                  key={t.label}
+                  type="button"
+                  disabled={t.disabled}
+                  onClick={() => !t.disabled && loanInputs.onPickTier(t.cost)}
+                  title={t.disabled ? t.reason : t.tag}
+                  className={`px-3 py-1.5 rounded-xl border text-left font-sans-ui ${
+                    t.disabled ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed'
+                      : picked ? 'bg-[#111311] text-white border-[#111311] cursor-pointer'
+                      : 'bg-white text-[#111311] border-[#E9ECEF] hover:border-[#111311]/40 cursor-pointer'
+                  }`}
+                >
+                  <span className="block font-semibold">{t.label}</span>
+                  <span className="block font-mono-num">{t.disabled ? 'NOT FOUND' : fmt(t.cost)}</span>
+                  {!t.disabled && <span className={`block text-[10px] ${picked ? 'text-emerald-300' : 'text-[#0E7A53]'}`}>{t.tag}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {mode === 'production' && loanInputs && (
         <div className="grid grid-cols-3 gap-3 text-xs">
