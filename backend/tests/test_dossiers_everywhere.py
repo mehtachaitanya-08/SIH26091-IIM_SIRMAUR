@@ -74,13 +74,15 @@ def test_feasibility_for_the_others_copies_dossier_lines(code):
     r = client.get(f"/api/feasibility/{code}").json()
     assert r["status"] == "verified"
     assert [s["id"] for s in r["sections"]] == ["market", "pricing", "season", "compliance", "swot_competition"]
+    assert '"line"' not in json.dumps(r) and '"raw"' not in json.dumps(r)   # never sent
     lines = dossier_lines(code)
-    for s in r["sections"]:
+    internal = feasibility.from_dossier(code, internal=True)   # the same report with its checker keys
+    for s in internal["sections"]:
         assert s["items"], (code, s["id"])
         for it in s["items"]:
             assert lines[it["line"] - 1].strip() == it["raw"], (code, it)
             assert it["tag"] == f"{code} dossier"
-    for g in r["gaps"]:
+    for g in internal["gaps"]:
         assert lines[g["line"] - 1].strip() == g["raw"]
         assert g["status"] in ("NOT FOUND", "REMAINING QUESTION")
 
@@ -139,3 +141,12 @@ def test_dpr_one_page_with_dossier_figures(code, cost):
 def test_dpr_d01_shows_its_printed_dscr():
     _, text = pdf_text("D01", 350000)
     assert "2.84" in text and "₹3,50,000" in text
+
+
+def test_dpr_long_name_decimal_amounts_and_all_answers_still_one_page():
+    qs = businesses.detail("D20")["questions"]
+    answers = {q["id"]: q["choices"][0] for q in qs}
+    r = post("/api/dpr", {"code": "D20", "projectCost": 140000.75, "familyIncome": 100000.5, "isSc": True,
+                          "answers": answers, "applicantName": "A" * 40 + " " + "B" * 39})
+    assert r.status_code == 200, r.text
+    assert len(PdfReader(io.BytesIO(r.content)).pages) == 1

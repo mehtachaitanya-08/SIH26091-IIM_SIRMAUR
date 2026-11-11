@@ -78,3 +78,13 @@ def test_key_never_echoed(monkeypatch):
 
     monkeypatch.setattr(mandi, "_get", boom)
     assert "secret-key-xyz" not in client.get("/api/mandi-prices").text
+
+
+def test_health_says_whether_the_mandi_key_is_set(monkeypatch, tmp_path):
+    # the dashboard's key light must not depend on a business having a crop
+    monkeypatch.setattr(mandi, "ENV_FILE", tmp_path / "missing.env")
+    monkeypatch.delenv("DATA_GOV_IN_API_KEY", raising=False)
+    assert client.get("/api/health").json()["mandiKeyConfigured"] is False
+    monkeypatch.setenv("DATA_GOV_IN_API_KEY", "abc123")
+    h = client.get("/api/health").json()
+    assert h["mandiKeyConfigured"] is True and "abc123" not in str(h)

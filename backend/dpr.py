@@ -107,8 +107,9 @@ class _Page:
         self.y -= 2
 
 
-def _dossier_block(pg, code, req):
-    """Section 4: the dossier's figures for the size matching the project cost (or the nearest, ASSUMED)."""
+def _dossier_block(pg, code, req, compact=False):
+    """Section 4: the dossier's figures for the size matching the project cost (or the nearest, ASSUMED).
+    compact=True (used only if the full page would overflow): sizes list and season line left out."""
     tag = f"[{code} dossier]"
     pg.heading("4. Dossier figures for this business")
     out = dossier_figures.cashflow(code, req)
@@ -118,16 +119,17 @@ def _dossier_block(pg, code, req):
     else:
         sizes = "; ".join(f"{t['label']}: " + (inr(t['project_cost']['value']) if t['project_cost'].get('value') else "NOT FOUND")
                           for t in dossier_figures.figures(code)["tiers"])
-        pg.text(f"Sizes in the dossier: {sizes} {tag}", size=7.5, indent=4)
+        if not compact:
+            pg.text(f"Sizes in the dossier: {sizes} {tag}", size=7.5, indent=4)
         pg.text(f"Size used: {tier['label']} ({inr(tier['project_cost']['value'])}) {tag}", size=7.5, indent=4)
         for a in out["assumptions"]:
             pg.text(f"{a['text']} [{a['tag']}]", size=7.5, indent=4)
         s = tier["surplus"]
         if s.get("value") is not None:
             per = "a year (Year 3, stabilised)" if s["period"] == "year" else "a month"
-            pg.text(f"Surplus before loan repayments: {inr(s['value'])} {per} {tag}", size=7.5, indent=4)
+            pg.text(f"Surplus ({s['basis']}): {inr(s['value'])} {per} {tag}", size=7.5, indent=4)
         else:
-            pg.text(f"Surplus before loan repayments: NOT FOUND {tag}", size=7.5, indent=4)
+            pg.text(f"Surplus: NOT FOUND {tag}", size=7.5, indent=4)
         if out.get("status") == "ok":
             yrs = ", ".join(f"Year {y['year']}: " + (f"{y['value']:.2f}" if y.get("value") is not None else "NOT FOUND")
                             for y in out["dscr"]["years"])
@@ -136,6 +138,8 @@ def _dossier_block(pg, code, req):
         else:
             pg.text(f"Cash-flow cover (DSCR): NOT FOUND. {out.get('reason', '')} {tag}", size=7.5, indent=4)
     season = dossier_figures.figures(code)["seasonality"]
+    if compact:
+        return
     if season.get("status") == "NOT FOUND":
         pg.text(f"Season pattern: NOT FOUND {tag}", size=7.5, indent=4)
     else:
@@ -148,6 +152,15 @@ class PageOverflow(RuntimeError):
 
 
 def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
+    """One page. If the full layout would overflow, it is rebuilt once with fewer gap lines and a shorter
+    dossier block (the full lists stay in the feasibility report)."""
+    try:
+        return _build_pdf(code, req, answers, applicant, notes, compact=False)
+    except PageOverflow:
+        return _build_pdf(code, req, answers, applicant, notes, compact=True)
+
+
+def _build_pdf(code, req, answers, applicant=None, notes=(), compact=False) -> bytes:
     has_rules = businesses.check_code(code)  # raises UnknownCode; True = has yes/no questions
     adv = businesses.advice(code, answers)   # raises BadAnswer (the 17 without questions accept no answers)
     out = loan.build_loan(req)
@@ -209,7 +222,7 @@ def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
         for w in out["warnings"]:
             pg.text(f"Warning: {w['text']} {_t(w['tag'])}", size=7.5, indent=4)
 
-    _dossier_block(pg, code, req)
+    _dossier_block(pg, code, req, compact=compact)
 
     pg.heading("5. Checks for this business")
     if not has_rules:
@@ -229,10 +242,11 @@ def build_pdf(code, req, answers, applicant=None, notes=()) -> bytes:
 
     g = feasibility.report(code)["gaps"]
     pg.heading(f"6. Gaps: {len(g)} items NOT FOUND or still open in the dossier")
-    for x in g[:MAX_GAPS_SHOWN]:
+    shown = 2 if compact else MAX_GAPS_SHOWN
+    for x in g[:shown]:
         pg.text(f"• [{x['section']}] {_cut(_plain(x['reason']), 150)}", size=7, indent=4)
-    if len(g) > MAX_GAPS_SHOWN:
-        pg.text(f"…and {len(g) - MAX_GAPS_SHOWN} more: see the feasibility report (/api/feasibility/{code}).", size=7, indent=4)
+    if len(g) > shown:
+        pg.text(f"…and {len(g) - shown} more: see the feasibility report (/api/feasibility/{code}).", size=7, indent=4)
 
     pg.heading("Sources")
     s1 = out["sources"]["[S1]"]

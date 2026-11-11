@@ -53,3 +53,14 @@ export function flowSteps({ code, projectCost, familyIncome, isSc, loanReady }) 
     { n: 5, label: 'Download the 1-page DPR', tab: 'dpr', done: false }
   ];
 }
+
+/**
+ * The cost to put in the box when a business's dossier arrives. origin = who last set the cost for
+ * this business: null (nobody), 'user' (typed) or 'chat'. Only an untouched box is filled (Micro first);
+ * returns null to leave the box as it is.
+ */
+export function costOnBusinessLoad({ origin, dossier }) {
+  if (origin === 'user' || origin === 'chat') return null;
+  const start = defaultTierCost(dossier);
+  return start == null ? '' : String(start);
+}

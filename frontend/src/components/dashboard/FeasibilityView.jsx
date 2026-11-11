@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * FeasibilityView — Feasibility report from the server (GET /api/feasibility/{code})
  * Market, pricing, season, compliance, SWOT and competition, from the verified business data only.
- * Every line keeps its tag; gaps are listed as NOT FOUND / VENDOR QUOTE NEEDED.
+ * Every line keeps its tag; gaps are the NOT FOUND / VENDOR QUOTE NEEDED lines and the dossier's remaining questions.
  */
 function itemText(it) {
   if (Array.isArray(it.cells)) return it.cells.join(' · ');
@@ -26,7 +26,7 @@ export default function FeasibilityView({ activeDomain, feasibility, onClose, mo
   } else if (feasibility.status !== 'verified') {
     body = (
       <p className="text-xs text-[#111311]">
-        {activeDomain?.name || code} ({code}) is not yet verified, so there is no feasibility report. NOT FOUND.
+        No feasibility report for {activeDomain?.name || code} ({code}). NOT FOUND.
         The NSFDC loan calculator still works for any business.
       </p>
     );
@@ -49,7 +49,7 @@ export default function FeasibilityView({ activeDomain, feasibility, onClose, mo
         ))}
         <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
           <p className="font-bold text-[#111311] mb-1">
-            Gaps: {(feasibility.gaps || []).length} items NOT FOUND or VENDOR QUOTE NEEDED in official sources
+            Gaps: {(feasibility.gaps || []).length} items NOT FOUND, waiting for a vendor quote, or still open in the dossier
           </p>
           <ul className="space-y-1 text-[#686D65] max-h-40 overflow-y-auto">
             {(feasibility.gaps || []).map((g, i) => (

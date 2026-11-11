@@ -228,7 +228,7 @@ export default function SetoDashboard({
               <Sparkles className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0E7A53] transition-colors" />
             </div>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              {isHi ? '12 महीने की मौसमीयता एवं अगस्त मंदी का तनाव परीक्षण।' : 'Test 12-month seasonality & August lean-month cash flows.'}
+              {isHi ? '12 महीने का मौसमी पैटर्न और सबसे कमज़ोर महीने, व्यवसाय के डोज़ियर से।' : "12-month season pattern and leanest months, from the business's dossier."}
             </p>
           </div>
 
@@ -243,7 +243,7 @@ export default function SetoDashboard({
               <Sparkles className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0E7A53] transition-colors" />
             </div>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              {isHi ? '6.5% / 8.0% पर 11 या 26 तिमाही किस्तों की गणना करें। [S1]' : 'Calculate 11 or 26 quarterly instalments at 6.5% / 8.0%. [S1]'}
+              {isHi ? '6.5% / 8.0% [S1] पर तिमाही किस्तें (11 या 26 किस्तें ASSUMED: NSFDC कहता है "भीतर")।' : 'Quarterly instalments at 6.5% / 8.0% [S1] (11 or 26 instalments ASSUMED: NSFDC says "within").'}
             </p>
           </div>
 

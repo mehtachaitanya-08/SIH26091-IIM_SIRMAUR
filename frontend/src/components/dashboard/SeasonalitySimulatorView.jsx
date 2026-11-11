@@ -53,7 +53,9 @@ export default function SeasonalitySimulatorView({
         <>
           <div className="grid grid-cols-2 gap-3 text-xs">
             <div className="p-3 rounded-xl bg-white border border-[#E9ECEF]">
-              <span className="text-[#686D65]">Surplus before loan repayments{tier ? ` (${tier.label})` : ''}:</span>
+              <span className="text-[#686D65]">
+                Surplus{surplus?.basis ? `, ${surplus.basis}` : ''}{tier ? ` (${tier.label})` : ''}:
+              </span>
               {surplus && typeof surplus.value === 'number' ? (
                 <>
                   <p className="text-base font-bold text-[#111311] font-mono-num">

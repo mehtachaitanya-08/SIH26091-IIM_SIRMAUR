@@ -42,6 +42,7 @@ export default function CenterWorkspace({
   onDownloadPdf,
   formatINR,
   mandiPriceData = null,
+  mandiKeyConfigured = null,
   mode = 'mockup'
 }) {
   const userGreeting = currentUser?.name 
@@ -134,7 +135,7 @@ export default function CenterWorkspace({
           <div className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E9ECEF] space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#E9ECEF] pb-2.5">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                <span className={`w-2 h-2 rounded-full ${mandiPriceData?.isLive ? 'bg-emerald-600' : 'bg-slate-400'}`}></span>
                 <span className="text-xs font-semibold text-[#111311] font-mono-num uppercase tracking-wider">
                   Open Government Data (data.gov.in / Agmarknet API)
                 </span>
@@ -178,8 +179,8 @@ export default function CenterWorkspace({
               <div className="bg-white p-3 rounded-lg border border-[#E9ECEF]">
                 <span className="text-[#686D65] block text-[11px] font-medium">API Integration Status</span>
                 <p className="font-bold text-[#111311] text-xs font-mono-num mt-0.5 flex items-center gap-1.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${mandiPriceData?.apiKeyConfigured ? 'bg-emerald-600' : 'bg-red-500'}`}></span>
-                  <span>DATA_GOV_IN_API_KEY {mandiPriceData?.apiKeyConfigured ? 'set' : 'not set'}</span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${mandiKeyConfigured === true ? 'bg-emerald-600' : mandiKeyConfigured === false ? 'bg-red-500' : 'bg-slate-400'}`}></span>
+                  <span>DATA_GOV_IN_API_KEY {mandiKeyConfigured === true ? 'set' : mandiKeyConfigured === false ? 'not set' : 'status unknown (server offline)'}</span>
                 </p>
                 <span className="text-[10px] text-[#686D65] truncate block">Resource: 9ef84268...Agmarknet</span>
               </div>
@@ -199,11 +200,11 @@ export default function CenterWorkspace({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px]">
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                 <span className="font-bold text-[#111311] block">1. NSFDC Dual-Tier Amortizer</span>
-                <span className="text-[#686D65] mt-0.5 block">Micro & Term loan optimization at 6.5%/8.0%</span>
+                <span className="text-[#686D65] mt-0.5 block">Micro & Term loan at 6.5%/8.0% [S1]</span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                 <span className="font-bold text-[#111311] block">2. 12-Mo Seasonality Stress</span>
-                <span className="text-[#686D65] mt-0.5 block">August lean-month cash flow simulation</span>
+                <span className="text-[#686D65] mt-0.5 block">Each business's leanest months, from its dossier</span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                 <span className="font-bold text-[#111311] block">3. Rule of Damdupat Audit</span>

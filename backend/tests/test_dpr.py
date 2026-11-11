@@ -73,8 +73,18 @@ def test_dpr_wording_fixes():
     assert " …" in t                                       # long gap reasons cut at a word, marked
 
 
-def test_dpr_page_overflow_is_a_clean_error(monkeypatch):
+def test_dpr_too_long_is_rebuilt_compact_on_one_page(monkeypatch):
     from backend import dpr as dpr_mod
-    monkeypatch.setattr(dpr_mod, "MAX_GAPS_SHOWN", 400)
+    monkeypatch.setattr(dpr_mod, "MAX_GAPS_SHOWN", 400)   # full layout overflows; compact retry fits
+    r = dpr({"code": "D20", "projectCost": 140000, "familyIncome": 1, "isSc": True})
+    assert r.status_code == 200
+    assert len(PdfReader(io.BytesIO(r.content)).pages) == 1
+
+
+def test_dpr_page_overflow_even_compact_is_a_clean_error(monkeypatch):
+    from backend import dpr as dpr_mod
+    def always_overflow(*a, **k):
+        raise dpr_mod.PageOverflow("DPR content does not fit on one page")
+    monkeypatch.setattr(dpr_mod, "_build_pdf", always_overflow)
     r = dpr({"code": "D20", "projectCost": 140000, "familyIncome": 1, "isSc": True})
     assert r.status_code == 500 and set(r.json()) >= {"error", "status", "timestamp"}

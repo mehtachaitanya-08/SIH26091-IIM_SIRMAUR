@@ -85,7 +85,16 @@ def _ranges(lines):
     return out
 
 
-def from_dossier(code: str) -> dict:
+def _strip_checker_keys(x):
+    if isinstance(x, dict):
+        return {k: _strip_checker_keys(v) for k, v in x.items() if k not in ("line", "raw")}
+    if isinstance(x, list):
+        return [_strip_checker_keys(v) for v in x]
+    return x
+
+
+def from_dossier(code: str, internal: bool = False) -> dict:
+    """internal=True keeps each item's dossier line and raw text (for the tests); never sent."""
     from backend.dossier_figures import _lines  # the same dossier reader as the figures
     lines = _lines(code)
     ranges = _ranges(lines)
@@ -114,7 +123,7 @@ def from_dossier(code: str) -> dict:
             if raw and not SEPARATOR.match(raw) and not raw.startswith("```") and raw != "---":
                 gaps.append({"section": "remaining_questions", "status": "REMAINING QUESTION", "value": None,
                              "line": n, "raw": raw, "reason": _clean(raw.lstrip("#")), "unverified": False, "hi": ""})
-    return {
+    out = {
         "code": code,
         "status": "verified",
         "name": NAMES[code],
@@ -125,6 +134,7 @@ def from_dossier(code: str) -> dict:
         "method": "Copied line by line from the business's research dossier (research_dossiers/), tagged "
                   f"'{code} dossier'; gaps are the dossier's remaining questions and NOT FOUND lines.",
     }
+    return out if internal else _strip_checker_keys(out)
 
 
 def report(code: str) -> dict:

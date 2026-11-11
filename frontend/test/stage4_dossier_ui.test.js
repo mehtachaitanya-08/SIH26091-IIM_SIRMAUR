@@ -95,3 +95,32 @@ describe('step-by-step flow', () => {
     assert.deepStrictEqual(all.map((x) => x.done), [true, true, true, true, false]);
   });
 });
+
+import { costOnBusinessLoad } from '../src/services/dossierView.js';
+import fs from 'node:fs';
+
+describe('size pre-fill never overwrites a cost someone chose', () => {
+  it('fills the Micro size only when nobody has touched the cost box for this business', () => {
+    assert.equal(costOnBusinessLoad({ origin: null, dossier: D08 }), '140000');
+    assert.equal(costOnBusinessLoad({ origin: 'user', dossier: D08 }), null);   // typed before the dossier arrived
+    assert.equal(costOnBusinessLoad({ origin: 'chat', dossier: D08 }), null);   // the chat gave a cost
+    assert.equal(costOnBusinessLoad({ origin: null, dossier: { tiers: [] } }), '');
+    assert.equal(costOnBusinessLoad({ origin: null, dossier: null }), '');
+  });
+});
+
+describe('leftover claims', () => {
+  const src = (p) => fs.readFileSync(new URL(`../src/${p}`, import.meta.url), 'utf8');
+  it('no August-only lean-month claims; 6.5%/8% tagged; quarter counts not tagged as NSFDC wording', () => {
+    for (const f of ['App.jsx', 'components/dashboard/CenterWorkspace.jsx', 'components/SetoDashboard.jsx']) {
+      assert.ok(!/August (monsoon )?lean-month/i.test(src(f)), f);
+    }
+    assert.ok(src('components/dashboard/CenterWorkspace.jsx').includes('6.5%/8.0% [S1]'));
+    assert.ok(!src('components/SetoDashboard.jsx').includes("6.5% / 8.0%. [S1]'"));
+  });
+  it('surplus label states what it is net of; gaps title fits remaining questions; no dead not-yet-verified branch', () => {
+    assert.ok(!src('components/dashboard/SeasonalitySimulatorView.jsx').includes('Surplus before loan repayments'));
+    assert.ok(!src('components/dashboard/FeasibilityView.jsx').includes('not yet verified'));
+    assert.ok(!src('components/dashboard/FeasibilityView.jsx').includes('VENDOR QUOTE NEEDED in official sources'));
+  });
+});

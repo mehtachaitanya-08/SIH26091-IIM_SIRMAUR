@@ -74,7 +74,8 @@ def test_every_value_reads_exactly_from_as_written(code):
     for x in figures_in(dfig.figures(code)):
         digits = x["as_written"].replace("₹", "").replace(",", "").rstrip("x").strip()
         v = float(digits)
-        if x.get("unit") == "INR lakh":
+        if x.get("written_in") == "lakh":
+            assert x["unit"] == "INR"  # the value is in rupees; the dossier wrote lakh
             v = round(v * 100000)
         assert x["value"] == v, x
 
@@ -131,22 +132,73 @@ def test_d20_person_c_layout():
     f = dfig.figures("D20")
     micro, term = f["tiers"]
     assert micro["project_cost"]["status"] == "NOT FOUND"
-    assert (term["project_cost"]["value"], term["project_cost"]["line"], term["project_cost"]["unit"]) == (4384000, 140, "INR lakh")
+    assert (term["project_cost"]["value"], term["project_cost"]["line"], term["project_cost"]["written_in"]) == (4384000, 140, "lakh")
     assert term["project_cost"]["source_tag"].startswith("[S5]")
     assert f["seasonality"]["status"] == "NOT FOUND"
     assert all(t["surplus"]["status"] == "NOT FOUND" for t in f["tiers"])
 
 
-@pytest.mark.parametrize("code", [c for c in PERSON_C if c != "D20"])
-def test_other_person_c_dossiers_print_no_total(code):
+PERSON_C_COSTS = {  # each size's total as the dossier prints it (lakh), or None where it prints none
+    "D15": [None, None], "D16": [None, 1075000], "D17": [None, None], "D18": [None, None],
+    "D19": [None, 1366000], "D20": [None, 4384000], "D21": [None, 280000, 841000], "D22": [None, 3928000],
+}
+
+
+@pytest.mark.parametrize("code", PERSON_C)
+def test_person_c_size_totals_as_printed(code):
     f = dfig.figures(code)
-    assert [t["project_cost"].get("status") for t in f["tiers"]] == ["NOT FOUND", "NOT FOUND"]
+    assert [t["project_cost"].get("value") for t in f["tiers"]] == PERSON_C_COSTS[code]
     assert f["seasonality"]["status"] == "NOT FOUND"
+    for t in f["tiers"]:
+        if t["project_cost"].get("status") == "NOT FOUND":
+            assert "prints no total project cost" in t["project_cost"]["reason"]
+
+
+def test_d19_and_d21_lines():
+    d19 = dfig.figures("D19")["tiers"][1]["project_cost"]
+    assert (d19["line"], d19["as_written"]) == (135, "13.66")
+    d21 = dfig.figures("D21")["tiers"]
+    assert [t["label"] for t in d21] == ["Micro Finance size", "Small Term Loan size", "Larger Term Loan size"]
+    assert [t["project_cost"].get("line") for t in d21] == [None, 130, 148]
+
+
+def test_surplus_basis_says_whether_loan_interest_is_already_taken_off():
+    # D04-D10, D23: "Net Monthly Surplus" = gross margin - overheads, and the overheads include a bank-interest line
+    for c in ["D04", "D05", "D06", "D07", "D08", "D09", "D10", "D23"]:
+        assert dfig.figures(c)["tiers"][1]["surplus"]["basis"] == dfig.AFTER_INTEREST, c
+    for c in ["D01", "D02", "D03", "D11", "D12", "D13", "D14", "D24"]:
+        assert all(t["surplus"]["basis"] == dfig.BEFORE_LOAN for t in dfig.figures(c)["tiers"]), c
+
+
+def test_parallel_loads_never_mix_up_codes():
+    import threading
+    for _ in range(20):
+        dfig.figures.cache_clear()
+        out = {}
+        def load(codes):
+            for c in codes:
+                out[c] = dfig.figures(c)
+        ts = [threading.Thread(target=load, args=(CODES,)), threading.Thread(target=load, args=(CODES[::-1],)),
+              threading.Thread(target=load, args=(["D20", "D01", "D08"] * 3,))]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join()
+        for c, f in out.items():
+            for x in figures_in(f):
+                assert x["tag"] == f"{c} dossier", (c, x)
+
+
+def test_cashflow_reply_has_no_checker_keys():
+    text = post("/api/dossiers/D01/cashflow", {"projectCost": 350000, "familyIncome": 1, "isSc": True}).text
+    for key in ('"line"', '"as_written"', '"source_tag"'):
+        assert key not in text, key
 
 
 def test_tier_counts():
     expected = {c: 3 for c in ["D01", "D02", "D03", "D11", "D12", "D13", "D24"]}
     expected.update({c: 2 for c in ["D04", "D05", "D06", "D07", "D08", "D09", "D10", "D14", "D23"] + PERSON_C})
+    expected["D21"] = 3
     assert {c: len(dfig.figures(c)["tiers"]) for c in CODES} == expected
 
 

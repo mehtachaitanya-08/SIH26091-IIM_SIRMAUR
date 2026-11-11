@@ -72,12 +72,22 @@ MODEL = re.compile(r"#### Model ([A-C])")
 YEAR_DSCR = re.compile(r"Year ([123]) DSCR")
 DSCR_VALUE = re.compile(r"(\d+\.\d+)\s*(?:\\times|×|x\b)")
 
+# What the surplus is net of. The Year 3 figures are before loan repayments ("Pre-Debt"); the monthly
+# "Net Monthly Surplus" of D04-D10 and D23 subtracts operating overheads that include a bank-interest line.
+BEFORE_LOAN = "before loan repayments"
+AFTER_INTEREST = "after the dossier's own loan-interest line"
+
 # Tier totals: "| **TOTAL** | **<size> CapEx** | ... | **₹X** | ... | `[S1, S3]` |"  (D01-style dossiers)
 TOTAL_A = re.compile(r"^\| \*\*TOTAL\*\* \| \*\*(?P<label>[^*]*CapEx)\*\* \|.*?\| \*\*(?P<w>₹[\d,]+)\*\* \|")
 # "| **Total** | **Total Project Cost (<size>)** | ... | **₹X** | [S8] |"  (D04-style dossiers)
 TOTAL_B = re.compile(r"^\| \*\*Total\*\* \| \*\*Total Project Cost \((?P<label>[^)]+)\)\*\* \|.*?\| \*\*(?P<w>₹[\d,]+)\*\* \|")
 # Person C dossiers: "| | **Total project cost** | **43.84** | [S5] p.5 |" (lakh)
-TOTAL_C = re.compile(r"^\| \| \*\*Total project cost\*\* \| \*\*(?P<w>[\d.]+)\*\* \|")
+# Person C dossiers: sizes under "### 2a. / 2b. / 2c." headings; each size's total row, written in lakh, e.g.
+# "| | **Total project cost** | **43.84** |", "| | **Cost of project** | **13.66** |",
+# "| | **Basis A: what the money is spent on** | ESTIMATE ... = **10.75** |", "| A: what the money is spent on | ... **2.80** |"
+SIZE_HEADING = re.compile(r"^#{2,3} 2[a-z]\. (?P<label>.+)$")
+COST_ROW = re.compile(r"^\| (?:\| )?(?:\*\*)?(?:Total project cost|Cost of project|Basis A: what the money is spent on|"
+                      r"A: what the money is spent on)(?:\*\*)? \|(?P<rest>.*)$")
 SEASON_ROW = re.compile(r"^\| \*\*M(?P<m>\d{2})\*\* \| (?P<month>[A-Za-z]+) \| \*\*(?P<w>\d+\.\d+)\*\* \|")
 SEASON_ARRAY = re.compile(r"Seasonality Array:\*\* `\[(?P<w>[\d., ]+)\]`")
 TAG = re.compile(r"\[(S\d+(?:,\s*S\d+)*)\](\s*p\.\s?[\d–-]+)?")
@@ -106,37 +116,45 @@ def _rupees(w):
     return int(w.replace("₹", "").replace(",", ""))
 
 
-_CODE = {"current": None}
-
-
-def _fig(value, w, n, line, **extra):
+def _fig(code, value, w, n, line, **extra):
     if w not in line:
-        raise DossierMismatch(f"line {n} does not contain {w!r}")
-    return dict(value=value, as_written=w, line=n, source_tag=_tag(line), tag=f"{_CODE['current']} dossier", **extra)
+        raise DossierMismatch(f"{code} line {n} does not contain {w!r}")
+    return dict(value=value, as_written=w, line=n, source_tag=_tag(line), tag=f"{code} dossier", **extra)
 
 
 def _not_found(reason):
     return {"status": "NOT FOUND", "value": None, "reason": reason}
 
 
+def _person_c_tiers(code, lines):
+    """Sizes = the dossier's own "2a. / 2b. / 2c." headings; cost = that size's printed total row (lakh)."""
+    starts = [(n, SIZE_HEADING.match(line)) for n, line in enumerate(lines, 1) if SIZE_HEADING.match(line)]
+    tiers = []
+    for i, (n, m) in enumerate(starts):
+        end = starts[i + 1][0] if i + 1 < len(starts) else next(
+            (k for k in range(n, len(lines)) if re.match(r"^#{1,2} \d", lines[k]) and not SIZE_HEADING.match(lines[k])), len(lines))
+        label = re.split(r"[(:]", m.group("label"))[0].strip()
+        cost = _not_found("The dossier lists items for this size but prints no total project cost.")
+        for k in range(n, end):
+            row = COST_ROW.match(lines[k])
+            if row:
+                v = re.findall(r"\*\*(\d+\.\d+)\*\*", row.group("rest"))
+                if v:
+                    cost = _fig(code, round(float(v[0]) * 100000), v[0], k + 1, lines[k], unit="INR", written_in="lakh")
+                    break
+        tiers.append({"label": label, "project_cost": cost})
+    return tiers
+
+
 def _tiers(code, lines):
     if code in PERSON_C:
-        micro = {"label": "Micro Finance size", "project_cost": _not_found(
-            "The dossier lists item prices for this size but prints no total project cost.")}
-        term = {"label": "Term Loan size", "project_cost": _not_found(
-            "The dossier prints no total project cost for this size.")}
-        for n, line in enumerate(lines, 1):
-            m = TOTAL_C.match(line)
-            if m:
-                w = m.group("w")
-                term["project_cost"] = _fig(round(float(w) * 100000), w, n, line, unit="INR lakh")
-        return [micro, term]
+        return _person_c_tiers(code, lines)
     tiers = []
     for n, line in enumerate(lines, 1):
         m = TOTAL_A.match(line) or TOTAL_B.match(line)
         if m:
             tiers.append({"label": m.group("label").strip(),
-                          "project_cost": _fig(_rupees(m.group("w")), m.group("w"), n, line, unit="INR")})
+                          "project_cost": _fig(code, _rupees(m.group("w")), m.group("w"), n, line, unit="INR")})
     return tiers
 
 
@@ -145,13 +163,13 @@ def _season(code, lines):
     for n, line in enumerate(lines, 1):
         m = SEASON_ROW.match(line)
         if m:
-            rows.append(_fig(float(m.group("w")), m.group("w"), n, line, month=m.group("month")))
+            rows.append(_fig(code, float(m.group("w")), m.group("w"), n, line, month=m.group("month")))
     if not rows:
         for n, line in enumerate(lines, 1):
             m = SEASON_ARRAY.search(line)
             if m:
                 parts = [p.strip() for p in m.group("w").split(",")]
-                rows = [_fig(float(p), p, n, line, month=MONTHS[i]) for i, p in enumerate(parts)]
+                rows = [_fig(code, float(p), p, n, line, month=MONTHS[i]) for i, p in enumerate(parts)]
                 break
     if not rows:
         return _not_found("The dossier gives no month-by-month season multipliers.")
@@ -165,7 +183,7 @@ def _dscr(code, lines, n_tiers):
     found = [dict() for _ in range(n_tiers)]
     for idx, n, ws in DSCR_TABLE.get(code, []):
         for year, w in enumerate(ws, 1):
-            found[idx][year] = _fig(float(w.rstrip("x")), w, n, lines[n - 1], year=year)
+            found[idx][year] = _fig(code, float(w.rstrip("x")), w, n, lines[n - 1], year=year)
     model = None
     for n, line in enumerate(lines, 1):
         m = MODEL.match(line)
@@ -180,7 +198,7 @@ def _dscr(code, lines, n_tiers):
             v = DSCR_VALUE.search(line[y.end():])
             year = int(y.group(1))
             if v and year not in found[model]:
-                found[model][year] = _fig(float(v.group(1)), v.group(1), n, line, year=year)
+                found[model][year] = _fig(code, float(v.group(1)), v.group(1), n, line, year=year)
     out = []
     for f in found:
         if f:
@@ -196,7 +214,6 @@ def figures(code):
     if code not in NAMES:
         raise KeyError(code)
     lines = _lines(code)
-    _CODE["current"] = code
     tiers = _tiers(code, lines)
     for t in tiers:
         t["surplus"] = _not_found("The dossier states no yearly or monthly surplus for this size.")
@@ -204,7 +221,8 @@ def figures(code):
         if idx >= len(tiers):
             raise DossierMismatch(f"{code}: surplus for size {idx + 1}, but the dossier has {len(tiers)} sizes")
         t = tiers[idx]
-        t["surplus"] = _fig(_rupees(w), w, n, lines[n - 1], period=period, unit="INR")
+        t["surplus"] = _fig(code, _rupees(w), w, n, lines[n - 1], period=period, unit="INR",
+                            basis=AFTER_INTEREST if period == "month" else BEFORE_LOAN)
         if period == "month":
             t["annual_surplus"] = {"value": t["surplus"]["value"] * 12,
                                    "tag": "CALCULATED: the dossier's monthly surplus x 12"}
@@ -289,4 +307,5 @@ async def dossier_cashflow(code: str, request: Request):
     except DossierMismatch as exc:
         return _error(f"The dossier changed since its figures were checked: {exc}", 500)
     out["assumptions"] = notes + out.get("assumptions", [])
-    return out
+    from backend.compat import _public  # line numbers etc. are for checking only; never sent
+    return _public(out)

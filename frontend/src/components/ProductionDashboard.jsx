@@ -13,7 +13,7 @@ import {
   fetchDossierCashflow,
   fetchDossier
 } from '../services/api';
-import { tierOptions, defaultTierCost, flowSteps } from '../services/dossierView';
+import { tierOptions, costOnBusinessLoad, flowSteps } from '../services/dossierView';
 
 // Import SSOT Modular Dashboard Components
 import DashboardShell from './dashboard/DashboardShell';
@@ -129,6 +129,7 @@ export default function ProductionDashboard({
   const [recentChecks, setRecentChecks] = useState({ D20: true, D18: false, debt: false });
   const [userModalOpen, setUserModalOpen] = useState(false);
   const [mandiPriceData, setMandiPriceData] = useState(null);
+  const [mandiKeyConfigured, setMandiKeyConfigured] = useState(null); // from the server's health check
   const [scenariosList, setScenariosList] = useState(loadScenarios);
 
   // Every reply updates the banner: it shows while replies are offline and clears once the server answers.
@@ -143,6 +144,7 @@ export default function ProductionDashboard({
     Promise.all([fetchHealth(), fetchDossiers()]).then(([healthRes, dossiersRes]) => {
       if (!isMounted) return;
       setServerOffline(Boolean(healthRes?.offline || dossiersRes?.offline));
+      setMandiKeyConfigured(typeof healthRes?.mandiKeyConfigured === 'boolean' ? healthRes.mandiKeyConfigured : null);
       const mapped = {};
       (dossiersRes?.dossiers || []).forEach((d) => {
         mapped[d.code] = { code: d.code, name: d.name || d.code, status: d.status };
@@ -168,17 +170,27 @@ export default function ProductionDashboard({
   // The business's dossier figures (sizes, season). The loan tab starts with the first size that has
   // a cost (Micro first), unless the chat has just given a cost for this business.
   const [dossierDetail, setDossierDetail] = useState(null);
-  const costFromChat = useRef(false);
+  // Who last set the cost box for the current business: null (nobody), 'user' or 'chat'.
+  // Reset when the user picks another business; the chat sets 'chat' along with its business.
+  const costOrigin = useRef(null);
+  const selectBusiness = useCallback((code) => {
+    costOrigin.current = null;
+    setSelectedDomainCode(code);
+  }, []);
+  const typeCost = useCallback((v) => {
+    costOrigin.current = 'user';
+    setProjectCost(v);
+  }, []);
   useEffect(() => {
     let isMounted = true;
     setDossierDetail(null);
     fetchDossier(selectedDomainCode).then((res) => {
       if (!isMounted) return;
       noteOffline(res);
-      setDossierDetail(res && !res.offline ? res : null);
-      if (costFromChat.current) { costFromChat.current = false; return; }
-      const start = res && !res.offline ? defaultTierCost(res) : null;
-      setProjectCost(start == null ? '' : String(start));
+      const detail = res && !res.offline ? res : null;
+      setDossierDetail(detail);
+      const next = costOnBusinessLoad({ origin: costOrigin.current, dossier: detail });
+      if (next !== null) setProjectCost(next);
     }).catch(() => { if (isMounted) setDossierDetail(null); });
     return () => { isMounted = false; };
   }, [selectedDomainCode, noteOffline]);
@@ -231,14 +243,14 @@ export default function ProductionDashboard({
   } : null;
   const loanInputs = {
     projectCost, familyIncome, isSc,
-    onProjectCostChange: setProjectCost,
+    onProjectCostChange: typeCost,
     onFamilyIncomeChange: setFamilyIncome,
     onIsScChange: setIsSc,
     ready: loanReady,
     result: loanResult,
     error: loanError,
     tiers: tierOptions(dossierDetail),
-    onPickTier: (cost) => setProjectCost(String(cost))
+    onPickTier: (cost) => typeCost(String(cost))
   };
   const steps = flowSteps({ code: selectedDomainCode, projectCost, familyIncome, isSc, loanReady });
 
@@ -381,10 +393,13 @@ export default function ProductionDashboard({
       if (res.reply) setChatMessages([...msgs, { role: 'assistant', content: res.reply }]);
       else { setChatMessages(chatMessages); setCommandInput(text); }
       const route = chatRoute(res.tool_results);
-      if (route.code) setSelectedDomainCode(route.code);
+      if (route.code) {
+        costOrigin.current = null;  // a business named by the chat starts untouched, unless the chat also gives a cost
+        setSelectedDomainCode(route.code);
+      }
       if (route.loanInputs) {
         if (route.loanInputs.projectCost !== undefined) {
-          if (route.code && route.code !== selectedDomainCode) costFromChat.current = true;
+          costOrigin.current = 'chat';
           setProjectCost(String(route.loanInputs.projectCost));
         }
         if (route.loanInputs.familyIncome !== undefined) setFamilyIncome(String(route.loanInputs.familyIncome));
@@ -466,7 +481,7 @@ export default function ProductionDashboard({
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         selectedDomainCode={selectedDomainCode}
-        onSelectDomain={setSelectedDomainCode}
+        onSelectDomain={selectBusiness}
         presets={allDossiers}
         isAdvisoryOpen={isAdvisoryOpen}
         onToggleAdvisory={() => setIsAdvisoryOpen(!isAdvisoryOpen)}
@@ -509,6 +524,7 @@ export default function ProductionDashboard({
         onDownloadPdf={handleDownloadDprPdf}
         formatINR={formatINR}
         mandiPriceData={mandiPriceData}
+        mandiKeyConfigured={mandiKeyConfigured}
         mode="production"
       />
 
@@ -520,7 +536,7 @@ export default function ProductionDashboard({
         recentChecks={recentChecks}
         onCheckChange={(id, checked) => setRecentChecks(prev => ({ ...prev, [id]: checked }))}
         onSelectScenario={(scenario) => {
-          if (scenario.domainCode) setSelectedDomainCode(scenario.domainCode);
+          if (scenario.domainCode) selectBusiness(scenario.domainCode);
           if (scenario.tab) setActiveTab(scenario.tab);
         }}
         onRefresh={handleRefreshScenarios}

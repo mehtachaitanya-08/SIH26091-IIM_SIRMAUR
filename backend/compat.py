@@ -123,7 +123,13 @@ def health():
             "verified_dossiers": len(NAMES),
             "total_dossiers": len(NAMES),
         },
+        "mandiKeyConfigured": _mandi_key_set(),
     }
+
+
+def _mandi_key_set():
+    from backend import mandi  # yes/no only; the key itself is never sent
+    return bool(mandi._api_key())
 
 
 FIELD_NAMES = {"project_cost": "projectCost", "annual_family_income": "familyIncome", "is_sc": "isSc"}
