@@ -1,6 +1,23 @@
 # How to open the GraminAI dashboard
 
-There are two ways. **Option A** needs nothing installed. **Option B** runs it on your own computer.
+Three ways, easiest first.
+
+## Easiest: double-click (Windows or Mac)
+
+1. On https://github.com/mehtachaitanya-08/SIH26091-IIM_SIRMAUR click the green **Code** button → **Download ZIP**, and unzip it.
+2. Open the unzipped folder and double-click:
+   - **Windows:** `start.bat`. If Windows says "Windows protected your PC", click **More info → Run anyway**.
+   - **Mac:** `start.command`. The first time: right-click → **Open** → **Open**.
+3. The first time it sets everything up by itself (a few minutes):
+   - it installs Python and Node.js if they're missing (Windows only; on a Mac it tells you where to get them);
+   - it installs the packages and builds the website;
+   - it asks for your Groq key (paste it, or press Enter to skip).
+   On Windows, if it installs Python or Node.js, it asks you to close the window and double-click `start.bat` again; then it carries on.
+4. The dashboard opens in your browser at http://127.0.0.1:8000/dashboard. Keep the black window open while you use it.
+
+Next time: just double-click again; it starts in seconds.
+
+The other two ways: **Option A** needs nothing installed on your computer. **Option B** is the manual version of the double-click.
 
 Demo sign-in on the website: phone **9876543210**, PIN **2026**.
 
