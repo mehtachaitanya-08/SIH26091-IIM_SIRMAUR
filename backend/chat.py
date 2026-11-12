@@ -54,14 +54,14 @@ Your job: find the user's business, ask that business's yes/no questions, work o
 Hard rules:
 1. NEVER state a number (amount, rate, count, year, percentage) unless it appears in a tool result in this conversation or the user said it. Do not do arithmetic yourself. If you need a figure, call a tool.
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
-2a. As soon as you know the project cost, the yearly family income and whether the user is SC, call calculate_loan immediately and give the loan before any business questions. If one of the three is missing, ask only for what is missing, then calculate.
+2a. As soon as you know the project cost, the yearly family income and whether the user is SC, call calculate_loan immediately and give the loan before any business questions. If one of the three is missing, ask only for what is missing, then calculate. If the user gives a new amount, call calculate_loan again with it. If the loan is already known and the user asks something else, answer that; mention the payment at most once.
 3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so.
 3a. Never ask the user for a business code: users do not know codes. Ask what business they run, in their own words, and find it with list_businesses. Say the business name first, e.g. "Oil Expellers (D08 dossier)".
 4. Use question ids and answer choices exactly as get_questions returns them.
 5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy. Keep each reply under 80 words and ask at most 2 questions at a time.
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
 7. To give the DPR, call dpr_link and tell the user to press the Download DPR button.
-8. Use the dashboard's plain words: say "payment every 3 months", not "quarterly instalment"; say "pause (no payment)", not "moratorium".
+8. Use the dashboard's plain words: say "payment every 3 months", not "quarterly instalment"; say "pause (no payment)", not "moratorium". Never say "quarter" or "quarterly"; in Hindi say "हर 3 महीने", never "तिमाही". When you give the loan, give the payment every 3 months (paymentEvery3Months).
 9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet."""
 
 # Stage A: the chat panel sends the language the user picked; rule 10 is added to the rules.
@@ -244,16 +244,21 @@ def _t_calculate_loan(project_cost, family_income, is_sc):
         "ownContribution": L["own_contribution"]["value"],
         "interestRatePa": L["interest_rate_pa"]["value"],
         "tenureYears": L["tenure_years"]["value"],
-        "pauseQuarters": L["moratorium_quarters"]["value"],
-        "repaymentQuarters": L["repayment_quarters"]["value"],
-        "quarterlyInstalment": S["equated_quarterly_instalment"]["value"],
+        # Plain field names (12 Nov 2026): the AI copied "pauseQuarters" into a reply as "First 2
+        # quarters: pause", against rule 8. A quarter is 3 months, so pauseMonths is pausePayments x 3.
+        "pausePayments": L["moratorium_quarters"]["value"],
+        "pauseMonths": L["moratorium_quarters"]["value"] * 3,
+        "numberOfPayments": L["repayment_quarters"]["value"],
+        "paymentEvery3Months": S["equated_quarterly_instalment"]["value"],
         "interestAddedDuringPause": S["interest_added_during_pause"]["value"],
         "totalPaid": S["total_paid"]["value"],
         "tags": {"projectCost": "USER INPUT", "familyIncome": "USER INPUT", "isSc": "USER INPUT",
                  "loanAmount": L["loan_amount"]["tag"],
                  "ownContribution": L["own_contribution"]["tag"], "interestRatePa": L["interest_rate_pa"]["tag"],
-                 "tenureYears": L["tenure_years"]["tag"], "pauseQuarters": L["moratorium_quarters"]["tag"],
-                 "repaymentQuarters": L["repayment_quarters"]["tag"], "quarterlyInstalment": "CALCULATED",
+                 "tenureYears": L["tenure_years"]["tag"], "pausePayments": L["moratorium_quarters"]["tag"],
+                 # no digit in this label: the guard also accepts numbers written in labels
+                 "pauseMonths": "CALCULATED (pause payments times three)",
+                 "numberOfPayments": L["repayment_quarters"]["tag"], "paymentEvery3Months": "CALCULATED",
                  "interestAddedDuringPause": "CALCULATED (pause handling ASSUMED)", "totalPaid": "CALCULATED"},
         "warnings": [w["text"] for w in out["warnings"]],
         "notes": notes,
@@ -327,6 +332,28 @@ def run_tool(name, raw_args):
         return {"error": f"internal check failed: {exc}"}
     except Exception as exc:  # any odd argument from the model goes back to it as an error, never crashes the chat
         return {"error": f"bad arguments for {name}: {type(exc).__name__}: {exc}"[:300]}
+
+
+# Laptop test, 12 Nov 2026: asked "What will my payment be?" with cost, income and SC all on the
+# dashboard, the chat said the amount was not available. The server keeps nothing between messages
+# and the AI did not call the calculator again, although rule 2a tells it to. So when the context
+# holds all three, the server works the loan out itself and hands it over as an answered call,
+# added at the end of the conversation it sends (normally right after the user's latest message).
+# It is kept out of the 5-call limit and out of what the website gets (the website jumps to the
+# loan tab on a calculate_loan result), but the number guard and both fallback replies use it.
+SERVER_LOAN_ID = "server_loan"
+
+
+def _server_loan(context):
+    """(arguments, result) of the server's own loan calculation, or (None, None)."""
+    if not context or not all(k in context for k in ("projectCost", "familyIncome", "isSc")):
+        return None, None
+    args = json.dumps({"project_cost": context["projectCost"], "family_income": context["familyIncome"],
+                       "is_sc": context["isSc"]})
+    res = run_tool("calculate_loan", args)          # run_tool turns any failure into {"error": ...}
+    if not isinstance(res, dict) or "error" in res:
+        return None, None                            # carry on without it, as before
+    return args, res
 
 
 # ---------------------------------------------------------------------------
@@ -430,8 +457,8 @@ def _plain_summary(tool_results, language=None):
         if t["tool"] == "calculate_loan" and r.get("isEligible"):
             from backend.dpr import inr
             lines.append(f"{r['scheme']}: loan {inr(r['loanAmount'])}, your share {inr(r['ownContribution'])}, "
-                         f"{r['interestRatePa']}% a year, {r['repaymentQuarters']} payments of "
-                         f"{inr(r['quarterlyInstalment'])}, one every 3 months.")
+                         f"{r['interestRatePa']}% a year, {r['numberOfPayments']} payments of "
+                         f"{inr(r['paymentEvery3Months'])}, one every 3 months.")
         elif t["tool"] == "calculate_loan" and r.get("isEligible") is False:
             lines += [x["text"] for x in r.get("reasons", [])]
         elif t["tool"] == "run_advice":
@@ -460,8 +487,8 @@ def _plain_summary_hi(tool_results):
         r = t["result"]
         if t["tool"] == "calculate_loan" and r.get("isEligible"):
             lines.append(f"{r['scheme']}: लोन {inr(r['loanAmount'])}, आपका हिस्सा {inr(r['ownContribution'])}, "
-                         f"ब्याज {r['interestRatePa']}% सालाना, हर 3 महीने पर {inr(r['quarterlyInstalment'])} की "
-                         f"{r['repaymentQuarters']} किस्तें।")
+                         f"ब्याज {r['interestRatePa']}% सालाना, हर 3 महीने पर {inr(r['paymentEvery3Months'])} की "
+                         f"{r['numberOfPayments']} किस्तें।")
         elif t["tool"] == "calculate_loan" and r.get("isEligible") is False:
             lines.append("NSFDC लोन नहीं मिल सकता:")
             lines += [x["text"] for x in r.get("reasons", [])]
@@ -587,6 +614,13 @@ async def chat_endpoint(request: Request):
     history = [dict(m, content=m["content"][:MAX_ASSISTANT_CHARS] + ("…" if len(m["content"]) > MAX_ASSISTANT_CHARS else ""))
                if m["role"] == "assistant" else m for m in convo[-MAX_HISTORY:]]
     messages = [{"role": "system", "content": system_prompt(language, context)}] + history
+    loan_args, server_loan = _server_loan(context)
+    if server_loan is not None:
+        messages.append({"role": "assistant", "content": "", "tool_calls": [{
+            "id": SERVER_LOAN_ID, "type": "function",
+            "function": {"name": "calculate_loan", "arguments": loan_args}}]})
+        messages.append({"role": "tool", "tool_call_id": SERVER_LOAN_ID,
+                         "content": json.dumps(server_loan, separators=(",", ":"), ensure_ascii=False)[:MAX_TOOL_CHARS]})
     tools = tool_specs()
     results = []
     reply = None
@@ -615,12 +649,19 @@ async def chat_endpoint(request: Request):
         log.warning("chat failed: %s", type(exc).__name__)
         return {"status": "ai_offline", "reply": offline, "tool_results": results, "guard": {"replaced": False}, "model": MODEL}
 
+    # The fallback replies show the loan once: the AI's own calculation if it got one (the user may
+    # have typed a new amount), otherwise the server's.
+    ai_loan = any(r["tool"] == "calculate_loan" and isinstance(r["result"], dict) and "isEligible" in r["result"]
+                  for r in results)
+    summary_from = results if ai_loan or server_loan is None else [{"tool": "calculate_loan", "result": server_loan}] + results
     if reply is None:
-        reply = _plain_summary(results, language)
+        reply = _plain_summary(summary_from, language)
     # The context's numbers are the user's own entries, so the reply may repeat them. They go in
     # as numbers, not text: a huge value written as text ("1e+21") would wrongly allow 1 and 21.
-    bad = unsupported(reply, allowed_numbers([r["result"] for r in results] + [context or {}], user_texts))
+    # The server's loan figures are allowed too (owner's decision G-5, 12 Nov 2026).
+    known = [r["result"] for r in results] + [context or {}] + ([server_loan] if server_loan is not None else [])
+    bad = unsupported(reply, allowed_numbers(known, user_texts))
     guard = {"replaced": bool(bad), "unsupported": bad}
     if bad:
-        reply = _plain_summary(results, language)
+        reply = _plain_summary(summary_from, language)
     return {"status": "ok", "reply": reply, "tool_results": results, "guard": guard, "model": MODEL}

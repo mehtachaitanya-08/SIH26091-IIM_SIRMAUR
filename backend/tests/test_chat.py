@@ -579,3 +579,115 @@ def test_not_a_number_and_infinity_in_context_are_refused(field, raw):
     body = '{"messages": [{"role": "user", "content": "hi"}], "context": {"%s": %s}}' % (field, raw)
     r = client.post("/api/chat", content=body, headers={"content-type": "application/json"})
     assert r.status_code == 400
+
+
+# Laptop test of 12 Nov 2026, rows 4 and 5: asked "What will my payment be?" with cost, income and
+# SC all on the dashboard, the chat said the amount was not available (the server keeps nothing
+# between messages and the AI did not call the calculator again); and a reply said "First 2
+# quarters: pause", copying the loan result's field names. Owner's plan decisions G-4..G-9.
+
+FULL = {"projectCost": 140000, "familyIncome": 150000, "isSc": True}   # gives the verified ₹1,25,000 loan
+
+
+def server_loan_pair(sent):
+    """The server-made calculate_loan call and its answer in what the model was sent, or (None, None)."""
+    call_msg = next((m for m in sent if m.get("role") == "assistant"
+                     and any(c.get("id") == chat.SERVER_LOAN_ID for c in m.get("tool_calls") or [])), None)
+    answer = next((m for m in sent if m.get("role") == "tool" and m.get("tool_call_id") == chat.SERVER_LOAN_ID), None)
+    return call_msg, answer
+
+
+def test_with_cost_income_and_sc_known_the_model_already_has_the_loan(fake):
+    f = fake([say("ok")])
+    assert ask_with(FULL, "What will my payment be?").status_code == 200
+    call_msg, answer = server_loan_pair(f.sent[0])
+    assert call_msg is not None and answer is not None
+    loan_result = json.loads(answer["content"])
+    assert loan_result["loanAmount"] == 125000 and "paymentEvery3Months" in loan_result
+    # the pair comes right after the user's latest message, call first, answer second
+    assert f.sent[0].index(call_msg) == len(f.sent[0]) - 2 and f.sent[0][-1] is answer
+
+
+def test_the_server_loan_is_not_sent_to_the_website_and_uses_none_of_the_5_calls(fake):
+    calls = [call("list_businesses") for _ in range(chat.MAX_TOOL_ROUNDS)]
+    f = fake(calls + [say("done")])
+    d = ask_with(FULL, "list").json()
+    assert all(t["tool"] != "calculate_loan" for t in d["tool_results"])
+    assert len(d["tool_results"]) == chat.MAX_TOOL_ROUNDS      # all 5 calls were still the model's own
+    assert server_loan_pair(f.sent[0])[0] is not None
+
+
+@pytest.mark.parametrize("missing", ["projectCost", "familyIncome", "isSc"])
+def test_with_one_of_the_three_missing_nothing_is_added(fake, missing):
+    f = fake([say("What is your project cost?")])
+    ctx = {k: v for k, v in FULL.items() if k != missing}
+    assert ask_with(ctx, "How much loan can I get?").status_code == 200
+    assert server_loan_pair(f.sent[0]) == (None, None)
+
+
+def test_a_reply_giving_the_payment_amount_passes_the_guard(fake):
+    fake([say("Your loan is ₹1,25,000; you pay ₹12,704.49 once every 3 months.")])
+    d = ask_with(FULL, "What will my payment be?").json()
+    assert d["guard"]["replaced"] is False and "12,704.49" in d["reply"]
+
+
+def test_an_invented_number_is_still_replaced_with_the_server_loan_present(fake):
+    fake([say("Your loan is ₹1,25,000 and you will earn ₹38,000 a month.")])
+    d = ask_with(FULL, "What will my payment be?").json()
+    assert d["guard"]["replaced"] is True and 38000 in d["guard"]["unsupported"]
+
+
+def test_the_guard_fallback_uses_the_server_loan_when_the_ai_made_no_call(fake):
+    fake([say("You will earn ₹38,000 a month.")])
+    d = ask_with(FULL, "What will my payment be?").json()
+    assert d["guard"]["replaced"] is True
+    assert "₹1,25,000" in d["reply"] and d["reply"].count("₹1,25,000") == 1
+
+
+def test_the_fallback_uses_the_ais_own_loan_once_when_it_called_the_calculator(fake):
+    fake([call("calculate_loan", project_cost=100000, family_income=150000, is_sc=True),
+          say("You will earn ₹38,000 a month.")])
+    d = ask_with(FULL, "My cost is now 100000. What is my loan?").json()
+    assert d["guard"]["replaced"] is True
+    own = next(t for t in d["tool_results"] if t["tool"] == "calculate_loan")["result"]
+    assert own["projectCost"] == 100000
+    assert d["reply"].count("loan ₹") == 1 and "₹1,25,000" not in d["reply"]
+
+
+def test_the_limit_reached_fallback_also_uses_the_server_loan(fake):
+    calls = [call("list_businesses") for _ in range(chat.MAX_TOOL_ROUNDS)]
+    fake(calls)                                  # the model never answers in words
+    d = ask_with(FULL, "list").json()
+    assert "₹1,25,000" in d["reply"]
+
+
+def test_a_not_eligible_server_loan_is_added_too(fake):
+    f = fake([say("ok")])
+    assert ask_with({"projectCost": 140000, "familyIncome": 150000, "isSc": False}, "hi").status_code == 200
+    _, answer = server_loan_pair(f.sent[0])
+    assert answer is not None and json.loads(answer["content"])["isEligible"] is False
+
+
+def test_a_failing_server_calculation_does_not_break_the_chat(fake, monkeypatch):
+    def boom(**kwargs):
+        raise RuntimeError("calculator down")
+    _, desc, props = chat.TOOLS["calculate_loan"]
+    monkeypatch.setitem(chat.TOOLS, "calculate_loan", (boom, desc, props))
+    f = fake([say("ok")])
+    d = ask_with(FULL, "hi").json()
+    assert d["status"] == "ok" and server_loan_pair(f.sent[0]) == (None, None)
+
+
+def test_the_chat_loan_result_never_names_quarters():
+    r = chat._t_calculate_loan(140000, 150000, True)
+    assert not [k for k in r if "quarter" in k.lower()], [k for k in r if "quarter" in k.lower()]
+    assert not [k for k in r["tags"] if "quarter" in k.lower()]
+    assert r["pauseMonths"] == r["pausePayments"] * 3
+    assert not any(ch.isdigit() for ch in r["tags"]["pauseMonths"])   # a digit here would loosen the guard
+
+
+def test_rule_8_bans_quarter_in_both_languages_and_rule_2a_recalculates():
+    assert "तिमाही" in chat.SYSTEM and "हर 3 महीने" in chat.SYSTEM and "paymentEvery3Months" in chat.SYSTEM
+    assert "quarterly instalment" in chat.SYSTEM                      # rule 8's old sentence stays
+    assert "If the user gives a new amount, call calculate_loan again" in chat.SYSTEM
+    assert "mention the payment at most once" in chat.SYSTEM
