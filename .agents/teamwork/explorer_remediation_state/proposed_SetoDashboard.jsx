@@ -231,7 +231,7 @@ export default function SetoDashboard() {
           The Entrepreneur Workspace
         </h2>
         <p className="text-xs text-[#686D65] mt-1 font-sans-ui">
-          SETO minimal diffused ambient dashboard mockup powered by GraminAI credit engine.
+          SETO minimal diffused ambient dashboard mockup powered by UdyamSetuAI credit engine.
         </p>
       </div>
 
@@ -249,12 +249,12 @@ export default function SetoDashboard() {
           <aside className="lg:col-span-3 bg-[#F8F9FA] p-6 flex flex-col justify-between border-r border-[#E9ECEF]">
             
             <div className="space-y-6">
-              {/* Brand Lockup: ✦ GraminAI */}
+              {/* Brand Lockup: ✦ UdyamSetuAI */}
               <div className="flex items-center space-x-2.5 px-2">
                 <div className="w-7 h-7 rounded-lg bg-[#111311] text-white flex items-center justify-center font-bold text-xs shadow-sm">
                   ✦
                 </div>
-                <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">GraminAI</span>
+                <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">UdyamSetuAI</span>
               </div>
 
               {/* Nav Tabs List with Active White Pill */}

@@ -1,5 +1,5 @@
 /**
- * GraminAI API Client Service
+ * UdyamSetuAI API Client Service
  * Talks to the verified server (backend/app.py) on /api.
  *
  * When the server is offline, nothing is filled in from a bundled file. Each call says so
@@ -18,7 +18,7 @@ const CODE = /^D(0[1-9]|1\d|2[0-4])$/;
 /** The server could not be reached (or the dev proxy found nothing on port 8000). */
 export class ServerOfflineError extends Error {
   constructor(cause) {
-    super('The GraminAI server is offline. Start it with: backend/.venv/bin/uvicorn backend.app:app --port 8000');
+    super('The UdyamSetuAI server is offline. Start it with: backend/.venv/bin/uvicorn backend.app:app --port 8000');
     this.name = 'ServerOfflineError';
     this.cause = cause;
   }
@@ -183,7 +183,7 @@ export async function downloadDpr(payload) {
 }
 
 /**
- * Chat with the GraminAI assistant. The whole conversation is sent each time; the server keeps nothing.
+ * Chat with the UdyamSetuAI assistant. The whole conversation is sent each time; the server keeps nothing.
  * @param {Array<{role:'user'|'assistant', content:string}>} messages
  * @returns {Promise<Object>} {status, reply, tool_results, guard, model}; offline: {status:'server_offline', reply:null, offline:true}
  */

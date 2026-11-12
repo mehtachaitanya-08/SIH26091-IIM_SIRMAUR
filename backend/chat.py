@@ -31,7 +31,7 @@ from backend.compat import NAMES, _body, _error, _whole_rupees
 from backend.schemas import LoanRequest
 
 router = APIRouter()
-log = logging.getLogger("graminai.chat")
+log = logging.getLogger("udyamsetuai.chat")
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"   # gitignored; GROQ_API_KEY=...
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -48,7 +48,7 @@ MAX_RATE_WAIT_S = 30.0   # longest wait after a 429 before the one retry
 MAX_TURNS = 30
 TIMEOUT_S = 30.0
 
-SYSTEM = """You are the GraminAI assistant for Scheduled Caste (SC) rural entrepreneurs in India, inside a loan-advice dashboard.
+SYSTEM = """You are the UdyamSetuAI assistant for Scheduled Caste (SC) rural entrepreneurs in India, inside a loan-advice dashboard.
 Your job: find the user's business, ask that business's yes/no questions, work out the NSFDC loan, explain results, and offer the 1-page DPR (bank report).
 
 Hard rules:

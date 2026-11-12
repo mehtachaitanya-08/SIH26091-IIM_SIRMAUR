@@ -14,7 +14,7 @@ Direct observations from independent test authoring, stress harnesses, boundary 
 
 ### 1.1 Empirical Verification Test Suites Executed
 1. **Adversarial Backend Test Suite (`tests/test_adversarial_backend.py`)**:
-   - 33 tests executed using raw HTTP/1.1 wire protocol directly into `GraminAIRequestHandler` across boundary conditions, security injections, and concurrency stress.
+   - 33 tests executed using raw HTTP/1.1 wire protocol directly into `UdyamSetuAIRequestHandler` across boundary conditions, security injections, and concurrency stress.
    - Command: `python -m unittest tests/test_adversarial_backend.py`
    - Output: `Ran 33 tests in 0.217s — OK`
 2. **Adversarial Frontend Fallback & Schema Suite (`frontend/test/api_client_adversarial.test.js`)**:
@@ -132,7 +132,7 @@ Direct observations from independent test authoring, stress harnesses, boundary 
 ## 3. Caveats
 
 - **Network Socket Permission in Sandbox**:
-  * In the Windows sandbox environment, TCP socket `connect()` to arbitrary localhost ports is restricted by OS policy (`WinError 10013`). The adversarial tests therefore validated `engine/server.py` using standard HTTP/1.1 wire protocol simulation into `GraminAIRequestHandler` (identical byte-level request/response parsing) and validated `ThreadingHTTPServer` socket binding and lifecycle separately.
+  * In the Windows sandbox environment, TCP socket `connect()` to arbitrary localhost ports is restricted by OS policy (`WinError 10013`). The adversarial tests therefore validated `engine/server.py` using standard HTTP/1.1 wire protocol simulation into `UdyamSetuAIRequestHandler` (identical byte-level request/response parsing) and validated `ThreadingHTTPServer` socket binding and lifecycle separately.
 - **Scope Boundary**:
   * Testing was confined to Milestone M1 scope (`engine/server.py`, `frontend/src/services/api.js`, `frontend/vite.config.js`). Google OAuth 2.0 (`googleAuth.js`) and modular dashboard synchronization belong to subsequent milestones M2 and M3.
 

@@ -20,7 +20,9 @@ export default function LeadBankDprView({
   if (!activeDomain) return null;
 
   const beneficiaryName = currentUser?.name || (language === 'hi' ? 'लाभार्थी उद्यमी' : 'Beneficiary Entrepreneur');
-  const beneficiaryCategory = currentUser?.category ? `${currentUser.category} · Verified` : 'SC · Verified';
+  // The user's own answer, marked self-declared as the PDF does; nothing when they gave none.
+  // It said "SC · Verified" by default, though nobody checks caste (teammate review, 11 Nov 2026).
+  const beneficiaryCategory = currentUser?.category ? `${currentUser.category}, self-declared` : null;
   const fmt = (v) => (formatINR ? formatINR(v) : `₹${v}`);
   const isMockup = mode !== 'production';
 
@@ -52,7 +54,7 @@ export default function LeadBankDprView({
         <div className="flex justify-between">
           <span className="text-[#686D65]">Applicant:</span>
           <span className="font-bold text-[#111311] font-sans-ui">
-            {beneficiaryName} ({beneficiaryCategory})
+            {beneficiaryName}{beneficiaryCategory ? ` (${beneficiaryCategory})` : ''}
           </span>
         </div>
         <div className="flex justify-between">
@@ -64,7 +66,7 @@ export default function LeadBankDprView({
               : loanInputs?.result && !loanInputs.result.isEligible
                 ? (loanInputs.result.status === 'not_covered' ? 'Not covered by the NSFDC loan schemes [S1]' : 'Not eligible for NSFDC loans [S1]')
               : loanInputs?.ready ? 'Working out the loan…'
-              : 'NOT FOUND: enter your project cost, income and SC status in the NSFDC Amortizer'}
+              : 'पहले लागत, कमाई और SC जानकारी भरें। / NOT FOUND: enter your project cost, income and SC status in the NSFDC Amortizer'}
           </span>
         </div>
         {!isMockup && loanStructure && (

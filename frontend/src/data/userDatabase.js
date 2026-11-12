@@ -4,26 +4,30 @@
  * Pure real user storage with zero mock data or hardcoded profiles.
  */
 
-const STORAGE_USERS_KEY = 'graminai_users_db_v1';
-const STORAGE_SESSION_KEY = 'graminai_active_session_v1';
+const STORAGE_USERS_KEY = 'udyamsetuai_users_db_v1';
+const STORAGE_SESSION_KEY = 'udyamsetuai_active_session_v1';
 
-// Verified evaluation account for instant access
+// Demo account (phone 9876543210, PIN 2026) so judges can sign in at once. It holds no district,
+// income, caste or "verified" flag: nobody answered those for it, and a made-up district and
+// certificate ID on every account read as real data (teammate review, 11 Nov 2026). The loan
+// screen asks for SC status and income.
 const SEED_USERS = [
   {
-    id: 'UP-STP-008129',
+    id: 'DEMO-0001',
     name: 'Gramin Entrepreneur',
-    email: 'entrepreneur@graminai.org',
+    email: 'entrepreneur@udyamsetuai.org',
     phone: '9876543210',
     pin: '2026',
-    category: 'Scheduled Caste (SC)',
+    category: null,
     trade: 'D20 Metal Smithy',
-    district: 'Sitapur District, UP',
-    income: '≤ ₹5,00,000',
-    verified: true,
     authProvider: 'local',
     createdAt: '2026-01-10T00:00:00.000Z'
   }
 ];
+
+// The answer to "Are you SC?" at sign-up, stored as the user gave it (self-declared).
+export const CATEGORY_SC = 'Scheduled Caste (SC)';
+export const CATEGORY_NOT_SC = 'Not SC';
 
 // In-memory fallback for SSR
 let inMemoryUsers = [...SEED_USERS];
@@ -101,18 +105,17 @@ export function authenticateByGoogle(googleProfile = null) {
   let user = getUserByEmail(profile.email);
 
   if (!user) {
-    // Auto-register genuine Google authenticated user
+    // Auto-register genuine Google authenticated user. Google tells us nothing about caste,
+    // district or income, so none is filled in; the loan screen asks for them.
     user = {
-      id: `UP-GOOG-${Math.floor(100000 + Math.random() * 900000)}`,
+      // No "UP-" prefix: it implied every user is in Uttar Pradesh (review, 11 Nov 2026).
+      id: `GOOG-${Math.floor(100000 + Math.random() * 900000)}`,
       name: profile.name || 'Google Beneficiary',
       email: profile.email,
       avatar: profile.avatar || null,
       phone: profile.phone || '',
-      category: 'Scheduled Caste (SC)',
+      category: null,
       trade: 'Rural Enterprise',
-      district: 'Sitapur District, UP',
-      income: '≤ ₹5,00,000',
-      verified: true,
       authProvider: 'google',
       createdAt: new Date().toISOString()
     };
@@ -137,24 +140,23 @@ export function registerUser({ name, phone, pin, trade, category, email }) {
   if (!pin || !pin.trim()) {
     return { success: false, error: '4-digit security PIN is required.' };
   }
-
   const users = getAllUsers();
-  
+
   if (getUserByPhone(phone)) {
     return { success: false, error: 'A user with this mobile number is already registered.' };
   }
+  if (category !== CATEGORY_SC && category !== CATEGORY_NOT_SC) {
+    return { success: false, error: 'Please answer: are you Scheduled Caste (SC)?' };
+  }
 
   const newUser = {
-    id: `UP-REG-${Math.floor(100000 + Math.random() * 900000)}`,
+    id: `REG-${Math.floor(100000 + Math.random() * 900000)}`,
     name: name?.trim() || 'Rural Entrepreneur',
-    email: email?.trim() || `${phone.trim()}@graminai.org`,
+    email: email?.trim() || `${phone.trim()}@udyamsetuai.org`,
     phone: phone.trim(),
     pin: pin.trim(),
-    category: category || 'Scheduled Caste (SC)',
+    category,
     trade: trade || 'Rural Enterprise',
-    district: 'Sitapur District, UP',
-    income: '≤ ₹5,00,000',
-    verified: true,
     authProvider: 'local',
     createdAt: new Date().toISOString()
   };

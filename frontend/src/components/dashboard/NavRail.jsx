@@ -9,24 +9,26 @@ import UserCard from './UserCard';
 export default function NavRail({
   activeTab = 'home',
   onSelectTab,
-  selectedDomainCode = 'D20',
+  selectedDomainCode = 'D01',
   onSelectDomain,
   presets = {},
   isAdvisoryOpen = true,
   onToggleAdvisory,
   currentUser = null,
   language = 'en',
-  onVerifyClick,
   onShowToast,
   mode = 'mockup'
 }) {
+  // "How it works" holds the judge-facing engine and data-connection panels, moved off Home so a
+  // first-time user sees their own business first (teammate review, 11 Nov 2026).
   const tabs = [
     { id: 'home', label: 'Home' },
     { id: 'simulator', label: 'Enterprise Studio' },
     { id: 'amortizer', label: 'NSFDC Amortizer' },
     { id: 'restructure', label: 'Debt Liberation' },
     { id: 'dpr', label: '1-Page DPR' },
-    { id: 'feasibility', label: 'Feasibility' }
+    { id: 'feasibility', label: 'Feasibility' },
+    { id: 'howitworks', label: 'How it works' }
   ];
 
   const presetList = Object.values(presets);
@@ -39,11 +41,11 @@ export default function NavRail({
           <div className="flex items-center space-x-2.5 px-2">
             <img 
               src="/images/logo.png" 
-              alt="GraminAI Emblem" 
+              alt="UdyamSetuAI Emblem" 
               className="w-8 h-8 object-contain rounded-md"
             />
             <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">
-              GraminAI
+              UdyamSetuAI
             </span>
             <span className="ml-auto text-[10px] font-mono-num font-bold px-2 py-0.5 rounded-md bg-slate-200 text-[#686D65] uppercase">
               Preview
@@ -54,9 +56,11 @@ export default function NavRail({
             <span className="text-[11px] font-semibold text-[#686D65] uppercase tracking-wider font-sans-ui">
               Navigation
             </span>
-            <span className="text-[11px] font-mono-num text-[#0E7A53] font-medium">
-              Sitapur, UP
-            </span>
+            {currentUser?.district && (
+              <span className="text-[11px] font-mono-num text-[#0E7A53] font-medium">
+                {currentUser.district}
+              </span>
+            )}
           </div>
         )}
 
@@ -79,23 +83,6 @@ export default function NavRail({
               </button>
             );
           })}
-
-          {/* Utility Action Buttons */}
-          <button
-            type="button"
-            onClick={() => onShowToast && onShowToast('No notifications')}
-            className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer font-sans-ui"
-          >
-            <span>Notifications</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onShowToast && onShowToast('Platform configuration settings')}
-            className="w-full flex items-center px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer font-sans-ui"
-          >
-            <span>Settings</span>
-          </button>
         </nav>
 
         {/* Collapsible Sub-Tree: Advisory Tools */}
@@ -127,7 +114,8 @@ export default function NavRail({
                         : 'hover:text-[#111311] hover:bg-white/40'
                     }`}
                   >
-                    <span className="truncate">{p.name ? p.name.split(' ')[0] : p.code}</span>
+                    {/* Full name: the first word alone gave "Commercial" three times and "Rural" twice. */}
+                    <span className="truncate" title={p.name || p.code}>{p.name || p.code}</span>
                     <span className="font-mono text-[11px] px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700 font-semibold">{p.code}</span>
                   </div>
                 );
@@ -141,7 +129,6 @@ export default function NavRail({
       <UserCard
         currentUser={currentUser}
         language={language}
-        onVerifyClick={onVerifyClick}
       />
     </aside>
   );

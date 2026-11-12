@@ -1,5 +1,5 @@
 """
-Adversarial Empirical Challenge Suite for GraminAI Backend REST Server
+Adversarial Empirical Challenge Suite for UdyamSetuAI Backend REST Server
 Executes stress tests, extreme boundary evaluations, schema validations,
 injection attacks, and error recovery against engine/server.py.
 """
@@ -17,12 +17,12 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from engine.server import create_server, GraminAIRequestHandler
+from engine.server import create_server, UdyamSetuAIRequestHandler
 from tests.test_api_server import WireSocket
 
 
 class TestAdversarialBackend(unittest.TestCase):
-    """Adversarial challenge tests for GraminAI Backend REST API."""
+    """Adversarial challenge tests for UdyamSetuAI Backend REST API."""
 
     @classmethod
     def setUpClass(cls):
@@ -52,7 +52,7 @@ class TestAdversarialBackend(unittest.TestCase):
 
         mock_socket = WireSocket(wire_raw)
         server_stub = self.server or MagicMock()
-        _ = GraminAIRequestHandler(mock_socket, ("127.0.0.1", 54321), server_stub)
+        _ = UdyamSetuAIRequestHandler(mock_socket, ("127.0.0.1", 54321), server_stub)
 
         response_bytes = mock_socket.wfile.getvalue()
         parts = response_bytes.split(b"\r\n\r\n", 1)

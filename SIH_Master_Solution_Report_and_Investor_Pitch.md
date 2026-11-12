@@ -385,7 +385,7 @@ This repository contains all research, code, specifications, and presentation as
 | **4. Deterministic Financial Core**| [`engine/multi_archetype_financial_engine.py`](file:///c:/Users/LENOVO/Desktop/IPL%202%20Project%20Research/engine/multi_archetype_financial_engine.py) | Python financial calculator; 100% test pass rate for DSCR, IRR, and subsidies. |
 | **5. 24 Micro-Enterprise Dossiers**| [`data/dossiers_db.json`](file:///c:/Users/LENOVO/Desktop/IPL%202%20Project%20Research/data/dossiers_db.json) | Complete database of 24 agro, livestock, technical, and artisan archetypes. |
 | **6. Interactive PWA Prototype**   | [`frontend/src/App.jsx`](file:///c:/Users/LENOVO/Desktop/IPL%202%20Project%20Research/frontend/src/App.jsx) | React 19 + Vite 6 bilingual working UI with live financial calculator. |
-| **7. 1-Page DPR PDF Generator**    | [`generate_1page_dpr_pdf.py`](file:///c:/Users/LENOVO/Desktop/IPL%202%20Project%20Research/generate_1page_dpr_pdf.py) | Automated script generating bankable 1-page DPR PDF in under 30 seconds. |
+| **7. 1-Page DPR PDF Generator**    | [`backend/dpr.py`](backend/dpr.py) | Advisory one-page DPR made by the server from the loan rules and the business dossier; not a loan sanction. |
 | **8. Master Handover & Pitch Memo** | [`SIH_Master_Solution_Report_and_Investor_Pitch.md`](file:///c:/Users/LENOVO/Desktop/IPL%202%20Project%20Research/SIH_Master_Solution_Report_and_Investor_Pitch.md) | This master document; ready for judges, mentors, investors, and team handover. |
 
 ---

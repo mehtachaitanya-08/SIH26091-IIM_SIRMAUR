@@ -580,7 +580,7 @@ def create_document():
         ("NSFDC & Caste Subsidy Calculator", "engine/nsfdc_calculator.py", "Complete; models concessional rates for SC/ST/OBC artisan schemes."),
         ("24 Archetype Database", "data/dossiers_db.json", "Turnkey JSON catalog covering equipment, power, OpEx, and margins."),
         ("PWA Interactive Frontend", "frontend/src/App.jsx & engine.js", "React 19 + Vite 6 bilingual client with live financial calculation."),
-        ("1-Page DPR PDF Generator", "generate_1page_dpr_pdf.py", "Automated ReportLab pipeline producing bankable 1-page DPR PDFs in < 30s."),
+        ("1-Page DPR PDF Generator", "backend/dpr.py", "Advisory one-page DPR made by the server from the loan rules and the business dossier; not a loan sanction."),
         ("Academic Literature Review", "Academic_Literature_Review.md", "1,500+ lines; 31 empirical citations across 7 research pillars."),
         ("Competitor Landscape Dossier", "Competitor_Landscape_Dossier.md", "18+ competitors mapped with complete whitespace matrix.")
     ]

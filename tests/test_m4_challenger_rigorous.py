@@ -21,7 +21,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from engine.server import create_server, GraminAIRequestHandler, DOSSIERS_MAP, DOSSIERS_LIST
+from engine.server import create_server, UdyamSetuAIRequestHandler, DOSSIERS_MAP, DOSSIERS_LIST
 from tests.test_api_server import WireSocket
 
 
@@ -54,7 +54,7 @@ class TestM4ChallengerRigorous(unittest.TestCase):
 
         mock_socket = WireSocket(wire_raw)
         server_stub = self.server or MagicMock()
-        _ = GraminAIRequestHandler(mock_socket, ("127.0.0.1", 54321), server_stub)
+        _ = UdyamSetuAIRequestHandler(mock_socket, ("127.0.0.1", 54321), server_stub)
 
         response_bytes = mock_socket.wfile.getvalue()
         parts = response_bytes.split(b"\r\n\r\n", 1)

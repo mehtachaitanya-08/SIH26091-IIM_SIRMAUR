@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-This survey report provides the architectural analysis and technical roadmap for **Requirement 3: Production Dashboard Implementation & Landing Page Synchronization** for GraminAI (SIH 2026: SIH26091 — MoSJE / NSFDC).
+This survey report provides the architectural analysis and technical roadmap for **Requirement 3: Production Dashboard Implementation & Landing Page Synchronization** for UdyamSetuAI (SIH 2026: SIH26091 — MoSJE / NSFDC).
 
 Currently, the entire dashboard implementation resides in a single monolithic file: `frontend/src/components/SetoDashboard.jsx` (939 lines). It is imported directly into `frontend/src/App.jsx` (line 17) and rendered as **Scene 6** (lines 1120–1122) at the bottom of the 6-scene scroll narrative. There is no separate standalone dashboard view or dedicated dashboard route. When a user authenticates via the header login modal, clicking their user profile pill merely scrolls down to `#dashboard-section` via `scrollToTarget('#dashboard-section')`.
 
@@ -46,7 +46,7 @@ To meet Requirement 3 ("Build the production dashboard components matching the d
 | | COLUMN 1: LEFT NAV RAIL | COLUMN 2: CENTER WORKSPACE        | COLUMN 3: RIGHT SIDEBAR        | |
 | | (lg:col-span-3)         | (lg:col-span-6)                   | (lg:col-span-3)                | |
 | |                         |                                   |                                | |
-| | - Brand: Logo + GraminAI| - Executive Console Header        | - Header: "Recent scenarios"   | |
+| | - Brand: Logo + UdyamSetuAI| - Executive Console Header        | - Header: "Recent scenarios"   | |
 | | - Nav Tabs (Home, Studio| - Quick Action Cards (Home tab)   | - Search Input Bar (dynamic)   | |
 | |   Amortizer, Debt, DPR) | - Dynamic Viewport (Tab Routing): | - Scenario History List Cards: | |
 | | - Notifications & Config|   * Seasonality Simulator         |   * D08 Mustard Oil Mill       | |
@@ -69,7 +69,7 @@ To meet Requirement 3 ("Build the production dashboard components matching the d
 
 2. **Column 1: Left Navigation Rail** (`lg:col-span-3`, lines 239–393):
    - Background: `bg-[#F8F9FA] p-6 flex flex-col justify-between border-r border-[#E9ECEF]`.
-   - Brand lockup: Image `/images/logo.png` (32x32) + Text `GraminAI` in `font-extrabold text-lg text-[#111311] font-sans-ui`.
+   - Brand lockup: Image `/images/logo.png` (32x32) + Text `UdyamSetuAI` in `font-extrabold text-lg text-[#111311] font-sans-ui`.
    - Primary navigation list:
      - 5 tabs: `Home` (`home`), `Enterprise Studio` (`simulator`), `NSFDC Amortizer` (`amortizer`), `Debt Liberation` (`restructure`), `1-Page DPR` (`dpr`).
      - Active pill style: `bg-white text-[#111311] shadow-sm border border-[#E9ECEF] rounded-xl px-4 py-2.5 font-semibold text-xs`.
@@ -282,7 +282,7 @@ Automated verification tests in `frontend/test/` enforce strict syntax and runti
    ```javascript
    const html = renderToString(React.createElement(SetoDashboard));
    assert.ok(html.includes('The Entrepreneur Workspace'));
-   assert.ok(html.includes('GraminAI'));
+   assert.ok(html.includes('UdyamSetuAI'));
    assert.ok(html.includes('Simulate enterprise'));
    assert.ok(html.includes('NSFDC amortizer'));
    assert.ok(html.includes('Debt liberation'));

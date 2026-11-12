@@ -1,4 +1,4 @@
-# How to open the GraminAI dashboard
+# How to open the UdyamSetuAI dashboard
 
 Three ways, easiest first.
 
@@ -45,7 +45,7 @@ Without these keys the dashboard still works; only the chat says "AI offline" an
 3. **First time:** click **Create codespace on main**.
    **Later:** click the codespace already listed there; it opens much faster.
 4. Wait. The first start installs everything and builds the website, which takes a few minutes. You'll see a terminal working.
-5. When it's ready, a **"GraminAI dashboard"** preview opens by itself. If it doesn't:
+5. When it's ready, a **"UdyamSetuAI dashboard"** preview opens by itself. If it doesn't:
    - open the **PORTS** tab at the bottom;
    - find port **8000**;
    - click the globe icon ("Open in Browser").

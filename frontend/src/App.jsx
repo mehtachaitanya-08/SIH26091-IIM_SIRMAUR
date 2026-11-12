@@ -20,10 +20,13 @@ import {
   getCurrentSession, 
   authenticateByCredentials, 
   authenticateByGoogle, 
-  registerUser, 
-  clearSession 
+  registerUser,
+  clearSession,
+  CATEGORY_SC,
+  CATEGORY_NOT_SC
 } from './data/userDatabase';
 import { triggerGoogleLogin } from './services/googleAuth';
+import { fetchHealth } from './services/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,7 +44,10 @@ const TRANSLATIONS = {
     scrollExplore: 'SCROLL TO EXPLORE',
     // Thesis
     thesisHeading: 'Statutory credit enables rural producers to fulfill their highest potential.',
-    thesisBody: 'To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Commissioned under the Ministry of Social Justice and Empowerment for Scheduled Caste micro-entrepreneurs across 24 core trade domains.',
+    // "Commissioned under the Ministry" went further than the source, which says only that SIH26091
+    // is a hackathon problem set by the Ministry (TEAM_RESEARCH_HANDOFF_v2_extracted.txt:3,
+    // sih.gov.in/sih2026PS). Reworded to what it says (owner's decision, 11 Nov 2026).
+    thesisBody: 'To break the cycle of predatory 36% moneylender interest and build intergenerational wealth. Built for Smart India Hackathon 2026 problem SIH26091, set by the Ministry of Social Justice and Empowerment (sih.gov.in), for Scheduled Caste micro-entrepreneurs across 24 core trade domains.',
     mcfAmount: '≤ ₹1.40 Lakh',
     mcfLabel: 'MCF Concessional @ 6.5%',
     termAmount: 'Up to ₹50 Lakh',
@@ -52,11 +58,15 @@ const TRANSLATIONS = {
     orbitTitlePre: 'What does ',
     orbitTitleItalic: 'opportunity',
     orbitTitlePost: ' mean today?',
-    orbitBody: 'It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and instant bank-sanction DPRs.',
+    // "instant bank-sanction DPRs" had no source and contradicts the DPR's own "not a loan sanction".
+    orbitBody: 'It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and one-page advisory DPRs.',
     // Immersion
-    riskGaugeLabel: 'LEAN-SEASON RISK',
-    immersionHeading: '67% of rural producers',
-    immersionBody: 'face catastrophic cash flow collapse during the August lean season without structured statutory amortisation.',
+    // "67% of rural producers…" had no source anywhere in the research files (only in the design
+    // brief), so it went (owner's decision, 11 Nov 2026). The gauge now shows the 12 months of a year.
+    gaugeCenter: '12',
+    riskGaugeLabel: 'MONTHS A YEAR',
+    immersionHeading: 'Every business has lean months.',
+    immersionBody: "UdyamSetuAI shows a business's leanest months from its research file, where the file has them, so instalments can be planned around them.",
     exploreDashboard: 'EXPLORE ADVISORY DASHBOARD',
     // Pillars
     pillarsHeading: 'The Four Pillars.',
@@ -88,11 +98,11 @@ const TRANSLATIONS = {
     nameLabel: 'Entrepreneur Full Name',
     namePlaceholder: 'e.g. Rajesh Singh',
     tradeLabel: 'Enterprise Domain / Trade',
-    categoryLabel: 'Beneficiary Social Category',
+    categoryLabel: 'Are you Scheduled Caste (SC)?',
     submitLogin: 'Sign In & Open Workspace',
     submitRegister: 'Register & Launch Workspace',
     alreadyRegistered: 'Already have an account?',
-    needAccount: 'New to GraminAI?',
+    needAccount: 'New to UdyamSetuAI?',
     signInLink: 'Sign In',
     registerLink: 'Create account'
   },
@@ -106,7 +116,7 @@ const TRANSLATIONS = {
     scrollExplore: 'आगे देखने के लिए स्क्रॉल करें',
     // Thesis
     thesisHeading: 'सांविधिक ऋण ग्रामीण उत्पादकों को उनकी उच्चतम क्षमता तक पहुँचने में सक्षम बनाता है।',
-    thesisBody: 'साहूकारों के 36% शोषणकारी ब्याज चक्र को तोड़कर पीढ़ियों की समृद्धि का निर्माण। 24 मुख्य व्यावसायिक क्षेत्रों में अनुसूचित जाति के सूक्ष्म उद्यमियों हेतु सामाजिक न्याय और अधिकारिता मंत्रालय के तत्वावधान में।',
+    thesisBody: 'साहूकारों के 36% शोषणकारी ब्याज चक्र को तोड़कर पीढ़ियों की समृद्धि का निर्माण। 24 मुख्य व्यावसायिक क्षेत्रों में अनुसूचित जाति के सूक्ष्म उद्यमियों के लिए, स्मार्ट इंडिया हैकथॉन 2026 की समस्या SIH26091 पर बना, जो सामाजिक न्याय और अधिकारिता मंत्रालय ने दी है (sih.gov.in)।',
     mcfAmount: '≤ ₹1.40 लाख',
     mcfLabel: 'एमसीएफ रियायती ऋण @ 6.5%',
     termAmount: '₹50 लाख तक',
@@ -117,11 +127,12 @@ const TRANSLATIONS = {
     orbitTitlePre: 'आज ',
     orbitTitleItalic: 'अवसर',
     orbitTitlePost: ' का क्या अर्थ है?',
-    orbitBody: 'इसका अर्थ है 3-सेंकड़ा साहूकार के बजाय 6.5% संस्थागत ऋण, 12 महीने का सॉल्वेंसी स्ट्रेस टेस्ट और तत्काल बैंक स्वीकृति डीपीआर तक सीधी पहुँच।',
+    orbitBody: 'इसका अर्थ है 3-सेंकड़ा साहूकार के बजाय 6.5% संस्थागत ऋण, 12 महीने का सॉल्वेंसी स्ट्रेस टेस्ट और एक-पृष्ठीय सलाहकारी डीपीआर तक सीधी पहुँच।',
     // Immersion
-    riskGaugeLabel: 'मंदी-मौसम जोखिम',
-    immersionHeading: '67% ग्रामीण उत्पादक',
-    immersionBody: 'संरचित सांविधिक ऋण चुकौती के बिना अगस्त के मंदी मौसम में गंभीर नकदी संकट का सामना करते हैं।',
+    gaugeCenter: '12',
+    riskGaugeLabel: 'साल के महीने',
+    immersionHeading: 'हर व्यवसाय के मंदी के महीने होते हैं।',
+    immersionBody: 'UdyamSetuAI व्यवसाय की शोध फ़ाइल से उसके सबसे कमज़ोर महीने दिखाता है (जहाँ फ़ाइल में हों), ताकि किस्तें उनके हिसाब से तय हों।',
     exploreDashboard: 'सलाहकार डैशबोर्ड देखें',
     // Pillars
     pillarsHeading: 'चार प्रमुख स्तंभ.',
@@ -153,11 +164,11 @@ const TRANSLATIONS = {
     nameLabel: 'उद्यमी का पूरा नाम',
     namePlaceholder: 'उदा. राजेश सिंह',
     tradeLabel: 'उद्यम क्षेत्र / व्यापार',
-    categoryLabel: 'लाभार्थी सामाजिक श्रेणी',
+    categoryLabel: 'क्या आप अनुसूचित जाति (SC) से हैं?',
     submitLogin: 'लॉगिन करें एवं कार्यक्षेत्र खोलें',
     submitRegister: 'पंजीकरण करें एवं कार्यक्षेत्र खोलें',
     alreadyRegistered: 'क्या पहले से खाता है?',
-    needAccount: 'GraminAI पर नए हैं?',
+    needAccount: 'UdyamSetuAI पर नए हैं?',
     signInLink: 'लॉगिन करें',
     registerLink: 'खाता बनाएं'
   }
@@ -190,7 +201,7 @@ const PILLAR_DOSSIERS = {
       specifications: [
         { label: 'Lean Season Simulation', value: 'Shows each business\'s 12-month season pattern from its research dossier, with the leanest months marked' },
         { label: 'Solvency Benchmark', value: 'Shows the cash-flow cover (DSCR) printed in each business\'s dossier, Year 1 to 3, or NOT FOUND' },
-        { label: 'Empirical Coverage', value: '24 validated trade dossiers spanning agro-processing, tailoring, retail, and artisanal crafts' },
+        { label: 'Empirical Coverage', value: '24 trade dossiers (agro-processing, tailoring, retail, artisanal crafts); the server checks each figure it shows against the dossier file' },
         { label: 'Stress Buffer Alert', value: 'Lists what each dossier leaves open (gaps and remaining questions) before you apply' }
       ]
     },
@@ -244,7 +255,7 @@ const PILLAR_DOSSIERS = {
       specifications: [
         { label: 'मंदी मौसम सिमुलेशन', value: 'हर व्यवसाय के शोध डोज़ियर से 12 महीने का मौसमी पैटर्न, सबसे कमज़ोर महीने चिह्नित' },
         { label: 'सॉल्वेंसी मानक', value: 'हर व्यवसाय के डोज़ियर में छपा ऋण चुकाने की क्षमता (DSCR), वर्ष 1 से 3, या NOT FOUND' },
-        { label: 'व्यावहारिक कवरेज', value: 'कृषि-प्रसंस्करण, सिलाई, किराना और हस्तशिल्प में 24 सत्यापित व्यापार प्रोफाइल' },
+        { label: 'व्यावहारिक कवरेज', value: 'कृषि-प्रसंस्करण, सिलाई, किराना और हस्तशिल्प में 24 व्यापार डोज़ियर; सर्वर हर दिखाया आँकड़ा डोज़ियर फ़ाइल से मिलाता है' },
         { label: 'स्ट्रेस बफर अलर्ट', value: 'आवेदन से पहले हर डोज़ियर में बचे खुले प्रश्न और कमियाँ' }
       ]
     },
@@ -339,7 +350,7 @@ export default function App() {
         }
       }
     } catch (err) {
-      console.warn('[GraminAI] Clean up landing animations warning:', err);
+      console.warn('[UdyamSetuAI] Clean up landing animations warning:', err);
     }
   }, []);
 
@@ -409,8 +420,29 @@ export default function App() {
   const [regPhone, setRegPhone] = useState('');
   const [regPin, setRegPin] = useState('');
   const [regTrade, setRegTrade] = useState('D20 Metal Smithy');
-  const [regCategory, setRegCategory] = useState('Scheduled Caste (SC)');
+  // Empty until the user answers: SC was pre-selected and labelled "Verified", so every account
+  // claimed a checked caste status nobody checked (teammate review, 11 Nov 2026).
+  const [regCategory, setRegCategory] = useState('');
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  // A question typed into the front page's chat bar, sent by the dashboard once it opens.
+  const [pendingQuestion, setPendingQuestion] = useState(null);
+  // Closing the sign-in box without signing in drops that question, so it is not sent later at an
+  // unrelated sign-in (review, 11 Nov 2026).
+  const dismissAuthModal = () => {
+    setIsAuthModalOpen(false);
+    setPendingQuestion(null);
+  };
+
+  // The header's "data.gov.in connected" badge was always green; it now shows only when the
+  // server reports a data.gov.in key (teammate review, 11 Nov 2026).
+  const [mandiConnected, setMandiConnected] = useState(false);
+  useEffect(() => {
+    let isMounted = true;
+    fetchHealth().then((h) => { if (isMounted) setMandiConnected(h?.mandiKeyConfigured === true); })
+      .catch(() => { if (isMounted) setMandiConnected(false); });
+    return () => { isMounted = false; };
+  }, []);
 
   // Restore active session on mount
   useEffect(() => {
@@ -616,12 +648,13 @@ export default function App() {
         }, 0.3);
 
       // -------------------------------------------------------------
-      // SCENE 4: IMMERSIVE ARC GAUGE (FILLS TO 67%)
+      // SCENE 4: IMMERSIVE ARC GAUGE (FILLS THE FULL YEAR: 12 MONTHS)
+      // It filled to an unsourced 67%; removed 11 Nov 2026.
       // -------------------------------------------------------------
       gsap.fromTo('#gauge-circle',
         { strokeDashoffset: 283 },
         {
-          strokeDashoffset: 93,
+          strokeDashoffset: 0,
           duration: 1.8,
           ease: 'power2.out',
           scrollTrigger: {
@@ -714,7 +747,7 @@ export default function App() {
     return (
       <div 
         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn"
-        onClick={() => setIsAuthModalOpen(false)}
+        onClick={dismissAuthModal}
       >
         <div 
           className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-black/10 space-y-5"
@@ -735,8 +768,8 @@ export default function App() {
                 </p>
               </div>
             </div>
-            <button 
-              onClick={() => setIsAuthModalOpen(false)}
+            <button
+              onClick={dismissAuthModal}
               className="p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-all cursor-pointer"
             >
               <X className="w-5 h-5" />
@@ -959,18 +992,19 @@ export default function App() {
                   {t.categoryLabel}
                 </label>
                 <select
+                  required
                   value={regCategory}
                   onChange={(e) => setRegCategory(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-[#111311] bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-all cursor-pointer"
                 >
-                  <option value="Scheduled Caste (SC)">
-                    {language === 'hi' ? 'अनुसूचित जाति (SC) · 100% पात्रता' : 'Scheduled Caste (SC) · Verified Eligibility'}
+                  <option value="" disabled>
+                    {language === 'hi' ? 'चुनें' : 'Choose'}
                   </option>
-                  <option value="Scheduled Tribe (ST)">
-                    {language === 'hi' ? 'अनुसूचित जनजाति (ST)' : 'Scheduled Tribe (ST)'}
+                  <option value={CATEGORY_SC}>
+                    {language === 'hi' ? 'हाँ, अनुसूचित जाति (SC) (स्वयं घोषित)' : 'Yes, Scheduled Caste (SC) (self-declared)'}
                   </option>
-                  <option value="Other Backward Classes (OBC)">
-                    {language === 'hi' ? 'अन्य पिछड़ा वर्ग (OBC)' : 'Other Backward Classes (OBC)'}
+                  <option value={CATEGORY_NOT_SC}>
+                    {language === 'hi' ? 'नहीं' : 'No'}
                   </option>
                 </select>
               </div>
@@ -1017,26 +1051,28 @@ export default function App() {
             <button
               onClick={navigateToLanding}
               className="flex items-center space-x-2.5 cursor-pointer group text-left"
-              title="Return to GraminAI Landing Page"
+              title="Return to UdyamSetuAI Landing Page"
             >
               <img
                 src="/images/logo.png"
-                alt="GraminAI Emblem"
+                alt="UdyamSetuAI Emblem"
                 className="h-8 sm:h-9 w-auto object-contain group-hover:scale-105 transition-transform"
               />
               <span className="font-extrabold text-lg sm:text-xl text-[#111311] tracking-tight font-sans-ui">
-                GraminAI
+                UdyamSetuAI
               </span>
             </button>
           </div>
 
           {/* Right: Controls & User Profile */}
           <div className="flex items-center space-x-2 sm:space-x-2.5">
-            {/* MyGov data.gov.in Live Status */}
-            <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-              <span className="text-[11px] font-mono-num">data.gov.in connected</span>
-            </div>
+            {/* MyGov data.gov.in Live Status: only when the server really has a key */}
+            {mandiConnected && (
+              <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                <span className="text-[11px] font-mono-num">data.gov.in connected</span>
+              </div>
+            )}
 
             {/* Language Toggle */}
             <button
@@ -1091,6 +1127,8 @@ export default function App() {
             language={language}
             currentUser={currentUser}
             onNavigateHome={navigateToLanding}
+            initialQuestion={pendingQuestion}
+            onInitialQuestionUsed={() => setPendingQuestion(null)}
           />
         </main>
 
@@ -1129,7 +1167,7 @@ export default function App() {
         >
           <img 
             src="/images/logo.png" 
-            alt="GraminAI Emblem" 
+            alt="UdyamSetuAI Emblem" 
             className="h-10 sm:h-11 w-auto object-contain group-hover:scale-105 transition-transform duration-200"
           />
         </div>
@@ -1433,7 +1471,7 @@ export default function App() {
 
             {/* Center Percentage Display */}
             <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-4xl sm:text-5xl font-editorial font-bold text-white tracking-tight">67%</span>
+              <span className="text-4xl sm:text-5xl font-editorial font-bold text-white tracking-tight">{t.gaugeCenter}</span>
               <span className="text-[10px] font-mono-num uppercase tracking-widest text-[#FACC15] mt-1 font-semibold">{t.riskGaugeLabel}</span>
             </div>
 
@@ -1657,6 +1695,16 @@ export default function App() {
           language={language} 
           currentUser={currentUser} 
           onLaunchWorkspace={() => {
+            if (currentUser) {
+              navigateToDashboard();
+            } else {
+              setAuthError(null);
+              setIsAuthModalOpen(true);
+            }
+          }}
+          onAskQuestion={(question) => {
+            // The chat lives on the signed-in dashboard: keep the question, sign in if needed, then send it there.
+            setPendingQuestion(question);
             if (currentUser) {
               navigateToDashboard();
             } else {

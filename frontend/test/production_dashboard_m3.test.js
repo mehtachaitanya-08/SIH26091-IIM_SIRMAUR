@@ -35,7 +35,8 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
       'LeadBankDprView.jsx',
       'CommandBar.jsx',
       'ScenariosSidebar.jsx',
-      'StatutoryVerificationModal.jsx'
+      // StatutoryVerificationModal.jsx was removed on 11 Nov 2026 (made-up certificate ID).
+      'HowItWorksView.jsx'
     ];
 
     for (const comp of requiredComponents) {
@@ -55,7 +56,7 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
       assert.ok(prodCode.includes('calculateNSFDCLoan'), 'ProductionDashboard must call calculateNSFDCLoan');
       assert.ok(prodCode.includes('restructureDebt'), 'ProductionDashboard must call restructureDebt');
       assert.ok(prodCode.includes('fetchDossiers'), 'ProductionDashboard must call fetchDossiers');
-      assert.ok(prodCode.includes('graminai_production_scenarios'), 'ProductionDashboard must support scenario persistence');
+      assert.ok(prodCode.includes('udyamsetuai_production_scenarios'), 'ProductionDashboard must support scenario persistence');
     });
   });
 
@@ -85,16 +86,18 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
       const userCardPath = path.join(componentsDir, 'UserCard.jsx');
       const code = fs.readFileSync(userCardPath, 'utf8');
       assert.ok(code.includes('currentUser?.name'), 'UserCard must bind to currentUser.name');
-      assert.ok(code.includes('Statutory Verified'), 'UserCard must render Statutory Verified button');
+      // Nothing about a user is checked, so the card claims no verification (11 Nov 2026).
+      assert.ok(!code.includes('Profile Verified'), 'UserCard must not claim a verified profile');
+      assert.ok(code.includes('self-declared'), 'UserCard must mark the user\'s own details as self-declared');
     });
 
-    it('StatutoryVerificationModal renders statutory provisions and certificate ID', () => {
-      const modalPath = path.join(componentsDir, 'StatutoryVerificationModal.jsx');
-      const code = fs.readFileSync(modalPath, 'utf8');
-      assert.ok(code.includes('Statutory Beneficiary Verification'), 'Modal must render statutory title');
-      assert.ok(code.includes('currentUser?.name'), 'Modal must bind to currentUser.name');
-      assert.ok(code.includes('MoSJE/NSFDC/2026/'), 'Modal must render statutory certificate ID prefix');
-      assert.ok(code.includes('Within 07 Jan 2026 MoSJE Mandate'), 'Modal must render MoSJE statutory mandate');
+    it('No verification popup and no made-up certificate ID anywhere in the dashboard', () => {
+      // The popup showed "MoSJE/NSFDC/2026/<id>" as a certificate for every user; removed 11 Nov 2026.
+      assert.ok(!fs.existsSync(path.join(componentsDir, 'StatutoryVerificationModal.jsx')));
+      for (const f of fs.readdirSync(componentsDir)) {
+        const code = fs.readFileSync(path.join(componentsDir, f), 'utf8');
+        assert.ok(!code.includes('MoSJE/NSFDC/2026/'), `${f} still prints a certificate ID`);
+      }
     });
 
     it('SeasonalitySimulatorView shows NOT FOUND, never a made-up curve or SAFE rating', () => {

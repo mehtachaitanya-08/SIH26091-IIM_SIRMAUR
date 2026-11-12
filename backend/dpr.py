@@ -171,7 +171,7 @@ def _build_pdf(code, req, answers, applicant=None, notes=(), compact=False) -> b
     pg = _Page(c)
 
     pg.text(f"Detailed Project Report (1 page) — {NAMES[code]} ({code})", size=13, bold=True)
-    pg.text(f"Prepared {date.today().isoformat()} by the GraminAI advisory server. Advisory document only: "
+    pg.text(f"Prepared {date.today().isoformat()} by the UdyamSetuAI advisory server. Advisory document only: "
             f"this is not a loan sanction. Tags: [S#] = official source (list below), CALCULATED = worked out "
             f"from tagged figures, ASSUMED = our stated assumption, USER INPUT = entered by the applicant, "
             f"{code} dossier = figure from the team's research dossier for this business.", size=7.5)

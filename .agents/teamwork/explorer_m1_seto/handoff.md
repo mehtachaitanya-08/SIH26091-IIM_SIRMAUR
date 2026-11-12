@@ -15,7 +15,7 @@ Direct code and file observations:
    - Scene 6 requires a strict SETO minimal mockup dashboard at the end of the landing page:
      - Diffused ambient canvas (`#D4D8DD` with dual warm peach/slate radial gradients, `rounded-[38px]`).
      - Rounded white 3-column container (`rounded-[28px]`, `soft-card-shadow`) divided 3:6:3.
-     - Left navigation rail with `✦ GraminAI` lockup, active white pill, collapsible `Advisory Tools ^` (D08/D18/D15), and bottom user card ("Ramesh Kumar", SC · Income ≤ ₹5.00L, with `✦ Statutory Verified` badge).
+     - Left navigation rail with `✦ UdyamSetuAI` lockup, active white pill, collapsible `Advisory Tools ^` (D08/D18/D15), and bottom user card ("Ramesh Kumar", SC · Income ≤ ₹5.00L, with `✦ Statutory Verified` badge).
      - Center workspace with top 4-pointed iridescent star SVG blossom (`@keyframes pulseStar`), "Welcome, Ramesh!", 3 quick action cards, mockup viewports (Simulator, Amortizer, Debt Liberation, DPR) integrating `frontend/src/engine.js`, and floating bottom command bar.
      - Right sidebar with "Recent scenarios", search, history cards with checkboxes and thumbnail previews.
      - Strictly limited dashboard functionality as a mockup per user instructions, authentically utilizing `engine.js` calculations for realistic values.
@@ -349,7 +349,7 @@ export default function SetoDashboard() {
           The Entrepreneur Workspace
         </h2>
         <p className="text-xs text-[#686D65] mt-1">
-          SETO minimal diffused ambient dashboard mockup powered by GraminAI credit engine.
+          SETO minimal diffused ambient dashboard mockup powered by UdyamSetuAI credit engine.
         </p>
       </div>
 
@@ -370,12 +370,12 @@ export default function SetoDashboard() {
           <aside className="lg:col-span-3 bg-[#F8F9FA] p-6 flex flex-col justify-between border-r border-[#E9ECEF]">
             
             <div className="space-y-6">
-              {/* Brand Lockup: ✦ GraminAI */}
+              {/* Brand Lockup: ✦ UdyamSetuAI */}
               <div className="flex items-center space-x-2.5 px-2">
                 <div className="w-7 h-7 rounded-lg bg-[#111311] text-white flex items-center justify-center font-bold text-xs shadow-sm">
                   ✦
                 </div>
-                <span className="font-extrabold text-lg text-[#111311] tracking-tight">GraminAI</span>
+                <span className="font-extrabold text-lg text-[#111311] tracking-tight">UdyamSetuAI</span>
               </div>
 
               {/* Nav Tabs List with Active White Pill */}

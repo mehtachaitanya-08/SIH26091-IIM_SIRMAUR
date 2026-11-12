@@ -72,7 +72,7 @@
      - Scene 6 SETO Minimal Mockup Dashboard: Rendered via `<SetoDashboard />` inside `#dashboard-section`.
    - `SetoDashboard.jsx` implements:
      - Diffused `#D4D8DD` ambient backdrop with rounded white 3-column shell (`rounded-[28px]`, 3:6:3 grid).
-     - Left Rail: Brand lockup `✦ GraminAI`, active white pill tabs (`Home`, `Enterprise Studio`, `NSFDC Amortizer`, `Debt Liberation`, `1-Page DPR`), collapsible `Advisory Tools ^` (D08 Mustard, D18 Tailoring, D15 Tractor), and bottom user card with avatar, "Ramesh Kumar", "SC · Income ≤ ₹5.00L", and `✦ Statutory Verified` modal trigger.
+     - Left Rail: Brand lockup `✦ UdyamSetuAI`, active white pill tabs (`Home`, `Enterprise Studio`, `NSFDC Amortizer`, `Debt Liberation`, `1-Page DPR`), collapsible `Advisory Tools ^` (D08 Mustard, D18 Tailoring, D15 Tractor), and bottom user card with avatar, "Ramesh Kumar", "SC · Income ≤ ₹5.00L", and `✦ Statutory Verified` modal trigger.
      - Center Workspace: 4-pointed iridescent star SVG blossom (`.iris-star-svg`), "Welcome, Ramesh!", 3 quick cards, 4 functional client-side viewports utilizing `frontend/src/engine.js` calculations, and floating command bar.
      - Right Panel: "Recent scenarios", search bar, scenario items with checkboxes and thumbnail image preview (`scenario_tailoring.jpg`), and "Create new simulation +" button.
 

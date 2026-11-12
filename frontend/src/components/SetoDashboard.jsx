@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
 import DashboardShell from './dashboard/DashboardShell';
 import StarBlossom from './dashboard/StarBlossom';
@@ -10,38 +10,10 @@ export const PRESETS = {
   D15: { code: 'D15', name: 'Tractor & Farm Equipment Garage', nameHi: 'ट्रैक्टर एवं कृषि उपकरण मरम्मत गैराज' }
 };
 
-// Static Preset Scenario Definitions for Right Sidebar Panel
-export const RECENT_SCENARIOS = [
-  {
-    id: 'D08',
-    domainCode: 'D08',
-    tab: 'simulator',
-    name: 'D08 Mustard Oil Mill',
-    subtitle: 'NSFDC Term Loan · see dashboard',
-    time: '2h ago',
-    type: 'd08'
-  },
-  {
-    id: 'D18',
-    domainCode: 'D18',
-    tab: 'simulator',
-    name: 'D18 Tailoring Workshop',
-    subtitle: 'PM Vishwakarma credit · see dashboard',
-    image: '/images/scenario_tailoring.jpg',
-    imageAlt: 'Tailoring craftsmanship',
-    imageFallback: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
-    time: '3h ago',
-    type: 'd18'
-  },
-  {
-    id: 'debt',
-    tab: 'restructure',
-    name: 'Sahukar Debt Relief',
-    subtitle: 'Moneylender senkda debt · see dashboard',
-    time: '5h ago',
-    type: 'debt'
-  }
-];
+// The preview's right column. It showed three made-up "recent" scenarios saved "2h/3h/5h ago",
+// with a tick box set; nobody saved them, so the preview now shows the real empty state a new
+// user sees (teammate review, 11 Nov 2026).
+export const RECENT_SCENARIOS = [];
 
 /**
  * SetoDashboard — Landing Page Onboarding Glimpse Mockup (Scene 06)
@@ -52,14 +24,24 @@ export const RECENT_SCENARIOS = [
 export default function SetoDashboard({
   language = 'en',
   currentUser = null,
-  onLaunchWorkspace
+  onLaunchWorkspace,
+  onAskQuestion
 }) {
   const isHi = language === 'hi';
+  // The preview's chat bar was read-only text that only opened sign-in; a teammate typed into it
+  // and got nothing (teammate review, 11 Nov 2026). Now the question is carried into the dashboard.
+  const [question, setQuestion] = useState('');
 
   const handleAction = (label) => {
     if (onLaunchWorkspace) {
       onLaunchWorkspace(label);
     }
+  };
+
+  const askQuestion = () => {
+    const q = question.trim();
+    if (q && onAskQuestion) onAskQuestion(q);
+    else handleAction('AI Command Bar');
   };
 
   return (
@@ -73,15 +55,15 @@ export default function SetoDashboard({
       {/* Column 1: Left Navigation Rail (Preview Mode) */}
       <aside className="lg:col-span-3 bg-[#F8F9FA] p-6 flex flex-col justify-between border-r border-[#E9ECEF]">
         <div className="space-y-6">
-          {/* Brand Lockup: GraminAI */}
+          {/* Brand Lockup: UdyamSetuAI */}
           <div className="flex items-center space-x-2.5 px-2">
             <img 
               src="/images/logo.png" 
-              alt="GraminAI Emblem" 
+              alt="UdyamSetuAI Emblem" 
               className="w-8 h-8 object-contain rounded-md"
             />
             <span className="font-extrabold text-lg text-[#111311] tracking-tight font-sans-ui">
-              GraminAI
+              UdyamSetuAI
             </span>
             <span className="ml-auto text-[10px] font-mono-num font-bold px-2 py-0.5 rounded-full bg-slate-200 text-[#686D65] uppercase">
               Preview
@@ -111,40 +93,19 @@ export default function SetoDashboard({
                 {!tab.active && <Lock className="w-3 h-3 ml-auto text-slate-400" />}
               </button>
             ))}
-
-            <button
-              type="button"
-              onClick={() => handleAction('Notifications')}
-              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer font-sans-ui"
-            >
-              <span>{isHi ? 'सूचनाएं' : 'Notifications'}</span>
-              <span className="w-5 h-5 rounded-full bg-[#111311] text-white text-[11px] flex items-center justify-center font-bold">
-                8
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleAction('Settings')}
-              className="w-full flex items-center px-4 py-2.5 rounded-xl text-[#686D65] hover:text-[#111311] hover:bg-white/60 font-medium text-xs transition-all cursor-pointer font-sans-ui"
-            >
-              <span>{isHi ? 'सेटिंग्स' : 'Settings'}</span>
-            </button>
           </nav>
 
           {/* Collapsible Sub-Tree: Advisory Tools */}
           <div className="pt-4 border-t border-[#E9ECEF] px-2">
             <div className="flex items-center justify-between text-xs font-semibold text-[#686D65] mb-2 font-sans-ui">
               <span>{isHi ? 'सलाहकार उपकरण' : 'Advisory Tools'}</span>
-              <span className="text-[10px] font-mono-num text-[#0E7A53] font-bold">24 Trades</span>
+              {/* Source: the 24 business research files, research_dossiers/D01-D24 */}
+              <span className="text-[10px] font-mono-num text-[#0E7A53] font-bold" title="Source: the 24 business research files (D01 to D24)">24 Trades</span>
             </div>
 
             <div className="space-y-1">
-              {[
-                { name: isHi ? 'सरसों तेल' : 'Mustard', code: 'D08', active: true },
-                { name: isHi ? 'सिलाई' : 'Village', code: 'D18' },
-                { name: isHi ? 'ट्रैक्टर गैराज' : 'Tractor', code: 'D15' }
-              ].map((item) => (
+              {/* Full names: "Village" stood for Tailoring and "Mustard" for an oil mill. */}
+              {Object.values(PRESETS).map((p, i) => ({ name: isHi ? p.nameHi : p.name, code: p.code, active: i === 0 })).map((item) => (
                 <button
                   key={item.code}
                   type="button"
@@ -155,7 +116,7 @@ export default function SetoDashboard({
                       : 'text-[#686D65] hover:text-[#111311] hover:bg-slate-50'
                   }`}
                 >
-                  <span>{item.name}</span>
+                  <span className="truncate text-left">{item.name}</span>
                   <span className="text-[10px] font-mono-num bg-slate-200 text-[#686D65] px-1.5 py-0.5 rounded">
                     {item.code}
                   </span>
@@ -167,12 +128,13 @@ export default function SetoDashboard({
 
         {/* Bottom Beneficiary Card */}
         <div className="mt-6 pt-4 border-t border-[#E9ECEF]">
-          <div 
-            onClick={() => handleAction('Beneficiary Verification')}
+          <div
+            onClick={() => handleAction('Profile')}
             className="flex items-center space-x-3 p-2.5 rounded-xl bg-white border border-[#E9ECEF] hover:border-black/20 cursor-pointer transition-all shadow-sm"
           >
+            {/* The user's initial; it said "SC" for everyone before sign-in. */}
             <div className="w-8 h-8 rounded-full bg-[#111311] text-white flex items-center justify-center font-bold text-xs">
-              {currentUser?.name ? currentUser.name.charAt(0) : 'SC'}
+              {currentUser?.name ? Array.from(currentUser.name.trim())[0] : '?'}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-xs text-[#111311] truncate font-sans-ui">
@@ -206,11 +168,6 @@ export default function SetoDashboard({
                   <span>MoSJE / NSFDC Concessional Credit Facility</span>
                 </p>
               </div>
-            </div>
-            <div className="flex items-center space-x-2 text-xs">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 text-[#0E7A53] font-semibold border border-emerald-200">
-                Sitapur District · STATUTORY-VERIFIED
-              </span>
             </div>
           </div>
         </div>
@@ -309,17 +266,21 @@ export default function SetoDashboard({
           <div className="relative">
             <input
               type="text"
-              readOnly
-              value="Try: 'Stress test August cash flow' or 'Download Lead-Bank DPR'"
-              onClick={() => handleAction('AI Command Bar')}
-              className="w-full bg-[#F8F9FA] rounded-2xl px-4 py-3 text-xs text-[#686D65] border border-[#E9ECEF] cursor-pointer hover:border-[#111311]/40 transition-colors font-sans-ui"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && askQuestion()}
+              placeholder={isHi
+                ? "UdyamSetuAI से पूछें (जैसे 'मैं यूपी में लोहार हूँ, क्या मुझे लोन मिल सकता है?')"
+                : "Ask UdyamSetuAI (e.g. 'I am a blacksmith in UP, can I get a loan?')"}
+              aria-label="Ask UdyamSetuAI"
+              className="w-full bg-[#F8F9FA] rounded-2xl pl-4 pr-20 py-3 text-xs text-[#111311] placeholder-[#686D65] border border-[#E9ECEF] hover:border-[#111311]/40 focus:outline-none focus:border-[#111311] transition-colors font-sans-ui"
             />
             <button
               type="button"
-              onClick={() => handleAction('AI Command Bar')}
+              onClick={askQuestion}
               className="absolute right-2 top-2 px-3 py-1.5 rounded-xl bg-[#111311] text-white text-[11px] font-bold font-mono-num cursor-pointer"
             >
-              Run →
+              {isHi ? 'पूछें →' : 'Ask →'}
             </button>
           </div>
         </div>
@@ -353,8 +314,13 @@ export default function SetoDashboard({
             />
           </div>
 
-          {/* Preset Scenario Cards */}
+          {/* Saved scenarios: empty until the user saves one */}
           <div className="space-y-3.5 pt-2 text-xs">
+            {RECENT_SCENARIOS.length === 0 && (
+              <div className="p-4 text-center text-[#686D65] bg-[#F8F9FA] rounded-xl border border-[#E9ECEF]">
+                <p className="font-semibold text-xs">{isHi ? 'अभी कोई परिदृश्य सहेजा नहीं गया' : 'No saved scenarios yet'}</p>
+              </div>
+            )}
             {RECENT_SCENARIOS.map((scenario) => (
               <div
                 key={scenario.id}
@@ -362,12 +328,6 @@ export default function SetoDashboard({
                 className="p-2.5 rounded-xl hover:bg-[#F8F9FA] transition-all cursor-pointer border border-transparent hover:border-[#E9ECEF]"
               >
                 <div className="flex items-start space-x-2">
-                  <input
-                    type="checkbox"
-                    defaultChecked={scenario.id === 'D08'}
-                    readOnly
-                    className="mt-0.5 rounded border-gray-300 text-[#111311] focus:ring-0 cursor-pointer"
-                  />
                   <div className="flex-1">
                     <p className="font-bold text-[#111311] font-sans-ui">{scenario.name}</p>
                     <p className="text-[11px] text-[#686D65] mt-0.5 font-sans-ui">{scenario.subtitle}</p>

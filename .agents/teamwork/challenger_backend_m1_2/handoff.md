@@ -98,7 +98,7 @@ Direct empirical observations from independent test execution, wire protocol ana
    - Because the maximum deviation observed across all 24 dossiers and all quarterly schedule entries was 0.00 to 0.05 paise (due to minor standard floating-point rounding), the two engines are in 100% mathematical parity.
 
 2. **Concurrency & Thread Safety**:
-   - Observation 2 demonstrates that `ThreadingHTTPServer` and `GraminAIRequestHandler` handle high-frequency concurrent requests cleanly. Each request is served in its own thread with isolated I/O streams and no mutable shared state leaks, ensuring production readiness for local multi-tab frontend requests.
+   - Observation 2 demonstrates that `ThreadingHTTPServer` and `UdyamSetuAIRequestHandler` handle high-frequency concurrent requests cleanly. Each request is served in its own thread with isolated I/O streams and no mutable shared state leaks, ensuring production readiness for local multi-tab frontend requests.
 
 3. **CORS & Proxy Conformance**:
    - Observation 4 confirms that Vite proxy and direct browser cross-origin requests are supported on all endpoints via explicit CORS headers and HTTP 204 preflight responses, fulfilling the interface contract in `PROJECT.md`.
@@ -114,7 +114,7 @@ Direct empirical observations from independent test execution, wire protocol ana
 ## 3. Caveats
 
 1. **Sandbox Socket Policy**:
-   - As documented by Worker M1, the Windows sandbox environment restricts raw outbound TCP socket client calls to arbitrary ports. Testing was executed via simulated HTTP/1.1 wire protocol streams directly exercising `GraminAIRequestHandler` and thread pools, which tests the exact same server logic without OS sandbox socket denial.
+   - As documented by Worker M1, the Windows sandbox environment restricts raw outbound TCP socket client calls to arbitrary ports. Testing was executed via simulated HTTP/1.1 wire protocol streams directly exercising `UdyamSetuAIRequestHandler` and thread pools, which tests the exact same server logic without OS sandbox socket denial.
 2. **Scope Boundary**:
    - Google authentication (M2) and modular dashboard synchronization (M3) are intentionally out of scope for Milestone M1 review.
 

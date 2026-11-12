@@ -13,6 +13,8 @@ export default function DebtLiberationView({
   onRateChange,
   debtMonthsActive = 36,
   onMonthsActiveChange,
+  debtIncome = '',
+  onDebtIncomeChange,
   debtRefinanceData,
   onClose,
   onGenerateLegalPackage,
@@ -95,13 +97,33 @@ export default function DebtLiberationView({
             className="w-full accent-[#E86043] cursor-pointer"
           />
         </div>
+
+        {/* Household income: typed by the user, never assumed. The server used to assume
+            35,000 a month for everyone (teammate review, 11 Nov 2026). */}
+        {!isMockup && (
+          <div>
+            <label className="font-semibold text-[#111311] block mb-1" htmlFor="debt-income">
+              परिवार की मासिक कमाई / Household income per month (rupees):
+            </label>
+            <input
+              id="debt-income"
+              type="number"
+              min={0}
+              inputMode="numeric"
+              value={debtIncome}
+              onChange={(e) => onDebtIncomeChange && onDebtIncomeChange(e.target.value)}
+              placeholder="e.g. 12000"
+              className="w-full bg-white border border-[#E9ECEF] rounded-xl p-2 text-xs font-semibold focus:outline-none font-sans-ui"
+            />
+          </div>
+        )}
       </div>
 
       {!hasFigures ? (
-        <p className="p-3 rounded-xl bg-white border border-[#E9ECEF] text-xs text-[#686D65]">
+        <p className="p-3 rounded-xl bg-white border border-[#E9ECEF] text-xs text-[#686D65] whitespace-pre-line">
           {isMockup ? 'Sign in and open the dashboard to see the refinancing figures (see dashboard).'
-            : !debtEntered ? 'Your moneylender debt: NOT FOUND. Move the sliders or choose the rate to enter your own debt.'
-            : d.offline ? 'Server offline: the refinancing figures need the server. NOT FOUND.'
+            : !debtEntered ? 'आपका साहूकारी कर्ज़ अभी नहीं भरा गया।\nYour moneylender debt: NOT FOUND. Move the sliders or choose the rate to enter your own debt.'
+            : d.offline ? 'सर्वर बंद है।\nServer offline: the refinancing figures need the server. NOT FOUND.'
             : d.error ? `Refinancing figures not available: ${d.error}`
             : 'Working out the refinancing figures…'}
         </p>
@@ -128,6 +150,18 @@ export default function DebtLiberationView({
                 {d.monthlyCashRelief >= 0 ? '+' : ''}{formatINR ? formatINR(d.monthlyCashRelief) : `₹${d.monthlyCashRelief}`} / month
               </span>
             </div>
+            {typeof d.incomeShareBeforePct === 'number' && typeof d.incomeShareAfterPct === 'number' ? (
+              <div className="flex justify-between">
+                <span className="text-[#686D65]">Share of your income going to the debt:</span>
+                <span className="font-bold font-mono-num text-[#111311]">
+                  {d.incomeShareBeforePct}% now → {d.incomeShareAfterPct}% after
+                </span>
+              </div>
+            ) : (
+              <p className="text-[11px] text-[#686D65] whitespace-pre-line">
+                {'यह जानकारी अभी नहीं है: कमाई का हिस्सा (1)\nWe don\'t have this yet: share of your income (1). Enter your household income above.'}
+              </p>
+            )}
             {d.tag && <p className="text-[10px] text-amber-700 pt-1">{d.tag}</p>}
           </div>
 

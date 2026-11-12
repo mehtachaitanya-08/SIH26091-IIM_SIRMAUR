@@ -1,15 +1,15 @@
 @echo off
 REM ==========================================================================
-REM  GraminAI - double-click to set up (first time) and open the dashboard.
+REM  UdyamSetuAI - double-click to set up (first time) and open the dashboard.
 REM  First time: installs Python / Node.js if missing (via winget), the
 REM  project's packages, builds the website and asks for your Groq key.
 REM  After that it just starts the server and opens the browser.
 REM ==========================================================================
 setlocal EnableExtensions
 cd /d "%~dp0"
-title GraminAI
+title UdyamSetuAI
 echo.
-echo  ===== GraminAI: getting everything ready =====
+echo  ===== UdyamSetuAI: getting everything ready =====
 echo.
 
 REM ---- 1. Python (3.10 or newer) -------------------------------------------
@@ -66,14 +66,14 @@ if errorlevel 1 (
 echo  [4/5] Keys checked ^(.env^).
 
 REM ---- 5. Start the server and open the dashboard --------------------------
-echo  [5/5] Starting GraminAI. The dashboard opens in your browser in a few seconds.
-echo        Keep this window open while you use it. Close it to stop GraminAI.
+echo  [5/5] Starting UdyamSetuAI. The dashboard opens in your browser in a few seconds.
+echo        Keep this window open while you use it. Close it to stop UdyamSetuAI.
 echo        Address: http://127.0.0.1:8000/dashboard   Demo sign-in: 9876543210 / PIN 2026
 echo.
 start "" cmd /c "timeout /t 5 >nul & start http://127.0.0.1:8000/dashboard"
 "backend\.venv\Scripts\python.exe" -m uvicorn backend.app:app --port 8000
 echo.
-echo  GraminAI stopped.
+echo  UdyamSetuAI stopped.
 pause
 exit /b 0
 

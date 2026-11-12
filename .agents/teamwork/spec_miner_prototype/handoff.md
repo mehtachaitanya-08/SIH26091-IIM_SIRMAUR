@@ -152,7 +152,7 @@ Direct examination of authoritative workspace sources yielded exact parameters, 
 - **Outer Canvas**: `diffused-backdrop rounded-[38px] p-4 sm:p-7 soft-shadow`.
 - **Inner 3-Column Card**: `bg-dashCard rounded-[28px] overflow-hidden soft-card-shadow grid grid-cols-1 lg:grid-cols-12 min-h-[760px] font-dashboard`.
 - **Left Navigation Rail (lg:col-span-3)**:
-  - Brand Lockup: `✦ GraminAI` (w-7 h-7 rounded-lg bg-waltonInk text-white flex items-center justify-center font-bold text-xs `✦`).
+  - Brand Lockup: `✦ UdyamSetuAI` (w-7 h-7 rounded-lg bg-waltonInk text-white flex items-center justify-center font-bold text-xs `✦`).
   - Nav Tabs:
     - `🏠 Home` (active pill: bg-white text-waltonInk font-semibold soft-card-shadow)
     - `⚙️ Enterprise Studio` (triggers simulator tab)
@@ -262,12 +262,12 @@ The database contains 24 micro-enterprise dossiers grouped into 9 sectoral baske
 
 ## 2. Logic Chain
 
-1. **Mapping Walton Family Foundation Architecture to GraminAI**:
+1. **Mapping Walton Family Foundation Architecture to UdyamSetuAI**:
    - The Walton reference site (`opportunity.waltonfamilyfoundation.org`) uses a 4-line condensed serif hero headline with dispersing image cards, vertical chapter drop lines, an orbital vortex of circular image tiles, and a circular radial arc gauge (animating to 67%) over full-bleed photography.
    - `interactive_platform_prototype.html` adapts this visual language specifically for SIH26091 (MoSJE / NSFDC): replacing generic American themes with rural Scheduled Caste entrepreneurship, statutory 6.5%/8.0% credit, August monsoon lean-month stress testing, and the SETO minimal dashboard layout.
 
 2. **Replication of SETO Dashboard Design**:
-   - The user provided a specific SETO dashboard design: diffused `#D4D8DD` ambient background with warm peach/slate gradients, rounded white container (`rounded-[28px]`), left navigation rail with brand lockup `✦ GraminAI` and user profile card (`Ramesh Kumar`, `SC · Income ≤ ₹5.00L`, `✦ Statutory Verified`), center workspace with 4-pointed iridescent star SVG blossom, 3 action cards, command input bar, and right sidebar with recent scenarios and search.
+   - The user provided a specific SETO dashboard design: diffused `#D4D8DD` ambient background with warm peach/slate gradients, rounded white container (`rounded-[28px]`), left navigation rail with brand lockup `✦ UdyamSetuAI` and user profile card (`Ramesh Kumar`, `SC · Income ≤ ₹5.00L`, `✦ Statutory Verified`), center workspace with 4-pointed iridescent star SVG blossom, 3 action cards, command input bar, and right sidebar with recent scenarios and search.
    - All interactive elements must remain strictly client-side mockups without requiring unbuilt backend microservices, fulfilling acceptance criteria while preserving complete visual fidelity.
 
 3. **Statutory Integrity**:
@@ -330,7 +330,7 @@ To independently verify the extracted specifications:
 | 6 | Scene 4 | Radial Arc Solvency Gauge | Glowing circular SVG radial arc animating from offset 283 to 93 (67%) with amber badge | ScrollTrigger enter at top 50% | Circle stroke draws to 67%; 56px amber badge shows 67%; action pill `02 / 04 OPEN DASHBOARD ↗` | Resets to 283 on leave back | `interactive_platform_prototype.html` lines 365–425, 927–937 |
 | 7 | Scene 5 | Four Platform Pillars | 4 clean cards detailing NSFDC Credit, 12-Mo Simulator, Mode B Debt Liberation, and 1-Page DPR | Grid display | Pillar headers, descriptions, and statutory metric footers | Responsive wrap from 4 cols to 1 col | `interactive_platform_prototype.html` lines 429–496 |
 | 8 | Scene 6 | SETO Dashboard Container | Diffused ambient canvas (`#D4D8DD` with radial gradients) housing rounded white 3-column card (`rounded-[28px]`) | Section render | Neumorphic soft-shadowed 3-column operational layout | Responsive stacking on mobile | `interactive_platform_prototype.html` lines 500–522 |
-| 9 | Scene 6 | SETO Left Rail & User Card | Left nav rail with `✦ GraminAI` lockup, active white nav pill, collapsible `Advisory Tools ^`, and Ramesh Kumar card | Click nav tab or domain preset | Switches active tab or preset; shows Ramesh Kumar (SC · Income ≤ ₹5.00L · Verified) | Default to Home tab | `interactive_platform_prototype.html` lines 522–613 |
+| 9 | Scene 6 | SETO Left Rail & User Card | Left nav rail with `✦ UdyamSetuAI` lockup, active white nav pill, collapsible `Advisory Tools ^`, and Ramesh Kumar card | Click nav tab or domain preset | Switches active tab or preset; shows Ramesh Kumar (SC · Income ≤ ₹5.00L · Verified) | Default to Home tab | `interactive_platform_prototype.html` lines 522–613 |
 | 10 | Scene 6 | Iridescent Blossom & Workspace | 4-pointed SVG star with multicolor radial gradient (#FFE4D6→#E86043→#8B5CF6→#F59E0B) pulsing above greeting | Active tab state | Star blossom glow, "Welcome, Ramesh!", 3 quick action cards, or active module viewport | Fallback to home view | `interactive_platform_prototype.html` lines 619–677 |
 | 11 | Scene 6 | Dynamic Solvency Simulator View | In-dashboard enterprise simulator with Project Cost, NOCF, and 12-month bar chart with August lean trough | Select simulator tab or D08/D18/D15 | Displays seasonal multipliers, orange bars for lean months, DSCR safe rating | Validates project cost > 0 | `interactive_platform_prototype.html` lines 1031–1075 |
 | 12 | Scene 6 | Dynamic Amortizer View | In-dashboard quarterly repayment schedule showing moratorium quarters and EQI | Select amortizer tab | Loan sanction, promoter margin, EQI, and 5-quarter preview table with moratorium highlight | Validates loan amount | `interactive_platform_prototype.html` lines 1078–1163 |

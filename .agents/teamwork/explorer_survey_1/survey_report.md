@@ -1,6 +1,6 @@
 # Comprehensive Survey Report: Git Status, Backend Services, ML Models & API Connectivity
 
-**Project:** GraminAI (MoSJE / NSFDC SIH26091 — AI-Driven Hyper-Local Rural Micro-Enterprise Advisory & Credit Platform)  
+**Project:** UdyamSetuAI (MoSJE / NSFDC SIH26091 — AI-Driven Hyper-Local Rural Micro-Enterprise Advisory & Credit Platform)  
 **Author:** Explorer Survey 1 (`explorer_survey_1`)  
 **Date:** 2026-11-10T11:30:00Z  
 **Target Scope:** Requirement 1 (GitHub Synchronization & Backend/ML Integration) and overall system connectivity.
@@ -121,7 +121,7 @@ A comprehensive search for serialized weights across the entire filesystem confi
 - Files matching `*.onnx`, `*.pt`, `*.pth`, `*.pkl`, `*.bin`, `*.joblib`, `*.h5`, `*.safetensors`: **0 files found**.
 
 ### 4.2 AI / ML Architecture Analysis
-Per `AI_Architecture_Safety_Evaluation_Report.md` (lines 56–95) and `Production_Tech_Stack_Architecture_Blueprint.md` (lines 60–85), the GraminAI platform enforces a **Zero-Hallucination Design Contract**:
+Per `AI_Architecture_Safety_Evaluation_Report.md` (lines 56–95) and `Production_Tech_Stack_Architecture_Blueprint.md` (lines 60–85), the UdyamSetuAI platform enforces a **Zero-Hallucination Design Contract**:
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐

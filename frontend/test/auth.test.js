@@ -77,7 +77,7 @@ describe('1. Pure User Database & Demo Elimination', () => {
     assert.strictEqual(res.user.name, 'Sunita Devi');
     assert.strictEqual(res.user.phone, testPhone);
     assert.strictEqual(res.user.trade, 'Handloom Weaving');
-    assert.ok(res.user.id.startsWith('UP-REG-'));
+    assert.ok(res.user.id.startsWith('REG-'));  // no "UP-": it implied Uttar Pradesh (11 Nov 2026)
 
     // Verify session was established
     const active = getCurrentSession();

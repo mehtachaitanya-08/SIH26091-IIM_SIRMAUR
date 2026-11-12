@@ -6,7 +6,7 @@ try {
   const html = renderToString(React.createElement(SetoDashboard));
   console.log('RENDER SUCCESS! HTML byte length:', html.length);
   console.log('Contains "Welcome!":', html.includes('Welcome!'));
-  console.log('Contains "GraminAI":', html.includes('GraminAI'));
+  console.log('Contains "UdyamSetuAI":', html.includes('UdyamSetuAI'));
   console.log('Contains "Recent scenarios":', html.includes('Recent scenarios'));
   console.log('Contains "Mustard Oil Mill":', html.includes('Mustard Oil Mill'));
   console.log('Contains "Tailoring Workshop":', html.includes('Tailoring Workshop'));

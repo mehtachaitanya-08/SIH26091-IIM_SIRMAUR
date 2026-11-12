@@ -1,4 +1,4 @@
-# Gate Status — GraminAI Production Dashboard
+# Gate Status — UdyamSetuAI Production Dashboard
 
 ## Milestone M1: Backend REST Server & API Integration
 Status: **PASSED**

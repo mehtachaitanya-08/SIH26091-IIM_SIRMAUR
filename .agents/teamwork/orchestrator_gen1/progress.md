@@ -1,4 +1,4 @@
-# Progress — GraminAI Production Landing Page & SETO Dashboard
+# Progress — UdyamSetuAI Production Landing Page & SETO Dashboard
 
 ## Current Status
 Last visited: 2026-11-10T04:56:00Z

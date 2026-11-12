@@ -207,6 +207,28 @@ def test_mode_b_his_values_tagged_assumed():
     assert d["damdupatViolated"] is False
 
 
+def test_mode_b_without_income_gives_no_income_ratios():
+    # His engine assumed 35,000 a month for everyone, so the dashboard's debt tool worked out
+    # "share of income" figures from an income nobody entered (teammate review, 11 Nov 2026).
+    m = post("/api/engine/mode-b/restructure", {"principal": 120000, "monthlyRatePct": 3.0, "durationMonths": 36}).json()["liberationMetrics"]
+    for k in ("cash_flow_liberation_ratio_pct", "debt_service_to_income_before_pct",
+              "debt_service_to_income_after_pct", "household_monthly_income"):
+        assert m[k] is None, k
+    assert m["income_note"].startswith("NOT FOUND")
+    m = post("/api/engine/mode-b/restructure", {"principal": 120000, "monthlyRatePct": 3.0, "durationMonths": 36,
+                                                "householdMonthlyIncome": 12000}).json()["liberationMetrics"]
+    assert m["household_monthly_income"] == 12000
+    assert m["debt_service_to_income_before_pct"] == 30.0  # 3,600 interest a month / 12,000 income
+    assert "income_note" not in m
+    # Zero, negative and NaN are not an income: the engine printed "0%" for them, and NaN broke the reply.
+    for bad in (0, -5000, "nan", "inf"):
+        r = post("/api/engine/mode-b/restructure", {"principal": 120000, "monthlyRatePct": 3.0, "durationMonths": 36,
+                                                    "householdMonthlyIncome": bad})
+        assert r.status_code == 200, bad
+        m = r.json()["liberationMetrics"]
+        assert m["debt_service_to_income_before_pct"] is None and m["income_note"].startswith("NOT FOUND"), bad
+
+
 def test_mode_b_damdupat_boundary_interest_equal_to_principal_counts():
     # Moved here from the website's tests (which now run with the server offline):
     # 100,000 at 10% a month -> 10,000 a month; 9 months = 90,000 (no), 10 = 100,000 (yes, equal counts), 11 = 110,000 (yes)

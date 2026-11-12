@@ -32,8 +32,8 @@ Direct observations obtained through codebase inspection, manual wire protocol e
    - Calls `engine.server.run_server(host=args.host, port=args.port)`.
 
 3. **`tests/test_api_server.py` (386 lines)**:
-   - Contains 16 unit and integration tests under `TestGraminAIServer`.
-   - Incorporates a dual-mode testing strategy: attempts live TCP socket connection; if Windows sandbox permission restrictions apply (`WinError 10013`), gracefully uses `WireSocket` in-memory HTTP/1.1 wire protocol execution into `GraminAIRequestHandler`.
+   - Contains 16 unit and integration tests under `TestUdyamSetuAIServer`.
+   - Incorporates a dual-mode testing strategy: attempts live TCP socket connection; if Windows sandbox permission restrictions apply (`WinError 10013`), gracefully uses `WireSocket` in-memory HTTP/1.1 wire protocol execution into `UdyamSetuAIRequestHandler`.
 
 4. **`frontend/vite.config.js` (19 lines)**:
    - Conforms strictly to requirements: specifies `envDir: '../'` (line 7) to read root `.env`.
@@ -71,7 +71,7 @@ All test and build commands were executed independently by this reviewer with th
    - Output:
      ```
      usage: run_backend.py [-h] [--host HOST] [--port PORT]
-     GraminAI Deterministic Financial Engine REST Server
+     UdyamSetuAI Deterministic Financial Engine REST Server
      options:
        -h, --help   show this help message and exit
        --host HOST  Host address to bind (default: 127.0.0.1)
@@ -103,7 +103,7 @@ All test and build commands were executed independently by this reviewer with th
 ### 1.3 Adversarial Stress-Test Runs
 
 1. **Concurrency Stress Test (50 Simultaneous Worker Threads)**:
-   - Executed a Python multi-threaded benchmark using `concurrent.futures.ThreadPoolExecutor(max_workers=20)` issuing 50 concurrent requests to `GraminAIRequestHandler`.
+   - Executed a Python multi-threaded benchmark using `concurrent.futures.ThreadPoolExecutor(max_workers=20)` issuing 50 concurrent requests to `UdyamSetuAIRequestHandler`.
    - Result: All 50 requests completed with HTTP 200, correct calculation payloads, and zero state corruption or thread collisions.
 
 2. **Boundary & Malformed Input Tests**:

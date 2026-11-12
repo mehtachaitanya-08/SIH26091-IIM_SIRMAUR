@@ -19,7 +19,7 @@ import httpx
 from fastapi import APIRouter
 
 router = APIRouter()
-log = logging.getLogger("graminai.mandi")
+log = logging.getLogger("udyamsetuai.mandi")
 
 ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 RESOURCE = "9ef84268-d588-465a-a308-a864a43d0070"  # teammate's Agmarknet daily price resource

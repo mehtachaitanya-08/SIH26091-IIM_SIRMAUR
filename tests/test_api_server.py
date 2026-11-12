@@ -1,5 +1,5 @@
 """
-Comprehensive Unit Test Suite for GraminAI Backend REST Server
+Comprehensive Unit Test Suite for UdyamSetuAI Backend REST Server
 Tests endpoints:
 - GET /api/health
 - GET /health
@@ -30,7 +30,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from engine.server import create_server, GraminAIRequestHandler
+from engine.server import create_server, UdyamSetuAIRequestHandler
 
 
 class WireSocket:
@@ -46,8 +46,8 @@ class WireSocket:
         self.wfile.write(data)
 
 
-class TestGraminAIServer(unittest.TestCase):
-    """Rigorous unit and integration test suite for GraminAI REST API."""
+class TestUdyamSetuAIServer(unittest.TestCase):
+    """Rigorous unit and integration test suite for UdyamSetuAI REST API."""
 
     server = None
     server_thread = None
@@ -95,7 +95,7 @@ class TestGraminAIServer(unittest.TestCase):
     def _send_request(self, method: str, path: str, body=None, headers=None):
         """
         Execute request either via live HTTP socket (if permitted by OS sandbox)
-        or via HTTP wire protocol client into GraminAIRequestHandler.
+        or via HTTP wire protocol client into UdyamSetuAIRequestHandler.
         """
         req_headers = dict(headers or {})
         body_bytes = b""
@@ -136,7 +136,7 @@ class TestGraminAIServer(unittest.TestCase):
 
         mock_socket = WireSocket(wire_raw)
         server_stub = self.server or MagicMock()
-        _ = GraminAIRequestHandler(mock_socket, ("127.0.0.1", 54321), server_stub)
+        _ = UdyamSetuAIRequestHandler(mock_socket, ("127.0.0.1", 54321), server_stub)
 
         response_bytes = mock_socket.wfile.getvalue()
         parts = response_bytes.split(b"\r\n\r\n", 1)

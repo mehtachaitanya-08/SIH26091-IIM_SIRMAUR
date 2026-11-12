@@ -31,6 +31,8 @@ export default function NsfdcAmortizerView({
   } else if (!loanInputs.ready) {
     body = (
       <p className="text-xs text-[#111311]">
+        {/* Hindi first, English under it (owner's decision, 11 Nov 2026). */}
+        <span className="block">ऊपर लागत, परिवार की सालाना कमाई और SC जानकारी भरें, फिर लोन दिखेगा।</span>
         Loan and repayment schedule: NOT FOUND until you pick a size (or type your project cost) and enter
         your family income and SC status above.
       </p>
@@ -155,7 +157,9 @@ export default function NsfdcAmortizerView({
         <div className="space-y-1 text-xs">
           <span className="font-semibold text-[#111311]">Sizes in this business's dossier (pick one, or type your own cost):</span>
           <div className="flex flex-wrap gap-2">
-            {loanInputs.tiers.map((t) => {
+            {/* Sizes with no cost in the dossier are listed once below, not as greyed NOT FOUND buttons
+                (teammate review, 11 Nov 2026). */}
+            {loanInputs.tiers.filter((t) => !t.disabled).map((t) => {
               const picked = !t.disabled && String(t.cost) === String(loanInputs.projectCost);
               return (
                 <button
@@ -177,6 +181,15 @@ export default function NsfdcAmortizerView({
               );
             })}
           </div>
+          {loanInputs.tiers.some((t) => t.disabled) && (
+            <p className="text-[11px] text-[#686D65] whitespace-pre-line">
+              {(() => {
+                const gone = loanInputs.tiers.filter((t) => t.disabled).map((t) => t.label);
+                return `यह जानकारी अभी नहीं है: लागत (${gone.join(', ')})\n`
+                  + `We don't have this yet: the cost of the ${gone.join(', ')} size (${gone.length}). Type your own cost instead.`;
+              })()}
+            </p>
+          )}
         </div>
       )}
 

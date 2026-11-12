@@ -115,7 +115,7 @@ def health():
     return {
         "status": "ok",
         "version": VERSION,
-        "service": "GraminAI verified backend (backend/app.py)",
+        "service": "UdyamSetuAI verified backend (backend/app.py)",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "engines": {
             "nsfdc_calculator": "verified (backend/loan.py)",
@@ -420,7 +420,16 @@ async def mode_b(request: Request):
         principal = float(body.get("principal", 0.0))
         monthly_rate_pct = float(body.get("monthlyRatePct") or body.get("monthly_rate_pct") or 3.0)
         duration_months = int(body.get("durationMonths") or body.get("duration_months") or body.get("monthsActive") or body.get("months_active") or 36)
-        household_income = float(body.get("householdMonthlyIncome") or body.get("household_monthly_income") or body.get("householdIncome") or 35000.0)
+        # No usable income -> no income-based figures. His engine's default of 35,000 a month was
+        # used for every user, so three "share of income" ratios were worked out from an income
+        # nobody entered (teammate review, 11 Nov 2026). Zero, negative, NaN and infinity count as
+        # not entered too: the engine prints "0%" for them, a share of an income that is not there,
+        # and NaN cannot be sent back as JSON at all (review, 11 Nov 2026).
+        raw_income = next((body.get(k) for k in ("householdMonthlyIncome", "household_monthly_income", "householdIncome")
+                           if body.get(k) is not None and body.get(k) != ""), None)
+        household_income = None if raw_income is None else float(raw_income)
+        if household_income is not None and not (math.isfinite(household_income) and household_income > 0):
+            household_income = None
         pathway = body.get("refinancingPathway") or body.get("refinancing_pathway") or body.get("pathway") or "MUDRA_KISHOR"
         tenure_months = int(body.get("refinanceTenureMonths") or body.get("refinance_tenure_months") or body.get("tenureMonths") or 36)
 
@@ -438,7 +447,7 @@ async def mode_b(request: Request):
 
         portfolio_result = RestructuringEngine.evaluate_portfolio(
             debts=debts,
-            household_monthly_income=household_income,
+            household_monthly_income=household_income if household_income is not None else 0.0,
             refinancing_pathway=pathway,
             refinance_tenure_months=tenure_months,
         )
@@ -446,7 +455,12 @@ async def mode_b(request: Request):
         audited = portfolio_result.get("audited_debts", [])
         damdupat_violated = any(d.get("damdupat_violation", False) for d in audited)
         plan = portfolio_result.get("refinancing_plan", {})
-        metrics = portfolio_result.get("liberation_metrics", {})
+        metrics = dict(portfolio_result.get("liberation_metrics", {}))
+        if household_income is None:
+            for k in ("cash_flow_liberation_ratio_pct", "debt_service_to_income_before_pct",
+                      "debt_service_to_income_after_pct", "household_monthly_income"):
+                metrics[k] = None
+            metrics["income_note"] = "NOT FOUND: household monthly income not entered"
         legal = portfolio_result.get("legal_remedy_summary", {})
         old_monthly_interest = portfolio_result.get("current_monthly_interest_bleed", 0.0)
         new_monthly_emi = plan.get("new_monthly_amortizing_emi", 0.0)

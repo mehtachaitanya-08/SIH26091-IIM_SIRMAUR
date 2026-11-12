@@ -46,7 +46,7 @@ Empirically stress-test Milestone M1 (Backend REST Server & API Integration): nu
 ## Attack Surface
 - **Hypotheses tested**:
   * Hypothesis 1: Numerical drift exists between Python floating-point calculations and JS `engine.js` for all 24 dossiers -> REJECTED (Parity confirmed down to <0.05 paise tolerance).
-  * Hypothesis 2: `ThreadingHTTPServer` / `GraminAIRequestHandler` suffers race conditions or deadlocks under concurrent load -> REJECTED (30 concurrent requests completed in <50ms each with 100% 200/204 status).
+  * Hypothesis 2: `ThreadingHTTPServer` / `UdyamSetuAIRequestHandler` suffers race conditions or deadlocks under concurrent load -> REJECTED (30 concurrent requests completed in <50ms each with 100% 200/204 status).
   * Hypothesis 3: Dossier search fails on case-insensitive lookups or invalid inputs -> REJECTED (Case insensitivity works across upper, lower, and mixed case; invalid codes return HTTP 404 with structured JSON).
   * Hypothesis 4: OPTIONS preflight is missing CORS headers or proper status -> REJECTED (HTTP 204 returned with all required CORS headers).
   * Hypothesis 5: `api.js` fallback produces exact contract outputs during offline mode -> PARTIALLY REFUTED (Found `monthlyOpex: 0` bug in fallback Mode A due to `cost` vs `opex` property name mismatch; documented for M3).

@@ -30,7 +30,7 @@ You exclusively own and may create/modify:
 ## Specific Tasks
 1. Build SSOT Modular Subcomponents in `frontend/src/components/dashboard/`:
    - `DashboardShell.jsx`: Ambient canvas with `.diffused-backdrop`, rounded 3-column container (`rounded-[28px]` or `rounded-[32px]`), border, soft shadow.
-   - `NavRail.jsx`: Brand lockup (GraminAI + official logo), navigation tabs (`home`, `simulator`, `amortizer`, `restructure`, `dpr`) with active white pill, collapsible Advisory Tools, bottom `UserCard`.
+   - `NavRail.jsx`: Brand lockup (UdyamSetuAI + official logo), navigation tabs (`home`, `simulator`, `amortizer`, `restructure`, `dpr`) with active white pill, collapsible Advisory Tools, bottom `UserCard`.
    - `UserCard.jsx`: Dynamic user card with avatar, `currentUser?.name`, category, and statutory verification badge opening modal.
    - `CenterWorkspace.jsx`: Executive header, 4-pointed iridescent star blossom (`<StarBlossom />`), quick action cards, and viewport switching.
    - `StarBlossom.jsx`: Reusable SVG 4-pointed iridescent star blossom with pulse/glow keyframes.

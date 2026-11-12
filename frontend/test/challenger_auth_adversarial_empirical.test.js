@@ -83,7 +83,8 @@ describe('CHALLENGER ADVERSARIAL SUITE — 1. userDatabase.js Edge Cases & Stres
 
   it('1.3 Registered user with incorrect PIN MUST be rejected', () => {
     const phone = '9800112233';
-    const regRes = registerUser({ name: 'Challenger Artisan', phone, pin: '5678' });
+    // Registration now needs the user's own answer to "Are you SC?" (11 Nov 2026).
+    const regRes = registerUser({ name: 'Challenger Artisan', phone, pin: '5678', category: 'Scheduled Caste (SC)' });
     assert.strictEqual(regRes.success, true);
 
     const failRes = authenticateByCredentials(phone, '9999');
@@ -124,7 +125,8 @@ describe('CHALLENGER ADVERSARIAL SUITE — 1. userDatabase.js Edge Cases & Stres
     assert.strictEqual(res.user.email, 'pooja.verma.sih@gmail.com');
     assert.strictEqual(res.user.avatar, 'https://lh3.googleusercontent.com/pooja_avatar.jpg');
     assert.strictEqual(res.user.authProvider, 'google');
-    assert.ok(res.user.id.startsWith('UP-GOOG-'), 'User ID must start with UP-GOOG-');
+    // No "UP-" prefix: it implied every user is in Uttar Pradesh (11 Nov 2026).
+    assert.ok(res.user.id.startsWith('GOOG-'), 'User ID must start with GOOG-');
     assert.notStrictEqual(res.user.id, 'UP-STP-008129', 'Must never use demo ID');
     assert.notStrictEqual(res.user.name, 'Ramesh Kumar', 'Must never use demo name');
 
@@ -172,7 +174,8 @@ describe('CHALLENGER ADVERSARIAL SUITE — 1. userDatabase.js Edge Cases & Stres
     assert.strictEqual(res.success, true);
     assert.strictEqual(res.user.name, 'Google Beneficiary');
     assert.strictEqual(res.user.avatar, null);
-    assert.strictEqual(res.user.category, 'Scheduled Caste (SC)');
+    // Google says nothing about caste, so none is assumed (it was set to SC for everyone; 11 Nov 2026).
+    assert.strictEqual(res.user.category, null);
     assert.strictEqual(res.user.authProvider, 'google');
   });
 });

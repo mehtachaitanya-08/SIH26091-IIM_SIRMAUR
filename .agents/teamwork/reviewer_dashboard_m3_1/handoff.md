@@ -21,7 +21,7 @@
    - `StarBlossom.jsx` (36 lines): Implements the 4-pointed iridescent star SVG blossom with 4-stop radial gradient (`#FFE4D6`, `#E86043`, `#8B5CF6`, `#F59E0B`) and `.iris-star-svg` CSS class.
    - `UserCard.jsx` (47 lines): Implements dynamic beneficiary profile display with `currentUser?.name`, fallback for unauthenticated users, and statutory verification trigger.
    - `StatutoryVerificationModal.jsx` (65 lines): Modal dialog with verified SC social category, MoSJE statutory mandate compliance, and certificate identification (`MoSJE/NSFDC/2026/${currentUser.id}`).
-   - `NavRail.jsx` (141 lines): Left navigation rail with `✦ GraminAI` lockup, active white pill tabs (`home`, `simulator`, `amortizer`, `restructure`, `dpr`), and collapsible Advisory Tools sub-tree.
+   - `NavRail.jsx` (141 lines): Left navigation rail with `✦ UdyamSetuAI` lockup, active white pill tabs (`home`, `simulator`, `amortizer`, `restructure`, `dpr`), and collapsible Advisory Tools sub-tree.
    - `CenterWorkspace.jsx` (166 lines): Consolidates `StarBlossom`, executive header greeting, 3 quick action cards, tab viewports, and `CommandBar`.
    - `SeasonalitySimulatorView.jsx` (91 lines): 12-month seasonality chart with August lean dip indicator (`m < 0.8 ? 'bg-orange-400' : 'bg-[#0E7A53]'`), project cost, NOCF, and DSCR rating (`SAFE (DSCR 1.62x)`).
    - `NsfdcAmortizerView.jsx` (107 lines): NSFDC equated quarterly repayment schedule table showing loan amount (90%), promoter margin (10%), EQI, and initial 6 quarters with Moratorium vs Amortizing badges.
@@ -38,7 +38,7 @@
 3. **Production Authenticated Dashboard** (`frontend/src/components/ProductionDashboard.jsx`, 534 lines):
    - Connects live calculations to `frontend/src/services/api.js` (`calculateNSFDCLoan`, `restructureDebt`, `fetchDossiers`, `fetchHealth`).
    - Binds to live Google OAuth `currentUser` session (name, avatar, social category, district, income).
-   - Manages scenario persistence via `localStorage.getItem('graminai_production_scenarios')` with sandbox safety try/catch blocks.
+   - Manages scenario persistence via `localStorage.getItem('udyamsetuai_production_scenarios')` with sandbox safety try/catch blocks.
    - Generates genuine downloadable Lead-Bank DPR HTML report conforming to RBI Lead Bank Scheme standards (`Lead_Bank_DPR_${activeDomain.code}_...html`).
 
 4. **Landing Page Integration** (`frontend/src/App.jsx`, lines 1121–1156):
@@ -61,7 +61,7 @@ Independent execution was conducted in PowerShell on Windows:
    - Output: `✓ 2097 modules transformed. ✓ built in 17.96s (dist/ created)`
 4. **SSR Render Check**:
    - Command: `cd frontend; node test/render_check.mjs`
-   - Output: `RENDER SUCCESS! HTML byte length: 12357. Contains "Welcome!": true, Contains "GraminAI": true, Contains "Recent scenarios": true, Contains "Mustard Oil Mill": true, Contains "Tailoring Workshop": true, Contains "Sahukar Debt Relief": true, Contains "The Entrepreneur Workspace": true`
+   - Output: `RENDER SUCCESS! HTML byte length: 12357. Contains "Welcome!": true, Contains "UdyamSetuAI": true, Contains "Recent scenarios": true, Contains "Mustard Oil Mill": true, Contains "Tailoring Workshop": true, Contains "Sahukar Debt Relief": true, Contains "The Entrepreneur Workspace": true`
 5. **Zero Hardcoded Ramesh Check**:
    - Command: `git grep -i "ramesh" frontend/src/`
    - Output: Exit code 1 (0 matches).

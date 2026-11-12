@@ -22,7 +22,7 @@ Direct observations from codebase inspection, tool executions, and test runs:
    - Outbound network calls via raw TCP socket `connect()` to arbitrary localhost ports inside the sandbox return:
      `PermissionError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions`
    - However, server sockets can bind and listen cleanly on `127.0.0.1:8000` via `socket.bind(('127.0.0.1', 8000))` and `socket.listen(1)`.
-   - Therefore, a dual-mode test harness was constructed in `tests/test_api_server.py` that starts `ThreadingHTTPServer` on a background daemon thread, checks socket connectivity, and uses standard HTTP/1.1 wire protocol execution into `GraminAIRequestHandler` for sandbox test automation.
+   - Therefore, a dual-mode test harness was constructed in `tests/test_api_server.py` that starts `ThreadingHTTPServer` on a background daemon thread, checks socket connectivity, and uses standard HTTP/1.1 wire protocol execution into `UdyamSetuAIRequestHandler` for sandbox test automation.
 
 3. **Backend Service Implementation (`engine/server.py`)**:
    - Zero external dependencies: Uses Python standard library `http.server.ThreadingHTTPServer` and `BaseHTTPRequestHandler`.
@@ -73,7 +73,7 @@ Direct observations from codebase inspection, tool executions, and test runs:
 
 2. **Backend Server Architecture (`engine/server.py`)**:
    - Python's standard library `http.server.ThreadingHTTPServer` handles concurrent client requests without third-party frameworks like FastAPI or Flask, satisfying the zero-dependency constraint.
-   - `GraminAIRequestHandler` parses incoming HTTP request lines and JSON payloads, calls `NSFDCCalculator`, `IncubationEngine`, and `RestructuringEngine`, and returns camelCase and snake_case properties conforming to the interface contracts in `PROJECT.md`.
+   - `UdyamSetuAIRequestHandler` parses incoming HTTP request lines and JSON payloads, calls `NSFDCCalculator`, `IncubationEngine`, and `RestructuringEngine`, and returns camelCase and snake_case properties conforming to the interface contracts in `PROJECT.md`.
    - Dossier lookup loads all 24 empirical records from `data/dossiers_db.json` into memory on startup and serves list and single-item queries by code.
 
 3. **Frontend Integration & Offline Fallback (`frontend/src/services/api.js`)**:
@@ -91,7 +91,7 @@ Direct observations from codebase inspection, tool executions, and test runs:
 ## 3. Caveats
 
 - **Operating System Socket Policy in Sandbox**:
-  * In the Windows sandbox environment, raw TCP `connect()` calls to unapproved local ports fail with `WinError 10013` (access forbidden). The test runner in `tests/test_api_server.py` gracefully detects this and uses the HTTP wire protocol test harness, passing identical wire bytes through `GraminAIRequestHandler`. When run on a host machine outside the sandbox, the socket client automatically engages.
+  * In the Windows sandbox environment, raw TCP `connect()` calls to unapproved local ports fail with `WinError 10013` (access forbidden). The test runner in `tests/test_api_server.py` gracefully detects this and uses the HTTP wire protocol test harness, passing identical wire bytes through `UdyamSetuAIRequestHandler`. When run on a host machine outside the sandbox, the socket client automatically engages.
 - **Scope Boundary**:
   * Per dispatch instructions, existing UI components (`frontend/src/components/*`) and existing calculation engines were not modified. Google authentication and modular dashboard synchronization belong to subsequent milestones (M2 and M3).
 

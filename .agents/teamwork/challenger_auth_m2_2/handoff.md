@@ -78,7 +78,7 @@ An automated empirical test suite was constructed and executed in `frontend/test
      ```
      RENDER SUCCESS! HTML byte length: 11148
      Contains "Welcome!": true
-     Contains "GraminAI": true
+     Contains "UdyamSetuAI": true
      Contains "Recent scenarios": true
      Contains "Mustard Oil Mill": true
      Contains "Tailoring Workshop": true

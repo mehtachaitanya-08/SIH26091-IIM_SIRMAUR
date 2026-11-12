@@ -1,14 +1,14 @@
-# UI Design Phase Contract: GraminAI Production Landing Page & SETO Mockup Dashboard
+# UI Design Phase Contract: UdyamSetuAI Production Landing Page & SETO Mockup Dashboard
 
 **Specification Standard**: `gsd-ui-phase` & `oxfords` UI Principles  
-**Target Platform**: GraminAI (MoSJE / NSFDC SIH26091)  
+**Target Platform**: UdyamSetuAI (MoSJE / NSFDC SIH26091)  
 **Location**: `frontend/src/`  
 **Status**: APPROVED DESIGN CONTRACT  
 
 ---
 
 ## 1. Editorial Vision & Aesthetic Synthesis
-GraminAI unifies the high-refinement editorial publication style of the Walton Family Foundation research microsite (`opportunity.waltonfamilyfoundation.org`) with the SETO minimal diffused ambient dashboard aesthetic.
+UdyamSetuAI unifies the high-refinement editorial publication style of the Walton Family Foundation research microsite (`opportunity.waltonfamilyfoundation.org`) with the SETO minimal diffused ambient dashboard aesthetic.
 
 - **Tone**: Dignified, institutional, authoritative, yet deeply human and grounded in the rural Indian Scheduled Caste micro-entrepreneur experience.
 - **Editorial Contrast**: Giant condensed serif typography (`WHERE OPPORTUNITY TAKES ROOT`) juxtaposed with authentic photographic portraits of artisans, handloom weavers, and agri-entrepreneurs.
@@ -111,7 +111,7 @@ background: radial-gradient(circle at 18% 22%, rgba(205, 220, 235, 0.65) 0%, tra
 - **Outer Canvas**: Diffused `#D4D8DD` canvas with `rounded-[38px]` and soft-shadow.
 - **Inner Shell**: Rounded white container (`rounded-[28px]`, `soft-card-shadow`) divided into 3 columns (3 cols / 6 cols / 3 cols).
 - **Left Rail**:
-  - Brand lockup: `✦ GraminAI`.
+  - Brand lockup: `✦ UdyamSetuAI`.
   - Navigation items with active white pill: `🏠 Home`, `⚙️ Enterprise Studio`, `📉 NSFDC Amortizer`, `⚖️ Debt Liberation`, `📄 1-Page DPR`.
   - Collapsible `Advisory Tools ^`: D08 Mustard Mill, D18 Tailoring Workshop, D15 Tractor Garage.
   - Bottom User Card: Avatar, "Ramesh Kumar", "SC · Income ≤ ₹5.00L", with `✦ Statutory Verified` green pill badge.

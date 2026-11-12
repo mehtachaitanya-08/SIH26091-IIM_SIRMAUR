@@ -99,7 +99,7 @@
    - File `frontend/src/components/SetoDashboard.jsx` lines 156-972:
      - Diffused canvas: `.diffused-backdrop` with `#D4D8DD` and dual peach/slate radial gradients.
      - Main shell: `bg-white rounded-[28px] overflow-hidden soft-card-shadow grid grid-cols-1 lg:grid-cols-12 min-h-[760px]`.
-     - Left Rail (3 cols): Brand `✦ GraminAI`, active white pill tabs (`Home`, `Enterprise Studio`, `NSFDC Amortizer`, `Debt Liberation`, `1-Page DPR`), collapsible `Advisory Tools ^` sub-tree (D08, D18, D15), bottom user card with avatar, "Ramesh Kumar", "SC · Income ≤ ₹5.00L", and `✦ Statutory Verified` button triggering full statutory dossier modal.
+     - Left Rail (3 cols): Brand `✦ UdyamSetuAI`, active white pill tabs (`Home`, `Enterprise Studio`, `NSFDC Amortizer`, `Debt Liberation`, `1-Page DPR`), collapsible `Advisory Tools ^` sub-tree (D08, D18, D15), bottom user card with avatar, "Ramesh Kumar", "SC · Income ≤ ₹5.00L", and `✦ Statutory Verified` button triggering full statutory dossier modal.
      - Center Workspace (6 cols): 4-pointed iridescent star SVG blossom (`.iris-star-svg`) with `@keyframes pulseStar` breathing animation, "Welcome, Ramesh!", 3 quick cards, 4 interactive viewports (Seasonality chart, Amortizer schedule table, Debt liberation slider with Damdupat audit, 1-Page Lead-Bank DPR Sanction Sheet with SHA256 hash), and floating bottom command bar.
      - Right Sidebar (3 cols): "Recent scenarios", search bar, scenario items with checkboxes and image preview (`scenario_tailoring.jpg`), and "Create new simulation +" button.
 

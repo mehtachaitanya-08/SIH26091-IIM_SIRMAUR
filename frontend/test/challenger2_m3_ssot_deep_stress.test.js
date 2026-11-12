@@ -90,7 +90,7 @@ describe('CHALLENGER 2: EMPIRICAL DEEP STRESS & SSOT PARITY HARNESS (M3)', () =>
       const railPath = path.join(subcomponentsDir, 'NavRail.jsx');
       const railCode = fs.readFileSync(railPath, 'utf8');
 
-      assert.ok(railCode.includes('GraminAI'), 'NavRail must render GraminAI logo brand text');
+      assert.ok(railCode.includes('UdyamSetuAI'), 'NavRail must render UdyamSetuAI logo brand text');
       assert.ok(railCode.includes('Enterprise Studio'), 'NavRail must render active simulator tab title');
       assert.ok(railCode.includes('bg-white text-[#111311] shadow-sm'), 'Active tab must receive white pill styling');
       assert.ok(railCode.includes('Advisory Tools'), 'Must render Advisory Tools accordion header');
@@ -153,15 +153,9 @@ describe('CHALLENGER 2: EMPIRICAL DEEP STRESS & SSOT PARITY HARNESS (M3)', () =>
       }
     });
 
-    it('StatutoryVerificationModal code handles dynamic provisions and certificate ID', () => {
-      const modalPath = path.join(subcomponentsDir, 'StatutoryVerificationModal.jsx');
-      const modalCode = fs.readFileSync(modalPath, 'utf8');
-
-      assert.ok(modalCode.includes('Statutory Beneficiary Verification'), 'Modal must render header');
-      assert.ok(modalCode.includes('currentUser?.name'), 'Modal must bind to user name');
-      assert.ok(modalCode.includes('Within 07 Jan 2026 MoSJE Mandate'), 'Modal must cite MoSJE 07 Jan 2026 mandate');
-      assert.ok(modalCode.includes('MoSJE/NSFDC/2026/'), 'Modal must render composite certificate ID prefix');
-      assert.ok(modalCode.includes('NSFDC Term Loan (8.0% p.a.) / MCF (6.5% p.a.)'), 'Modal must cite dual-tier concessional rates');
+    it('The verification popup with its made-up certificate ID is gone', () => {
+      // Removed 11 Nov 2026: it showed every user as "Verified" with an invented certificate ID.
+      assert.ok(!fs.existsSync(path.join(subcomponentsDir, 'StatutoryVerificationModal.jsx')));
     });
   });
 
@@ -182,7 +176,7 @@ describe('CHALLENGER 2: EMPIRICAL DEEP STRESS & SSOT PARITY HARNESS (M3)', () =>
         'LeadBankDprView.jsx',
         'CommandBar.jsx',
         'ScenariosSidebar.jsx',
-        'StatutoryVerificationModal.jsx',
+        'HowItWorksView.jsx',
         'CenterWorkspace.jsx'
       ];
 

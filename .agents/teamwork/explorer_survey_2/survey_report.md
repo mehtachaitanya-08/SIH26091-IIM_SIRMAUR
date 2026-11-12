@@ -22,7 +22,7 @@ Every instance of hardcoded demo data, mock fallbacks, and "Ramesh" references h
 
 | Line(s) | Verbatim Code / Target | Purpose & Problem | Elimination / Remediation Action |
 |---|---|---|---|
-| **10–24** | `SEED_USERS = [{ id: 'UP-STP-008129', name: 'Ramesh Kumar', email: 'ramesh.kumar@graminai.org', phone: '9876543210', pin: '2026', category: 'Scheduled Caste (SC)', trade: 'D08 Mustard & Edible Oil Expeller Mill', district: 'Sitapur District, UP', income: '≤ ₹5,00,000', verified: true, authProvider: 'phone', createdAt: '2026-01-10T00:00:00.000Z' }]` | Hardcoded Ramesh Kumar seed profile in local database. | Remove `SEED_USERS` or initialize empty array `[]`. Do not seed fake accounts into `localStorage`. |
+| **10–24** | `SEED_USERS = [{ id: 'UP-STP-008129', name: 'Ramesh Kumar', email: 'ramesh.kumar@udyamsetuai.org', phone: '9876543210', pin: '2026', category: 'Scheduled Caste (SC)', trade: 'D08 Mustard & Edible Oil Expeller Mill', district: 'Sitapur District, UP', income: '≤ ₹5,00,000', verified: true, authProvider: 'phone', createdAt: '2026-01-10T00:00:00.000Z' }]` | Hardcoded Ramesh Kumar seed profile in local database. | Remove `SEED_USERS` or initialize empty array `[]`. Do not seed fake accounts into `localStorage`. |
 | **25–38** | `SEED_USERS` secondary item: `Sunita Devi` (`UP-STP-004312`, phone: `9876543211`, pin: `2026`) | Hardcoded secondary mock user in seed store. | Remove hardcoded secondary seed profile. |
 | **42** | `let inMemoryUsers = [...SEED_USERS];` | Initializes memory store with mock seed profiles. | Initialize as empty array `let inMemoryUsers = [];`. |
 | **58** | `window.localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(SEED_USERS));` | Persists mock seed profiles into browser localStorage on initial read. | Remove automatic seed persistence; return empty array or existing persisted users only. |
@@ -89,8 +89,8 @@ Every instance of hardcoded demo data, mock fallbacks, and "Ramesh" references h
 ### 2.1. Component Architecture & State Management
 - **State Store**: Authentication state lives in React state inside `frontend/src/App.jsx` as `const [currentUser, setCurrentUser] = useState(null);`.
 - **Session Persistence**: Backed by `localStorage` keys:
-  - `STORAGE_USERS_KEY = 'graminai_users_db_v1'`
-  - `STORAGE_SESSION_KEY = 'graminai_active_session_v1'`
+  - `STORAGE_USERS_KEY = 'udyamsetuai_users_db_v1'`
+  - `STORAGE_SESSION_KEY = 'udyamsetuai_active_session_v1'`
 - **Session Hydration**: On component mount, `App.jsx` runs:
   ```javascript
   useEffect(() => {
@@ -123,7 +123,7 @@ Every instance of hardcoded demo data, mock fallbacks, and "Ramesh" references h
 3. Inside `authenticateByGoogle()` in `userDatabase.js`:
    - Checks if `ramesh.kumar.sc@gmail.com` exists.
    - If not, constructs a synthetic user object with random ID `UP-GOOG-xxxxxx`, hardcodes phone `9876543210`, trade `D08 Mustard...`, category `Scheduled Caste (SC)`, and verified status `true`.
-   - Saves to `localStorage` under `graminai_active_session_v1`.
+   - Saves to `localStorage` under `udyamsetuai_active_session_v1`.
 4. `App.jsx` updates `currentUser`, closes the modal, and scrolls to `#dashboard-section`.
 5. **No Google server is ever contacted. No OAuth token is requested. No credential is exchanged. It is 100% simulated mock execution.**
 

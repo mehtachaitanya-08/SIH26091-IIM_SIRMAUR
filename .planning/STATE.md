@@ -16,7 +16,7 @@
 | **M2: Competitive Landscape** | 18+ Competitors, Whitespace Analysis | ✅ Completed | `Competitor_Landscape_Dossier.md` / `.pdf` |
 | **M3: Core AI Architecture** | 5-Tier Hybrid Engine, Zero Hallucination | ✅ Completed | `AI_Architecture_Safety_Evaluation_Report.md` / `.pdf` |
 | **M4: Financial Engine & Specs** | Deterministic Math, Seasonal DSCR | ✅ Completed | `Deterministic_Financial_Engine_Spec.md`, `Technical_Architecture_and_Data_Pipeline_Spec.md` |
-| **M5: UX & Artifact Wireframe** | WhatsApp Flow, 1-Page Bilingual DPR | ✅ Completed | `WhatsApp_Flow_and_1Page_DPR_Wireframe.md`, `Sample_BankReady_1Page_DPR.pdf` |
+| **M5: UX & Artifact Wireframe** | WhatsApp Flow, 1-Page Bilingual DPR | ✅ Completed | `WhatsApp_Flow_and_1Page_DPR_Wireframe.md` |
 | **M6: Deep Research Sprint** | 9 Workstreams (Regulations, Hardware, ODOP, Personas, M&E, Tech) | ✅ Completed | 9 Comprehensive Domain Research Files (~760 KB) |
 | **M7: Universal Business Taxonomy & Architecture** | 8 User Baskets, 24 Research Domains, 10-Point Analysis | ✅ Completed | `Rural_MSME_Business_Taxonomy_Framework.md`, Expanded Archetype Dossiers |
 | **M8: Multi-Archetype Deterministic Engine** | Mode A (Incubation) & Mode B (Debt Relief) Python & JS Core | ✅ Completed | `multi_archetype_financial_engine.py`, 100% Passing Unit Tests |

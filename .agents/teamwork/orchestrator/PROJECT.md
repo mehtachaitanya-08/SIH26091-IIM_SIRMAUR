@@ -1,4 +1,4 @@
-# Project: GraminAI Production Landing Page & SETO Minimal Mockup Dashboard
+# Project: UdyamSetuAI Production Landing Page & SETO Minimal Mockup Dashboard
 
 ## Architecture
 - **Framework**: Vite 6 + React 19 + Tailwind CSS + Lucide React + GSAP 3 (ScrollTrigger) + Lenis smooth scrolling.
@@ -25,7 +25,7 @@
 | 14 | Scene 5: Platform in 4 Pillars | 4 clean cards: NSFDC Dual-Tier, 12-Month Solvency, Mode B Debt Liberation, 1-Page DPR | M1 | survey |
 | 15 | Scene 6: Diffused Ambient Canvas | `#D4D8DD` outer canvas with dual radial peach/slate gradients and `rounded-[38px]` | M1 | survey |
 | 16 | Scene 6: 3-Column White Shell | Rounded white container (`rounded-[28px]`, `soft-card-shadow`) divided 3:6:3 | M1 | survey |
-| 17 | Scene 6: Left Navigation Rail | `✦ GraminAI` lockup, active white pill, collapsible `Advisory Tools ^` tree with D08/D18/D15 | M1 | survey |
+| 17 | Scene 6: Left Navigation Rail | `✦ UdyamSetuAI` lockup, active white pill, collapsible `Advisory Tools ^` tree with D08/D18/D15 | M1 | survey |
 | 18 | Scene 6: Bottom User Profile Card | Ramesh Kumar (SC · Income ≤ ₹5.00L) with `✦ Statutory Verified` green badge | M1 | survey |
 | 19 | Scene 6: Iridescent Star Blossom | 4-pointed SVG star with `@keyframes pulseStar` and peach/coral/violet/amber radial gradient | M1 | survey |
 | 20 | Scene 6: Center Greeting & Action Cards | "Welcome, Ramesh!" with 3 quick cards (`Simulate enterprise`, `NSFDC amortizer`, `Debt liberation`) | M1 | survey |

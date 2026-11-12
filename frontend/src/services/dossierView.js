@@ -43,11 +43,16 @@ export function dscrRows(reply) {
   };
 }
 
-/** The 5 steps of the dashboard flow, with the tab each opens and whether the user has done it. */
-export function flowSteps({ code, projectCost, familyIncome, isSc, loanReady }) {
+/**
+ * The 5 steps of the dashboard flow, with the tab each opens and whether the user has done it.
+ * Steps 1 and 2 count only what the user (or the chat, on the user's words) chose: the opening
+ * business and the cost filled in from its dossier ticked both before anyone touched anything
+ * (teammate review, 11 Nov 2026).
+ */
+export function flowSteps({ businessPicked, costChosen, projectCost, familyIncome, isSc, loanReady }) {
   return [
-    { n: 1, label: 'Choose your business', tab: 'feasibility', done: Boolean(code) },
-    { n: 2, label: 'Choose a size or type your cost', tab: 'amortizer', done: projectCost !== '' && projectCost != null },
+    { n: 1, label: 'Choose your business', tab: 'feasibility', done: Boolean(businessPicked) },
+    { n: 2, label: 'Choose a size or type your cost', tab: 'amortizer', done: Boolean(costChosen) && projectCost !== '' && projectCost != null },
     { n: 3, label: 'Your details (income, SC)', tab: 'amortizer', done: familyIncome !== '' && familyIncome != null && typeof isSc === 'boolean' },
     { n: 4, label: 'See loan, season and cover', tab: 'simulator', done: Boolean(loanReady) },
     { n: 5, label: 'Download the 1-page DPR', tab: 'dpr', done: false }

@@ -52,8 +52,11 @@ export default function DashboardShell({
       {banner}
 
       {/* Enterprise Advisory Workspace Enclosure */}
+      {/* overflow-clip, not overflow-hidden: "hidden" makes this box a scroll container, and the
+          chat bar's sticky pinning then measured against a box that never scrolls, so the chat
+          sat below the screen on long tabs (review, 11 Nov 2026). "clip" keeps the rounded corners. */}
       {isProduction ? (
-        <div className="w-full flex-1 bg-white rounded-2xl shadow-sm border border-[#E9ECEF] grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-80px)] overflow-hidden">
+        <div className="w-full flex-1 bg-white rounded-2xl shadow-sm border border-[#E9ECEF] grid grid-cols-1 lg:grid-cols-12 min-h-[calc(100vh-80px)] overflow-clip">
           {children}
         </div>
       ) : (

@@ -66,7 +66,7 @@ describe('1. Mockup Boundaries & Offline Independence', () => {
     assert.ok(html.length > 5000, 'Rendered HTML output is surprisingly short');
     assert.ok(html.includes('The Entrepreneur Workspace'), 'Missing main section headline');
     assert.ok(html.includes('Welcome'), 'Missing center greeting');
-    assert.ok(html.includes('GraminAI'), 'Missing GraminAI brand lockup');
+    assert.ok(html.includes('UdyamSetuAI'), 'Missing UdyamSetuAI brand lockup');
     assert.ok(html.includes('Simulate enterprise'), 'Missing quick card Simulate');
     assert.ok(html.includes('NSFDC amortizer'), 'Missing quick card Amortizer');
     assert.ok(html.includes('Debt liberation'), 'Missing quick card Debt Liberation');

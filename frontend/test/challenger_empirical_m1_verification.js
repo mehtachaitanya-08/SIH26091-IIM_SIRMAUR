@@ -291,7 +291,7 @@ describe('CHALLENGER EMPIRICAL VERIFICATION SUITE — MILESTONE 1 FIX', () => {
       // Default render
       const htmlDefault = renderToString(React.createElement(SetoDashboard));
       assert.ok(htmlDefault.length > 5000);
-      assert.ok(htmlDefault.includes('GraminAI'));
+      assert.ok(htmlDefault.includes('UdyamSetuAI'));
       assert.ok(htmlDefault.includes('Welcome'));
 
       // Dynamic profile fixture render
@@ -299,7 +299,7 @@ describe('CHALLENGER EMPIRICAL VERIFICATION SUITE — MILESTONE 1 FIX', () => {
         currentUser: { name: 'Ramesh Kumar', category: 'SC', id: 'UP-STP-008129' }
       }));
       assert.ok(html.length > 5000);
-      assert.ok(html.includes('GraminAI'));
+      assert.ok(html.includes('UdyamSetuAI'));
       assert.ok(html.includes('Ramesh Kumar'));
     });
   });

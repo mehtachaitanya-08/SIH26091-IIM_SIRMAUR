@@ -31,7 +31,7 @@
   - `SetoDashboard.jsx:231`: `<div className="bg-[#E9ECEF] rounded-[32px] p-3 sm:p-6 border border-[#DEE2E6] shadow-sm">`
   - `SetoDashboard.jsx:234`: `<div className="bg-white rounded-[24px] overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 min-h-[760px] border border-[#E9ECEF]">`
 - **Column 1: Left Nav Rail** (`lg:col-span-3`, lines 239–393):
-  - Brand lockup: Image `/images/logo.png` + "GraminAI" (lines 243–250).
+  - Brand lockup: Image `/images/logo.png` + "UdyamSetuAI" (lines 243–250).
   - Navigation tabs: `home`, `simulator`, `amortizer`, `restructure`, `dpr` with active white pill (`bg-white text-[#111311] shadow-sm border border-[#E9ECEF]`).
   - Collapsible Advisory Tools: toggled by `isAdvisoryOpen`, iterates `PRESETS` (`D08`, `D18`, `D15`) (lines 337–362).
   - Bottom User Card: Avatar `/images/avatar_ramesh.jpg`, user name `{currentUser?.name || (language === 'hi' ? 'रमेश कुमार' : 'Ramesh Kumar')}`, `SC · Income ≤ ₹5.00L`, button `Statutory Verified` opening `userModalOpen` (lines 365–391).
@@ -62,7 +62,7 @@
 - `cd frontend; node --test test/*.js` executes 34 tests across 8 suites, all passing in ~630ms.
 - `challenger2_empirical_test.js:41–46` strictly asserts `/\bfetch\s*\(/`, `/\baxios\b/`, `/\bXMLHttpRequest\b/`, and `/\bWebSocket\b/` are FALSE in `SetoDashboard.jsx`.
 - `challenger_empirical_m1_verification.js` strictly inspects `SetoDashboard.jsx` for exact tokens: `min={20000}`, `max={300000}`, `step={10000}`, `useState(120000)`, `min={1}`, `max={48}`, `step={1}`, `useState(36)`, `debtRefinanceData.damdupatViolated`, `Rule of Damdupat Triggered:`, `Usurious Loans Act 1918`, `exceeds principal`, `filteredScenarios.length === 0`, `No matching scenarios`, `Try searching "Mustard", "Tailoring", or "Debt"`.
-- `challenger2_empirical_test.js:63–76` tests React SSR render of `dist-ssr/SetoDashboard.js`, asserting inclusion of `'Welcome, Ramesh!'`, `'GraminAI'`, `'Simulate enterprise'`, `'NSFDC amortizer'`, `'Debt liberation'`, `'Recent scenarios'`, `'D08 Mustard Oil Mill'`, `'D18 Tailoring Workshop'`, `'Sahukar Debt Relief'`.
+- `challenger2_empirical_test.js:63–76` tests React SSR render of `dist-ssr/SetoDashboard.js`, asserting inclusion of `'Welcome, Ramesh!'`, `'UdyamSetuAI'`, `'Simulate enterprise'`, `'NSFDC amortizer'`, `'Debt liberation'`, `'Recent scenarios'`, `'D08 Mustard Oil Mill'`, `'D18 Tailoring Workshop'`, `'Sahukar Debt Relief'`.
 
 ---
 

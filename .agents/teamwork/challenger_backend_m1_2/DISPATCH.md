@@ -19,7 +19,7 @@ Read before starting challenge:
 ## Challenge Tasks
 1. Execute empirical verification:
    - Verify numerical parity between Python server outputs and client-side `engine.js` calculations for identical inputs across all 24 dossiers.
-   - Test concurrent request simulation through `ThreadingHTTPServer` / `GraminAIRequestHandler`.
+   - Test concurrent request simulation through `ThreadingHTTPServer` / `UdyamSetuAIRequestHandler`.
    - Test dossier search / code lookups for all valid codes (`D01` to `D24`), case-insensitivity (`d08` vs `D08`), and invalid codes (`D99`, `invalid`).
    - Verify CORS headers on all endpoints including OPTIONS preflight.
 2. Verify all existing test suites pass:

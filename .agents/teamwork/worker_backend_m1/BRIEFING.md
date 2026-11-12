@@ -34,7 +34,7 @@ Implement Milestone M1: Backend REST Server & API Integration (`engine/server.py
 - Added support for all statutory endpoints: `/api/health`, `/api/engine/nsfdc/calculate`, `/api/engine/mode-a/evaluate`, `/api/engine/mode-b/restructure`, `/api/dossiers`, `/api/dossiers/:code`.
 - Configured CORS headers (`Access-Control-Allow-Origin: *`, `Access-Control-Allow-Methods: GET, POST, OPTIONS`) and OPTIONS preflight.
 - Created `scripts/run_backend.py` with CLI arguments `--host` and `--port`.
-- Implemented dual-mode test harness in `tests/test_api_server.py` passing HTTP/1.1 wire protocol through `GraminAIRequestHandler` and testing socket readiness, passing 16/16 tests.
+- Implemented dual-mode test harness in `tests/test_api_server.py` passing HTTP/1.1 wire protocol through `UdyamSetuAIRequestHandler` and testing socket readiness, passing 16/16 tests.
 - Updated `frontend/vite.config.js` with `/api` proxy target and `envDir: '../'`.
 - Implemented `frontend/src/services/api.js` with all 6 async methods and complete resilient offline fallback to `frontend/src/engine.js` and `frontend/src/data/dossiers_db.json`.
 - Added `frontend/test/api_client.test.js` validating all 6 api client functions, increasing frontend test count from 34 to 43 passing tests.

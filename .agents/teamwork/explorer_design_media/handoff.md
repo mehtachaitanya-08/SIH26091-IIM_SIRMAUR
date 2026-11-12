@@ -1,7 +1,7 @@
 # Handoff Report: Design Reference & Media Asset Exploration
 **Agent:** Design Reference & Media Asset Explorer  
 **State Folder:** `c:\Users\LENOVO\Desktop\IPL 2 Project Research\.agents\teamwork\explorer_design_media\`  
-**Target Milestone:** UI Design Phase Contract (`UI-SPEC.md`) & Asset Pipeline for GraminAI Frontend  
+**Target Milestone:** UI Design Phase Contract (`UI-SPEC.md`) & Asset Pipeline for UdyamSetuAI Frontend  
 **Date:** 2026-11-09T22:15:00Z  
 
 ---
@@ -50,7 +50,7 @@
 - **Lines 501–820**: Scene 6 (SETO Minimal Dashboard Shell):
   - Rounded outer container (`rounded-[38px]`) with diffused canvas.
   - White inner container (`rounded-[28px]`, `soft-card-shadow`) divided into a 3-column 12-grid layout:
-    1. Left Rail (3 cols): `✦ GraminAI` lockup, active white pill button `Home`, nav links, `Advisory Tools ^` collapsible tree with D08/D18/D15 presets, and bottom user card (`bg-slate-200/80 rounded-2xl`) with avatar, `"Ramesh Kumar"`, `"SC · Income ≤ ₹5.00L"`, and `"✦ Statutory Verified"` badge.
+    1. Left Rail (3 cols): `✦ UdyamSetuAI` lockup, active white pill button `Home`, nav links, `Advisory Tools ^` collapsible tree with D08/D18/D15 presets, and bottom user card (`bg-slate-200/80 rounded-2xl`) with avatar, `"Ramesh Kumar"`, `"SC · Income ≤ ₹5.00L"`, and `"✦ Statutory Verified"` badge.
     2. Center Workspace (6 cols): 4-pointed iridescent star bloom SVG, `"Welcome, Ramesh!"`, 3 quick action cards (`Simulate enterprise`, `NSFDC amortizer`, `Debt liberation`), dynamic tool viewport, and bottom floating command bar with mic 🎤 and arrow ↑.
     3. Right Panel (3 cols): `"Recent scenarios"`, search input, scenario cards with checkboxes and thumbnail image preview, and bottom black pill `"Create new simulation +"`.
 - **Lines 830–950**: GSAP ScrollTrigger + Lenis script orchestrating hero dispersion, vertical line drop, orbital tile vortex, arc gauge trigger, and capsule waypoint updates.

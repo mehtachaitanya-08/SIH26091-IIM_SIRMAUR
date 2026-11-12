@@ -88,11 +88,17 @@ describe('DSCR rows', () => {
 
 describe('step-by-step flow', () => {
   it('five steps in order, each opening a tab, done-marks from what the user has filled in', () => {
-    const s = flowSteps({ code: 'D20', projectCost: '140000', familyIncome: '', isSc: true, loanReady: false });
+    const s = flowSteps({ businessPicked: true, costChosen: true, projectCost: '140000', familyIncome: '', isSc: true, loanReady: false });
     assert.deepStrictEqual(s.map((x) => x.tab), ['feasibility', 'amortizer', 'amortizer', 'simulator', 'dpr']);
     assert.deepStrictEqual(s.map((x) => x.done), [true, true, false, false, false]);
-    const all = flowSteps({ code: 'D20', projectCost: '140000', familyIncome: '100000', isSc: true, loanReady: true });
+    const all = flowSteps({ businessPicked: true, costChosen: true, projectCost: '140000', familyIncome: '100000', isSc: true, loanReady: true });
     assert.deepStrictEqual(all.map((x) => x.done), [true, true, true, true, false]);
+  });
+
+  it('nothing is ticked on first load: the opening business and its pre-filled cost are not the user\'s choice', () => {
+    // Steps 1 and 2 were ticked before anyone touched anything (teammate review, 11 Nov 2026).
+    const first = flowSteps({ businessPicked: false, costChosen: false, projectCost: '140000', familyIncome: '', isSc: null, loanReady: false });
+    assert.deepStrictEqual(first.map((x) => x.done), [false, false, false, false, false]);
   });
 });
 
@@ -112,10 +118,11 @@ describe('size pre-fill never overwrites a cost someone chose', () => {
 describe('leftover claims', () => {
   const src = (p) => fs.readFileSync(new URL(`../src/${p}`, import.meta.url), 'utf8');
   it('no August-only lean-month claims; 6.5%/8% tagged; quarter counts not tagged as NSFDC wording', () => {
-    for (const f of ['App.jsx', 'components/dashboard/CenterWorkspace.jsx', 'components/SetoDashboard.jsx']) {
+    for (const f of ['App.jsx', 'components/dashboard/CenterWorkspace.jsx', 'components/dashboard/HowItWorksView.jsx', 'components/SetoDashboard.jsx']) {
       assert.ok(!/August (monsoon )?lean-month/i.test(src(f)), f);
     }
-    assert.ok(src('components/dashboard/CenterWorkspace.jsx').includes('6.5%/8.0% [S1]'));
+    // The engines panel moved to the "How it works" tab (11 Nov 2026); its rates keep their [S1] tag.
+    assert.ok(src('components/dashboard/HowItWorksView.jsx').includes('6.5%/8.0% [S1]'));
     assert.ok(!src('components/SetoDashboard.jsx').includes("6.5% / 8.0%. [S1]'"));
   });
   it('surplus label states what it is net of; gaps title fits remaining questions; no dead not-yet-verified branch', () => {

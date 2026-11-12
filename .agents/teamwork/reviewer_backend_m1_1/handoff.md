@@ -129,7 +129,7 @@ Direct observations from source code inspection, independent command executions,
 ## 5. Caveats
 
 1. **Sandbox Socket Connect Policy**:
-   - In the Windows sandbox environment, raw TCP socket `connect()` calls from client processes to arbitrary localhost ports are blocked by OS permissions (`WinError 10013`). The `tests/test_api_server.py` test harness handles this by detecting socket connectivity and exercising the HTTP wire protocol into `GraminAIRequestHandler`. When run on a host machine outside the sandbox, live socket connections operate as expected.
+   - In the Windows sandbox environment, raw TCP socket `connect()` calls from client processes to arbitrary localhost ports are blocked by OS permissions (`WinError 10013`). The `tests/test_api_server.py` test harness handles this by detecting socket connectivity and exercising the HTTP wire protocol into `UdyamSetuAIRequestHandler`. When run on a host machine outside the sandbox, live socket connections operate as expected.
 2. **Upcoming Milestones (M2–M4)**:
    - Google Authentication (`googleAuth.js`), user profile binding, and UI dashboard synchronization belong to subsequent milestones (M2 and M3) per `PROJECT.md`. This review is strictly scoped to Milestone M1 deliverables.
 

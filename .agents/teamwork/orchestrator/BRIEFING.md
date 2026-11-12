@@ -1,7 +1,7 @@
 # BRIEFING — 2026-11-10T04:33:00Z
 
 ## Mission
-Build production landing page (6 scroll scenes) and limited mockup dashboard for GraminAI (MoSJE / NSFDC SIH26091) in frontend/src/ with top-tier editorial visual polish, following gsd-ui-phase standards.
+Build production landing page (6 scroll scenes) and limited mockup dashboard for UdyamSetuAI (MoSJE / NSFDC SIH26091) in frontend/src/ with top-tier editorial visual polish, following gsd-ui-phase standards.
 
 ## 🔒 My Identity
 - Archetype: orchestrator

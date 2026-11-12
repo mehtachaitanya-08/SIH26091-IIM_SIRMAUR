@@ -233,7 +233,13 @@ describe('CHALLENGER M3 EMPIRICAL ADVERSARIAL STRESS SUITE', () => {
       );
     }
 
-    const testScenarios = RECENT_SCENARIOS;
+    // The preview's made-up scenarios were removed from the site (11 Nov 2026); the search logic is
+    // still tested on the same three entries, kept here as test data only.
+    const testScenarios = [
+      { id: 'D08', name: 'D08 Mustard Oil Mill', subtitle: 'NSFDC Term Loan · see dashboard' },
+      { id: 'D18', name: 'D18 Tailoring Workshop', subtitle: 'PM Vishwakarma credit · see dashboard' },
+      { id: 'debt', name: 'Sahukar Debt Relief', subtitle: 'Moneylender senkda debt · see dashboard' }
+    ];
 
     it('Empty string returns all scenarios without filtering', () => {
       const res = filterScenarios(testScenarios, '');
@@ -332,7 +338,7 @@ describe('CHALLENGER M3 EMPIRICAL ADVERSARIAL STRESS SUITE', () => {
       assert.ok(prodCode.includes('handleCreateNewSimulation'), 'ProductionDashboard missing handleCreateNewSimulation');
       assert.ok(prodCode.includes('localStorage.getItem'), 'ProductionDashboard missing localStorage read');
       assert.ok(prodCode.includes('localStorage.setItem'), 'ProductionDashboard missing localStorage write');
-      assert.ok(prodCode.includes('graminai_production_scenarios'), 'Missing correct localStorage key');
+      assert.ok(prodCode.includes('udyamsetuai_production_scenarios'), 'Missing correct localStorage key');
     });
 
     it('ProductionDashboard downloads the 1-page DPR PDF made by the server', () => {

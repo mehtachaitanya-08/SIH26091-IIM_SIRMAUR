@@ -2,15 +2,14 @@ import React from 'react';
 
 /**
  * ScenariosSidebar — Right Column Scenario History & Search Filter
- * Filters scenario library by enterprise keyword, displays financial health tags,
- * and launches new simulations.
+ * Lists the scenarios the user saved, filters them by keyword, and saves new ones. The tick
+ * boxes did nothing and the empty-list hint pointed at scenarios that do not exist, so both went
+ * (teammate review, 11 Nov 2026).
  */
 export default function ScenariosSidebar({
   searchQuery = '',
   onSearchChange,
   filteredScenarios = [],
-  recentChecks = {},
-  onCheckChange,
   onSelectScenario,
   onRefresh,
   onCreateSimulation,
@@ -47,9 +46,11 @@ export default function ScenariosSidebar({
         <div className="space-y-3.5 pt-2 text-xs">
           {filteredScenarios.length === 0 ? (
             <div className="p-4 text-center text-[#686D65] bg-[#F8F9FA] rounded-xl border border-[#E9ECEF]">
-              <p className="font-semibold text-xs">No matching scenarios</p>
+              <p className="font-semibold text-xs">
+                {searchQuery && searchQuery.trim() ? 'No matching scenarios' : 'No saved scenarios yet'}
+              </p>
               <p className="text-[11px] text-[#A0A59D] mt-0.5">
-                Try searching "Mustard", "Tailoring", or "Debt"
+                Use "Create new simulation +" to save the business and cost you are looking at.
               </p>
             </div>
           ) : (
@@ -60,13 +61,6 @@ export default function ScenariosSidebar({
                 className="p-2.5 rounded-xl hover:bg-[#F8F9FA] transition-all cursor-pointer border border-transparent hover:border-[#E9ECEF]"
               >
                 <div className="flex items-start space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(recentChecks[scenario.id])}
-                    onChange={(e) => onCheckChange && onCheckChange(scenario.id, e.target.checked)}
-                    onClick={(e) => e.stopPropagation()}
-                    className="mt-0.5 rounded border-gray-300 text-[#111311] focus:ring-0 cursor-pointer"
-                  />
                   <div className="flex-1">
                     <p className="font-bold text-[#111311] font-sans-ui">{scenario.name}</p>
                     <p className="text-[11px] text-[#686D65] mt-0.5 font-sans-ui">{scenario.subtitle}</p>

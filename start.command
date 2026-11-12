@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# GraminAI - double-click (Mac) or run ./start.command (Linux) to set up the first time and open the dashboard.
+# UdyamSetuAI - double-click (Mac) or run ./start.command (Linux) to set up the first time and open the dashboard.
 # First time: the project's packages, the website build and your Groq key. After that: start + open browser.
 set -e
 cd "$(dirname "$0")"
 echo
-echo " ===== GraminAI: getting everything ready ====="
+echo " ===== UdyamSetuAI: getting everything ready ====="
 echo
 
 # 1. Python 3.10+
@@ -57,7 +57,7 @@ echo " [4/5] Keys checked (.env)."
 
 # 5. Start and open
 URL="http://127.0.0.1:8000/dashboard"
-echo " [5/5] Starting GraminAI. The dashboard opens in your browser in a few seconds."
+echo " [5/5] Starting UdyamSetuAI. The dashboard opens in your browser in a few seconds."
 echo "       Keep this window open while you use it. Close it (or press Ctrl+C) to stop."
 echo "       Address: $URL   Demo sign-in: 9876543210 / PIN 2026"
 ( sleep 4; if command -v open >/dev/null 2>&1; then open "$URL"; elif command -v xdg-open >/dev/null 2>&1; then xdg-open "$URL" >/dev/null 2>&1; fi ) &

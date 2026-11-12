@@ -3,7 +3,7 @@ Adversarial Empirical Challenge Test Suite (Milestone M1)
 Author: Challenger Agent 2
 Verifies:
 1. Numerical precision parity across all 24 dossiers between server and engine.js
-2. Concurrency stress-testing through ThreadingHTTPServer / GraminAIRequestHandler
+2. Concurrency stress-testing through ThreadingHTTPServer / UdyamSetuAIRequestHandler
 3. Dossier search and code lookups (D01-D24, case-insensitivity, invalid codes)
 4. CORS headers and OPTIONS preflight on all endpoints
 5. Mode B Debt Restructuring and Damdupat boundary precision
@@ -24,7 +24,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from engine.server import GraminAIRequestHandler, DOSSIERS_MAP
+from engine.server import UdyamSetuAIRequestHandler, DOSSIERS_MAP
 from engine.nsfdc_calculator import NSFDCCalculator, BeneficiaryProfile
 from engine.multi_archetype_financial_engine import IncubationEngine, RestructuringEngine
 
@@ -45,7 +45,7 @@ class MockWireSocket:
 
 
 def execute_http_request(method: str, path: str, body: dict = None, headers: dict = None):
-    """Executes a real HTTP wire request through GraminAIRequestHandler."""
+    """Executes a real HTTP wire request through UdyamSetuAIRequestHandler."""
     body_bytes = b""
     req_headers = dict(headers or {})
     if body is not None:
@@ -63,7 +63,7 @@ def execute_http_request(method: str, path: str, body: dict = None, headers: dic
     sock = MockWireSocket(raw_req)
 
     # Initialize and execute handler
-    handler = GraminAIRequestHandler(sock, ("127.0.0.1", 54321), None)
+    handler = UdyamSetuAIRequestHandler(sock, ("127.0.0.1", 54321), None)
 
     # Parse response
     sock.wfile.seek(0)
@@ -219,7 +219,7 @@ class TestEmpiricalChallenger(unittest.TestCase):
     # =========================================================================
 
     def test_concurrency_stress_simulation(self):
-        """Simulate 30 concurrent requests to GraminAIRequestHandler across multiple endpoints."""
+        """Simulate 30 concurrent requests to UdyamSetuAIRequestHandler across multiple endpoints."""
         endpoints = [
             ("GET", "/api/health", None),
             ("GET", "/api/dossiers", None),

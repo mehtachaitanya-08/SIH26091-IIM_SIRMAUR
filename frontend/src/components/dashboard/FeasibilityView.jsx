@@ -66,7 +66,8 @@ export default function FeasibilityView({ activeDomain, feasibility, onClose, mo
     <div className="bg-[#F8F9FA] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
       <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
         <div>
-          <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">Verified sources only</span>
+          {/* Was "Verified sources only"; only 7 businesses have independently checked data files. */}
+          <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">From the business's research file only</span>
           <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
             Feasibility report — {activeDomain?.name || code} ({code})
           </h4>

@@ -55,7 +55,7 @@ Direct empirical evidence gathered from static analysis, code inspection, and co
    - No hardcoded calculation constants or static responses were present in route handlers.
 
 3. **Adversarial Dynamic Calculation Verification**:
-   Executed dynamic script passing un-canned boundary parameters into `GraminAIRequestHandler`:
+   Executed dynamic script passing un-canned boundary parameters into `UdyamSetuAIRequestHandler`:
    - Input `projectCost: 85000` (MCF tier): Calculated `loanAmount: 76500.0` (90%), `promoterContribution: 8500.0` (10%), `tier: MCF`.
    - Boundary `familyIncome: 500000` -> `isEligible: True`. Boundary `familyIncome: 500001` -> `isEligible: False` (rejection reason: *"exceeds statutory NSFDC ceiling"*).
    - Mode A scaling `scale: 2.5`: `capex` scaled from ₹6,50,000 to ₹16,25,000.
@@ -148,7 +148,7 @@ To independently reproduce the forensic verification:
    ```bash
    python -c "
    import io, json
-   from engine.server import GraminAIRequestHandler
+   from engine.server import UdyamSetuAIRequestHandler
    class MockSock:
        def __init__(self, d): self.rfile, self.wfile = io.BytesIO(d), io.BytesIO()
        def makefile(self, m, *a, **k): return self.rfile if 'r' in m else self.wfile
@@ -157,7 +157,7 @@ To independently reproduce the forensic verification:
        raw = json.dumps(b).encode('utf-8')
        wire = f'{m} {p} HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Type: application/json\r\nContent-Length: {len(raw)}\r\n\r\n'.encode('utf-8') + raw
        s = MockSock(wire)
-       GraminAIRequestHandler(s, ('127.0.0.1', 1234), None)
+       UdyamSetuAIRequestHandler(s, ('127.0.0.1', 1234), None)
        return json.loads(s.wfile.getvalue().split(b'\r\n\r\n', 1)[1])
    r = send('POST', '/api/engine/nsfdc/calculate', {'projectCost': 85000, 'familyIncome': 100000})
    assert r['loanAmount'] == 76500.0 and r['promoterContribution'] == 8500.0

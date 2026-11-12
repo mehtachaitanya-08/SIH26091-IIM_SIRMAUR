@@ -15,7 +15,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 router = APIRouter()
 SITE_DIR = Path(__file__).resolve().parents[1] / "frontend" / "dist"
 
-NOT_BUILT = """<!doctype html><meta charset="utf-8"><title>GraminAI</title>
+NOT_BUILT = """<!doctype html><meta charset="utf-8"><title>UdyamSetuAI</title>
 <body style="font-family:sans-serif;max-width:640px;margin:40px auto;line-height:1.5">
 <h2>The server is running, but the website is not built yet.</h2>
 <p>Build it once (needs Node.js), then reload this page:</p>

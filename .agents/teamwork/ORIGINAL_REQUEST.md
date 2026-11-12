@@ -2,7 +2,7 @@
 
 ## Initial Request — 2026-11-09T21:58:52Z
 
-Use gsd-ui-phase to build the front end. Build the production landing page and limited mockup dashboard for GraminAI (Hyper-Local Business Advisory & Concessional Credit Platform for Scheduled Caste rural micro-entrepreneurs, SIH 2026: SIH26091 — MoSJE / NSFDC) in `frontend/src/` with top-tier visual polish, editorial typography, high-refinement imagery, and smooth scroll interactions, following `gsd-ui-phase` workflow standards.
+Use gsd-ui-phase to build the front end. Build the production landing page and limited mockup dashboard for UdyamSetuAI (Hyper-Local Business Advisory & Concessional Credit Platform for Scheduled Caste rural micro-entrepreneurs, SIH 2026: SIH26091 — MoSJE / NSFDC) in `frontend/src/` with top-tier visual polish, editorial typography, high-refinement imagery, and smooth scroll interactions, following `gsd-ui-phase` workflow standards.
 
 Integrity mode: development
 
@@ -35,7 +35,7 @@ Implement the production landing page in `frontend/src/` using Vite + React 19 +
 - Scene 6 (SETO Minimal Dashboard Mockup): Replicate the SETO aesthetic at the end of the landing page:
   * Diffused ambient canvas (`#D4D8DD` with warm peach/slate radial gradients).
   * Rounded white 3-column container (`rounded-[28px]`, soft-neumorphic shadow).
-  * Left navigation rail with `✦ GraminAI` lockup, active white pill, collapsible `Advisory Tools ^`, and bottom user card ("Ramesh Kumar", SC · Income ≤ ₹5.00L, with "Statutory Verified" badge).
+  * Left navigation rail with `✦ UdyamSetuAI` lockup, active white pill, collapsible `Advisory Tools ^`, and bottom user card ("Ramesh Kumar", SC · Income ≤ ₹5.00L, with "Statutory Verified" badge).
   * Center workspace with top 4-pointed iridescent star SVG blossom, "Welcome, Ramesh! How can I help you today?", 3 quick action cards, and floating bottom command bar with mic and arrow.
   * Right sidebar with "Recent scenarios", search, and history cards with avatars and image previews.
   * Keep dashboard functionality strictly limited as a mockup per user instructions.

@@ -11,7 +11,7 @@
 
 ### 1.1. Hardcoded Demo & Ramesh Profile Occurrences
 1. `frontend/src/data/userDatabase.js`:
-   - Lines 10–39: `const SEED_USERS = [{ id: 'UP-STP-008129', name: 'Ramesh Kumar', email: 'ramesh.kumar@graminai.org', phone: '9876543210', pin: '2026', ... }, { id: 'UP-STP-004312', name: 'Sunita Devi', ... }];`
+   - Lines 10–39: `const SEED_USERS = [{ id: 'UP-STP-008129', name: 'Ramesh Kumar', email: 'ramesh.kumar@udyamsetuai.org', phone: '9876543210', pin: '2026', ... }, { id: 'UP-STP-004312', name: 'Sunita Devi', ... }];`
    - Line 42: `let inMemoryUsers = [...SEED_USERS];`
    - Line 58: `window.localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(SEED_USERS));`
    - Lines 100–105:

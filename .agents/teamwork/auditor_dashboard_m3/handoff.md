@@ -53,7 +53,7 @@ Inspected all 12 subcomponents on disk:
 - `DashboardShell.jsx` (55 lines): Outer container incorporating `.diffused-backdrop`, `.soft-shadow`, and responsive 3-column container grid.
 - `UserCard.jsx` (47 lines): Binds to `currentUser?.name || (language === 'hi' ? 'उद्यमी' : 'Entrepreneur')` and `currentUser?.category || 'SC · Income ≤ ₹5.00L'`.
 - `StatutoryVerificationModal.jsx` (65 lines): Modal displaying verified SC category, MoSJE statutory mandate compliance, and certificate identification prefix `MoSJE/NSFDC/2026/`.
-- `NavRail.jsx` (141 lines): Left rail with `✦ GraminAI` lockup, active white pill buttons, collapsible Advisory Tools sub-tree, and dynamic `UserCard`.
+- `NavRail.jsx` (141 lines): Left rail with `✦ UdyamSetuAI` lockup, active white pill buttons, collapsible Advisory Tools sub-tree, and dynamic `UserCard`.
 - `SeasonalitySimulatorView.jsx` (91 lines): 12-month seasonality chart with August lean dip (`m < 0.8 ? 'bg-orange-400' : 'bg-[#0E7A53]'`) and dynamic DSCR rating.
 - `NsfdcAmortizerView.jsx` (107 lines): Table rendering initial 6 quarters of amortization schedule with Moratorium vs Amortizing badges.
 - `DebtLiberationView.jsx` (134 lines): Interactive sliders (`min={20000} max={300000} step={10000}`, duration `min={1} max={48} step={1}`), dialectal quotes (2.5 to 5.0 senkda), cash relief, and Damdupat statutory alert (`Usurious Loans Act 1918`).
@@ -88,7 +88,7 @@ Inspected all 12 subcomponents on disk:
   ```
   RENDER SUCCESS! HTML byte length: 12357
   Contains "Welcome!": true
-  Contains "GraminAI": true
+  Contains "UdyamSetuAI": true
   Contains "Recent scenarios": true
   Contains "Mustard Oil Mill": true
   Contains "Tailoring Workshop": true

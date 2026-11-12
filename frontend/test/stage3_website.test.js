@@ -295,10 +295,37 @@ describe('3. No invented numbers or claims in the dashboard source', () => {
     assert.ok(code.includes('interestRatePa'));
   });
 
-  it('default business is D20 (dashboard, demo user, registration form)', () => {
-    assert.ok(read('components/ProductionDashboard.jsx').includes("useState('D20')"));
+  it('dashboard opens on D01; demo user and registration form keep D20', () => {
+    // D01's dossier has every figure; D20 opened on 46 gaps (owner's decision, 11 Nov 2026).
+    assert.ok(read('components/ProductionDashboard.jsx').includes("useState('D01')"));
     assert.ok(read('data/userDatabase.js').includes("trade: 'D20"));
     assert.match(read('App.jsx'), /useState\('D20 /);
+  });
+
+  it('values removed as made up on 11 Nov 2026 stay out of every website source file', () => {
+    // A teammate found these on screen and called the dashboard "hallucinating values": a fixed
+    // district, a "Verified" badge and certificate ID for every user, a pre-ticked "100% पात्रता",
+    // an unsourced 67%, "saved 2h ago" times, a stranger's stock photo and the dataset ID read as
+    // an API key. Comments may still name them (they record why they went), so comments are skipped.
+    const REMOVED = ['Sitapur', 'STATUTORY-VERIFIED', 'Profile Verified', 'Verified Eligibility', '100% पात्रता',
+      'MoSJE/NSFDC/2026/', '67%', 'h ago', 'unsplash', '9ef84268', 'bank-sanction'];
+    const stripComments = (code) => code
+      .replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/(^|[^:'"`])\/\/.*$/gm, '$1');
+    const files = [];
+    const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).forEach((e) => {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (/\.(jsx?|mjs)$/.test(e.name)) files.push(p);
+    });
+    walk(SRC);
+    const found = [];
+    for (const f of files) {
+      const code = stripComments(fs.readFileSync(f, 'utf8'));
+      for (const s of REMOVED) if (code.includes(s)) found.push(`${path.relative(SRC, f)}: ${s}`);
+    }
+    assert.deepStrictEqual(found, [], `made-up values are back:\n${found.join('\n')}`);
   });
 
   it('DPR download goes to the server PDF', () => {
@@ -313,16 +340,21 @@ describe('3. No invented numbers or claims in the dashboard source', () => {
 // ---------------------------------------------------------------------------
 const user = { name: 'Asha Devi', category: 'SC', incomeNum: 120000, district: 'Sitapur', id: 'TEST-1' };
 const render = (props) => renderToString(React.createElement(ProductionDashboard, { currentUser: user, ...props }));
-// The user card shows NSFDC's income ceiling (₹5,00,000 [S1]): a sourced rule, the only rupee figure allowed before input.
+// The user card used to show "Income ≤ ₹5.00L" for everyone (meant as NSFDC's ceiling, read as the
+// user's income); since 11 Nov 2026 it shows only the user's own figure, so this strips nothing on
+// the test user (who has no `income`). Kept so the rupee checks below stay strict if it returns.
 const SOURCED_CEILING = 'Income ≤ ₹5.00L';
 const withoutCeiling = (html) => html.split(SOURCED_CEILING).join('');
 
 describe('4. Production dashboard render', () => {
-  it('home: D20 selected, Feasibility tab, chat box, no invented figures', () => {
+  it('home: asks the user to choose a business, Feasibility tab, chat box, no invented figures', () => {
     const html = render();
-    assert.ok(html.includes('D20'));
+    // "D20" used to appear here only through a made-up "D20 Metal Smithy · Start here" sidebar card,
+    // removed 11 Nov 2026. Before the server replies, step 1 asks the user to choose.
+    assert.ok(html.includes('Choose your business'));
+    assert.ok(!html.includes('Start here'), 'made-up starter scenario card is back');
     assert.ok(html.includes('Feasibility'));
-    assert.ok(html.includes('Ask GraminAI'), 'chat box placeholder missing');
+    assert.ok(html.includes('Ask UdyamSetuAI'), 'chat box placeholder missing');
     for (const s of INVENTED) assert.ok(!html.includes(s), `renders "${s}"`);
   });
 
@@ -334,9 +366,11 @@ describe('4. Production dashboard render', () => {
     assert.ok(!withoutCeiling(html).includes('₹'), 'shows a rupee figure with no cost entered');
   });
 
-  it('simulator: cash flow, cover (DSCR) and season curve are NOT FOUND, never a SAFE rating', () => {
+  it('simulator before a cost is entered: asks for the cost, shows no figures, never a SAFE rating', () => {
+    // Missing figures are now one "We don't have this yet" line, and "no cost yet" is a prompt,
+    // not NOT FOUND boxes (11 Nov 2026).
     const html = render({ initialTab: 'simulator' });
-    assert.ok(html.includes('NOT FOUND'));
+    assert.ok(html.includes('Enter a project cost'));
     assert.ok(!html.includes('SAFE'));
     assert.ok(!/\d\.\d+x/.test(html), 'shows a multiplier');
   });
@@ -363,7 +397,9 @@ describe('4. Production dashboard render', () => {
 describe('5. Landing mock-up keeps its look but shows no figures', () => {
   it('no rupee amounts, multipliers or DSCR values', () => {
     const html = renderToString(React.createElement(SetoDashboard));
-    assert.ok(html.includes('D08 Mustard Oil Mill'), 'mock-up items kept');
+    // The made-up "recent scenarios" are gone (11 Nov 2026); the advisory list now shows full names.
+    assert.ok(html.includes('Mustard &amp; Edible Oil Expeller Mill'), 'mock-up advisory list kept');
+    assert.ok(!/\dh ago/.test(html), 'mock-up shows a made-up "saved 2h ago" time');
     assert.ok(!/₹\s?\d/.test(withoutCeiling(html)), 'mock-up shows a rupee amount');
     assert.ok(!/DSCR \d/.test(html), 'mock-up shows a DSCR value');
     assert.ok(html.includes('see dashboard'));

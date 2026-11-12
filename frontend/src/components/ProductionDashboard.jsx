@@ -14,50 +14,22 @@ import {
   fetchDossier
 } from '../services/api';
 import { tierOptions, costOnBusinessLoad, flowSteps } from '../services/dossierView';
+import { CATEGORY_SC, CATEGORY_NOT_SC } from '../data/userDatabase';
 
 // Import SSOT Modular Dashboard Components
 import DashboardShell from './dashboard/DashboardShell';
 import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
-import StatutoryVerificationModal from './dashboard/StatutoryVerificationModal';
 
-// Seed scenarios: names and where they open. No figures: every figure comes from the server.
-const DEFAULT_PRODUCTION_SCENARIOS = [
-  {
-    id: 'D20',
-    domainCode: 'D20',
-    tab: 'feasibility',
-    name: 'D20 Metal Smithy',
-    subtitle: 'Verified business · feasibility and loan',
-    time: 'Start here',
-    type: 'custom'
-  },
-  {
-    id: 'D18',
-    domainCode: 'D18',
-    tab: 'amortizer',
-    name: 'D18 Tailoring Workshop',
-    subtitle: 'Dossier sizes and season · no yes/no questions yet',
-    image: '/images/scenario_tailoring.jpg',
-    imageAlt: 'Tailoring craftsmanship',
-    imageFallback: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=400&q=80',
-    time: 'Template',
-    type: 'custom'
-  },
-  {
-    id: 'debt',
-    tab: 'restructure',
-    name: 'Sahukar Debt Relief',
-    subtitle: 'Moneylender senkda debt → bank credit (ASSUMED engine)',
-    time: 'Template',
-    type: 'custom'
-  }
-];
+// The sidebar lists only scenarios the user saved. It used to start with three made-up "recent"
+// cards ("Start here", "Template", a stock photo), which read as someone's past work
+// (teammate review, 11 Nov 2026).
+const DEFAULT_PRODUCTION_SCENARIOS = [];
 
 // Saved scenarios are stored as {v: 2, list}. Older saves (a bare list) carried invented
 // figures (e.g. DSCR badges), so they are not shown again.
-const SCENARIOS_KEY = 'graminai_production_scenarios';
+const SCENARIOS_KEY = 'udyamsetuai_production_scenarios';
 function loadScenarios() {
   try {
     const saved = JSON.parse(localStorage.getItem(SCENARIOS_KEY));
@@ -66,6 +38,15 @@ function loadScenarios() {
     return DEFAULT_PRODUCTION_SCENARIOS;
   }
 }
+
+// Chat messages in Hindi with plain English under them (owner's decision, 11 Nov 2026): the
+// English-only "AI offline" notice was missed by Hindi readers and taken for a broken chat.
+const CHAT_NOTICES = {
+  aiOff: 'चैट अभी बंद है।\nChat is off right now: this server has no AI key. The loan calculator still works.',
+  keyRejected: 'चैट अभी बंद है।\nChat is off right now: the AI key was rejected. The loan calculator still works.',
+  serverOffline: 'सर्वर बंद है।\nThe server is off, so the chat cannot answer. The loan calculator still works.',
+  error: 'कुछ गड़बड़ हुई।\nSomething went wrong with the chat.'
+};
 
 const isPositiveNumber = (v) => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) > 0;
 const isNonNegativeNumber = (v) => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) >= 0;
@@ -80,11 +61,18 @@ export default function ProductionDashboard({
   language = 'en',
   currentUser = null,
   onNavigateHome,
-  initialTab = 'home'
+  initialTab = 'home',
+  initialQuestion = null,
+  onInitialQuestionUsed
 }) {
   // Navigation & Viewport State
   const [activeTab, setActiveTab] = useState(initialTab);
-  const [selectedDomainCode, setSelectedDomainCode] = useState('D20');
+  // Opens on D01 Village FMCG Retail: its dossier has every loan size, the surplus, the DSCR and
+  // the season, where D20 had 46 gaps and showed rows of NOT FOUND first (teammate review, 11 Nov 2026).
+  // It is only shown as an example: step 1 ticks once the user picks a business themselves.
+  const [selectedDomainCode, setSelectedDomainCode] = useState('D01');
+  const [businessPicked, setBusinessPicked] = useState(false);
+  const [costChosen, setCostChosen] = useState(false);
   const [isAdvisoryOpen, setIsAdvisoryOpen] = useState(true);
 
   // The 24 businesses from the server: {code: {code, name, status}}
@@ -94,12 +82,15 @@ export default function ProductionDashboard({
   // Loan inputs: all USER INPUT. SC status pre-filled only from the user's own registration answer.
   const [projectCost, setProjectCost] = useState('');
   const [familyIncome, setFamilyIncome] = useState('');
-  const registeredSc = typeof currentUser?.category === 'string' && /\(SC\)|^SC$/.test(currentUser.category);
-  const [isSc, setIsSc] = useState(registeredSc ? true : null);
+  // The user's own sign-up answer, either way: a "No" used to be dropped and asked again (review, 11 Nov 2026).
+  const registeredSc = currentUser?.category === CATEGORY_SC || currentUser?.category === 'SC';
+  const registeredNotSc = currentUser?.category === CATEGORY_NOT_SC;
+  const registeredAnswer = registeredSc ? true : registeredNotSc ? false : null;
+  const [isSc, setIsSc] = useState(registeredAnswer);
   // The session can arrive after the first render: pre-fill once it does, unless the user already chose.
   useEffect(() => {
-    if (registeredSc) setIsSc((prev) => (prev === null ? true : prev));
-  }, [registeredSc]);
+    if (registeredAnswer !== null) setIsSc((prev) => (prev === null ? registeredAnswer : prev));
+  }, [registeredAnswer]);
   const [loanResult, setLoanResult] = useState(null);
   const [loanError, setLoanError] = useState(null);
   // Answers the chat collected, kept with the business they belong to: {code, answers}
@@ -110,6 +101,9 @@ export default function ProductionDashboard({
   const [debtPrincipal, setDebtPrincipal] = useState(120000);
   const [debtRateSenkda, setDebtRateSenkda] = useState(3.0);
   const [debtMonthsActive, setDebtMonthsActive] = useState(36);
+  // Household monthly income for the debt tool: blank until the user types it; the server then
+  // leaves its "share of income" figures empty instead of assuming 35,000 a month.
+  const [debtIncome, setDebtIncome] = useState('');
   const [debtEntered, setDebtEntered] = useState(false);
   const enterDebt = (setter) => (v) => { setDebtEntered(true); setter(v); };
   const [debtRefinanceData, setDebtRefinanceData] = useState(null);
@@ -126,8 +120,6 @@ export default function ProductionDashboard({
   // UI & Scenario Persistence States
   const [toastMessage, setToastMessage] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [recentChecks, setRecentChecks] = useState({ D20: true, D18: false, debt: false });
-  const [userModalOpen, setUserModalOpen] = useState(false);
   const [mandiPriceData, setMandiPriceData] = useState(null);
   const [mandiKeyConfigured, setMandiKeyConfigured] = useState(null); // from the server's health check
   const [scenariosList, setScenariosList] = useState(loadScenarios);
@@ -175,10 +167,13 @@ export default function ProductionDashboard({
   const costOrigin = useRef(null);
   const selectBusiness = useCallback((code) => {
     costOrigin.current = null;
+    setCostChosen(false);
+    setBusinessPicked(true);
     setSelectedDomainCode(code);
   }, []);
   const typeCost = useCallback((v) => {
     costOrigin.current = 'user';
+    setCostChosen(true);
     setProjectCost(v);
   }, []);
   useEffect(() => {
@@ -201,8 +196,10 @@ export default function ProductionDashboard({
     let isMounted = true;
     setDossierCashflow(null);
     if (!isPositiveNumber(projectCost)) return undefined;
+    // SC unknown -> not sent, so the server takes it as SC and says so as ASSUMED on screen. The page
+    // used to send "true" itself, which hid that assumption (review, 11 Nov 2026).
     fetchDossierCashflow(selectedDomainCode, Number(projectCost),
-      isNonNegativeNumber(familyIncome) ? Number(familyIncome) : 0, typeof isSc === 'boolean' ? isSc : true)
+      isNonNegativeNumber(familyIncome) ? Number(familyIncome) : 0, typeof isSc === 'boolean' ? isSc : undefined)
       .then((res) => { if (isMounted) setDossierCashflow(noteOffline(res)); })
       .catch((err) => { if (isMounted) setDossierCashflow({ status: 'NOT FOUND', reason: err.message }); });
     return () => { isMounted = false; };
@@ -252,13 +249,15 @@ export default function ProductionDashboard({
     tiers: tierOptions(dossierDetail),
     onPickTier: (cost) => typeCost(String(cost))
   };
-  const steps = flowSteps({ code: selectedDomainCode, projectCost, familyIncome, isSc, loanReady });
+  const steps = flowSteps({ businessPicked, costChosen, projectCost, familyIncome, isSc, loanReady });
 
   // Mode B Debt Restructuring: the server's figures only (team's engine, tagged ASSUMED by the server)
   useEffect(() => {
     let isMounted = true;
     if (!debtEntered) { setDebtRefinanceData(null); return undefined; }
-    restructureDebt(debtPrincipal, debtRateSenkda, debtMonthsActive).then((res) => {
+    // Only a positive income is sent: a share of a zero income is not a figure (review, 11 Nov 2026).
+    const incomeOption = isPositiveNumber(debtIncome) ? { householdMonthlyIncome: Number(debtIncome) } : {};
+    restructureDebt(debtPrincipal, debtRateSenkda, debtMonthsActive, incomeOption).then((res) => {
       if (!isMounted) return;
       noteOffline(res);
       if (res.offline) { setDebtRefinanceData({ offline: true }); return; }
@@ -274,13 +273,15 @@ export default function ProductionDashboard({
         damdupatViolated: res.damdupatViolated,
         pathwayName: plan.pathway_name,
         formalRatePct: plan.formal_interest_rate_pct,
+        incomeShareBeforePct: res.liberationMetrics?.debt_service_to_income_before_pct ?? null,
+        incomeShareAfterPct: res.liberationMetrics?.debt_service_to_income_after_pct ?? null,
         tag: res.tags?.source
       });
     }).catch((err) => {
       if (isMounted) setDebtRefinanceData({ error: err.message });
     });
     return () => { isMounted = false; };
-  }, [debtPrincipal, debtRateSenkda, debtMonthsActive, debtEntered, noteOffline]);
+  }, [debtPrincipal, debtRateSenkda, debtMonthsActive, debtIncome, debtEntered, noteOffline]);
 
   // Query Daily Agmarknet Mandi Spot Prices via data.gov.in API
   useEffect(() => {
@@ -352,7 +353,8 @@ export default function ProductionDashboard({
       tab: 'amortizer',
       name: `${activeDomain.code} ${String(activeDomain.name).split(' ')[0]} Sim`,
       subtitle: isPositiveNumber(projectCost) ? `Project cost ${formatINR(Number(projectCost))} (your input)` : 'Project cost not entered yet',
-      time: 'Just now',
+      // The real save date; "Just now" stayed on every card for ever.
+      time: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
       type: 'custom'
     };
     persistScenarios([newScenario, ...scenariosList]);
@@ -381,25 +383,26 @@ export default function ProductionDashboard({
         setServerOffline(true);
         setChatMessages(chatMessages); // not answered: keep it out of the conversation, give it back in the box
         setCommandInput(text);
-        setChatNotice('Server offline: the assistant is not available. The loan calculator still works.');
+        setChatNotice(CHAT_NOTICES.serverOffline);
         return;
       }
       setServerOffline(false);
       if (res.status !== 'ok') {
-        setChatNotice(res.status === 'ai_key_rejected'
-          ? 'AI key rejected: the assistant is not available. The loan calculator still works.'
-          : 'AI offline: the assistant is not available right now. The loan calculator still works.');
+        setChatNotice(res.status === 'ai_key_rejected' ? CHAT_NOTICES.keyRejected : CHAT_NOTICES.aiOff);
       }
       if (res.reply) setChatMessages([...msgs, { role: 'assistant', content: res.reply }]);
       else { setChatMessages(chatMessages); setCommandInput(text); }
       const route = chatRoute(res.tool_results);
       if (route.code) {
         costOrigin.current = null;  // a business named by the chat starts untouched, unless the chat also gives a cost
+        setCostChosen(false);
+        setBusinessPicked(true);    // the chat found it from the user's own words
         setSelectedDomainCode(route.code);
       }
       if (route.loanInputs) {
         if (route.loanInputs.projectCost !== undefined) {
           costOrigin.current = 'chat';
+          setCostChosen(true);
           setProjectCost(String(route.loanInputs.projectCost));
         }
         if (route.loanInputs.familyIncome !== undefined) setFamilyIncome(String(route.loanInputs.familyIncome));
@@ -410,11 +413,21 @@ export default function ProductionDashboard({
     } catch (err) {
       setChatMessages(chatMessages);
       setCommandInput(text);
-      setChatNotice(`Assistant error: ${err.message}`);
+      setChatNotice(`${CHAT_NOTICES.error} (${err.message})`);
     } finally {
       setChatBusy(false);
     }
   };
+
+  // A question typed into the front page's chat bar is sent once, as soon as the dashboard opens.
+  const initialSent = useRef(false);
+  useEffect(() => {
+    if (initialSent.current || !initialQuestion || !initialQuestion.trim()) return;
+    initialSent.current = true;
+    if (onInitialQuestionUsed) onInitialQuestionUsed();
+    handleChatSend(initialQuestion);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialQuestion]);
 
   // 1-page DPR PDF, made by the server from verified data
   const handleDownloadDprPdf = async () => {
@@ -468,14 +481,6 @@ export default function ProductionDashboard({
       showTitle={false}
       banner={banner}
     >
-      {/* Statutory Beneficiary Verification Modal */}
-      <StatutoryVerificationModal
-        isOpen={userModalOpen}
-        onClose={() => setUserModalOpen(false)}
-        currentUser={currentUser}
-        language={language}
-      />
-
       {/* Column 1: Left Navigation Rail */}
       <NavRail
         activeTab={activeTab}
@@ -487,7 +492,6 @@ export default function ProductionDashboard({
         onToggleAdvisory={() => setIsAdvisoryOpen(!isAdvisoryOpen)}
         currentUser={currentUser}
         language={language}
-        onVerifyClick={() => setUserModalOpen(true)}
         onShowToast={showToast}
         mode="production"
       />
@@ -512,6 +516,8 @@ export default function ProductionDashboard({
         onRateChange={enterDebt(setDebtRateSenkda)}
         debtMonthsActive={debtMonthsActive}
         onMonthsActiveChange={enterDebt(setDebtMonthsActive)}
+        debtIncome={debtIncome}
+        onDebtIncomeChange={setDebtIncome}
         debtEntered={debtEntered}
         debtRefinanceData={debtRefinanceData}
         commandInput={commandInput}
@@ -533,8 +539,6 @@ export default function ProductionDashboard({
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         filteredScenarios={filteredScenarios}
-        recentChecks={recentChecks}
-        onCheckChange={(id, checked) => setRecentChecks(prev => ({ ...prev, [id]: checked }))}
         onSelectScenario={(scenario) => {
           if (scenario.domainCode) selectBusiness(scenario.domainCode);
           if (scenario.tab) setActiveTab(scenario.tab);

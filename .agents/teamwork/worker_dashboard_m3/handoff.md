@@ -28,7 +28,7 @@ The following components and files were created or modified:
    - `DashboardShell.jsx` (58 lines): Outer architectural container providing `.diffused-backdrop` ambient canvas, `.soft-shadow` elevation, responsive 3-column grid container, and toast notifications.
    - `UserCard.jsx` (47 lines): Dynamic user card with avatar, dynamic `currentUser?.name`, social category fallback, and `Statutory Verified` trigger button.
    - `StatutoryVerificationModal.jsx` (58 lines): Dynamic modal presenting beneficiary's verified SC status, certificate ID (`MoSJE/NSFDC/2026/...`), and 07 Jan 2026 MoSJE income threshold compliance.
-   - `NavRail.jsx` (143 lines): Left navigation rail with `✦ GraminAI` brand lockup, active white pill tabs (`home`, `simulator`, `amortizer`, `restructure`, `dpr`), collapsible Advisory Tools tree, and bottom `UserCard`.
+   - `NavRail.jsx` (143 lines): Left navigation rail with `✦ UdyamSetuAI` brand lockup, active white pill tabs (`home`, `simulator`, `amortizer`, `restructure`, `dpr`), collapsible Advisory Tools tree, and bottom `UserCard`.
    - `SeasonalitySimulatorView.jsx` (96 lines): 12-month seasonality chart with August lean dip (`< 0.8` warning color), project cost, NOCF, and dynamic DSCR rating (`SAFE (DSCR 1.62x)`).
    - `NsfdcAmortizerView.jsx` (108 lines): NSFDC quarterly repayment schedule table showing loan amount (90%), promoter margin (10%), EQI, and initial 6 quarters with Moratorium vs Amortizing badges.
    - `DebtLiberationView.jsx` (128 lines): Mode B informal moneylender debt refinancing with interactive sliders (`min={20000} max={300000} step={10000}`, duration `min={1} max={48} step={1}`), dialectal quotes (2.5 to 5.0 senkda), cash relief, and Damdupat statutory alert (`Usurious Loans Act 1918`).

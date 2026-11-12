@@ -1,7 +1,7 @@
 # Forensic Audit Task Assignment — Auditor (Milestone M4: Final System Audit)
 
 ## Objective
-Perform independent forensic integrity auditing of the entire codebase and repository state for the GraminAI production dashboard delivery.
+Perform independent forensic integrity auditing of the entire codebase and repository state for the UdyamSetuAI production dashboard delivery.
 Verify zero cheating, zero facade implementations, zero hardcoded test strings, genuine Google Identity Services integration, genuine backend REST service, and complete synchronization between the production dashboard and Scene 6 mockup.
 
 ## Working Directory

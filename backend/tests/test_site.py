@@ -15,7 +15,7 @@ client = TestClient(app)
 @pytest.fixture
 def built(tmp_path, monkeypatch):
     (tmp_path / "assets").mkdir()
-    (tmp_path / "index.html").write_text("<html>GraminAI app</html>")
+    (tmp_path / "index.html").write_text("<html>UdyamSetuAI app</html>")
     (tmp_path / "assets" / "app.js").write_text("console.log(1)")
     (tmp_path / "manifest.json").write_text("{}")
     monkeypatch.setattr(site, "SITE_DIR", tmp_path)
@@ -25,7 +25,7 @@ def built(tmp_path, monkeypatch):
 def test_home_and_dashboard_give_the_website(built):
     for path in ("/", "/dashboard", "/dashboard/anything"):
         r = client.get(path)
-        assert r.status_code == 200 and "GraminAI app" in r.text, path
+        assert r.status_code == 200 and "UdyamSetuAI app" in r.text, path
         assert r.headers["content-type"].startswith("text/html")
 
 
@@ -44,7 +44,7 @@ def test_api_still_answers_first(built):
 def test_no_reading_outside_the_website_folder(built):
     for path in ("/../backend/app.py", "/%2e%2e/%2e%2e/etc/passwd", "/assets/../../.env"):
         r = client.get(path)
-        assert "GraminAI app" in r.text or r.status_code == 404, path
+        assert "UdyamSetuAI app" in r.text or r.status_code == 404, path
         assert "import" not in r.text and "GROQ" not in r.text
 
 

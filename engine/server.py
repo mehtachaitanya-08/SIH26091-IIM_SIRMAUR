@@ -1,5 +1,5 @@
 """
-GraminAI Backend REST API Server
+UdyamSetuAI Backend REST API Server
 Zero-Dependency Python HTTP Service exposing deterministic calculation engines:
 - Statutory NSFDC Dual-Tier Credit Calculator (engine/nsfdc_calculator.py)
 - Multi-Archetype Financial Engine: Mode A Incubation & Mode B Restructuring (engine/multi_archetype_financial_engine.py)
@@ -51,7 +51,7 @@ except ImportError:
         ARCHETYPES
     )
 
-logger = logging.getLogger("GraminAI.Server")
+logger = logging.getLogger("UdyamSetuAI.Server")
 if not logger.handlers:
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s"))
@@ -80,10 +80,10 @@ DOSSIERS_METADATA, DOSSIERS_MAP = load_dossiers()
 DOSSIERS_LIST = list(DOSSIERS_MAP.values())
 
 
-class GraminAIRequestHandler(BaseHTTPRequestHandler):
-    """Zero-dependency HTTP request handler for GraminAI calculation engines."""
+class UdyamSetuAIRequestHandler(BaseHTTPRequestHandler):
+    """Zero-dependency HTTP request handler for UdyamSetuAI calculation engines."""
 
-    server_version = "GraminAI-HTTP/1.0.0"
+    server_version = "UdyamSetuAI-HTTP/1.0.0"
 
     def log_message(self, format, *args):
         """Clean standard request logging."""
@@ -202,7 +202,7 @@ class GraminAIRequestHandler(BaseHTTPRequestHandler):
         self._send_json({
             "status": "ok",
             "version": "1.0.0",
-            "service": "GraminAI Deterministic Financial Engine",
+            "service": "UdyamSetuAI Deterministic Financial Engine",
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "engines": {
                 "nsfdc_calculator": "2.0.0",
@@ -596,14 +596,14 @@ class GraminAIRequestHandler(BaseHTTPRequestHandler):
 def create_server(host: str = "127.0.0.1", port: int = 8000) -> ThreadingHTTPServer:
     """Create and return a configured ThreadingHTTPServer instance."""
     server_address = (host, port)
-    server = ThreadingHTTPServer(server_address, GraminAIRequestHandler)
+    server = ThreadingHTTPServer(server_address, UdyamSetuAIRequestHandler)
     return server
 
 
 def run_server(host: str = "127.0.0.1", port: int = 8000):
-    """Run the GraminAI server with graceful keyboard interrupt handling."""
+    """Run the UdyamSetuAI server with graceful keyboard interrupt handling."""
     server = create_server(host, port)
-    logger.info(f"GraminAI Backend Server listening on http://{host}:{port}")
+    logger.info(f"UdyamSetuAI Backend Server listening on http://{host}:{port}")
     logger.info(f"Loaded {len(DOSSIERS_MAP)} verified empirical micro-enterprise dossiers")
     try:
         server.serve_forever()

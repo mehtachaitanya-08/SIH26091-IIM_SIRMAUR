@@ -46,7 +46,7 @@
    ```
    RENDER SUCCESS! HTML byte length: 12357
    Contains "Welcome!": true
-   Contains "GraminAI": true
+   Contains "UdyamSetuAI": true
    Contains "Recent scenarios": true
    Contains "Mustard Oil Mill": true
    Contains "Tailoring Workshop": true
