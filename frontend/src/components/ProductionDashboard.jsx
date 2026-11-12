@@ -7,6 +7,7 @@ import {
   fetchFeasibility,
   downloadDpr,
   sendChat,
+  chatContext,
   chatRoute,
   dprPayload,
   fetchMandiPrices,
@@ -78,7 +79,11 @@ export default function ProductionDashboard({
 
   // Loan inputs: all USER INPUT. SC status pre-filled only from the user's own registration answer.
   const [projectCost, setProjectCost] = useState('');
-  const [familyIncome, setFamilyIncome] = useState('');
+  // My account (Stage A): an empty income box is filled from the saved yearly income. It starts
+  // filled, not only after a first render: a question typed on the front page is sent in that first
+  // render and went without the income, so the chat asked for it again (review, 12 Nov 2026).
+  const savedIncome = typeof currentUser?.income === 'number' && Number.isFinite(currentUser.income) ? String(currentUser.income) : null;
+  const [familyIncome, setFamilyIncome] = useState(() => savedIncome ?? '');
   // The user's own sign-up answer, either way: a "No" used to be dropped and asked again (review, 11 Nov 2026).
   const registeredSc = currentUser?.category === CATEGORY_SC || currentUser?.category === 'SC';
   const registeredNotSc = currentUser?.category === CATEGORY_NOT_SC;
@@ -88,8 +93,7 @@ export default function ProductionDashboard({
   useEffect(() => {
     if (registeredAnswer !== null) setIsSc((prev) => (prev === null ? registeredAnswer : prev));
   }, [registeredAnswer]);
-  // My account (Stage A): an empty income box is filled from the saved yearly income, the same way.
-  const savedIncome = typeof currentUser?.income === 'number' && Number.isFinite(currentUser.income) ? String(currentUser.income) : null;
+  // A session that arrives after the first render fills an empty income box the same way.
   useEffect(() => {
     if (savedIncome !== null) setFamilyIncome((prev) => (prev === '' ? savedIncome : prev));
   }, [savedIncome]);
@@ -408,7 +412,9 @@ export default function ProductionDashboard({
     setChatBusy(true);
     setChatNotice(null);
     try {
-      const res = await sendChat(msgs, chatLanguage);
+      // What the screen already shows goes with it, so the chat does not ask again (12 Nov 2026).
+      const context = chatContext({ code: selectedDomainCode, businessPicked, projectCost, costChosen, familyIncome, isSc });
+      const res = await sendChat(msgs, chatLanguage, context);
       if (res.offline) {
         setServerOffline(true);
         setChatMessages(chatMessages); // not answered: keep it out of the conversation, give it back in the box

@@ -189,10 +189,38 @@ export async function downloadDpr(payload) {
  */
 export const CHAT_MAX_MESSAGES = 30; // backend/chat.py MAX_TURNS
 
+/**
+ * What the dashboard already knows, for the chat (Stage A follow-up, 12 Nov 2026: the chat asked a
+ * user for income and SC status that My account already held). Only the user's own entries:
+ * - code: only a business the user picked (the default-highlighted one is not their choice);
+ * - projectCost: only one they chose (typed, picked a size, or the chat set it) and above 0.
+ *   The box also fills itself from the research file, which is not the user's entry; and a
+ *   cleared box must not go as 0, which the server refuses;
+ * - familyIncome: only a number of 0 or more in the box (it is filled from My account);
+ * - isSc: only a yes/no answer.
+ * @returns {Object|null} null when nothing is known.
+ */
+// The server refuses context numbers above this (backend/chat.py MAX_CONTEXT_RUPEES); a refused
+// context stops the whole chat, so such a number is left out here instead (review, 12 Nov 2026).
+export const CHAT_CONTEXT_MAX_RUPEES = 1e12;
+
+export function chatContext({ code, businessPicked, projectCost, costChosen, familyIncome, isSc }) {
+  const out = {};
+  const num = (v) => (v === '' || v === null || v === undefined ? NaN : Number(v));
+  const ok = (v) => Number.isFinite(v) && v <= CHAT_CONTEXT_MAX_RUPEES;
+  if (businessPicked && typeof code === 'string' && code) out.code = code;
+  if (costChosen && ok(num(projectCost)) && num(projectCost) > 0) out.projectCost = num(projectCost);
+  if (ok(num(familyIncome)) && num(familyIncome) >= 0) out.familyIncome = num(familyIncome);
+  if (typeof isSc === 'boolean') out.isSc = isSc;
+  return Object.keys(out).length ? out : null;
+}
+
 // language: 'hi' or 'en' from the chat panel's switch (Stage A); left out when not chosen yet.
-export async function sendChat(messages, language) {
+// context: from chatContext; left out when it has nothing in it.
+export async function sendChat(messages, language, context = null) {
   const body = { messages: messages.slice(-CHAT_MAX_MESSAGES) };
   if (language === 'hi' || language === 'en') body.language = language;
+  if (context && typeof context === 'object' && Object.keys(context).length) body.context = context;
   try {
     return await getJson('/api/chat', { method: 'POST', body });
   } catch (err) {

@@ -56,6 +56,7 @@ Hard rules:
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
 2a. As soon as you know the project cost, the yearly family income and whether the user is SC, call calculate_loan immediately and give the loan before any business questions. If one of the three is missing, ask only for what is missing, then calculate.
 3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so.
+3a. Never ask the user for a business code: users do not know codes. Ask what business they run, in their own words, and find it with list_businesses. Say the business name first, e.g. "Oil Expellers (D08 dossier)".
 4. Use question ids and answer choices exactly as get_questions returns them.
 5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy. Keep each reply under 80 words and ask at most 2 questions at a time.
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
@@ -63,16 +64,85 @@ Hard rules:
 8. Use the dashboard's plain words: say "payment every 3 months", not "quarterly instalment"; say "pause (no payment)", not "moratorium".
 9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet."""
 
-# Stage A: the chat panel sends the language the user picked; one line is added to the rules.
-# With no language (older callers), the prompt is exactly SYSTEM (rule 5: the user's language).
+# Stage A: the chat panel sends the language the user picked; rule 10 is added to the rules.
+# Stage A follow-up (12 Nov 2026): it may also send what the dashboard already shows (the
+# "context"), added as rule 11, because the chat asked a user for income and SC status that
+# My account already held. With neither (older callers), the prompt is exactly SYSTEM.
 LANGUAGES = {"hi": "Hindi", "en": "English"}
 
+# The only context fields accepted. The business name is looked up here from NAMES, never taken
+# from the browser, so no text a browser sends ends up inside the AI's instructions.
+CONTEXT_FIELDS = ("code", "projectCost", "familyIncome", "isSc")
+# Review, 12 Nov 2026: a 400-digit whole number crashed the server (500, OverflowError in
+# math.isfinite) instead of being refused. Nothing real is above 1 lakh crore rupees (10^12).
+MAX_CONTEXT_RUPEES = 10 ** 12
 
-def system_prompt(language=None):
-    if language not in LANGUAGES:
-        return SYSTEM
-    script = " (Devanagari script)" if language == "hi" else ""
-    return SYSTEM + f"\n10. The user chose {LANGUAGES[language]}: answer only in {LANGUAGES[language]}{script}, whatever language they type in."
+
+def _finite_number(v):
+    # True/False are ints in Python, and json.loads accepts NaN and Infinity: refuse all three.
+    # The size check comes first: it compares a huge int exactly, where isfinite would overflow.
+    return (isinstance(v, (int, float)) and not isinstance(v, bool)
+            and abs(v) <= MAX_CONTEXT_RUPEES and math.isfinite(v))
+
+
+def check_context(raw):
+    """The dashboard's context, checked: (context dict, None) or (None, error text).
+    No context (missing or null) is an empty one. A business code the server does not know is
+    dropped, not refused: a website and server out of step must not stop the whole chat."""
+    if raw is None:
+        return {}, None
+    if not isinstance(raw, dict):
+        return None, "'context' must be an object"
+    unknown = sorted(set(raw) - set(CONTEXT_FIELDS))
+    if unknown:
+        return None, f"'context' has unknown field(s): {', '.join(unknown)}"
+    ctx = {}
+    if "code" in raw:
+        code = raw["code"].strip().upper() if isinstance(raw["code"], str) else None
+        if code in NAMES:
+            ctx["code"] = code
+    if "projectCost" in raw:
+        if not _finite_number(raw["projectCost"]) or raw["projectCost"] <= 0:
+            return None, "'context.projectCost' must be a number above 0, up to 10^12"
+        ctx["projectCost"] = raw["projectCost"]
+    if "familyIncome" in raw:
+        if not _finite_number(raw["familyIncome"]) or raw["familyIncome"] < 0:
+            return None, "'context.familyIncome' must be a number of 0 or more, up to 10^12"
+        ctx["familyIncome"] = raw["familyIncome"]
+    if "isSc" in raw:
+        if not isinstance(raw["isSc"], bool):
+            return None, "'context.isSc' must be true or false"
+        ctx["isSc"] = raw["isSc"]
+    return ctx, None
+
+
+def _plain(v):
+    # Rupees to the paisa, never computer notation: 1e-05 was written as "1e-05" (review, 12 Nov 2026).
+    return f"{v:.2f}".rstrip("0").rstrip(".")
+
+
+def _context_line(ctx):
+    known = []
+    if "code" in ctx:
+        known.append(f"business {NAMES[ctx['code']]} ({ctx['code']})")
+    if "projectCost" in ctx:
+        known.append(f"total project cost {_plain(ctx['projectCost'])} rupees")
+    if "familyIncome" in ctx:
+        known.append(f"yearly family income {_plain(ctx['familyIncome'])} rupees")
+    if "isSc" in ctx:
+        known.append(f"Scheduled Caste: {'yes' if ctx['isSc'] else 'no'}")
+    return ("\n11. What the dashboard already has (the user's own entries, self-declared): "
+            + "; ".join(known) + ". Use these; do not ask for them again.")
+
+
+def system_prompt(language=None, context=None):
+    prompt = SYSTEM
+    if language in LANGUAGES:
+        script = " (Devanagari script)" if language == "hi" else ""
+        prompt += f"\n10. The user chose {LANGUAGES[language]}: answer only in {LANGUAGES[language]}{script}, whatever language they type in."
+    if context:
+        prompt += _context_line(context)
+    return prompt
 
 
 # ---------------------------------------------------------------------------
@@ -504,6 +574,11 @@ async def chat_endpoint(request: Request):
     language = body.get("language")
     if language is not None and (not isinstance(language, str) or language not in LANGUAGES):
         return _error("'language' must be 'hi' or 'en'", 400)
+    context = None
+    if "context" in body:
+        context, bad_context = check_context(body["context"])
+        if bad_context:
+            return _error(bad_context, 400)
     offline = OFFLINE_HI if language == "hi" else OFFLINE
 
     if not _api_key():
@@ -511,7 +586,7 @@ async def chat_endpoint(request: Request):
 
     history = [dict(m, content=m["content"][:MAX_ASSISTANT_CHARS] + ("…" if len(m["content"]) > MAX_ASSISTANT_CHARS else ""))
                if m["role"] == "assistant" else m for m in convo[-MAX_HISTORY:]]
-    messages = [{"role": "system", "content": system_prompt(language)}] + history
+    messages = [{"role": "system", "content": system_prompt(language, context)}] + history
     tools = tool_specs()
     results = []
     reply = None
@@ -542,7 +617,9 @@ async def chat_endpoint(request: Request):
 
     if reply is None:
         reply = _plain_summary(results, language)
-    bad = unsupported(reply, allowed_numbers([r["result"] for r in results], user_texts))
+    # The context's numbers are the user's own entries, so the reply may repeat them. They go in
+    # as numbers, not text: a huge value written as text ("1e+21") would wrongly allow 1 and 21.
+    bad = unsupported(reply, allowed_numbers([r["result"] for r in results] + [context or {}], user_texts))
     guard = {"replaced": bool(bad), "unsupported": bad}
     if bad:
         reply = _plain_summary(results, language)

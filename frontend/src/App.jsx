@@ -105,7 +105,8 @@ const TRANSLATIONS = {
     alreadyRegistered: 'Already have an account?',
     needAccount: 'New to UdyamSetuAI?',
     signInLink: 'Sign In',
-    registerLink: 'Create account'
+    registerLink: 'Create account',
+    googleNotOn: 'Google sign-in is not switched on yet. Please sign in with your mobile number.'
   },
   hi: {
     // Header
@@ -171,9 +172,16 @@ const TRANSLATIONS = {
     alreadyRegistered: 'क्या पहले से खाता है?',
     needAccount: 'UdyamSetuAI पर नए हैं?',
     signInLink: 'लॉगिन करें',
-    registerLink: 'खाता बनाएं'
+    registerLink: 'खाता बनाएं',
+    googleNotOn: 'Google से साइन-इन अभी चालू नहीं है। कृपया अपने मोबाइल नंबर से साइन-इन करें।'
   }
 };
+
+// The developer's message googleAuth.js gives when no Google client ID is set. Users saw it as is
+// ("Please define VITE_GOOGLE_CLIENT_ID…", browser test of 12 Nov 2026); the sign-in box now shows
+// a plain-words marker instead, in the chosen language. googleAuth.js keeps its wording: tests pin it.
+const GOOGLE_NOT_CONFIGURED = 'Google Authentication is not configured';
+const GOOGLE_NOT_ON = 'googleNotOn';
 
 // ============================================================================
 // BILINGUAL PILLAR DOSSIERS (MODAL CONTENTS)
@@ -470,7 +478,8 @@ export default function App() {
         setAuthError(result.error || 'Failed to authenticate Google profile.');
       }
     } catch (err) {
-      setAuthError(err.message || 'Google authentication failed.');
+      const msg = err && err.message;
+      setAuthError(msg && msg.startsWith(GOOGLE_NOT_CONFIGURED) ? GOOGLE_NOT_ON : (msg || 'Google authentication failed.'));
     } finally {
       setIsAuthenticating(false);
     }
@@ -850,7 +859,7 @@ export default function App() {
           {authError && (
             <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{authError}</span>
+              <span>{authError === GOOGLE_NOT_ON ? t.googleNotOn : authError}</span>
             </div>
           )}
 
@@ -1071,7 +1080,9 @@ export default function App() {
                 alt="UdyamSetuAI Emblem"
                 className="h-8 sm:h-9 w-auto object-contain group-hover:scale-105 transition-transform"
               />
-              <span className="font-extrabold text-base sm:text-xl text-[#111311] tracking-tight font-sans-ui">
+              {/* Below 450 px the word was clipped to "UdyamSe" by the buttons beside it (12 Nov 2026): the logo
+                  stays. Measured signed in: the word needs about 434 px; 450 leaves a 16 px gap. */}
+              <span className="max-[449px]:hidden font-extrabold text-base sm:text-xl text-[#111311] tracking-tight font-sans-ui">
                 UdyamSetuAI
               </span>
             </button>
