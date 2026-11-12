@@ -1,12 +1,11 @@
 /**
- * Empirical Adversarial Challenge Suite — Milestone M2: Google Authentication & Demo Elimination
+ * Empirical Adversarial Challenge Suite — Milestone M2: Authentication & Demo Elimination
  * Challenger Agent: challenger_auth_m2_1
- * 
+ *
  * Stress-tests:
- * 1. userDatabase.js: null/empty/malformed Google profiles, unregistered phone/pin,
- *    whitespace inputs, duplicate registrations, session isolation, zero mock personas.
- * 2. googleAuth.js: missing/null/placeholder client ID, invalid tokens, network failure,
- *    SSR environment safety, popup errors, zero fallback to mock personas.
+ * 1. userDatabase.js: unregistered phone/pin, whitespace inputs, duplicate registrations,
+ *    session isolation, zero mock personas.
+ * 2. (Google sign-in tests removed with Google sign-in on 12 Nov 2026.)
  * 3. Static Codebase Audit: rigorous search for leaked mock strings across frontend/src/.
  * 4. SSR Dashboard Rendering: verifying dynamic binding and graceful fallbacks under null/empty profiles.
  */
@@ -24,20 +23,11 @@ import {
   getUserByPhone,
   getUserByEmail,
   authenticateByCredentials,
-  authenticateByGoogle,
   registerUser,
   getCurrentSession,
   saveSession,
   clearSession
 } from '../src/data/userDatabase.js';
-
-import {
-  getGoogleClientId,
-  isGoogleAuthAvailable,
-  initGoogleAuth,
-  triggerGoogleLogin,
-  fetchGoogleUserProfile
-} from '../src/services/googleAuth.js';
 
 import SetoDashboard from '../dist-ssr/SetoDashboard.js';
 
@@ -92,68 +82,6 @@ describe('CHALLENGER ADVERSARIAL SUITE — 1. userDatabase.js Edge Cases & Stres
     assert.ok(failRes.error.includes('Incorrect 4-digit PIN'));
   });
 
-  it('1.4 authenticateByGoogle MUST reject null, undefined, empty, or malformed Google profiles without fallback', () => {
-    const malformedProfiles = [
-      null,
-      undefined,
-      {},
-      { name: 'Adversary Without Email' },
-      { email: '' },
-      { email: null },
-      { email: undefined }
-    ];
-
-    for (const profile of malformedProfiles) {
-      const res = authenticateByGoogle(profile);
-      assert.strictEqual(res.success, false, `Must reject malformed profile: ${JSON.stringify(profile)}`);
-      assert.ok(res.error.includes('No Google profile credentials provided'), `Expected specific error, got '${res.error}'`);
-      assert.strictEqual(getCurrentSession(), null, 'Session must not be set on failure');
-    }
-  });
-
-  it('1.5 authenticateByGoogle MUST dynamically create verified user without hardcoded demo traits', () => {
-    const genuineGoogleProfile = {
-      sub: 'google_oauth_sub_99887766',
-      name: 'Pooja Verma',
-      email: 'pooja.verma.sih@gmail.com',
-      avatar: 'https://lh3.googleusercontent.com/pooja_avatar.jpg'
-    };
-
-    const res = authenticateByGoogle(genuineGoogleProfile);
-    assert.strictEqual(res.success, true);
-    assert.strictEqual(res.user.name, 'Pooja Verma');
-    assert.strictEqual(res.user.email, 'pooja.verma.sih@gmail.com');
-    assert.strictEqual(res.user.avatar, 'https://lh3.googleusercontent.com/pooja_avatar.jpg');
-    assert.strictEqual(res.user.authProvider, 'google');
-    // No "UP-" prefix: it implied every user is in Uttar Pradesh (11 Nov 2026).
-    assert.ok(res.user.id.startsWith('GOOG-'), 'User ID must start with GOOG-');
-    assert.notStrictEqual(res.user.id, 'UP-STP-008129', 'Must never use demo ID');
-    assert.notStrictEqual(res.user.name, 'Ramesh Kumar', 'Must never use demo name');
-
-    // Verify session persistence
-    const session = getCurrentSession();
-    assert.ok(session);
-    assert.strictEqual(session.id, res.user.id);
-  });
-
-  it('1.6 Subsequent authenticateByGoogle with same email MUST update profile rather than duplicating', () => {
-    const email = 'pooja.verma.sih@gmail.com';
-    const updatedProfile = {
-      sub: 'google_oauth_sub_99887766',
-      name: 'Pooja Verma (Updated)',
-      email,
-      avatar: 'https://lh3.googleusercontent.com/pooja_updated.jpg'
-    };
-
-    const res = authenticateByGoogle(updatedProfile);
-    assert.strictEqual(res.success, true);
-    assert.strictEqual(res.user.name, 'Pooja Verma (Updated)');
-    assert.strictEqual(res.user.avatar, 'https://lh3.googleusercontent.com/pooja_updated.jpg');
-
-    const matchingUsers = getAllUsers().filter(u => u.email === email);
-    assert.strictEqual(matchingUsers.length, 1, 'Must not duplicate account in store');
-  });
-
   it('1.7 Database stores zero hardcoded Ramesh personas or demo identifiers', () => {
     const allUsers = getAllUsers();
     assert.ok(Array.isArray(allUsers));
@@ -164,146 +92,6 @@ describe('CHALLENGER ADVERSARIAL SUITE — 1. userDatabase.js Edge Cases & Stres
     }
   });
 
-  it('1.8 Google profile with missing name/avatar defaults gracefully to generic beneficiary identity', () => {
-    const minimalProfile = {
-      sub: 'google_sub_minimal_123',
-      email: 'minimal.beneficiary@rural.org'
-    };
-
-    const res = authenticateByGoogle(minimalProfile);
-    assert.strictEqual(res.success, true);
-    assert.strictEqual(res.user.name, 'Google Beneficiary');
-    assert.strictEqual(res.user.avatar, null);
-    // Google says nothing about caste, so none is assumed (it was set to SC for everyone; 11 Nov 2026).
-    assert.strictEqual(res.user.category, null);
-    assert.strictEqual(res.user.authProvider, 'google');
-  });
-});
-
-describe('CHALLENGER ADVERSARIAL SUITE — 2. googleAuth.js Resilient Error Handling', () => {
-  it('2.1 getGoogleClientId returns empty string when VITE_GOOGLE_CLIENT_ID is unset', () => {
-    const clientId = getGoogleClientId();
-    assert.strictEqual(typeof clientId, 'string');
-  });
-
-  it('2.2 initGoogleAuth in Node/SSR environment safely returns false without crashing', () => {
-    let capturedError = null;
-    const res = initGoogleAuth(
-      () => {},
-      (err) => { capturedError = err; },
-      ''
-    );
-    assert.strictEqual(res, false, 'initGoogleAuth must return false in Node/SSR');
-  });
-
-  it('2.3 initGoogleAuth in browser environment invokes error callback when client ID is missing or placeholder', () => {
-    const originalWindow = global.window;
-    try {
-      global.window = {}; // Simulate browser environment where window is defined
-      
-      let errorReceived = null;
-      const resEmpty = initGoogleAuth(
-        () => {},
-        (err) => { errorReceived = err; },
-        ''
-      );
-      assert.strictEqual(resEmpty, false);
-      assert.ok(errorReceived instanceof Error);
-      assert.ok(errorReceived.message.includes('Google Authentication is not configured'));
-
-      let placeholderError = null;
-      const resPlaceholder = initGoogleAuth(
-        () => {},
-        (err) => { placeholderError = err; },
-        'your_google_client_id_here.apps.googleusercontent.com'
-      );
-      assert.strictEqual(resPlaceholder, false);
-      assert.ok(placeholderError instanceof Error);
-      assert.ok(placeholderError.message.includes('Google Authentication is not configured'));
-    } finally {
-      global.window = originalWindow;
-    }
-  });
-
-  it('2.4 triggerGoogleLogin rejects cleanly when client ID is missing without throwing uncaught exceptions', async () => {
-    await assert.rejects(
-      async () => {
-        await triggerGoogleLogin();
-      },
-      (err) => {
-        assert.ok(err instanceof Error);
-        assert.ok(err.message.includes('Google Authentication is not configured'));
-        return true;
-      }
-    );
-  });
-
-  it('2.5 fetchGoogleUserProfile rejects when access token is missing or empty', async () => {
-    const badTokens = ['', null, undefined];
-    for (const token of badTokens) {
-      await assert.rejects(
-        async () => {
-          await fetchGoogleUserProfile(token);
-        },
-        (err) => {
-          assert.ok(err instanceof Error);
-          assert.ok(err.message.includes('Access token is missing'));
-          return true;
-        }
-      );
-    }
-  });
-
-  it('2.6 fetchGoogleUserProfile handles HTTP 401 unauthorized gracefully without mock fallback', async () => {
-    const originalFetch = global.fetch;
-    try {
-      global.fetch = async () => ({
-        ok: false,
-        status: 401,
-        statusText: 'Unauthorized'
-      });
-
-      await assert.rejects(
-        async () => {
-          await fetchGoogleUserProfile('invalid_access_token_12345');
-        },
-        (err) => {
-          assert.ok(err instanceof Error);
-          assert.ok(err.message.includes('HTTP 401'));
-          return true;
-        }
-      );
-    } finally {
-      global.fetch = originalFetch;
-    }
-  });
-
-  it('2.7 fetchGoogleUserProfile parses full user profile and falls back gracefully when name parts are missing', async () => {
-    const originalFetch = global.fetch;
-    try {
-      global.fetch = async () => ({
-        ok: true,
-        json: async () => ({
-          sub: 'sub_12345678',
-          given_name: 'Anjali',
-          family_name: 'Devi',
-          email: 'anjali.devi@rural.in',
-          picture: 'https://lh3.googleusercontent.com/anjali.jpg',
-          email_verified: true
-        })
-      });
-
-      const profile = await fetchGoogleUserProfile('mock_valid_token');
-      assert.strictEqual(profile.id, 'sub_12345678');
-      assert.strictEqual(profile.name, 'Anjali Devi');
-      assert.strictEqual(profile.email, 'anjali.devi@rural.in');
-      assert.strictEqual(profile.avatar, 'https://lh3.googleusercontent.com/anjali.jpg');
-      assert.strictEqual(profile.verified, true);
-      assert.strictEqual(profile.authProvider, 'google');
-    } finally {
-      global.fetch = originalFetch;
-    }
-  });
 });
 
 describe('CHALLENGER ADVERSARIAL SUITE — 3. Codebase Static Leakage Audit', () => {
@@ -409,7 +197,7 @@ describe('CHALLENGER ADVERSARIAL SUITE — 4. Dashboard SSR Rendering & Dynamic 
 
   it('4.3 SetoDashboard renders dynamic authenticated user profile completely across all views', () => {
     const testUser = {
-      id: 'UP-GOOG-889900',
+      id: 'UP-USER-889900',
       name: 'Sunita Devi',
       category: 'Scheduled Caste (SC)',
       district: 'Sitapur District, UP',
@@ -426,7 +214,7 @@ describe('CHALLENGER ADVERSARIAL SUITE — 4. Dashboard SSR Rendering & Dynamic 
     // Beneficiary cards must display full name: "Sunita Devi"
     assert.ok(html.includes('Sunita Devi'), 'Expected "Sunita Devi" in user card');
     // Statutory certificate ID
-    assert.ok(html.includes('UP-GOOG-889900'), 'Expected dynamic user ID');
+    assert.ok(html.includes('UP-USER-889900'), 'Expected dynamic user ID');
     assert.strictEqual(/ramesh/i.test(html), false, 'Must not contain Ramesh');
   });
 

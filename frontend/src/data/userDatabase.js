@@ -95,47 +95,8 @@ export function authenticateByCredentials(phone, pin) {
   return { success: true, user };
 }
 
-export function authenticateByGoogle(googleProfile = null) {
-  if (!googleProfile || !googleProfile.email) {
-    return { success: false, error: 'No Google profile credentials provided.' };
-  }
-
-  const profile = googleProfile;
-  const users = getAllUsers();
-  let user = getUserByEmail(profile.email);
-
-  if (!user) {
-    // Auto-register genuine Google authenticated user. Google tells us nothing about caste,
-    // district or income, so none is filled in; the loan screen asks for them.
-    user = {
-      // No "UP-" prefix: it implied every user is in Uttar Pradesh (review, 11 Nov 2026).
-      id: `GOOG-${Math.floor(100000 + Math.random() * 900000)}`,
-      name: profile.name || 'Google Beneficiary',
-      email: profile.email,
-      avatar: profile.avatar || null,
-      phone: profile.phone || '',
-      category: null,
-      trade: 'Rural Enterprise',
-      authProvider: 'google',
-      createdAt: new Date().toISOString()
-    };
-    users.push(user);
-    persistUsers(users);
-  } else {
-    // Update existing user with Google provider flag, avatar and name. A name the user changed
-    // in My account (nameSetByUser) is kept (review finding, owner's ruling 12 Nov 2026).
-    // The stored copy in the list is updated, so the list and the session stay the same.
-    const stored = users.find((u) => u.id === user.id);
-    stored.authProvider = 'google';
-    if (profile.avatar) stored.avatar = profile.avatar;
-    if (profile.name && !stored.nameSetByUser) stored.name = profile.name;
-    user = stored;
-    persistUsers(users);
-  }
-
-  saveSession(user);
-  return { success: true, user };
-}
+// Google sign-in was removed on 12 Nov 2026 (owner: "no need for it"); it never had a real
+// client ID, so no Google account was ever created. Sign-in is mobile number + 4-digit PIN only.
 
 export function registerUser({ name, phone, pin, trade, category, email }) {
   if (!phone || !phone.trim()) {
@@ -223,7 +184,7 @@ export function updateUser(id, changes = {}) {
   if ('name' in changes) {
     const name = String(changes.name ?? '').trim();
     if (!name) return { success: false, error: 'Please enter your name.' };
-    if (name !== user.name) next.nameSetByUser = true; // a later Google sign-in keeps it
+    if (name !== user.name) next.nameSetByUser = true; // no longer read (it guarded Google sign-in); kept so saved accounts stay consistent
     next.name = name;
   }
   if ('category' in changes) {
@@ -251,12 +212,12 @@ export function updateUser(id, changes = {}) {
   return { success: true, user: next };
 }
 
-/** Change the 4-digit PIN. Needs the current PIN. Google accounts have no PIN. */
+/** Change the 4-digit PIN. Needs the current PIN. An account without a PIN is refused. */
 export function changePin(id, currentPin, newPin) {
   const user = getAllUsers().find((u) => u.id === id);
   if (!user) return { success: false, error: 'Account not found. Please sign in again.' };
-  if (user.authProvider === 'google' || !user.pin) {
-    return { success: false, error: 'This account signs in with Google and has no PIN.' };
+  if (!user.pin) {
+    return { success: false, error: 'This account has no PIN.' };
   }
   if (String(currentPin ?? '').trim() !== user.pin) return { success: false, error: 'The current PIN is not right.' };
   const pin = String(newPin ?? '').trim();

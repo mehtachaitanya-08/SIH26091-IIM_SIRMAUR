@@ -4,7 +4,7 @@ import { updateUser, changePin, CATEGORY_SC, CATEGORY_NOT_SC } from '../../data/
 /**
  * AccountPanel — "My account" (Stage A)
  * The user's own answers about themselves (self-declared, checked by nobody): name, SC, yearly
- * family income and district. Change PIN (needs the current PIN; hidden for Google accounts).
+ * family income and district. Change PIN (needs the current PIN; hidden for an account with none).
  * Sign out. Saved in this browser only (userDatabase.js).
  */
 const box = 'w-full bg-white border border-[#E9ECEF] rounded-xl p-2 text-xs font-semibold focus:outline-none font-sans-ui';
@@ -21,7 +21,7 @@ export default function AccountPanel({ currentUser, onSaved, onSignOut, onClose 
   const [pinNew, setPinNew] = useState('');
   const [pinMessage, setPinMessage] = useState(null);
   if (!currentUser) return null;
-  const hasPin = currentUser.authProvider !== 'google' && Boolean(currentUser.pin);
+  const hasPin = Boolean(currentUser.pin);
 
   const save = (e) => {
     e.preventDefault();

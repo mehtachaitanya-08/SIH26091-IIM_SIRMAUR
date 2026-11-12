@@ -6,7 +6,7 @@ import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   registerUser, updateUser, changePin, getCurrentSession, getUserByPhone, authenticateByCredentials,
-  CATEGORY_SC, authenticateByGoogle
+  CATEGORY_SC, getAllUsers
 } from '../src/data/userDatabase.js';
 
 let phone;
@@ -77,26 +77,17 @@ describe('changePin', () => {
   });
 
   it('an unknown account is refused', () => {
-    assert.equal(changePin('GOOG-NOPE', '', '1234').success, false);
+    assert.equal(changePin('NO-SUCH-ID', '', '1234').success, false);
   });
 
-  it('a real Google account (no PIN) is refused, with the Google reason', () => {
-    const g = authenticateByGoogle({ email: `g${n}@example.org`, name: 'Google Name' }).user;
-    const r = changePin(g.id, '', '1234');
+  // Replaces the Google-account test removed with Google sign-in (12 Nov 2026): the "no PIN" rule
+  // in changePin had no other test. Without a browser, getAllUsers() hands back the in-memory list.
+  it('a saved account with no PIN is refused, and gets no PIN', () => {
+    const id = `NOPIN-${n}`;
+    getAllUsers().push({ id, name: 'No PIN', phone: '', authProvider: 'local' });
+    const r = changePin(id, '', '1234');
     assert.equal(r.success, false);
-    assert.match(r.error, /Google/);
-  });
-});
-
-describe('Google sign-in keeps a name changed in My account (review finding, 12 Nov 2026)', () => {
-  it('Google\'s name is used until the user changes it in My account; then the user\'s own name is kept', () => {
-    const email = `keep${n}@example.org`;
-    const g = authenticateByGoogle({ email, name: 'Google Name' }).user;
-    assert.equal(g.name, 'Google Name');
-    assert.equal(authenticateByGoogle({ email, name: 'Google Name 2' }).user.name, 'Google Name 2');
-    assert.equal(updateUser(g.id, { name: 'My Own Name' }).success, true);
-    const again = authenticateByGoogle({ email, name: 'Google Name' }).user;
-    assert.equal(again.name, 'My Own Name');
-    assert.equal(getCurrentSession().name, 'My Own Name');
+    assert.match(r.error, /no PIN/);
+    assert.equal(getAllUsers().find((u) => u.id === id).pin, undefined);
   });
 });

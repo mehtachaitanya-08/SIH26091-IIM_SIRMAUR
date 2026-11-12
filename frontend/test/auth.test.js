@@ -1,5 +1,5 @@
 /**
- * Unit & Behavioral Verification Test Suite for Production Google Auth & User Database
+ * Unit & Behavioral Verification Test Suite for the User Database (mobile number + PIN sign-in)
  * Confirms complete elimination of mock data and verifies genuine state & error flows.
  */
 
@@ -11,20 +11,11 @@ import {
   getUserByPhone,
   getUserByEmail,
   authenticateByCredentials,
-  authenticateByGoogle,
   registerUser,
   getCurrentSession,
   saveSession,
   clearSession
 } from '../src/data/userDatabase.js';
-
-import {
-  getGoogleClientId,
-  isGoogleAuthAvailable,
-  initGoogleAuth,
-  triggerGoogleLogin,
-  fetchGoogleUserProfile
-} from '../src/services/googleAuth.js';
 
 describe('1. Pure User Database & Demo Elimination', () => {
   beforeEach(() => {
@@ -92,62 +83,5 @@ describe('1. Pure User Database & Demo Elimination', () => {
     });
     assert.strictEqual(dupRes.success, false);
     assert.ok(dupRes.error.includes('already registered'));
-  });
-
-  it('authenticateByGoogle rejects null or missing profile credentials without fake fallback', () => {
-    const resNull = authenticateByGoogle(null);
-    assert.strictEqual(resNull.success, false);
-    assert.ok(resNull.error.includes('No Google profile credentials provided'));
-
-    const resEmpty = authenticateByGoogle({});
-    assert.strictEqual(resEmpty.success, false);
-    assert.ok(resEmpty.error.includes('No Google profile credentials provided'));
-  });
-
-  it('authenticateByGoogle authenticates genuine Google profile and creates real account', () => {
-    const genuineGoogleProfile = {
-      sub: 'google_uid_987654321',
-      name: 'Amit Kumar',
-      email: 'amit.kumar.rural@gmail.com',
-      avatar: 'https://lh3.googleusercontent.com/photo_amit.jpg'
-    };
-
-    const res = authenticateByGoogle(genuineGoogleProfile);
-    assert.strictEqual(res.success, true);
-    assert.strictEqual(res.user.name, 'Amit Kumar');
-    assert.strictEqual(res.user.email, 'amit.kumar.rural@gmail.com');
-    assert.strictEqual(res.user.avatar, 'https://lh3.googleusercontent.com/photo_amit.jpg');
-    assert.strictEqual(res.user.authProvider, 'google');
-
-    const session = getCurrentSession();
-    assert.strictEqual(session.email, 'amit.kumar.rural@gmail.com');
-  });
-});
-
-describe('2. Google Identity Services (GIS) Service Architecture', () => {
-  it('isGoogleAuthAvailable returns false in Node/SSR environment', () => {
-    assert.strictEqual(isGoogleAuthAvailable(), false);
-  });
-
-  it('initGoogleAuth returns false when client ID is missing and invokes error callback', () => {
-    let capturedError = null;
-    const result = initGoogleAuth(
-      () => {},
-      (err) => { capturedError = err; },
-      '' // explicit empty client ID
-    );
-    assert.strictEqual(result, false);
-  });
-
-  it('triggerGoogleLogin rejects cleanly when client ID is unconfigured or placeholder', async () => {
-    await assert.rejects(
-      async () => {
-        await triggerGoogleLogin();
-      },
-      (err) => {
-        assert.ok(err instanceof Error);
-        return true;
-      }
-    );
   });
 });
