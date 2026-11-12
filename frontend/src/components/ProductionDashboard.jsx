@@ -23,7 +23,7 @@ import DashboardShell from './dashboard/DashboardShell';
 import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
 import ChatLauncher from './dashboard/ChatLauncher';
-import { chatNotice as noticeText } from '../services/chatText';
+import { chatNotice as noticeText, questionLanguage } from '../services/chatText';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
 
 // The sidebar lists only scenarios the user saved. It used to start with three made-up "recent"
@@ -403,7 +403,9 @@ export default function ProductionDashboard({
   };
 
   // Chat: the whole conversation goes to the server each time; the server keeps nothing.
-  const handleChatSend = async (overrideText = null) => {
+  // overrideLanguage: for the front-page question, sent in the same moment its language is chosen
+  // (a value saved with setChatLanguage is only seen after the next screen update).
+  const handleChatSend = async (overrideText = null, overrideLanguage = null) => {
     const text = (overrideText ?? commandInput).trim();
     if (!text || chatBusy) return;
     setCommandInput('');
@@ -414,7 +416,7 @@ export default function ProductionDashboard({
     try {
       // What the screen already shows goes with it, so the chat does not ask again (12 Nov 2026).
       const context = chatContext({ code: selectedDomainCode, businessPicked, projectCost, costChosen, familyIncome, isSc });
-      const res = await sendChat(msgs, chatLanguage, context);
+      const res = await sendChat(msgs, overrideLanguage ?? chatLanguage, context);
       if (res.offline) {
         setServerOffline(true);
         setChatMessages(chatMessages); // not answered: keep it out of the conversation, give it back in the box
@@ -462,7 +464,12 @@ export default function ProductionDashboard({
     initialSent.current = true;
     if (onInitialQuestionUsed) onInitialQuestionUsed();
     setChatOpen(true);  // the user asked on the front page: show the panel with the question in it
-    handleChatSend(initialQuestion);
+    // No language was picked in the panel yet: take it from the letters typed, show it on the panel's
+    // हि/EN switch, and keep it for follow-ups. It used to go with none, and an English question got a
+    // Hindi answer (owner's report, 12 Nov 2026).
+    const lang = questionLanguage(initialQuestion);
+    setChatLanguage(lang);
+    handleChatSend(initialQuestion, lang);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion]);
 

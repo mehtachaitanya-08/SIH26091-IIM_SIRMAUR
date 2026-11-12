@@ -1,7 +1,7 @@
 /** Stage A, chat panel: safe bold drawing, starter questions, notices per language, language sent to the server. */
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { boldParts, STARTERS, chatNotice, CHAT_UI } from '../src/services/chatText.js';
+import { boldParts, STARTERS, chatNotice, CHAT_UI, questionLanguage } from '../src/services/chatText.js';
 import { sendChat, chatContext } from '../src/services/api.js';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
@@ -127,5 +127,25 @@ describe('sendChat sends the context only when it has something in it', () => {
     await sendChat(msgs, 'en', {});
     assert.deepStrictEqual(bodies[0].context, { familyIncome: 150000 });
     assert.ok(!('context' in bodies[1]) && !('context' in bodies[2]));
+  });
+});
+
+
+// A question asked on the front page is sent before anyone picks हि/EN in the chat panel, so its
+// language comes from the letters typed (owner's decision, 12 Nov 2026: English letters get English,
+// whatever the site language; Hindi letters get Hindi).
+describe('questionLanguage: the language of a front-page question, from its letters', () => {
+  it('Hindi letters -> hi', () => {
+    assert.equal(questionLanguage('मुझे कितना लोन मिल सकता है?'), 'hi');
+  });
+  it('English letters -> en, Hinglish included', () => {
+    assert.equal(questionLanguage('How much loan can I get?'), 'en');
+    assert.equal(questionLanguage('mujhe loan chahiye'), 'en');
+  });
+  it('mixed text with any Hindi letters -> hi', () => {
+    assert.equal(questionLanguage('DPR रिपोर्ट kaise milegi?'), 'hi');
+  });
+  it('digits only, empty or missing text -> en', () => {
+    for (const t of ['140000', '', '   ', null, undefined]) assert.equal(questionLanguage(t), 'en');
   });
 });

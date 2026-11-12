@@ -67,3 +67,12 @@ export const CHAT_UI = {
   hi: { placeholder: 'अपना सवाल लिखें…', send: 'भेजें', close: 'बंद करें', starters: 'इनमें से कोई सवाल पूछें:', thinking: 'सोच रहा है' },
   en: { placeholder: 'Type your question…', send: 'Send', close: 'Close', starters: 'Try one of these:', thinking: 'Thinking' }
 };
+
+/**
+ * The language of a question asked on the front page, before anyone picks हि/EN in the chat panel:
+ * Hindi letters (Devanagari) -> 'hi', anything else -> 'en'. Owner's decision, 12 Nov 2026: English
+ * letters get English whatever the site language (Hinglish typed in English letters included).
+ */
+export function questionLanguage(text) {
+  return /[\u0900-\u097F]/.test(String(text ?? '')) ? 'hi' : 'en';
+}

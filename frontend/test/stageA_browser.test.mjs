@@ -78,4 +78,114 @@ describe('Stage A in the browser', { skip }, () => {
     assert.match(shown, /₹90,000/);       // the server's loan for ₹1,00,000 (90%) is still shown
     assert.doesNotMatch(shown, /1,25,000/); // not the late reply for ₹1,40,000
   });
+
+  // A question typed on the FRONT PAGE must reach the chat with a language (owner's report, 12 Nov
+  // 2026: an English question got a Hindi answer, because none was sent). /api/chat is answered by
+  // the browser with a fixed reply, so these cases never call the AI.
+  const REPLY = 'FAKE-REPLY-7731';
+  const FAKE = JSON.stringify({ status: 'ok', reply: REPLY, tool_results: [], guard: { replaced: false } });
+  const HINDI_PLACEHOLDER = 'UdyamSetuAI से पूछें';
+  // Waits for the n-th chat request, then 1 s more, so a late extra send would still be counted.
+  const waitForRequests = async (page, bodies, n) => {
+    for (let i = 0; i < 100 && bodies.length < n; i++) await page.waitForTimeout(100);
+    await page.waitForTimeout(1000);
+  };
+  const askBox = async (page, question) => {
+    const box = page.getByLabel('Ask UdyamSetuAI');
+    await box.fill(question);
+    await box.press('Enter');
+  };
+  const askOnFrontPage = async ({ question, hindiSite = false, signedIn = true }) => {
+    const page = await (await browser.newContext({ viewport: { width: 1400, height: 1000 } })).newPage();
+    const bodies = [];
+    await page.route('**/api/chat', async (route) => {
+      bodies.push(JSON.parse(route.request().postData()));
+      await route.fulfill({ status: 200, contentType: 'application/json', body: FAKE });
+    });
+    await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+    await page.evaluate(({ u, signedIn }) => {
+      localStorage.clear();
+      localStorage.setItem('udyamsetuai_users_db_v1', JSON.stringify([u]));
+      if (signedIn) localStorage.setItem('udyamsetuai_active_session_v1', JSON.stringify(u));
+    }, { u: user, signedIn });
+    await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+    if (hindiSite) {
+      await page.getByRole('button', { name: 'Toggle language between English and Hindi' }).first().click();
+      const placeholder = await page.getByLabel('Ask UdyamSetuAI').getAttribute('placeholder');
+      assert.ok(placeholder.startsWith(HINDI_PLACEHOLDER), `the site did not switch to Hindi (placeholder: ${placeholder})`);
+    }
+    await askBox(page, question);
+    if (!signedIn) {
+      await page.locator('input[type=tel]').fill(user.phone);
+      await page.locator('input[type=password]').fill(user.pin);
+      await page.locator('form:has(input[type=tel]) button[type=submit]').click();
+    }
+    await waitForRequests(page, bodies, 1);
+    return { page, bodies, panel: page.locator('section[role=dialog]') };
+  };
+  const sentOnce = (bodies, lang) => {
+    assert.equal(bodies.length, 1, `expected 1 chat request, got ${bodies.length}`);
+    assert.equal(bodies[0].language, lang, `sent: ${JSON.stringify({ language: bodies[0].language })}`);
+  };
+  const shownLanguage = async (panel) => {
+    await panel.getByText(REPLY, { exact: true }).first().waitFor();
+    return panel.locator('button[aria-pressed=true]').innerText();
+  };
+  const typeInPanel = async (panel, text) => {
+    await panel.locator('form input').fill(text);
+    await panel.locator('form button[type=submit]').click();
+  };
+
+  it('front page, English site, English question -> sent once, with "en"; the panel shows EN', async () => {
+    const { bodies, panel } = await askOnFrontPage({ question: 'How much loan can I get?' });
+    sentOnce(bodies, 'en');
+    assert.equal(bodies[0].messages.at(-1).content, 'How much loan can I get?');
+    assert.equal(await shownLanguage(panel), 'EN');
+  });
+
+  it('front page, Hindi site, Hindi question -> sent once, with "hi"', async () => {
+    const { bodies } = await askOnFrontPage({ question: 'मुझे कितना लोन मिल सकता है?', hindiSite: true });
+    sentOnce(bodies, 'hi');
+  });
+
+  it('front page, Hindi site, English letters -> sent once, with "en" (owner\'s decision)', async () => {
+    const { bodies } = await askOnFrontPage({ question: 'How much loan can I get?', hindiSite: true });
+    sentOnce(bodies, 'en');
+  });
+
+  it('a follow-up typed in the panel keeps the same language, and the panel shows it', async () => {
+    const { page, bodies, panel } = await askOnFrontPage({ question: 'मुझे कितना लोन मिल सकता है?' });
+    assert.equal(await shownLanguage(panel), 'हि');
+    await typeInPanel(panel, 'और बताइए');
+    await waitForRequests(page, bodies, 2);
+    assert.equal(bodies.length, 2, 'the follow-up was not sent (or sent twice)');
+    assert.equal(bodies[1].language, 'hi');
+  });
+
+  it('changing the panel switch after a front-page question: the next typed message uses the new choice', async () => {
+    const { page, bodies, panel } = await askOnFrontPage({ question: 'मुझे कितना लोन मिल सकता है?' });
+    assert.equal(await shownLanguage(panel), 'हि');
+    await panel.getByRole('button', { name: 'EN', exact: true }).click();
+    await typeInPanel(panel, 'tell me more');
+    await waitForRequests(page, bodies, 2);
+    assert.equal(bodies.length, 2);
+    assert.equal(bodies[1].language, 'en');
+  });
+
+  it('back to the front page, a second question in the other language: sent once, with its own language', async () => {
+    const { page, bodies, panel } = await askOnFrontPage({ question: 'How much loan can I get?' });
+    sentOnce(bodies, 'en');
+    await shownLanguage(panel);
+    await page.getByRole('button', { name: 'Landing Page' }).click();
+    await askBox(page, 'मुझे कितना लोन मिल सकता है?');
+    await waitForRequests(page, bodies, 2);
+    assert.equal(bodies.length, 2, `expected 2 chat requests in all, got ${bodies.length}`);
+    assert.equal(bodies[1].language, 'hi');
+    assert.equal(bodies[1].messages.at(-1).content, 'मुझे कितना लोन मिल सकता है?');
+  });
+
+  it('asked while signed out, then signed in -> sent once, with "en"', async () => {
+    const { bodies } = await askOnFrontPage({ question: 'How much loan can I get?', signedIn: false });
+    sentOnce(bodies, 'en');
+  });
 });
