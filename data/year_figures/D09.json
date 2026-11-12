@@ -1,0 +1,203 @@
+{
+ "code": "D09",
+ "kind": "one_month",
+ "source": "research_dossiers/D09_Spice_Grinding_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 675000,
+     "as_written": "₹6,75,000",
+     "line": 70,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 109,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 213,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 750000,
+    "as_written": "₹7,50,000",
+    "line": 87,
+    "unit": "INR",
+    "position": 0
+   },
+   "header_project_cost": {
+    "value": 750000,
+    "as_written": "₹7,50,000",
+    "line": 70,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 75,
+     "item": "Water-Cooled Heavy Hammer Pulverizer",
+     "as_written": "₹1,45,000",
+     "value": 145000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 76,
+     "item": "Secondary Fine Pin Mill Grinder",
+     "as_written": "₹55,000",
+     "value": 55000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 77,
+     "item": "Rotary Gyro Screen Separator",
+     "as_written": "₹48,000",
+     "value": 48000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 78,
+     "item": "Stainless Steel Ribbon Blender",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 79,
+     "item": "Semi-Automatic Auger Powder Filler",
+     "as_written": "₹85,000",
+     "value": 85000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 80,
+     "item": "Heavy Continuous Band Sealer & Coder",
+     "as_written": "₹26,000",
+     "value": 26000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 81,
+     "item": "Centralized Industrial Dust Cyclone",
+     "as_written": "₹38,000",
+     "value": 38000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 82,
+     "item": "Digital Weighing & Moisture Meter",
+     "as_written": "₹22,500",
+     "value": 22500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 83,
+     "item": "Civil Shed Renovation & Food-Grade Epoxy",
+     "as_written": "₹52,000",
+     "value": 52000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 84,
+     "item": "3-Phase LT 12 HP Power Setup",
+     "as_written": "₹24,000",
+     "value": 24000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 85,
+     "item": "Pre-operative Compliance & Brand Design",
+     "as_written": "₹11,500",
+     "value": 11500,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 86,
+     "item": "Initial Working Capital / Rotating Stock",
+     "as_written": "₹1,75,000",
+     "value": 175000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 1
+    }
+   ],
+   "break_even_pct": {
+    "value": 16.6,
+    "as_written": "16.6%",
+    "line": 163,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 628750,
+     "as_written": "₹6,28,750",
+     "line": 151,
+     "unit": "INR",
+     "position": 0,
+     "label": "monthly turnover"
+    },
+    "net_surplus": {
+     "value": 129850,
+     "as_written": "₹1,29,850",
+     "line": 155,
+     "unit": "INR",
+     "position": 2
+    },
+    "bank_interest": {
+     "value": 4500,
+     "as_written": "₹4,500",
+     "line": 109,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ]
+}

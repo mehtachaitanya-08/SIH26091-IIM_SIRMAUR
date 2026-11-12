@@ -1,0 +1,193 @@
+{
+ "code": "D04",
+ "kind": "one_month",
+ "source": "research_dossiers/D04_Seeds_Fertiliser_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 900000,
+     "as_written": "₹9,00,000",
+     "line": 72,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 110,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 202,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 1000000,
+    "as_written": "₹10,00,000",
+    "line": 88,
+    "unit": "INR",
+    "position": 0
+   },
+   "header_project_cost": {
+    "value": 1000000,
+    "as_written": "₹10,00,000",
+    "line": 72,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 77,
+     "item": "Industrial Digital Platform Weighing Scale",
+     "as_written": "₹18,500",
+     "value": 18500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 78,
+     "item": "Retail Counter Digital Scale",
+     "as_written": "₹4,500",
+     "value": 4500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 79,
+     "item": "Commercial Godown Storage Racking System",
+     "as_written": "₹72,000",
+     "value": 72000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 80,
+     "item": "HDPE Stackable Heavy Pallets",
+     "as_written": "₹25,000",
+     "value": 25000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 81,
+     "item": "Computer Hardware, PoS Terminal & Barcode Scanner",
+     "as_written": "₹42,000",
+     "value": 42000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 82,
+     "item": "DBT-Fertilizer Biometric PoS Terminal",
+     "as_written": "₹12,500",
+     "value": 12500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 83,
+     "item": "Solar Inverter Power Backup System",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 84,
+     "item": "Fire Safety & Spillage Containment System",
+     "as_written": "₹8,500",
+     "value": 8500,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 85,
+     "item": "Pre-operative Expenses & Compliance Deposits",
+     "as_written": "₹14,000",
+     "value": 14000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 1
+    },
+    {
+     "line": 86,
+     "item": "Commercial Godown Lease Advance & Civil Renovation",
+     "as_written": "₹35,000",
+     "value": 35000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 87,
+     "item": "Initial Stock / Working Capital Margin (Opening Inventory)",
+     "as_written": "₹7,00,000",
+     "value": 700000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 1
+    }
+   ],
+   "break_even_pct": {
+    "value": 35.6,
+    "as_written": "35.6%",
+    "line": 150,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 450000,
+     "as_written": "₹4,50,000",
+     "line": 134,
+     "unit": "INR",
+     "position": 0,
+     "label": "monthly turnover"
+    },
+    "net_surplus": {
+     "value": 8580,
+     "as_written": "₹8,580",
+     "line": 142,
+     "unit": "INR",
+     "position": 2
+    },
+    "bank_interest": {
+     "value": 6000,
+     "as_written": "₹6,000",
+     "line": 110,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ]
+}

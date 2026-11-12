@@ -1,0 +1,203 @@
+{
+ "code": "D10",
+ "kind": "one_month",
+ "source": "research_dossiers/D10_Horticultural_Dehydration_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 720000,
+     "as_written": "₹7,20,000",
+     "line": 71,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 110,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 208,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 800000,
+    "as_written": "₹8,00,000",
+    "line": 88,
+    "unit": "INR",
+    "position": 0
+   },
+   "header_project_cost": {
+    "value": 800000,
+    "as_written": "₹8,00,000",
+    "line": 71,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 76,
+     "item": "Commercial Solar Tunnel Dryer (1,000 sq.ft)",
+     "as_written": "₹2,20,000",
+     "value": 220000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 77,
+     "item": "Heat-Pump Auxiliary Drying Backup",
+     "as_written": "₹1,45,000",
+     "value": 145000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 78,
+     "item": "Motorized Stainless Steel Vegetable Slicer",
+     "as_written": "₹48,000",
+     "value": 48000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 6
+    },
+    {
+     "line": 79,
+     "item": "Stainless Steel Steam Blanching Kettle",
+     "as_written": "₹52,000",
+     "value": 52000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 80,
+     "item": "Industrial SS 304 Mesh Drying Trays",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 6
+    },
+    {
+     "line": 81,
+     "item": "Continuous Band Sealer & Nitrogen Flush",
+     "as_written": "₹32,000",
+     "value": 32000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 82,
+     "item": "Digital Halogen Moisture Analyzer",
+     "as_written": "₹28,000",
+     "value": 28000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 83,
+     "item": "Digital Industrial Platform Scales",
+     "as_written": "₹16,500",
+     "value": 16500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 84,
+     "item": "Civil Shed & Hygienic Concrete Flooring",
+     "as_written": "₹62,000",
+     "value": 62000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 85,
+     "item": "3-Phase LT 8 HP Commercial Connection",
+     "as_written": "₹19,500",
+     "value": 19500,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 86,
+     "item": "Pre-operative Compliance & Brand Design",
+     "as_written": "₹9,000",
+     "value": 9000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 87,
+     "item": "Initial Working Capital / Rotating Stock",
+     "as_written": "₹1,00,000",
+     "value": 100000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 3
+    }
+   ],
+   "break_even_pct": {
+    "value": 29.8,
+    "as_written": "29.8%",
+    "line": 158,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 348000,
+     "as_written": "₹3,48,000",
+     "line": 146,
+     "unit": "INR",
+     "position": 2,
+     "label": "monthly turnover"
+    },
+    "net_surplus": {
+     "value": 92900,
+     "as_written": "₹92,900",
+     "line": 150,
+     "unit": "INR",
+     "position": 3
+    },
+    "bank_interest": {
+     "value": 4800,
+     "as_written": "₹4,800",
+     "line": 110,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ]
+}

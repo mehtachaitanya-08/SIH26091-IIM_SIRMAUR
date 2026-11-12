@@ -1,0 +1,678 @@
+{
+ "code": "D13",
+ "kind": "three_years",
+ "source": "research_dossiers/D13_Commercial_Broiler_Poultry_Dossier.md",
+ "sizes": [
+  {
+   "tier": 0,
+   "label": "Model A: Micro Finance Tier",
+   "loan": {
+    "amount": {
+     "value": 125000,
+     "as_written": "₹1,25,000",
+     "line": 340,
+     "unit": "INR",
+     "position": 4
+    },
+    "rate_pct": {
+     "value": 6.5,
+     "as_written": "6.5%",
+     "line": 340,
+     "unit": "%",
+     "position": 5
+    },
+    "terms": {
+     "value": null,
+     "as_written": "3-month moratori",
+     "line": 75,
+     "unit": "text"
+    },
+    "moratorium_periods": 1,
+    "repayment_periods": 11,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 140000,
+    "as_written": "₹1,40,000",
+    "line": 87,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 79,
+     "item": "Low-Cost Deep Litter Shed",
+     "as_written": "₹53,200",
+     "value": 53200,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 9
+    },
+    {
+     "line": 80,
+     "item": "Radiant Brooding Equipment",
+     "as_written": "₹7,000",
+     "value": 7000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 9
+    },
+    {
+     "line": 81,
+     "item": "Feeding & Drinking Gear",
+     "as_written": "₹7,800",
+     "value": 7800,
+     "unit": "INR",
+     "group": "tools",
+     "counted": true,
+     "position": 8
+    },
+    {
+     "line": 82,
+     "item": "Water Tank & Side Curtains",
+     "as_written": "₹8,500",
+     "value": 8500,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 83,
+     "item": "Electrical Installation",
+     "as_written": "₹5,500",
+     "value": 5500,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 5
+    },
+    {
+     "line": 84,
+     "item": "Biosecurity & Disinfection Kit",
+     "as_written": "₹3,500",
+     "value": 3500,
+     "unit": "INR",
+     "group": "tools",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 85,
+     "item": "First-Batch Day-Old Chicks (DOC)",
+     "as_written": "₹16,200",
+     "value": 16200,
+     "unit": "INR",
+     "group": "first_batch_inputs",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 86,
+     "item": "Capitalized Working Capital Buffer",
+     "as_written": "₹38,300",
+     "value": 38300,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 11
+    }
+   ],
+   "break_even_pct": {
+    "value": 39.4,
+    "as_written": "39.4%",
+    "line": 440,
+    "unit": "%",
+    "position": 0
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 496370,
+      "as_written": "₹4,96,370",
+      "line": 345,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 127705,
+      "as_written": "₹1,27,705",
+      "line": 346,
+      "unit": "INR",
+      "position": 1
+     },
+     "debt": {
+      "value": 39535.27,
+      "as_written": "₹39,535.27",
+      "line": 347,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 3.23,
+      "as_written": "3.23",
+      "line": 348,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 595644,
+      "as_written": "₹5,95,644",
+      "line": 352,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 119286,
+      "as_written": "₹1,19,286",
+      "line": 353,
+      "unit": "INR",
+      "position": 3
+     },
+     "debt": {
+      "value": 50005.36,
+      "as_written": "₹50,005.36",
+      "line": 354,
+      "unit": "INR",
+      "position": 1
+     },
+     "dscr": {
+      "value": 2.39,
+      "as_written": "2.39",
+      "line": 355,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 595644,
+      "as_written": "₹5,95,644",
+      "line": 358,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 119286,
+      "as_written": "₹1,19,286",
+      "line": 359,
+      "unit": "INR",
+      "position": 1
+     },
+     "debt": {
+      "value": 50005.36,
+      "as_written": "₹50,005.36",
+      "line": 360,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 2.39,
+      "as_written": "2.39",
+      "line": 361,
+      "unit": "ratio",
+      "position": 1
+     }
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "label": "Model B: Intermediate Term Tier",
+   "loan": {
+    "amount": {
+     "value": 765000,
+     "as_written": "₹7,65,000",
+     "line": 367,
+     "unit": "INR",
+     "position": 4
+    },
+    "rate_pct": {
+     "value": 8.0,
+     "as_written": "8.0%",
+     "line": 367,
+     "unit": "%",
+     "position": 5
+    },
+    "terms": {
+     "value": null,
+     "as_written": "2 quarters interest-only moratorium",
+     "line": 95,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 850000,
+    "as_written": "₹8,50,000",
+    "line": 108,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 99,
+     "item": "Semi-Pucca Steel Truss Shed",
+     "as_written": "₹4,25,000",
+     "value": 425000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 9
+    },
+    {
+     "line": 100,
+     "item": "Automatic Nipple Drinking System",
+     "as_written": "₹55,000",
+     "value": 55000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 8
+    },
+    {
+     "line": 101,
+     "item": "Hanging Tube Feeders & Winch",
+     "as_written": "₹35,000",
+     "value": 35000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 6
+    },
+    {
+     "line": 102,
+     "item": "Brooding & Climate Control",
+     "as_written": "₹78,000",
+     "value": 78000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 9
+    },
+    {
+     "line": 103,
+     "item": "Water Storage & Treatment Setup",
+     "as_written": "₹48,000",
+     "value": 48000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 4
+    },
+    {
+     "line": 104,
+     "item": "Diesel Generator Power Backup",
+     "as_written": "₹62,000",
+     "value": 62000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 6
+    },
+    {
+     "line": 105,
+     "item": "Biosecurity, Scale & Disposal Pit",
+     "as_written": "₹28,000",
+     "value": 28000,
+     "unit": "INR",
+     "group": "tools",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 106,
+     "item": "Pre-Operative & SPCB Reg.",
+     "as_written": "₹12,000",
+     "value": 12000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 107,
+     "item": "Capitalized Working Capital Buffer",
+     "as_written": "₹1,07,000",
+     "value": 107000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 6
+    }
+   ],
+   "break_even_pct": {
+    "value": 70.0,
+    "as_written": "70.0%",
+    "line": 440,
+    "unit": "%",
+    "position": 1
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 288680,
+      "as_written": "₹2,88,680",
+      "line": 372,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 198680,
+      "as_written": "₹1,98,680",
+      "line": 374,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 106639.82,
+      "as_written": "₹1,06,639.82",
+      "line": 375,
+      "unit": "INR",
+      "position": 9
+     },
+     "dscr": {
+      "value": 1.86,
+      "as_written": "1.86",
+      "line": 376,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 346416,
+      "as_written": "₹3,46,416",
+      "line": 380,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 238416,
+      "as_written": "₹2,38,416",
+      "line": 381,
+      "unit": "INR",
+      "position": 3
+     },
+     "debt": {
+      "value": 152079.64,
+      "as_written": "₹1,52,079.64",
+      "line": 382,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 1.57,
+      "as_written": "1.57",
+      "line": 383,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 346416,
+      "as_written": "₹3,46,416",
+      "line": 386,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 238416,
+      "as_written": "₹2,38,416",
+      "line": 387,
+      "unit": "INR",
+      "position": 1
+     },
+     "debt": {
+      "value": 152079.64,
+      "as_written": "₹1,52,079.64",
+      "line": 388,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 1.57,
+      "as_written": "1.57",
+      "line": 389,
+      "unit": "ratio",
+      "position": 1
+     }
+    }
+   }
+  },
+  {
+   "tier": 2,
+   "label": "Model C: Commercial Scaled Tier",
+   "loan": {
+    "amount": {
+     "value": 1350000,
+     "as_written": "₹13,50,000",
+     "line": 396,
+     "unit": "INR",
+     "position": 4
+    },
+    "rate_pct": {
+     "value": 8.0,
+     "as_written": "8.0%",
+     "line": 396,
+     "unit": "%",
+     "position": 5
+    },
+    "terms": {
+     "value": null,
+     "as_written": "2 quarters interest-only m",
+     "line": 116,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 1500000,
+    "as_written": "₹15,00,000",
+    "line": 129,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 120,
+     "item": "Pre-Engineered Steel Shed",
+     "as_written": "₹8,60,000",
+     "value": 860000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 121,
+     "item": "Automated Pan Feeding Line",
+     "as_written": "₹1,85,000",
+     "value": 185000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 122,
+     "item": "Automated Nipple Drinking Line",
+     "as_written": "₹1,15,000",
+     "value": 115000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 6
+    },
+    {
+     "line": 123,
+     "item": "Climate Control & Exhaust Fans",
+     "as_written": "₹1,20,000",
+     "value": 120000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 9
+    },
+    {
+     "line": 124,
+     "item": "Water Sourcing & Filtration",
+     "as_written": "₹65,000",
+     "value": 65000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 4
+    },
+    {
+     "line": 125,
+     "item": "Diesel Generator Power Backup",
+     "as_written": "₹95,000",
+     "value": 95000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 126,
+     "item": "Biosecurity & Carcass Disposal",
+     "as_written": "₹32,000",
+     "value": 32000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 127,
+     "item": "Pre-Operative, Consent & Plan",
+     "as_written": "₹18,000",
+     "value": 18000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 128,
+     "item": "Capitalized Working Capital Buffer",
+     "as_written": "₹10,000",
+     "value": 10000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 5
+    }
+   ],
+   "break_even_pct": {
+    "value": 52.1,
+    "as_written": "52.1%",
+    "line": 440,
+    "unit": "%",
+    "position": 2
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 724200,
+      "as_written": "₹7,24,200",
+      "line": 401,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 474200,
+      "as_written": "₹4,74,200",
+      "line": 403,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 188187.92,
+      "as_written": "₹1,88,187.92",
+      "line": 404,
+      "unit": "INR",
+      "position": 9
+     },
+     "dscr": {
+      "value": 2.52,
+      "as_written": "2.52",
+      "line": 405,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 869040,
+      "as_written": "₹8,69,040",
+      "line": 409,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 569040,
+      "as_written": "₹5,69,040",
+      "line": 410,
+      "unit": "INR",
+      "position": 3
+     },
+     "debt": {
+      "value": 268375.84,
+      "as_written": "₹2,68,375.84",
+      "line": 411,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 2.12,
+      "as_written": "2.12",
+      "line": 412,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 869040,
+      "as_written": "₹8,69,040",
+      "line": 415,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 569040,
+      "as_written": "₹5,69,040",
+      "line": 416,
+      "unit": "INR",
+      "position": 1
+     },
+     "debt": {
+      "value": 268375.84,
+      "as_written": "₹2,68,375.84",
+      "line": 417,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 2.12,
+      "as_written": "2.12",
+      "line": 418,
+      "unit": "ratio",
+      "position": 1
+     }
+    }
+   }
+  }
+ ]
+}

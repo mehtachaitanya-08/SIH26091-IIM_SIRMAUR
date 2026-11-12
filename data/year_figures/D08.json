@@ -1,0 +1,203 @@
+{
+ "code": "D08",
+ "kind": "one_month",
+ "source": "research_dossiers/D08_Oil_Expellers_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 765000,
+     "as_written": "₹7,65,000",
+     "line": 71,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 110,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 207,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 850000,
+    "as_written": "₹8,50,000",
+    "line": 88,
+    "unit": "INR",
+    "position": 1
+   },
+   "header_project_cost": {
+    "value": 850000,
+    "as_written": "₹8,50,000",
+    "line": 71,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 76,
+     "item": "6-Bolt Commercial Oil Expeller",
+     "as_written": "₹1,65,000",
+     "value": 165000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 77,
+     "item": "Plate and Frame Oil Filter Press",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 78,
+     "item": "Vibratory Oilseed Destoner & Cleaner",
+     "as_written": "₹52,000",
+     "value": 52000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 79,
+     "item": "Stainless Steel Oil Storage Tanks",
+     "as_written": "₹46,000",
+     "value": 46000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 80,
+     "item": "Semi-Automatic Liquid Bottle / Pouch Filler",
+     "as_written": "₹38,000",
+     "value": 38000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 81,
+     "item": "Continuous Induction Bottle Cap Sealer",
+     "as_written": "₹18,500",
+     "value": 18500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 82,
+     "item": "Digital Platform & Precision Scales",
+     "as_written": "₹16,000",
+     "value": 16000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 83,
+     "item": "15 kVA Servo Voltage Stabilizer",
+     "as_written": "₹42,000",
+     "value": 42000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 84,
+     "item": "Civil Shed Construction & Oil Drainage",
+     "as_written": "₹72,000",
+     "value": 72000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 85,
+     "item": "3-Phase LT 15 HP Agro-Industrial Connection",
+     "as_written": "₹30,000",
+     "value": 30000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 4
+    },
+    {
+     "line": 86,
+     "item": "Pre-operative Compliance & Branding",
+     "as_written": "₹12,500",
+     "value": 12500,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 87,
+     "item": "Initial Working Capital / Rotating Stock",
+     "as_written": "₹2,90,000",
+     "value": 290000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 3
+    }
+   ],
+   "break_even_pct": {
+    "value": 22.1,
+    "as_written": "22.1%",
+    "line": 156,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 709400,
+     "as_written": "₹7,09,400",
+     "line": 143,
+     "unit": "INR",
+     "position": 2,
+     "label": "monthly oil and cake realisation, as printed"
+    },
+    "net_surplus": {
+     "value": 79150,
+     "as_written": "₹79,150",
+     "line": 148,
+     "unit": "INR",
+     "position": 2
+    },
+    "bank_interest": {
+     "value": 5100,
+     "as_written": "₹5,100",
+     "line": 110,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ]
+}

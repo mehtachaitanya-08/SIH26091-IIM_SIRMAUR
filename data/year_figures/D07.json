@@ -1,0 +1,204 @@
+{
+ "code": "D07",
+ "kind": "one_month",
+ "source": "research_dossiers/D07_Grain_Dal_Milling_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 765000,
+     "as_written": "₹7,65,000",
+     "line": 73,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 112,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 216,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 850000,
+    "as_written": "₹8,50,000",
+    "line": 90,
+    "unit": "INR",
+    "position": 0
+   },
+   "header_project_cost": {
+    "value": 850000,
+    "as_written": "₹8,50,000",
+    "line": 73,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 78,
+     "item": "Heavy Commercial Emery Atta Chakki",
+     "as_written": "₹52,000",
+     "value": 52000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 79,
+     "item": "Mini Dal Mill Processing Unit",
+     "as_written": "₹1,65,000",
+     "value": 165000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 80,
+     "item": "Grain Destoner-cum-Cleaner",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 81,
+     "item": "Pulse Conditioning / Pitting Unit",
+     "as_written": "₹22,000",
+     "value": 22000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 82,
+     "item": "Industrial Dust Cyclone & Ducting",
+     "as_written": "₹35,000",
+     "value": 35000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 83,
+     "item": "Continuous Band Sealer & Nitrogen Flush",
+     "as_written": "₹28,000",
+     "value": 28000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 84,
+     "item": "Digital Platform Scales",
+     "as_written": "₹18,500",
+     "value": 18500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 85,
+     "item": "Automatic Voltage Stabilizer",
+     "as_written": "₹42,000",
+     "value": 42000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 86,
+     "item": "Civil Shed Construction / Renovation",
+     "as_written": "₹85,000",
+     "value": 85000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 87,
+     "item": "3-Phase LT Agro-Industrial Power Setup",
+     "as_written": "₹32,000",
+     "value": 32000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 88,
+     "item": "Pre-operative Compliance & Branding",
+     "as_written": "₹12,500",
+     "value": 12500,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 89,
+     "item": "Initial Working Capital / Rotating Stock",
+     "as_written": "₹2,90,000",
+     "value": 290000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 2
+    }
+   ],
+   "break_even_pct": {
+    "value": 41.3,
+    "as_written": "41.3%",
+    "line": 165,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 191500,
+     "as_written": "₹1,91,500",
+     "line": 154,
+     "unit": "INR",
+     "position": 2,
+     "label": "monthly gross income (job work + merchant margin), as printed"
+    },
+    "net_surplus": {
+     "value": 119550,
+     "as_written": "₹1,19,550",
+     "line": 157,
+     "unit": "INR",
+     "position": 2
+    },
+    "bank_interest": {
+     "value": 5100,
+     "as_written": "₹5,100",
+     "line": 112,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ],
+ "no_turnover": true
+}

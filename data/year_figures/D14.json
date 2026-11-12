@@ -1,0 +1,501 @@
+{
+ "code": "D14",
+ "kind": "three_years",
+ "source": "research_dossiers/D14_Inland_Freshwater_Aquaculture_Dossier.md",
+ "sizes": [
+  {
+   "tier": 0,
+   "label": "Micro (0.1 ha)",
+   "loan": {
+    "amount": {
+     "value": 125000,
+     "as_written": "₹1,25,000",
+     "line": 75,
+     "unit": "INR",
+     "position": 7
+    },
+    "rate_pct": {
+     "value": 6.5,
+     "as_written": "6.5%",
+     "line": 75,
+     "unit": "%",
+     "position": 8
+    },
+    "terms": {
+     "value": null,
+     "as_written": "including 3-month moratorium",
+     "line": 75,
+     "unit": "text"
+    },
+    "moratorium_periods": 3,
+    "repayment_periods": 33,
+    "schedule": "monthly"
+   },
+   "capex_total": {
+    "value": 140000,
+    "as_written": "₹1,40,000",
+    "line": 89,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 80,
+     "item": "Leased Pond De-silting & Dyke Strengthening",
+     "as_written": "₹32,000",
+     "value": 32000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 8
+    },
+    {
+     "line": 81,
+     "item": "Pre-Stocking Water & Soil Conditioning",
+     "as_written": "₹3,000",
+     "value": 3000,
+     "unit": "INR",
+     "group": "first_batch_inputs",
+     "counted": false,
+     "position": 9
+    },
+    {
+     "line": 82,
+     "item": "Advanced IMC Fingerling Stock",
+     "as_written": "₹8,000",
+     "value": 8000,
+     "unit": "INR",
+     "group": "first_batch_inputs",
+     "counted": false,
+     "position": 12
+    },
+    {
+     "line": 83,
+     "item": "Floating Surface Splash Aerator",
+     "as_written": "₹28,000",
+     "value": 28000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 84,
+     "item": "Electrical Supply Line & Submersible Pump",
+     "as_written": "₹22,000",
+     "value": 22000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 85,
+     "item": "Biosecurity & Perimeter Protection",
+     "as_written": "₹21,000",
+     "value": 21000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 86,
+     "item": "Water Limnology Testing Kit",
+     "as_written": "₹4,500",
+     "value": 4500,
+     "unit": "INR",
+     "group": "tools",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 87,
+     "item": "Sampling & Harvesting Gear",
+     "as_written": "₹3,500",
+     "value": 3500,
+     "unit": "INR",
+     "group": "tools",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 88,
+     "item": "Capitalized Working Capital Buffer",
+     "as_written": "₹18,000",
+     "value": 18000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 7
+    }
+   ],
+   "break_even_pct": {
+    "value": 58.98,
+    "as_written": "58.98",
+    "line": 412,
+    "unit": "%",
+    "position": 2
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 152250,
+      "as_written": "₹1,52,250",
+      "line": 353,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 80250,
+      "as_written": "₹80,250",
+      "line": 356,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 30880,
+      "as_written": "₹30,880",
+      "line": 358,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 2.6,
+      "as_written": "2.60",
+      "line": 360,
+      "unit": "ratio",
+      "position": 0
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 163500,
+      "as_written": "₹1,63,500",
+      "line": 353,
+      "unit": "INR",
+      "position": 1
+     },
+     "surplus": {
+      "value": 87492,
+      "as_written": "₹87,492",
+      "line": 356,
+      "unit": "INR",
+      "position": 1
+     },
+     "debt": {
+      "value": 49761,
+      "as_written": "₹49,761",
+      "line": 358,
+      "unit": "INR",
+      "position": 1
+     },
+     "dscr": {
+      "value": 1.76,
+      "as_written": "1.76",
+      "line": 360,
+      "unit": "ratio",
+      "position": 1
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 172900,
+      "as_written": "₹1,72,900",
+      "line": 353,
+      "unit": "INR",
+      "position": 2
+     },
+     "surplus": {
+      "value": 94400,
+      "as_written": "₹94,400",
+      "line": 356,
+      "unit": "INR",
+      "position": 2
+     },
+     "debt": {
+      "value": 49761,
+      "as_written": "₹49,761",
+      "line": 358,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 1.9,
+      "as_written": "1.90",
+      "line": 360,
+      "unit": "ratio",
+      "position": 2
+     }
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "label": "Commercial Term (1.0 ha)",
+   "loan": {
+    "amount": {
+     "value": 945000,
+     "as_written": "₹9,45,000",
+     "line": 97,
+     "unit": "INR",
+     "position": 7
+    },
+    "rate_pct": {
+     "value": 8.0,
+     "as_written": "8.0%",
+     "line": 97,
+     "unit": "%",
+     "position": 8
+    },
+    "terms": {
+     "value": null,
+     "as_written": "28 quarters, including 6-month moratorium",
+     "line": 97,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 1050000,
+    "as_written": "₹10,50,000",
+    "line": 115,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 102,
+     "item": "Earthwork Excavation & Dyke Compaction",
+     "as_written": "₹3,50,000",
+     "value": 350000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 103,
+     "item": "Masonry Sluice Inlet & Outlet Gates",
+     "as_written": "₹50,000",
+     "value": 50000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 5
+    },
+    {
+     "line": 104,
+     "item": "Deep Tube Well Drilling & Casing",
+     "as_written": "₹1,10,000",
+     "value": 110000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 105,
+     "item": "5 HP Submersible Pumping Machinery",
+     "as_written": "₹1,25,000",
+     "value": 125000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 9
+    },
+    {
+     "line": 106,
+     "item": "Nocturnal Paddle-Wheel Aerator System",
+     "as_written": "₹90,000",
+     "value": 90000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 8
+    },
+    {
+     "line": 107,
+     "item": "Farm Perimeter Biosecurity Netting",
+     "as_written": "₹40,000",
+     "value": 40000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 5
+    },
+    {
+     "line": 108,
+     "item": "Automated Solar Demand Feeders",
+     "as_written": "₹32,000",
+     "value": 32000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 8
+    },
+    {
+     "line": 109,
+     "item": "Digital Limnology Testing & Lab Probe",
+     "as_written": "₹16,000",
+     "value": 16000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 110,
+     "item": "Farm Store & Watchman Cabin",
+     "as_written": "₹55,000",
+     "value": 55000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 4
+    },
+    {
+     "line": 111,
+     "item": "Drag Netting & Live Handling Gear",
+     "as_written": "₹22,000",
+     "value": 22000,
+     "unit": "INR",
+     "group": "tools",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 112,
+     "item": "Pre-Stocking Basal Liming & Manure",
+     "as_written": "₹20,000",
+     "value": 20000,
+     "unit": "INR",
+     "group": "first_batch_inputs",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 113,
+     "item": "Quality Certified IMC Fingerlings",
+     "as_written": "₹45,000",
+     "value": 45000,
+     "unit": "INR",
+     "group": "first_batch_inputs",
+     "counted": false,
+     "position": 11
+    },
+    {
+     "line": 114,
+     "item": "Capitalized Working Capital Feed Buffer",
+     "as_written": "₹95,000",
+     "value": 95000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 8
+    }
+   ],
+   "break_even_pct": {
+    "value": 79.12,
+    "as_written": "79.12",
+    "line": 436,
+    "unit": "%",
+    "position": 2
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 790000,
+      "as_written": "₹7,90,000",
+      "line": 368,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 265000,
+      "as_written": "₹2,65,000",
+      "line": 371,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 113932,
+      "as_written": "₹1,13,932",
+      "line": 373,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 2.33,
+      "as_written": "2.33",
+      "line": 375,
+      "unit": "ratio",
+      "position": 0
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 875000,
+      "as_written": "₹8,75,000",
+      "line": 368,
+      "unit": "INR",
+      "position": 1
+     },
+     "surplus": {
+      "value": 312883,
+      "as_written": "₹3,12,883",
+      "line": 371,
+      "unit": "INR",
+      "position": 1
+     },
+     "debt": {
+      "value": 187863,
+      "as_written": "₹1,87,863",
+      "line": 373,
+      "unit": "INR",
+      "position": 1
+     },
+     "dscr": {
+      "value": 1.67,
+      "as_written": "1.67",
+      "line": 375,
+      "unit": "ratio",
+      "position": 1
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 923000,
+      "as_written": "₹9,23,000",
+      "line": 368,
+      "unit": "INR",
+      "position": 2
+     },
+     "surplus": {
+      "value": 343000,
+      "as_written": "₹3,43,000",
+      "line": 371,
+      "unit": "INR",
+      "position": 2
+     },
+     "debt": {
+      "value": 187863,
+      "as_written": "₹1,87,863",
+      "line": 373,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 1.83,
+      "as_written": "1.83",
+      "line": 375,
+      "unit": "ratio",
+      "position": 2
+     }
+    }
+   }
+  }
+ ]
+}

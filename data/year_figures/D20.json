@@ -1,0 +1,263 @@
+{
+ "code": "D20",
+ "kind": "government_profile",
+ "title": "UP MSME project profile: Grills and Gates (one full-capacity year)",
+ "rows": {
+  "gross_sale": [
+   {
+    "value": 26663000,
+    "as_written": "266.63",
+    "file": "D20/UP_MSME_Grills_Gates.pdf",
+    "page": 8,
+    "row": "Excluding 10% wastage (In Lacs)",
+    "values_as_written": [
+     "266.63"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "total_cost_of_production": [
+   {
+    "value": 23808000,
+    "as_written": "238.08",
+    "file": "D20/UP_MSME_Grills_Gates.pdf",
+    "page": 7,
+    "row": "TOTAL COST OF PRODUCTION (in Lacs)",
+    "values_as_written": [
+     "238.08"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "depreciation_plant": [
+   {
+    "value": 53000,
+    "as_written": "0.53",
+    "file": "D20/UP_MSME_Grills_Gates.pdf",
+    "page": 7,
+    "row": "2 Depreciation on Plant and Machinery @ 15%",
+    "values_as_written": [
+     "0.53"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "depreciation_furniture": [
+   {
+    "value": 5000,
+    "as_written": "0.05",
+    "file": "D20/UP_MSME_Grills_Gates.pdf",
+    "page": 7,
+    "row": "3 Depreciation of Furniture/Fixture & Office Equipment @ 10 %",
+    "values_as_written": [
+     "0.05"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "finance_cost": [
+   {
+    "value": 392000,
+    "as_written": "3.92",
+    "file": "D20/UP_MSME_Grills_Gates.pdf",
+    "page": 7,
+    "row": "4 Finance Cost",
+    "values_as_written": [
+     "3.92"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "net_profit": [
+   {
+    "value": 2857000,
+    "as_written": "28.57",
+    "file": "D20/UP_MSME_Grills_Gates.pdf",
+    "page": 8,
+    "row": "PROFIT Cost of Production ‐ Turnover (In Lacs)",
+    "values_as_written": [
+     "28.57"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ]
+ },
+ "term_loan": {
+  "value": 346000,
+  "as_written": "3.46",
+  "file": "D20/UP_MSME_Grills_Gates.pdf",
+  "page": 6,
+  "row": "2 Term Loan",
+  "values_as_written": [
+   "3.46"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh"
+ },
+ "capital_cost": {
+  "value": 4384000,
+  "as_written": "43.84",
+  "file": "D20/UP_MSME_Grills_Gates.pdf",
+  "page": 5,
+  "row": "Margin for Working Capital 38.93 9.73 29.20 Total",
+  "values_as_written": [
+   "43.84",
+   "11.19",
+   "32.66"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh"
+ },
+ "break_even_pct": null,
+ "break_even_split": {
+  "sales": {
+   "value": 26663000,
+   "as_written": "266.63",
+   "file": "D20/UP_MSME_Grills_Gates.pdf",
+   "page": 8,
+   "row": "Excluding 10% wastage (In Lacs)",
+   "values_as_written": [
+    "266.63"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "stock_build_up": null,
+  "fixed": [
+   {
+    "label": "Salary and wages (one printed line)",
+    "fig": {
+     "value": 840000,
+     "as_written": "8,40,000.00",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 6,
+     "row": "1 Salary and Wages",
+     "values_as_written": [
+      "8,40,000.00"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "rupees"
+    }
+   },
+   {
+    "label": "Selling & admin",
+    "fig": {
+     "value": 535250,
+     "as_written": "5,35,250.00",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 6,
+     "row": "4 Other selling and administrative Expenses",
+     "values_as_written": [
+      "5,35,250.00"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "rupees"
+    }
+   },
+   {
+    "label": "Depreciation, plant",
+    "fig": {
+     "value": 53000,
+     "as_written": "0.53",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 7,
+     "row": "2 Depreciation on Plant and Machinery @ 15%",
+     "values_as_written": [
+      "0.53"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Depreciation, furniture",
+    "fig": {
+     "value": 5000,
+     "as_written": "0.05",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 7,
+     "row": "3 Depreciation of Furniture/Fixture & Office Equipment @ 10 %",
+     "values_as_written": [
+      "0.05"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Finance cost",
+    "fig": {
+     "value": 392000,
+     "as_written": "3.92",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 7,
+     "row": "4 Finance Cost",
+     "values_as_written": [
+      "3.92"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "variable": [
+   {
+    "label": "Raw material",
+    "fig": {
+     "value": 21775000,
+     "as_written": "2,17,75,000.00",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 6,
+     "row": "2 Raw Material",
+     "values_as_written": [
+      "2,17,75,000.00"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "rupees"
+    }
+   },
+   {
+    "label": "Utilities",
+    "fig": {
+     "value": 207770,
+     "as_written": "2,07,770.00",
+     "file": "D20/UP_MSME_Grills_Gates.pdf",
+     "page": 6,
+     "row": "3 Utilities",
+     "values_as_written": [
+      "2,07,770.00"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "rupees"
+    }
+   }
+  ],
+  "tag": "ASSUMED: owner's choice: fixed = salary, rent, selling & admin, interest, depreciation; variable = raw material, power, consumables, repair, labour wages",
+  "note": "the profile prints salary and wages as one line; counted as fixed"
+ },
+ "dscr_printed": null,
+ "repayment": null,
+ "repayment_reason": "repayment schedule not printed in the profile"
+}

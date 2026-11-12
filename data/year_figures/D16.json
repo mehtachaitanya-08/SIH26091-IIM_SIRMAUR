@@ -1,0 +1,981 @@
+{
+ "code": "D16",
+ "kind": "government_profile",
+ "title": "UP MSME project profile: Electrical Motor Winding Unit",
+ "rows": {
+  "gross_sale": [
+   {
+    "value": 2001000,
+    "as_written": "20.01",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "20.01",
+     "26.86",
+     "29.45",
+     "33.16",
+     "36.86"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 2686000,
+    "as_written": "26.86",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "20.01",
+     "26.86",
+     "29.45",
+     "33.16",
+     "36.86"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 2945000,
+    "as_written": "29.45",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "20.01",
+     "26.86",
+     "29.45",
+     "33.16",
+     "36.86"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 3316000,
+    "as_written": "33.16",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "20.01",
+     "26.86",
+     "29.45",
+     "33.16",
+     "36.86"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 3686000,
+    "as_written": "36.86",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "20.01",
+     "26.86",
+     "29.45",
+     "33.16",
+     "36.86"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "depreciation": [
+   {
+    "value": 59000,
+    "as_written": "0.59",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.59",
+     "0.54",
+     "0.48",
+     "0.42",
+     "0.37"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 54000,
+    "as_written": "0.54",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.59",
+     "0.54",
+     "0.48",
+     "0.42",
+     "0.37"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 48000,
+    "as_written": "0.48",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.59",
+     "0.54",
+     "0.48",
+     "0.42",
+     "0.37"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 42000,
+    "as_written": "0.42",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.59",
+     "0.54",
+     "0.48",
+     "0.42",
+     "0.37"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 37000,
+    "as_written": "0.37",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.59",
+     "0.54",
+     "0.48",
+     "0.42",
+     "0.37"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "interest_term_loan": [
+   {
+    "value": 45000,
+    "as_written": "0.45",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "D) Bank Interest (Term Loan )",
+    "values_as_written": [
+     "0.45",
+     "0.54",
+     "0.39",
+     "0.24",
+     "0.09"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 54000,
+    "as_written": "0.54",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "D) Bank Interest (Term Loan )",
+    "values_as_written": [
+     "0.45",
+     "0.54",
+     "0.39",
+     "0.24",
+     "0.09"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 39000,
+    "as_written": "0.39",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "D) Bank Interest (Term Loan )",
+    "values_as_written": [
+     "0.45",
+     "0.54",
+     "0.39",
+     "0.24",
+     "0.09"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 24000,
+    "as_written": "0.24",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "D) Bank Interest (Term Loan )",
+    "values_as_written": [
+     "0.45",
+     "0.54",
+     "0.39",
+     "0.24",
+     "0.09"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 9000,
+    "as_written": "0.09",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "D) Bank Interest (Term Loan )",
+    "values_as_written": [
+     "0.45",
+     "0.54",
+     "0.39",
+     "0.24",
+     "0.09"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "interest_working_capital": [
+   {
+    "value": 24000,
+    "as_written": "0.24",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Bank Interest ( C.C. Limit )",
+    "values_as_written": [
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 24000,
+    "as_written": "0.24",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Bank Interest ( C.C. Limit )",
+    "values_as_written": [
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 24000,
+    "as_written": "0.24",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Bank Interest ( C.C. Limit )",
+    "values_as_written": [
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 24000,
+    "as_written": "0.24",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Bank Interest ( C.C. Limit )",
+    "values_as_written": [
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 24000,
+    "as_written": "0.24",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "Bank Interest ( C.C. Limit )",
+    "values_as_written": [
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24",
+     "0.24"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "net_profit": [
+   {
+    "value": 436000,
+    "as_written": "4.36",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "4.36",
+     "5.87",
+     "7.17",
+     "8.57",
+     "9.91"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 587000,
+    "as_written": "5.87",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "4.36",
+     "5.87",
+     "7.17",
+     "8.57",
+     "9.91"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 717000,
+    "as_written": "7.17",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "4.36",
+     "5.87",
+     "7.17",
+     "8.57",
+     "9.91"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 857000,
+    "as_written": "8.57",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "4.36",
+     "5.87",
+     "7.17",
+     "8.57",
+     "9.91"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 991000,
+    "as_written": "9.91",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "4.36",
+     "5.87",
+     "7.17",
+     "8.57",
+     "9.91"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "tax": [
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "0.59",
+     "1.43",
+     "1.71",
+     "1.98"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 59000,
+    "as_written": "0.59",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "0.59",
+     "1.43",
+     "1.71",
+     "1.98"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 143000,
+    "as_written": "1.43",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "0.59",
+     "1.43",
+     "1.71",
+     "1.98"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 171000,
+    "as_written": "1.71",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "0.59",
+     "1.43",
+     "1.71",
+     "1.98"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 198000,
+    "as_written": "1.98",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "0.59",
+     "1.43",
+     "1.71",
+     "1.98"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "profit_after_tax": [
+   {
+    "value": 436000,
+    "as_written": "4.36",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "4.36",
+     "5.29",
+     "5.74",
+     "6.86",
+     "7.92"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 529000,
+    "as_written": "5.29",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "4.36",
+     "5.29",
+     "5.74",
+     "6.86",
+     "7.92"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 574000,
+    "as_written": "5.74",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "4.36",
+     "5.29",
+     "5.74",
+     "6.86",
+     "7.92"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 686000,
+    "as_written": "6.86",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "4.36",
+     "5.29",
+     "5.74",
+     "6.86",
+     "7.92"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 792000,
+    "as_written": "7.92",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 6,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "4.36",
+     "5.29",
+     "5.74",
+     "6.86",
+     "7.92"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "repayment": [
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 4,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "1.31",
+     "1.31",
+     "1.31",
+     "1.75"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 131000,
+    "as_written": "1.31",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 4,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "1.31",
+     "1.31",
+     "1.31",
+     "1.75"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 131000,
+    "as_written": "1.31",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 4,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "1.31",
+     "1.31",
+     "1.31",
+     "1.75"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 131000,
+    "as_written": "1.31",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 4,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "1.31",
+     "1.31",
+     "1.31",
+     "1.75"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 175000,
+    "as_written": "1.75",
+    "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+    "page": 4,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "1.31",
+     "1.31",
+     "1.31",
+     "1.75"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ]
+ },
+ "term_loan": {
+  "value": 523000,
+  "as_written": "5.23",
+  "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+  "page": 4,
+  "row": "Increase In Term Loan",
+  "values_as_written": [
+   "5.23",
+   "-",
+   "-",
+   "-",
+   "-"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh"
+ },
+ "capital_cost": {
+  "value": 531000,
+  "as_written": "5.31",
+  "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+  "page": 4,
+  "row": "Increase in Fixed Assets",
+  "values_as_written": [
+   "5.31",
+   "-",
+   "-",
+   "-",
+   "-"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh",
+  "note": "fixed assets only, as printed; working capital not included"
+ },
+ "break_even_pct": null,
+ "break_even_split": {
+  "sales": {
+   "value": 2001000,
+   "as_written": "20.01",
+   "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+   "page": 6,
+   "row": "Gross Sale",
+   "values_as_written": [
+    "20.01",
+    "26.86",
+    "29.45",
+    "33.16",
+    "36.86"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "stock_build_up": {
+   "value": 178000,
+   "as_written": "1.78",
+   "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+   "page": 6,
+   "row": "Less: Closing Stock /WIP",
+   "values_as_written": [
+    "1.78",
+    "1.04",
+    "1.19",
+    "1.33",
+    "1.48"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "fixed": [
+   {
+    "label": "Salary to staff",
+    "fig": {
+     "value": 158000,
+     "as_written": "1.58",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "E) Salary to Staff",
+     "values_as_written": [
+      "1.58",
+      "1.74",
+      "1.92",
+      "2.11",
+      "2.32"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Selling & admin",
+    "fig": {
+     "value": 40000,
+     "as_written": "0.40",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "F) Selling & Adm Expenses Exp.",
+     "values_as_written": [
+      "0.40",
+      "0.54",
+      "0.59",
+      "0.66",
+      "0.74"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Interest, term loan",
+    "fig": {
+     "value": 45000,
+     "as_written": "0.45",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "D) Bank Interest (Term Loan )",
+     "values_as_written": [
+      "0.45",
+      "0.54",
+      "0.39",
+      "0.24",
+      "0.09"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Interest, cash credit",
+    "fig": {
+     "value": 24000,
+     "as_written": "0.24",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Bank Interest ( C.C. Limit )",
+     "values_as_written": [
+      "0.24",
+      "0.24",
+      "0.24",
+      "0.24",
+      "0.24"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Depreciation",
+    "fig": {
+     "value": 59000,
+     "as_written": "0.59",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Depriciation",
+     "values_as_written": [
+      "0.59",
+      "0.54",
+      "0.48",
+      "0.42",
+      "0.37"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "variable": [
+   {
+    "label": "Raw material",
+    "fig": {
+     "value": 990000,
+     "as_written": "9.90",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Raw Mateiral Consumed",
+     "values_as_written": [
+      "9.90",
+      "11.55",
+      "13.20",
+      "14.85",
+      "16.50"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Electricity",
+    "fig": {
+     "value": 43000,
+     "as_written": "0.43",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Elecricity Expenses",
+     "values_as_written": [
+      "0.43",
+      "0.50",
+      "0.57",
+      "0.64",
+      "0.72"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Repair & maintenance",
+    "fig": {
+     "value": 0,
+     "as_written": "-",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Repair & Maintenance",
+     "values_as_written": [
+      "-",
+      "0.27",
+      "0.29",
+      "0.33",
+      "0.37"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Labour & wages",
+    "fig": {
+     "value": 343000,
+     "as_written": "3.43",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Labour & Wages",
+     "values_as_written": [
+      "3.43",
+      "3.78",
+      "4.15",
+      "4.57",
+      "5.02"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Consumables",
+    "fig": {
+     "value": 40000,
+     "as_written": "0.40",
+     "file": "D16/UP_MSME_Electrical_Motor_Winding_Unit.pdf",
+     "page": 6,
+     "row": "Consumables and Other Expense",
+     "values_as_written": [
+      "0.40",
+      "0.54",
+      "0.59",
+      "0.66",
+      "0.74"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "tag": "ASSUMED: owner's choice: fixed = salary, rent, selling & admin, interest, depreciation; variable = raw material, power, consumables, repair, labour wages"
+ },
+ "dscr_printed": null
+}

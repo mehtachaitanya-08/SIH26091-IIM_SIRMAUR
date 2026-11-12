@@ -1,0 +1,1043 @@
+{
+ "code": "D22",
+ "kind": "government_profile",
+ "title": "UP MSME project profile: Fly Ash Bricks",
+ "rows": {
+  "gross_sale": [
+   {
+    "value": 11016000,
+    "as_written": "110.16",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Gross Sale (Fly Ash Bricks)",
+    "values_as_written": [
+     "110.16",
+     "136.03",
+     "151.37",
+     "165.64",
+     "178.73",
+     "187.62"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 13603000,
+    "as_written": "136.03",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Gross Sale (Fly Ash Bricks)",
+    "values_as_written": [
+     "110.16",
+     "136.03",
+     "151.37",
+     "165.64",
+     "178.73",
+     "187.62"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 15137000,
+    "as_written": "151.37",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Gross Sale (Fly Ash Bricks)",
+    "values_as_written": [
+     "110.16",
+     "136.03",
+     "151.37",
+     "165.64",
+     "178.73",
+     "187.62"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 16564000,
+    "as_written": "165.64",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Gross Sale (Fly Ash Bricks)",
+    "values_as_written": [
+     "110.16",
+     "136.03",
+     "151.37",
+     "165.64",
+     "178.73",
+     "187.62"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 17873000,
+    "as_written": "178.73",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Gross Sale (Fly Ash Bricks)",
+    "values_as_written": [
+     "110.16",
+     "136.03",
+     "151.37",
+     "165.64",
+     "178.73",
+     "187.62"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "depreciation": [
+   {
+    "value": 413000,
+    "as_written": "4.13",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan 3.00 3.00 3.00 3.00 3.00 3.00 Depreciation",
+    "values_as_written": [
+     "4.13",
+     "3.55",
+     "3.06",
+     "2.64",
+     "2.27",
+     "1.96"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 355000,
+    "as_written": "3.55",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan 3.00 3.00 3.00 3.00 3.00 3.00 Depreciation",
+    "values_as_written": [
+     "4.13",
+     "3.55",
+     "3.06",
+     "2.64",
+     "2.27",
+     "1.96"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 306000,
+    "as_written": "3.06",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan 3.00 3.00 3.00 3.00 3.00 3.00 Depreciation",
+    "values_as_written": [
+     "4.13",
+     "3.55",
+     "3.06",
+     "2.64",
+     "2.27",
+     "1.96"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 264000,
+    "as_written": "2.64",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan 3.00 3.00 3.00 3.00 3.00 3.00 Depreciation",
+    "values_as_written": [
+     "4.13",
+     "3.55",
+     "3.06",
+     "2.64",
+     "2.27",
+     "1.96"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 227000,
+    "as_written": "2.27",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan 3.00 3.00 3.00 3.00 3.00 3.00 Depreciation",
+    "values_as_written": [
+     "4.13",
+     "3.55",
+     "3.06",
+     "2.64",
+     "2.27",
+     "1.96"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "interest_term_loan": [
+   {
+    "value": 234000,
+    "as_written": "2.34",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Term Loan",
+    "values_as_written": [
+     "2.34",
+     "1.95",
+     "1.48",
+     "1.01",
+     "0.53",
+     "0.09"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 195000,
+    "as_written": "1.95",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Term Loan",
+    "values_as_written": [
+     "2.34",
+     "1.95",
+     "1.48",
+     "1.01",
+     "0.53",
+     "0.09"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 148000,
+    "as_written": "1.48",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Term Loan",
+    "values_as_written": [
+     "2.34",
+     "1.95",
+     "1.48",
+     "1.01",
+     "0.53",
+     "0.09"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 101000,
+    "as_written": "1.01",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Term Loan",
+    "values_as_written": [
+     "2.34",
+     "1.95",
+     "1.48",
+     "1.01",
+     "0.53",
+     "0.09"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 53000,
+    "as_written": "0.53",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Term Loan",
+    "values_as_written": [
+     "2.34",
+     "1.95",
+     "1.48",
+     "1.01",
+     "0.53",
+     "0.09"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "interest_working_capital": [
+   {
+    "value": 300000,
+    "as_written": "3.00",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan",
+    "values_as_written": [
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 300000,
+    "as_written": "3.00",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan",
+    "values_as_written": [
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 300000,
+    "as_written": "3.00",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan",
+    "values_as_written": [
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 300000,
+    "as_written": "3.00",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan",
+    "values_as_written": [
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 300000,
+    "as_written": "3.00",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "Interest on Working Capital Loan",
+    "values_as_written": [
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00",
+     "3.00"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "net_profit": [
+   {
+    "value": 278000,
+    "as_written": "2.78",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "NET PROFIT (C-D)",
+    "values_as_written": [
+     "2.78",
+     "4.35",
+     "4.94",
+     "6.97",
+     "8.78",
+     "9.38"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 435000,
+    "as_written": "4.35",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "NET PROFIT (C-D)",
+    "values_as_written": [
+     "2.78",
+     "4.35",
+     "4.94",
+     "6.97",
+     "8.78",
+     "9.38"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 494000,
+    "as_written": "4.94",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "NET PROFIT (C-D)",
+    "values_as_written": [
+     "2.78",
+     "4.35",
+     "4.94",
+     "6.97",
+     "8.78",
+     "9.38"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 697000,
+    "as_written": "6.97",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "NET PROFIT (C-D)",
+    "values_as_written": [
+     "2.78",
+     "4.35",
+     "4.94",
+     "6.97",
+     "8.78",
+     "9.38"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 878000,
+    "as_written": "8.78",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "NET PROFIT (C-D)",
+    "values_as_written": [
+     "2.78",
+     "4.35",
+     "4.94",
+     "6.97",
+     "8.78",
+     "9.38"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "tax": [
+   {
+    "value": 56000,
+    "as_written": "0.56",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "LESS : TAXES",
+    "values_as_written": [
+     "0.56",
+     "0.87",
+     "0.99",
+     "1.39",
+     "1.76",
+     "1.88"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 87000,
+    "as_written": "0.87",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "LESS : TAXES",
+    "values_as_written": [
+     "0.56",
+     "0.87",
+     "0.99",
+     "1.39",
+     "1.76",
+     "1.88"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 99000,
+    "as_written": "0.99",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "LESS : TAXES",
+    "values_as_written": [
+     "0.56",
+     "0.87",
+     "0.99",
+     "1.39",
+     "1.76",
+     "1.88"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 139000,
+    "as_written": "1.39",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "LESS : TAXES",
+    "values_as_written": [
+     "0.56",
+     "0.87",
+     "0.99",
+     "1.39",
+     "1.76",
+     "1.88"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 176000,
+    "as_written": "1.76",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "LESS : TAXES",
+    "values_as_written": [
+     "0.56",
+     "0.87",
+     "0.99",
+     "1.39",
+     "1.76",
+     "1.88"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "profit_after_tax": [
+   {
+    "value": 222000,
+    "as_written": "2.22",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "PROFIT AFTER TAX",
+    "values_as_written": [
+     "2.22",
+     "3.48",
+     "3.95",
+     "5.58",
+     "7.02",
+     "7.50"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 348000,
+    "as_written": "3.48",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "PROFIT AFTER TAX",
+    "values_as_written": [
+     "2.22",
+     "3.48",
+     "3.95",
+     "5.58",
+     "7.02",
+     "7.50"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 395000,
+    "as_written": "3.95",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "PROFIT AFTER TAX",
+    "values_as_written": [
+     "2.22",
+     "3.48",
+     "3.95",
+     "5.58",
+     "7.02",
+     "7.50"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 558000,
+    "as_written": "5.58",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "PROFIT AFTER TAX",
+    "values_as_written": [
+     "2.22",
+     "3.48",
+     "3.95",
+     "5.58",
+     "7.02",
+     "7.50"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 702000,
+    "as_written": "7.02",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 5,
+    "row": "PROFIT AFTER TAX",
+    "values_as_written": [
+     "2.22",
+     "3.48",
+     "3.95",
+     "5.58",
+     "7.02",
+     "7.50"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "repayment": [
+   {
+    "value": 215000,
+    "as_written": "2.15",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 6,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "2.15",
+     "4.30",
+     "4.30",
+     "4.30",
+     "4.30",
+     "2.15"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 430000,
+    "as_written": "4.30",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 6,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "2.15",
+     "4.30",
+     "4.30",
+     "4.30",
+     "4.30",
+     "2.15"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 430000,
+    "as_written": "4.30",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 6,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "2.15",
+     "4.30",
+     "4.30",
+     "4.30",
+     "4.30",
+     "2.15"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 430000,
+    "as_written": "4.30",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 6,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "2.15",
+     "4.30",
+     "4.30",
+     "4.30",
+     "4.30",
+     "2.15"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 430000,
+    "as_written": "4.30",
+    "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+    "page": 6,
+    "row": "Repayment of Term Loan",
+    "values_as_written": [
+     "-",
+     "2.15",
+     "4.30",
+     "4.30",
+     "4.30",
+     "4.30",
+     "2.15"
+    ],
+    "index": 5,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ]
+ },
+ "term_loan": {
+  "value": 2150000,
+  "as_written": "21.50",
+  "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+  "page": 4,
+  "row": "Term Loan From Bank",
+  "values_as_written": [
+   "21.50",
+   "19.35",
+   "15.05",
+   "10.75",
+   "6.45",
+   "2.15",
+   "0.00"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh"
+ },
+ "capital_cost": {
+  "value": 3048000,
+  "as_written": "30.48",
+  "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+  "page": 6,
+  "row": "Capital Expenditure",
+  "values_as_written": [
+   "30.48",
+   "-",
+   "-",
+   "-",
+   "-",
+   "-",
+   "-"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh",
+  "note": "fixed assets only, as printed; working capital not included"
+ },
+ "break_even_pct": null,
+ "break_even_split": {
+  "sales": {
+   "value": 11016000,
+   "as_written": "110.16",
+   "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+   "page": 5,
+   "row": "Gross Sale (Fly Ash Bricks)",
+   "values_as_written": [
+    "110.16",
+    "136.03",
+    "151.37",
+    "165.64",
+    "178.73",
+    "187.62"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "stock_build_up": {
+   "value": 696000,
+   "as_written": "6.96",
+   "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+   "page": 5,
+   "row": "Less : Cl. Fin. Goods",
+   "values_as_written": [
+    "6.96",
+    "8.04",
+    "8.77",
+    "9.50",
+    "10.22",
+    "10.52"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "fixed": [
+   {
+    "label": "Salary to staff",
+    "fig": {
+     "value": 1080000,
+     "as_written": "10.80",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Salary to Staff",
+     "values_as_written": [
+      "10.80",
+      "12.96",
+      "15.55",
+      "18.66",
+      "21.46",
+      "24.68"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Selling & admin",
+    "fig": {
+     "value": 330000,
+     "as_written": "3.30",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Selling & Adminsitrative Expenses",
+     "values_as_written": [
+      "3.30",
+      "8.16",
+      "12.11",
+      "13.25",
+      "14.30",
+      "15.01"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Interest, term loan",
+    "fig": {
+     "value": 234000,
+     "as_written": "2.34",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Interest on Term Loan",
+     "values_as_written": [
+      "2.34",
+      "1.95",
+      "1.48",
+      "1.01",
+      "0.53",
+      "0.09"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Interest, working capital",
+    "fig": {
+     "value": 300000,
+     "as_written": "3.00",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Interest on Working Capital Loan",
+     "values_as_written": [
+      "3.00",
+      "3.00",
+      "3.00",
+      "3.00",
+      "3.00",
+      "3.00"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Depreciation",
+    "fig": {
+     "value": 413000,
+     "as_written": "4.13",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Interest on Working Capital Loan 3.00 3.00 3.00 3.00 3.00 3.00 Depreciation",
+     "values_as_written": [
+      "4.13",
+      "3.55",
+      "3.06",
+      "2.64",
+      "2.27",
+      "1.96"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "variable": [
+   {
+    "label": "Raw material & consumables",
+    "fig": {
+     "value": 6958000,
+     "as_written": "69.58",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Raw Material & Consumable",
+     "values_as_written": [
+      "69.58",
+      "80.36",
+      "87.67",
+      "94.97",
+      "102.19",
+      "105.20"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Power",
+    "fig": {
+     "value": 594000,
+     "as_written": "5.94",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Power Expense",
+     "values_as_written": [
+      "5.94",
+      "6.53",
+      "7.13",
+      "7.72",
+      "7.72",
+      "8.32"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Repair & maintenance",
+    "fig": {
+     "value": 29000,
+     "as_written": "0.29",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Repair & Maintenance",
+     "values_as_written": [
+      "0.29",
+      "0.32",
+      "0.37",
+      "0.44",
+      "0.56",
+      "0.72"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Wages & salary (one printed line)",
+    "fig": {
+     "value": 1386000,
+     "as_written": "13.86",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Wages & Salary",
+     "values_as_written": [
+      "13.86",
+      "14.55",
+      "15.28",
+      "16.04",
+      "16.85",
+      "17.69"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Factory expenses",
+    "fig": {
+     "value": 110000,
+     "as_written": "1.10",
+     "file": "D22/UP_MSME_Fly_Ash_Bricks.pdf",
+     "page": 5,
+     "row": "Factory Expenses",
+     "values_as_written": [
+      "1.10",
+      "1.36",
+      "1.51",
+      "1.66",
+      "1.79",
+      "1.88"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "tag": "ASSUMED: owner's choice: fixed = salary, rent, selling & admin, interest, depreciation; variable = raw material, power, consumables, repair, labour wages",
+  "note": "factory expenses are not named in the split; counted as variable, with the other production costs"
+ },
+ "dscr_printed": null
+}

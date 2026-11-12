@@ -1,0 +1,628 @@
+{
+ "code": "D01",
+ "kind": "three_years",
+ "source": "research_dossiers/D01_Village_FMCG_Retail_Dossier.md",
+ "sizes": [
+  {
+   "tier": 0,
+   "label": "Model A: Micro Finance Tier",
+   "loan": {
+    "amount": {
+     "value": 125000,
+     "as_written": "₹1,25,000",
+     "line": 337,
+     "unit": "INR",
+     "position": 1
+    },
+    "rate_pct": {
+     "value": 6.5,
+     "as_written": "6.5%",
+     "line": 337,
+     "unit": "%",
+     "position": 2
+    },
+    "terms": {
+     "value": null,
+     "as_written": "11 repayment quarters after 3-month moratorium",
+     "line": 575,
+     "unit": "text"
+    },
+    "moratorium_periods": 1,
+    "repayment_periods": 11,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 140000,
+    "as_written": "₹1,40,000",
+    "line": 96,
+    "unit": "INR",
+    "position": 0
+   },
+   "capex_lines": [
+    {
+     "line": 89,
+     "item": "Core Fast-Moving Opening Inventory",
+     "as_written": "₹95,000",
+     "value": 95000,
+     "unit": "INR",
+     "group": "stock",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 90,
+     "item": "Modular Display Racking & Wall Shelves",
+     "as_written": "₹20,000",
+     "value": 20000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 91,
+     "item": "Retail Billing Counter & Cash Drawer",
+     "as_written": "₹8,000",
+     "value": 8000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 6
+    },
+    {
+     "line": 92,
+     "item": "Digital Retail Weighing Scale",
+     "as_written": "₹5,500",
+     "value": 5500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 9
+    },
+    {
+     "line": 93,
+     "item": "Shop Electrification & LED Fixtures",
+     "as_written": "₹4,500",
+     "value": 4500,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 9
+    },
+    {
+     "line": 94,
+     "item": "Pre-Operative & Regulatory Licensing",
+     "as_written": "₹2,000",
+     "value": 2000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 4
+    },
+    {
+     "line": 95,
+     "item": "Cash Float & Operational Liquidity Reserve",
+     "as_written": "₹5,000",
+     "value": 5000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 4
+    }
+   ],
+   "break_even_pct": {
+    "value": 43.21,
+    "as_written": "43.21%",
+    "line": 444,
+    "unit": "%",
+    "position": 0
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 1275750,
+      "as_written": "₹12,75,750",
+      "line": 339,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 90690,
+      "as_written": "₹90,690",
+      "line": 342,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 39535.27,
+      "as_written": "₹39,535.27",
+      "line": 343,
+      "unit": "INR",
+      "position": 6
+     },
+     "dscr": {
+      "value": 2.29,
+      "as_written": "2.29",
+      "line": 344,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 1458000,
+      "as_written": "₹14,58,000",
+      "line": 347,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 112560,
+      "as_written": "₹1,12,560",
+      "line": 350,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 50005.36,
+      "as_written": "₹50,005.36",
+      "line": 351,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 2.25,
+      "as_written": "2.25",
+      "line": 352,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 1620000,
+      "as_written": "₹16,20,000",
+      "line": 355,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 132000,
+      "as_written": "₹1,32,000",
+      "line": 359,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 50005.36,
+      "as_written": "₹50,005.36",
+      "line": 360,
+      "unit": "INR",
+      "position": 1
+     },
+     "dscr": {
+      "value": 2.64,
+      "as_written": "2.64",
+      "line": 361,
+      "unit": "ratio",
+      "position": 3
+     }
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "label": "Model B: Intermediate Term Loan Tier",
+   "loan": {
+    "amount": {
+     "value": 315000,
+     "as_written": "₹3,15,000",
+     "line": 366,
+     "unit": "INR",
+     "position": 1
+    },
+    "rate_pct": {
+     "value": 8.0,
+     "as_written": "8.0%",
+     "line": 366,
+     "unit": "%",
+     "position": 2
+    },
+    "terms": {
+     "value": null,
+     "as_written": "26 repayment quarters after 6-month moratorium",
+     "line": 583,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 350000,
+    "as_written": "₹3,50,000",
+    "line": 122,
+    "unit": "INR",
+    "position": 0
+   },
+   "capex_lines": [
+    {
+     "line": 115,
+     "item": "Commercial Visi-Cooler (Beverages & Dairy)",
+     "as_written": "₹38,000",
+     "value": 38000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 8
+    },
+    {
+     "line": 116,
+     "item": "Solar Hybrid Inverter & Tubular Battery",
+     "as_written": "₹34,000",
+     "value": 34000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 10
+    },
+    {
+     "line": 117,
+     "item": "Heavy-Duty Slotted Steel Retail Racks",
+     "as_written": "₹42,000",
+     "value": 42000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 8
+    },
+    {
+     "line": 118,
+     "item": "Digital POS Terminal & Billing Gear",
+     "as_written": "₹22,000",
+     "value": 22000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 119,
+     "item": "Shop Fit-out, Signage & Security",
+     "as_written": "₹26,000",
+     "value": 26000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 120,
+     "item": "Pre-Operative, Licensing & Compliance",
+     "as_written": "₹8,000",
+     "value": 8000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 4
+    },
+    {
+     "line": 121,
+     "item": "Core Commercial Inventory Investment",
+     "as_written": "₹1,80,000",
+     "value": 180000,
+     "unit": "INR",
+     "group": "stock",
+     "counted": false,
+     "position": 7
+    }
+   ],
+   "break_even_pct": {
+    "value": 49.54,
+    "as_written": "49.54%",
+    "line": 444,
+    "unit": "%",
+    "position": 1
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 2646000,
+      "as_written": "₹26,46,000",
+      "line": 368,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 124608,
+      "as_written": "₹1,24,608",
+      "line": 371,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 43910.52,
+      "as_written": "₹43,910.52",
+      "line": 372,
+      "unit": "INR",
+      "position": 10
+     },
+     "dscr": {
+      "value": 2.84,
+      "as_written": "2.84",
+      "line": 373,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 3024000,
+      "as_written": "₹30,24,000",
+      "line": 376,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 172992,
+      "as_written": "₹1,72,992",
+      "line": 379,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 62621.03,
+      "as_written": "₹62,621.03",
+      "line": 380,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 2.76,
+      "as_written": "2.76",
+      "line": 381,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 3360000,
+      "as_written": "₹33,60,000",
+      "line": 384,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 216000,
+      "as_written": "₹2,16,000",
+      "line": 388,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 62621.03,
+      "as_written": "₹62,621.03",
+      "line": 389,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 3.45,
+      "as_written": "3.45",
+      "line": 390,
+      "unit": "ratio",
+      "position": 3
+     }
+    }
+   }
+  },
+  {
+   "tier": 2,
+   "label": "Model C: Commercial Term Loan Tier",
+   "loan": {
+    "amount": {
+     "value": 765000,
+     "as_written": "₹7,65,000",
+     "line": 395,
+     "unit": "INR",
+     "position": 1
+    },
+    "rate_pct": {
+     "value": 8.0,
+     "as_written": "8.0%",
+     "line": 395,
+     "unit": "%",
+     "position": 2
+    },
+    "terms": {
+     "value": null,
+     "as_written": "26 repayment quarters after 6-month moratorium",
+     "line": 583,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 850000,
+    "as_written": "₹8,50,000",
+    "line": 148,
+    "unit": "INR",
+    "position": 0
+   },
+   "capex_lines": [
+    {
+     "line": 141,
+     "item": "Supermarket Gondola & Wall Shelving Line",
+     "as_written": "₹1,10,000",
+     "value": 110000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 142,
+     "item": "Dual Commercial Refrigeration Setup",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 8
+    },
+    {
+     "line": 143,
+     "item": "Automated Barcode POS Billing Checkout",
+     "as_written": "₹45,000",
+     "value": 45000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 144,
+     "item": "High-Capacity Solar Hybrid Power System",
+     "as_written": "₹78,000",
+     "value": 78000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 9
+    },
+    {
+     "line": 145,
+     "item": "Civil Renovation, Interior & Security",
+     "as_written": "₹54,000",
+     "value": 54000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 146,
+     "item": "Statutory Approvals, Weighing & Fire Safety",
+     "as_written": "₹15,000",
+     "value": 15000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 7
+    },
+    {
+     "line": 147,
+     "item": "Broad-Spectrum Commercial Inventory",
+     "as_written": "₹4,80,000",
+     "value": 480000,
+     "unit": "INR",
+     "group": "stock",
+     "counted": false,
+     "position": 8
+    }
+   ],
+   "break_even_pct": {
+    "value": 51.25,
+    "as_written": "51.25%",
+    "line": 444,
+    "unit": "%",
+    "position": 2
+   },
+   "years": {
+    "1": {
+     "benefit": {
+      "value": 6804000,
+      "as_written": "₹68,04,000",
+      "line": 397,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 316140,
+      "as_written": "₹3,16,140",
+      "line": 400,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 106639.82,
+      "as_written": "₹1,06,639.82",
+      "line": 401,
+      "unit": "INR",
+      "position": 10
+     },
+     "dscr": {
+      "value": 2.96,
+      "as_written": "2.96",
+      "line": 402,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "2": {
+     "benefit": {
+      "value": 7776000,
+      "as_written": "₹77,76,000",
+      "line": 405,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 447360,
+      "as_written": "₹4,47,360",
+      "line": 408,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 152079.65,
+      "as_written": "₹1,52,079.65",
+      "line": 409,
+      "unit": "INR",
+      "position": 2
+     },
+     "dscr": {
+      "value": 2.94,
+      "as_written": "2.94",
+      "line": 410,
+      "unit": "ratio",
+      "position": 3
+     }
+    },
+    "3": {
+     "benefit": {
+      "value": 8640000,
+      "as_written": "₹86,40,000",
+      "line": 413,
+      "unit": "INR",
+      "position": 0
+     },
+     "surplus": {
+      "value": 564000,
+      "as_written": "₹5,64,000",
+      "line": 417,
+      "unit": "INR",
+      "position": 0
+     },
+     "debt": {
+      "value": 152079.65,
+      "as_written": "₹1,52,079.65",
+      "line": 418,
+      "unit": "INR",
+      "position": 0
+     },
+     "dscr": {
+      "value": 3.71,
+      "as_written": "3.71",
+      "line": 419,
+      "unit": "ratio",
+      "position": 3
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,641 @@
+{
+ "code": "D21",
+ "kind": "government_profile",
+ "title": "UP MSME project profile: Pottery Products",
+ "rows": {
+  "gross_sale": [
+   {
+    "value": 924000,
+    "as_written": "9.24",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Gross Sale Total",
+    "values_as_written": [
+     "9.24",
+     "10.80",
+     "11.92",
+     "13.08",
+     "14.30"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 1080000,
+    "as_written": "10.80",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Gross Sale Total",
+    "values_as_written": [
+     "9.24",
+     "10.80",
+     "11.92",
+     "13.08",
+     "14.30"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 1192000,
+    "as_written": "11.92",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Gross Sale Total",
+    "values_as_written": [
+     "9.24",
+     "10.80",
+     "11.92",
+     "13.08",
+     "14.30"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 1308000,
+    "as_written": "13.08",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Gross Sale Total",
+    "values_as_written": [
+     "9.24",
+     "10.80",
+     "11.92",
+     "13.08",
+     "14.30"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 1430000,
+    "as_written": "14.30",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Gross Sale Total",
+    "values_as_written": [
+     "9.24",
+     "10.80",
+     "11.92",
+     "13.08",
+     "14.30"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "depreciation": [
+   {
+    "value": 13000,
+    "as_written": "0.13",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.13",
+     "0.12",
+     "0.10",
+     "0.09",
+     "0.07"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 12000,
+    "as_written": "0.12",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.13",
+     "0.12",
+     "0.10",
+     "0.09",
+     "0.07"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 10000,
+    "as_written": "0.10",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.13",
+     "0.12",
+     "0.10",
+     "0.09",
+     "0.07"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 9000,
+    "as_written": "0.09",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.13",
+     "0.12",
+     "0.10",
+     "0.09",
+     "0.07"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 7000,
+    "as_written": "0.07",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "Depriciation",
+    "values_as_written": [
+     "0.13",
+     "0.12",
+     "0.10",
+     "0.09",
+     "0.07"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "net_profit": [
+   {
+    "value": 120000,
+    "as_written": "1.20",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "NET PROFIT",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 150000,
+    "as_written": "1.50",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "NET PROFIT",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 193000,
+    "as_written": "1.93",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "NET PROFIT",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 239000,
+    "as_written": "2.39",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "NET PROFIT",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 287000,
+    "as_written": "2.87",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "NET PROFIT",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "profit_after_tax": [
+   {
+    "value": 120000,
+    "as_written": "1.20",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "PROFIT (After Tax)",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 150000,
+    "as_written": "1.50",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "PROFIT (After Tax)",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 193000,
+    "as_written": "1.93",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "PROFIT (After Tax)",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 239000,
+    "as_written": "2.39",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "PROFIT (After Tax)",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 287000,
+    "as_written": "2.87",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 5,
+    "row": "PROFIT (After Tax)",
+    "values_as_written": [
+     "1.20",
+     "1.50",
+     "1.93",
+     "2.39",
+     "2.87"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "tax": [
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 7,
+    "row": "Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 7,
+    "row": "Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 7,
+    "row": "Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 7,
+    "row": "Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D21/UP_MSME_Pottery_Products.pdf",
+    "page": 7,
+    "row": "Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "-",
+     "-",
+     "-"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ]
+ },
+ "term_loan": null,
+ "loan_reason": "the profile has no loan",
+ "capital_cost": {
+  "value": 100000,
+  "as_written": "1.00",
+  "file": "D21/UP_MSME_Pottery_Products.pdf",
+  "page": 7,
+  "row": "Increase in Fixed Assets",
+  "values_as_written": [
+   "1.00"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh",
+  "note": "fixed assets only, as printed; working capital not included"
+ },
+ "break_even_pct": null,
+ "break_even_split": {
+  "sales": {
+   "value": 924000,
+   "as_written": "9.24",
+   "file": "D21/UP_MSME_Pottery_Products.pdf",
+   "page": 5,
+   "row": "Gross Sale Total",
+   "values_as_written": [
+    "9.24",
+    "10.80",
+    "11.92",
+    "13.08",
+    "14.30"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "stock_build_up": {
+   "value": 61000,
+   "as_written": "0.61",
+   "file": "D21/UP_MSME_Pottery_Products.pdf",
+   "page": 5,
+   "row": "Less: Closing Stock /WIP",
+   "values_as_written": [
+    "0.61",
+    "0.66",
+    "0.71",
+    "0.76",
+    "0.82"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  "fixed": [
+   {
+    "label": "Rent",
+    "fig": {
+     "value": 108000,
+     "as_written": "1.08",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Rent",
+     "values_as_written": [
+      "1.08",
+      "1.11",
+      "1.15",
+      "1.18",
+      "1.22"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Selling & admin",
+    "fig": {
+     "value": 28000,
+     "as_written": "0.28",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Selling & adm Exp",
+     "values_as_written": [
+      "0.28",
+      "0.32",
+      "0.36",
+      "0.39",
+      "0.43"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Depreciation",
+    "fig": {
+     "value": 13000,
+     "as_written": "0.13",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Depriciation",
+     "values_as_written": [
+      "0.13",
+      "0.12",
+      "0.10",
+      "0.09",
+      "0.07"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "variable": [
+   {
+    "label": "Raw material",
+    "fig": {
+     "value": 605000,
+     "as_written": "6.05",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Raw Mateiral Consumed",
+     "values_as_written": [
+      "6.05",
+      "6.54",
+      "7.05",
+      "7.57",
+      "8.09"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Electricity",
+    "fig": {
+     "value": 50000,
+     "as_written": "0.50",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Elecricity Expenses",
+     "values_as_written": [
+      "0.50",
+      "0.55",
+      "0.61",
+      "0.67",
+      "0.74"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Consumables",
+    "fig": {
+     "value": 51000,
+     "as_written": "0.51",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Consumables",
+     "values_as_written": [
+      "0.51",
+      "0.59",
+      "0.66",
+      "0.72",
+      "0.79"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   },
+   {
+    "label": "Repair & maintenance",
+    "fig": {
+     "value": 9000,
+     "as_written": "0.09",
+     "file": "D21/UP_MSME_Pottery_Products.pdf",
+     "page": 5,
+     "row": "Repair & maintennace",
+     "values_as_written": [
+      "0.09",
+      "0.11",
+      "0.12",
+      "0.13",
+      "0.14"
+     ],
+     "index": 0,
+     "unit": "INR",
+     "written_in": "lakh"
+    }
+   }
+  ],
+  "tag": "ASSUMED: owner's choice: fixed = salary, rent, selling & admin, interest, depreciation; variable = raw material, power, consumables, repair, labour wages"
+ },
+ "dscr_printed": null
+}

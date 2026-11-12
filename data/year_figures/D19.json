@@ -1,0 +1,934 @@
+{
+ "code": "D19",
+ "kind": "government_profile",
+ "title": "UP MSME project profile: Wooden Furniture Manufacturing Unit (file: UP_MSME_Wooden_Doors.pdf)",
+ "rows": {
+  "gross_sale": [
+   {
+    "value": 7830000,
+    "as_written": "78.30",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "78.30",
+     "96.87",
+     "114.10",
+     "132.27",
+     "151.44"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 9687000,
+    "as_written": "96.87",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "78.30",
+     "96.87",
+     "114.10",
+     "132.27",
+     "151.44"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 11410000,
+    "as_written": "114.10",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "78.30",
+     "96.87",
+     "114.10",
+     "132.27",
+     "151.44"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 13227000,
+    "as_written": "132.27",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "78.30",
+     "96.87",
+     "114.10",
+     "132.27",
+     "151.44"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 15144000,
+    "as_written": "151.44",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Gross Sale",
+    "values_as_written": [
+     "78.30",
+     "96.87",
+     "114.10",
+     "132.27",
+     "151.44"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "depreciation": [
+   {
+    "value": 111000,
+    "as_written": "1.11",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Depreciation",
+    "values_as_written": [
+     "1.11",
+     "0.95",
+     "0.81",
+     "0.70",
+     "0.60"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 95000,
+    "as_written": "0.95",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Depreciation",
+    "values_as_written": [
+     "1.11",
+     "0.95",
+     "0.81",
+     "0.70",
+     "0.60"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 81000,
+    "as_written": "0.81",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Depreciation",
+    "values_as_written": [
+     "1.11",
+     "0.95",
+     "0.81",
+     "0.70",
+     "0.60"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 70000,
+    "as_written": "0.70",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Depreciation",
+    "values_as_written": [
+     "1.11",
+     "0.95",
+     "0.81",
+     "0.70",
+     "0.60"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 60000,
+    "as_written": "0.60",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "Depreciation",
+    "values_as_written": [
+     "1.11",
+     "0.95",
+     "0.81",
+     "0.70",
+     "0.60"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "interest_term_loan": [
+   {
+    "value": 77000,
+    "as_written": "0.77",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "D) Bank Interest i) (Term Loan )",
+    "values_as_written": [
+     "0.77",
+     "0.63",
+     "0.46",
+     "0.28",
+     "0.11"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 63000,
+    "as_written": "0.63",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "D) Bank Interest i) (Term Loan )",
+    "values_as_written": [
+     "0.77",
+     "0.63",
+     "0.46",
+     "0.28",
+     "0.11"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 46000,
+    "as_written": "0.46",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "D) Bank Interest i) (Term Loan )",
+    "values_as_written": [
+     "0.77",
+     "0.63",
+     "0.46",
+     "0.28",
+     "0.11"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 28000,
+    "as_written": "0.28",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "D) Bank Interest i) (Term Loan )",
+    "values_as_written": [
+     "0.77",
+     "0.63",
+     "0.46",
+     "0.28",
+     "0.11"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 11000,
+    "as_written": "0.11",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "D) Bank Interest i) (Term Loan )",
+    "values_as_written": [
+     "0.77",
+     "0.63",
+     "0.46",
+     "0.28",
+     "0.11"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "interest_working_capital": [
+   {
+    "value": 57000,
+    "as_written": "0.57",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "ii) Interest On Working Capital",
+    "values_as_written": [
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 57000,
+    "as_written": "0.57",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "ii) Interest On Working Capital",
+    "values_as_written": [
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 57000,
+    "as_written": "0.57",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "ii) Interest On Working Capital",
+    "values_as_written": [
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 57000,
+    "as_written": "0.57",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "ii) Interest On Working Capital",
+    "values_as_written": [
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 57000,
+    "as_written": "0.57",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "ii) Interest On Working Capital",
+    "values_as_written": [
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57",
+     "0.57"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "net_profit": [
+   {
+    "value": 244000,
+    "as_written": "2.44",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "5.11",
+     "6.68",
+     "8.65"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 376000,
+    "as_written": "3.76",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "5.11",
+     "6.68",
+     "8.65"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 511000,
+    "as_written": "5.11",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "5.11",
+     "6.68",
+     "8.65"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 668000,
+    "as_written": "6.68",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "5.11",
+     "6.68",
+     "8.65"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 865000,
+    "as_written": "8.65",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "H) NET PROFIT",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "5.11",
+     "6.68",
+     "8.65"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "tax": [
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "0.15",
+     "0.48",
+     "0.89"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 0,
+    "as_written": "-",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "0.15",
+     "0.48",
+     "0.89"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 15000,
+    "as_written": "0.15",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "0.15",
+     "0.48",
+     "0.89"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 48000,
+    "as_written": "0.48",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "0.15",
+     "0.48",
+     "0.89"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 89000,
+    "as_written": "0.89",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "I) Taxation",
+    "values_as_written": [
+     "-",
+     "-",
+     "0.15",
+     "0.48",
+     "0.89"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "profit_after_tax": [
+   {
+    "value": 244000,
+    "as_written": "2.44",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "4.96",
+     "6.20",
+     "7.76"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 376000,
+    "as_written": "3.76",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "4.96",
+     "6.20",
+     "7.76"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 496000,
+    "as_written": "4.96",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "4.96",
+     "6.20",
+     "7.76"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 620000,
+    "as_written": "6.20",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "4.96",
+     "6.20",
+     "7.76"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 776000,
+    "as_written": "7.76",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 9,
+    "row": "J) PROFIT (After Tax)",
+    "values_as_written": [
+     "2.44",
+     "3.76",
+     "4.96",
+     "6.20",
+     "7.76"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ],
+  "repayment": [
+   {
+    "value": 79000,
+    "as_written": "0.79",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 13,
+    "row": "REPAYMENT Repayment of Term Loan",
+    "values_as_written": [
+     "0.79",
+     "1.58",
+     "1.58",
+     "1.58",
+     "1.58"
+    ],
+    "index": 0,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 158000,
+    "as_written": "1.58",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 13,
+    "row": "REPAYMENT Repayment of Term Loan",
+    "values_as_written": [
+     "0.79",
+     "1.58",
+     "1.58",
+     "1.58",
+     "1.58"
+    ],
+    "index": 1,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 158000,
+    "as_written": "1.58",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 13,
+    "row": "REPAYMENT Repayment of Term Loan",
+    "values_as_written": [
+     "0.79",
+     "1.58",
+     "1.58",
+     "1.58",
+     "1.58"
+    ],
+    "index": 2,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 158000,
+    "as_written": "1.58",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 13,
+    "row": "REPAYMENT Repayment of Term Loan",
+    "values_as_written": [
+     "0.79",
+     "1.58",
+     "1.58",
+     "1.58",
+     "1.58"
+    ],
+    "index": 3,
+    "unit": "INR",
+    "written_in": "lakh"
+   },
+   {
+    "value": 158000,
+    "as_written": "1.58",
+    "file": "D19/UP_MSME_Wooden_Doors.pdf",
+    "page": 13,
+    "row": "REPAYMENT Repayment of Term Loan",
+    "values_as_written": [
+     "0.79",
+     "1.58",
+     "1.58",
+     "1.58",
+     "1.58"
+    ],
+    "index": 4,
+    "unit": "INR",
+    "written_in": "lakh"
+   }
+  ]
+ },
+ "term_loan": {
+  "value": 709000,
+  "as_written": "7.09",
+  "file": "D19/UP_MSME_Wooden_Doors.pdf",
+  "page": 3,
+  "row": "Working Capital(Finance) 5.20 Term Loan",
+  "values_as_written": [
+   "7.09"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh"
+ },
+ "capital_cost": {
+  "value": 1366000,
+  "as_written": "13.66",
+  "file": "D19/UP_MSME_Wooden_Doors.pdf",
+  "page": 3,
+  "row": "Furniture & Fixtures 1.50 Working Capital 5.78 Total",
+  "values_as_written": [
+   "13.66"
+  ],
+  "index": 0,
+  "unit": "INR",
+  "written_in": "lakh"
+ },
+ "break_even_pct": {
+  "value": 29.0,
+  "as_written": "29%",
+  "file": "D19/UP_MSME_Wooden_Doors.pdf",
+  "page": 3,
+  "row": "12 Break Even Point :",
+  "values_as_written": [
+   "29%"
+  ],
+  "index": 0,
+  "unit": "%"
+ },
+ "dscr_printed": [
+  {
+   "value": 2.77,
+   "as_written": "2.77",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "DEBT SERVICE COVERAGE R",
+   "values_as_written": [
+    "2.77",
+    "2.42",
+    "3.06",
+    "3.86",
+    "5.03"
+   ],
+   "index": 0,
+   "unit": "ratio"
+  },
+  {
+   "value": 2.42,
+   "as_written": "2.42",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "DEBT SERVICE COVERAGE R",
+   "values_as_written": [
+    "2.77",
+    "2.42",
+    "3.06",
+    "3.86",
+    "5.03"
+   ],
+   "index": 1,
+   "unit": "ratio"
+  },
+  {
+   "value": 3.06,
+   "as_written": "3.06",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "DEBT SERVICE COVERAGE R",
+   "values_as_written": [
+    "2.77",
+    "2.42",
+    "3.06",
+    "3.86",
+    "5.03"
+   ],
+   "index": 2,
+   "unit": "ratio"
+  },
+  {
+   "value": 3.86,
+   "as_written": "3.86",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "DEBT SERVICE COVERAGE R",
+   "values_as_written": [
+    "2.77",
+    "2.42",
+    "3.06",
+    "3.86",
+    "5.03"
+   ],
+   "index": 3,
+   "unit": "ratio"
+  },
+  {
+   "value": 5.03,
+   "as_written": "5.03",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "DEBT SERVICE COVERAGE R",
+   "values_as_written": [
+    "2.77",
+    "2.42",
+    "3.06",
+    "3.86",
+    "5.03"
+   ],
+   "index": 4,
+   "unit": "ratio"
+  }
+ ],
+ "avg_dscr_printed": {
+  "value": 3.38,
+  "as_written": "3.38",
+  "file": "D19/UP_MSME_Wooden_Doors.pdf",
+  "page": 13,
+  "row": "AVERAGE D.S.C.R.",
+  "values_as_written": [
+   "3.38"
+  ],
+  "index": 0,
+  "unit": "ratio"
+ },
+ "debt_service_printed": [
+  {
+   "value": 156000,
+   "as_written": "1.56",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "Repayment of Term Loan 0.79 1.58 1.58 1.58 1.58 Interest on Term Loan 0.77 0.63 0.46 0.28 0.11 Total",
+   "values_as_written": [
+    "1.56",
+    "2.20",
+    "2.03",
+    "1.86",
+    "1.68"
+   ],
+   "index": 0,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  {
+   "value": 220000,
+   "as_written": "2.20",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "Repayment of Term Loan 0.79 1.58 1.58 1.58 1.58 Interest on Term Loan 0.77 0.63 0.46 0.28 0.11 Total",
+   "values_as_written": [
+    "1.56",
+    "2.20",
+    "2.03",
+    "1.86",
+    "1.68"
+   ],
+   "index": 1,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  {
+   "value": 203000,
+   "as_written": "2.03",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "Repayment of Term Loan 0.79 1.58 1.58 1.58 1.58 Interest on Term Loan 0.77 0.63 0.46 0.28 0.11 Total",
+   "values_as_written": [
+    "1.56",
+    "2.20",
+    "2.03",
+    "1.86",
+    "1.68"
+   ],
+   "index": 2,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  {
+   "value": 186000,
+   "as_written": "1.86",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "Repayment of Term Loan 0.79 1.58 1.58 1.58 1.58 Interest on Term Loan 0.77 0.63 0.46 0.28 0.11 Total",
+   "values_as_written": [
+    "1.56",
+    "2.20",
+    "2.03",
+    "1.86",
+    "1.68"
+   ],
+   "index": 3,
+   "unit": "INR",
+   "written_in": "lakh"
+  },
+  {
+   "value": 168000,
+   "as_written": "1.68",
+   "file": "D19/UP_MSME_Wooden_Doors.pdf",
+   "page": 13,
+   "row": "Repayment of Term Loan 0.79 1.58 1.58 1.58 1.58 Interest on Term Loan 0.77 0.63 0.46 0.28 0.11 Total",
+   "values_as_written": [
+    "1.56",
+    "2.20",
+    "2.03",
+    "1.86",
+    "1.68"
+   ],
+   "index": 4,
+   "unit": "INR",
+   "written_in": "lakh"
+  }
+ ],
+ "payback_printed": {
+  "value": 5.0,
+  "as_written": "5",
+  "file": "D19/UP_MSME_Wooden_Doors.pdf",
+  "page": 3,
+  "row": "10 Pay Back Period :",
+  "values_as_written": [
+   "5"
+  ],
+  "index": 0,
+  "unit": "years"
+ }
+}

@@ -1,0 +1,193 @@
+{
+ "code": "D06",
+ "kind": "one_month",
+ "source": "research_dossiers/D06_Farm_Hardware_Drip_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 810000,
+     "as_written": "₹8,10,000",
+     "line": 70,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 108,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 199,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 900000,
+    "as_written": "₹9,00,000",
+    "line": 86,
+    "unit": "INR",
+    "position": 0
+   },
+   "header_project_cost": {
+    "value": 900000,
+    "as_written": "₹9,00,000",
+    "line": 70,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 75,
+     "item": "Industrial Cantilever Pipe Storage Racks",
+     "as_written": "₹48,000",
+     "value": 48000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 76,
+     "item": "Modular Small Parts Storage Cabinets",
+     "as_written": "₹36,000",
+     "value": 36000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 77,
+     "item": "Micro-Irrigation Demo & Test Bench",
+     "as_written": "₹24,000",
+     "value": 24000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 78,
+     "item": "Battery Sprayer Testing & Charging Station",
+     "as_written": "₹12,500",
+     "value": 12500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 79,
+     "item": "Electronic Platform Scale & Length Meter",
+     "as_written": "₹16,500",
+     "value": 16500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 80,
+     "item": "Computer Hardware, Billing PC & POS",
+     "as_written": "₹40,000",
+     "value": 40000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 4
+    },
+    {
+     "line": 81,
+     "item": "Solar Hybrid Power Backup System",
+     "as_written": "₹68,000",
+     "value": 68000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 82,
+     "item": "Fire Safety & Hand Tools Display Boards",
+     "as_written": "₹15,000",
+     "value": 15000,
+     "unit": "INR",
+     "group": "furniture_fittings",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 83,
+     "item": "Pre-operative Costs & Commercial Deposits",
+     "as_written": "₹14,000",
+     "value": 14000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 1
+    },
+    {
+     "line": 84,
+     "item": "Commercial Shop & Yard Renovation",
+     "as_written": "₹46,000",
+     "value": 46000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 85,
+     "item": "Initial Rotating Stock (Opening Inventory)",
+     "as_written": "₹5,80,000",
+     "value": 580000,
+     "unit": "INR",
+     "group": "stock",
+     "counted": false,
+     "position": 1
+    }
+   ],
+   "break_even_pct": {
+    "value": 27.8,
+    "as_written": "27.8%",
+    "line": 149,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 320000,
+     "as_written": "₹3,20,000",
+     "line": 133,
+     "unit": "INR",
+     "position": 0,
+     "label": "monthly turnover"
+    },
+    "net_surplus": {
+     "value": 24372,
+     "as_written": "₹24,372",
+     "line": 141,
+     "unit": "INR",
+     "position": 2
+    },
+    "bank_interest": {
+     "value": 5400,
+     "as_written": "₹5,400",
+     "line": 108,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ]
+}

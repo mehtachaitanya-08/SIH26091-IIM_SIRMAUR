@@ -1,0 +1,193 @@
+{
+ "code": "D23",
+ "kind": "one_month",
+ "source": "research_dossiers/D23_Vermicompost_Dossier.md",
+ "sizes": [
+  {
+   "tier": 1,
+   "label": "Term Loan Tier (the only size with monthly figures)",
+   "loan": {
+    "amount": {
+     "value": 585000,
+     "as_written": "₹5,85,000",
+     "line": 72,
+     "unit": "INR",
+     "position": 2
+    },
+    "rate_pct": {
+     "value": 8,
+     "as_written": "8%",
+     "line": 110,
+     "unit": "%",
+     "position": 0
+    },
+    "terms": {
+     "value": null,
+     "as_written": "7 years including 6-month moratorium",
+     "line": 212,
+     "unit": "text"
+    },
+    "moratorium_periods": 2,
+    "repayment_periods": 26,
+    "schedule": "quarterly"
+   },
+   "capex_total": {
+    "value": 650000,
+    "as_written": "₹6,50,000",
+    "line": 88,
+    "unit": "INR",
+    "position": 1
+   },
+   "header_project_cost": {
+    "value": 650000,
+    "as_written": "₹6,50,000",
+    "line": 72,
+    "unit": "INR",
+    "position": 1
+   },
+   "capex_lines": [
+    {
+     "line": 77,
+     "item": "Commercial HDPE Vermi-Beds (30 units)",
+     "as_written": "₹1,05,000",
+     "value": 105000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 7
+    },
+    {
+     "line": 78,
+     "item": "High-Grade Breeding Earthworms",
+     "as_written": "₹87,500",
+     "value": 87500,
+     "unit": "INR",
+     "group": "livestock",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 79,
+     "item": "Motorized Rotary Trommel Sieve Machine",
+     "as_written": "₹82,000",
+     "value": 82000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 5
+    },
+    {
+     "line": 80,
+     "item": "Automated Micro-Misting & Fogging System",
+     "as_written": "₹38,000",
+     "value": 38000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 81,
+     "item": "Central Vermiwash Filtration & Storage Unit",
+     "as_written": "₹24,000",
+     "value": 24000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 2
+    },
+    {
+     "line": 82,
+     "item": "Portable Electric Bag Closer Machine",
+     "as_written": "₹7,500",
+     "value": 7500,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 1
+    },
+    {
+     "line": 83,
+     "item": "Digital Platform Scales",
+     "as_written": "₹16,000",
+     "value": 16000,
+     "unit": "INR",
+     "group": "machinery",
+     "counted": true,
+     "position": 3
+    },
+    {
+     "line": 84,
+     "item": "Permanent Civil Shedding & Concrete Apron",
+     "as_written": "₹1,35,000",
+     "value": 135000,
+     "unit": "INR",
+     "group": "civil_works",
+     "counted": false,
+     "position": 2
+    },
+    {
+     "line": 85,
+     "item": "3-Phase LT 5 HP Agricultural Power Setup",
+     "as_written": "₹18,000",
+     "value": 18000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 3
+    },
+    {
+     "line": 86,
+     "item": "Pre-operative Compliance & Lab Certification",
+     "as_written": "₹12,000",
+     "value": 12000,
+     "unit": "INR",
+     "group": "licences_deposits",
+     "counted": false,
+     "position": 1
+    },
+    {
+     "line": 87,
+     "item": "Initial Working Capital / Rotating Stock",
+     "as_written": "₹1,25,000",
+     "value": 125000,
+     "unit": "INR",
+     "group": "working_capital",
+     "counted": false,
+     "position": 4
+    }
+   ],
+   "break_even_pct": {
+    "value": 55.0,
+    "as_written": "55.0%",
+    "line": 162,
+    "unit": "%",
+    "position": 0
+   },
+   "month": {
+    "revenue": {
+     "value": 141250,
+     "as_written": "₹1,41,250",
+     "line": 150,
+     "unit": "INR",
+     "position": 3,
+     "label": "monthly turnover"
+    },
+    "net_surplus": {
+     "value": 85590,
+     "as_written": "₹85,590",
+     "line": 154,
+     "unit": "INR",
+     "position": 2
+    },
+    "bank_interest": {
+     "value": 3900,
+     "as_written": "₹3,900",
+     "line": 110,
+     "unit": "INR",
+     "position": 1
+    }
+   }
+  }
+ ]
+}
