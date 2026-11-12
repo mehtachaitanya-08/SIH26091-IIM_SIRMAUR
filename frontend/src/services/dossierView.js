@@ -54,8 +54,8 @@ export function flowSteps({ businessPicked, costChosen, projectCost, familyIncom
     { n: 1, label: 'Choose your business', tab: 'feasibility', done: Boolean(businessPicked) },
     { n: 2, label: 'Choose a size or type your cost', tab: 'amortizer', done: Boolean(costChosen) && projectCost !== '' && projectCost != null },
     { n: 3, label: 'Your details (income, SC)', tab: 'amortizer', done: familyIncome !== '' && familyIncome != null && typeof isSc === 'boolean' },
-    { n: 4, label: 'See loan, season and cover', tab: 'simulator', done: Boolean(loanReady) },
-    { n: 5, label: 'Download the 1-page DPR', tab: 'dpr', done: false }
+    { n: 4, label: 'See your loan and good and bad months', tab: 'simulator', done: Boolean(loanReady) },
+    { n: 5, label: 'Download report (DPR)', tab: 'dpr', done: false }
   ];
 }
 
@@ -68,4 +68,37 @@ export function costOnBusinessLoad({ origin, dossier }) {
   if (origin === 'user' || origin === 'chat') return null;
   const start = defaultTierCost(dossier);
   return start == null ? '' : String(start);
+}
+
+// ---- Plain words (Stage A). New helpers only: the outputs above stay as they are, and the
+// research file's own words are still shown under "How we got this".
+
+/**
+ * Size names ranked inside one business, smallest first (the research files list sizes smallest
+ * first): 3 sizes -> Small / Medium / Large, 2 -> Small / Large. Other counts keep the file's name.
+ * Returns one entry per tier option: {plainLabel, originalLabel, costText}.
+ */
+export function plainSizes(options) {
+  const list = Array.isArray(options) ? options : [];
+  const names = list.length === 3 ? ['Small', 'Medium', 'Large'] : list.length === 2 ? ['Small', 'Large'] : null;
+  return list.map((o, i) => ({
+    plainLabel: names ? names[i] : o.label,
+    originalLabel: o.label,
+    costText: o.disabled ? 'cost not in research file' : null
+  }));
+}
+
+/** A season multiplier as whole percent against an average month (1.00 = average): 1.10 -> "+10%", 0.75 -> "−25%". */
+export function seasonPercent(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+  const n = Math.round((value - 1) * 100);
+  if (n === 0) return '0%';
+  return n > 0 ? `+${n}%` : `\u2212${-n}%`;
+}
+
+/** One "Can the business repay?" line from a dscrRows row: "Year 1: earns ₹2.84 for every ₹1 of loan payment". */
+export function repayLine(row, value) {
+  if (!row) return null;
+  if (typeof value !== 'number' || !Number.isFinite(value)) return `Year ${row.year}: not in research file`;
+  return `Year ${row.year}: earns \u20b9${value.toFixed(2)} for every \u20b91 of loan payment`;
 }

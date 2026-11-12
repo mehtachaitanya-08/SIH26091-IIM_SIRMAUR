@@ -22,7 +22,12 @@ export default function UserCard({
 }) {
   const displayName = currentUser?.name || (language === 'hi' ? 'उद्यमी' : 'Entrepreneur');
   const selfDeclared = language === 'hi' ? 'स्वयं घोषित' : 'self-declared';
-  const details = [currentUser?.category, currentUser?.income && `Income ${currentUser.income}`]
+  // Saved income is a number (My account, Stage A); shown as "₹1,20,000". 0 is a real answer.
+  const income = currentUser?.income;
+  const incomeText = typeof income === 'number' && Number.isFinite(income)
+    ? `Income ₹${income.toLocaleString('en-IN')}`
+    : income ? `Income ${income}` : null;
+  const details = [currentUser?.category, incomeText]
     .filter(Boolean);
   const detailLine = details.length ? `${details.join(' · ')} (${selfDeclared})` : '';
 
@@ -48,7 +53,7 @@ export default function UserCard({
             {displayName}
           </p>
           {detailLine && (
-            <p className="text-[11px] text-[#686D65] font-mono truncate">
+            <p className="text-[11px] text-[#686D65] font-mono break-words">
               {detailLine}
             </p>
           )}

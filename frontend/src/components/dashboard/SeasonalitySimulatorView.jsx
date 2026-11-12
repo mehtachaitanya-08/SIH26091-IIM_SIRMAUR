@@ -1,8 +1,11 @@
 import React from 'react';
-import { seasonBars, dscrRows } from '../../services/dossierView';
+import { seasonBars, dscrRows, seasonPercent, repayLine } from '../../services/dossierView';
+import HowWeGotThis from './HowWeGotThis';
 
 /**
- * SeasonalitySimulatorView — Business season and cash-flow cover, from the business's dossier
+ * SeasonalitySimulatorView — "Good and bad months": the business's season and cash-flow cover, from its dossier.
+ * Stage A: plain words on screen (whole percent against an average month; "can the business repay?");
+ * the research file's own numbers and tags sit under "How we got this".
  * Season bars: the dossier's 12 monthly multipliers. Surplus and cash-flow cover (DSCR): the dossier's
  * own figures for the size matching the project cost (or the nearest size, ASSUMED). Each figure is
  * labelled "<code> dossier"; what the dossier does not state shows NOT FOUND.
@@ -14,6 +17,7 @@ export default function SeasonalitySimulatorView({
   onNavigateFeasibility,
   dossierDetail = null,
   dossierCashflow = null,
+  cashflowUpdating = false,
   costEntered = false,
   formatINR,
   mode = 'mockup'
@@ -24,7 +28,6 @@ export default function SeasonalitySimulatorView({
   const cover = dscrRows(dossierCashflow);
   const tier = dossierCashflow?.tier;
   const surplus = tier?.surplus;
-  const tag = `${activeDomain.code} dossier`;
   const fmt = (v) => (formatINR ? formatINR(v) : `₹${v}`);
 
   // Figures the dossier does not state are listed once, in one line, instead of a NOT FOUND box
@@ -38,16 +41,16 @@ export default function SeasonalitySimulatorView({
   const hasCover = cover.status === 'ok';
   const missing = [];
   const cashflowAnswered = !waitingForCost && !loadingFigures;
-  if (cashflowAnswered && !hasSurplus && !dossierCashflow?.offline) missing.push({ hi: 'बचत', en: 'surplus' });
-  if (cashflowAnswered && !hasCover && cover.status !== 'offline') missing.push({ hi: 'कर्ज़ चुकाने की क्षमता', en: 'cash-flow cover (DSCR)' });
-  if (dossierDetail && !bars) missing.push({ hi: 'मौसम', en: 'season pattern' });
+  if (cashflowAnswered && !hasSurplus && !dossierCashflow?.offline) missing.push({ hi: 'बचत', en: 'money left each year' });
+  if (cashflowAnswered && !hasCover && cover.status !== 'offline') missing.push({ hi: 'कर्ज़ चुकाने की क्षमता', en: 'whether the business can repay' });
+  if (dossierDetail && !bars) missing.push({ hi: 'मौसम', en: 'good and bad months' });
 
   return (
     <div className="bg-[#F8F9FA] rounded-2xl p-5 border border-[#E9ECEF] space-y-4 animate-fadeIn">
       <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
         <div>
           <span className="text-[11px] font-mono-num text-[#0E7A53] font-semibold">
-            Seasonality & Stress Simulator
+            Good and bad months
           </span>
           <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
             {activeDomain.name} ({activeDomain.code})
@@ -68,8 +71,12 @@ export default function SeasonalitySimulatorView({
         <>
           {waitingForCost && (
             <p className="p-3 rounded-xl bg-white border border-[#E9ECEF] text-xs text-[#686D65] whitespace-pre-line">
-              {'पहले प्रोजेक्ट की लागत डालें।\nEnter a project cost in the NSFDC Amortizer to see the surplus and cash-flow cover.'}
+              {'पहले प्रोजेक्ट की लागत डालें।\nEnter a project cost in "Your loan and repayments" to see the money left each year and whether the business can repay.'}
             </p>
+          )}
+          {/* Typing fix (Stage A): one line in a fixed space while new figures are worked out. */}
+          {!loadingFigures && !waitingForCost && (
+            <p className="h-4 text-[11px] text-[#686D65]" aria-live="polite">{cashflowUpdating ? 'Updating…' : ''}</p>
           )}
           {loadingFigures && (
             <p className="p-3 rounded-xl bg-white border border-[#E9ECEF] text-xs text-[#686D65]">Working out the figures…</p>
@@ -82,35 +89,44 @@ export default function SeasonalitySimulatorView({
               {hasSurplus && (
                 <div className="p-3 rounded-xl bg-white border border-[#E9ECEF]">
                   <span className="text-[#686D65]">
-                    Surplus{surplus?.basis ? `, ${surplus.basis}` : ''}{tier ? ` (${tier.label})` : ''}:
+                    {surplus.period === 'year' ? 'Money left each year after running costs, before loan payments:' : 'Money left each month after running costs, before loan payments:'}
                   </span>
                   <p className="text-base font-bold text-[#111311] font-mono-num">
                     {fmt(surplus.value)} <span className="text-[11px] font-normal">{surplus.period === 'year' ? 'a year (Year 3)' : 'a month'}</span>
                   </p>
-                  <p className="text-[10px] text-[#0E7A53]">{surplus.tag}</p>
+                  <HowWeGotThis
+                    tags={[surplus.tag]}
+                    working={`Surplus${surplus?.basis ? `, ${surplus.basis}` : ''}${surplus.period === 'year' ? ', Year 3' : ''}.`}
+                    notes={tier ? [`Size: "${tier.label}" in the research file.`] : []}
+                  />
                 </div>
               )}
               {hasCover && (
                 <div className="p-3 rounded-xl bg-white border border-[#E9ECEF]">
-                  <span className="text-[#686D65]">Cash-flow cover (DSCR), as printed in the dossier:</span>
-                  <ul className="font-mono-num font-bold text-[#111311] text-sm">
-                    {cover.rows.map((r) => (
-                      <li key={r.year}>Year {r.year}: {r.text}{r.tag && <span className="ml-1 text-[10px] font-normal text-[#0E7A53]">{r.tag}</span>}</li>
-                    ))}
+                  <span className="text-[#686D65]">Can the business repay?</span>
+                  <ul className="font-bold text-[#111311] text-xs space-y-0.5">
+                    {cover.rows.map((r) => {
+                      const y = (dossierCashflow?.dscr?.years || []).find((x) => x.year === r.year);
+                      return <li key={r.year}>{repayLine(r, y?.value)}</li>;
+                    })}
                   </ul>
-                  <p className="text-[10px] text-[#686D65] pt-1">The dossier's own figure, using its own loan instalment; it can differ from the NSFDC loan tab.</p>
+                  <HowWeGotThis
+                    tags={[...new Set(cover.rows.map((r) => r.tag).filter(Boolean))]}
+                    working={`Cash-flow cover (DSCR) as printed in the research file: ${cover.rows.map((r) => `Year ${r.year} ${r.text}`).join(', ')}.`}
+                    notes={["Uses the research file's own loan payment, so it can differ from \"Your loan and repayments\"."]}
+                  />
                 </div>
               )}
             </div>
           )}
           {(dossierCashflow?.assumptions || []).map((a, i) => (
-            <p key={i} className="text-[11px] text-amber-800">{a.text} [{a.tag}]</p>
+            <div key={i} className="text-[11px] text-amber-800">{a.text} <HowWeGotThis tags={[a.tag]} /></div>
           ))}
 
           {bars && (
           <div className="pt-2">
             <span className="text-[11px] font-semibold text-[#686D65]">
-              12-month season pattern ({tag}):
+              Each month against an average month:
             </span>
               <>
                 <div className="grid grid-cols-12 gap-1 h-24 items-end pt-3 pb-1 border-b border-[#E9ECEF]">
@@ -119,17 +135,21 @@ export default function SeasonalitySimulatorView({
                       <div
                         className={`w-full rounded-t ${b.lean ? 'bg-orange-400' : 'bg-[#0E7A53]'}`}
                         style={{ height: `${b.heightPct}%` }}
-                        title={`${b.month}: ${b.value.toFixed(2)} (${b.tag})`}
+                        title={`${b.month}: ${seasonPercent(b.value)} vs an average month`}
                       />
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-12 text-center text-[10px] text-[#686D65] font-mono-num pt-1">
-                  {bars.map((b) => <span key={b.month}>{b.month.slice(0, 3)}<br />{b.value.toFixed(2)}</span>)}
+                  {bars.map((b) => <span key={b.month}>{b.month.slice(0, 3)}<br />{seasonPercent(b.value)}</span>)}
                 </div>
                 <p className="text-[11px] text-[#686D65] pt-2">
-                  Orange: the 3 leanest months. Multipliers as written in the {tag}.
+                  Orange: the 3 weakest months. +10% means 10% more than an average month.
                 </p>
+                <HowWeGotThis
+                  tags={[...new Set(bars.map((b) => b.tag).filter(Boolean))]}
+                  working={`The research file gives each month a number; 1.00 is an average month. ${bars.map((b) => `${b.month.slice(0, 3)} ${b.value.toFixed(2)}`).join(', ')}.`}
+                />
               </>
           </div>
           )}
@@ -138,7 +158,7 @@ export default function SeasonalitySimulatorView({
             <p className="p-3 rounded-xl bg-white border border-dashed border-[#DEE2E6] text-[11px] text-[#686D65] whitespace-pre-line">
               {`यह जानकारी अभी नहीं है: ${missing.map((m) => m.hi).join(', ')} (${missing.length})\n`
                 + `We don't have this yet: ${missing.map((m) => m.en).join(', ')} (${missing.length}). `
-                + `It is not in the ${tag}; the feasibility report has what the dossier does say.`}
+                + `It is not in the ${activeDomain.code} research file; the feasibility report has what the file does say.`}
               {(surplus?.reason || dossierCashflow?.reason) && (
                 <span className="block pt-1 text-[10px]">{surplus?.reason || dossierCashflow?.reason}</span>
               )}

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import SetoDashboard from './components/SetoDashboard';
 import ProductionDashboard from './components/ProductionDashboard';
+import AccountPanel from './components/dashboard/AccountPanel';
 import { 
   getCurrentSession, 
   authenticateByCredentials, 
@@ -53,7 +54,7 @@ const TRANSLATIONS = {
     termAmount: 'Up to ₹50 Lakh',
     termLabel: 'Term Loan Facility @ 8.0%',
     dprAmount: 'Lead-Bank Standard',
-    dprLabel: 'Statutory 1-Page DPR',
+    dprLabel: 'Download report (DPR)',
     // Orbit
     orbitTitlePre: 'What does ',
     orbitTitleItalic: 'opportunity',
@@ -71,13 +72,13 @@ const TRANSLATIONS = {
     // Pillars
     pillarsHeading: 'The Four Pillars.',
     pillarsBody: 'Translating statutory NSFDC credit guidelines and empirical rural cash flows into a unified advisory platform.',
-    card1Title: 'NSFDC Dual-Tier Credit',
+    card1Title: 'Your loan and repayments',
     card1Body: 'NSFDC Micro Finance (project cost up to ₹1.40 lakh, 6.5%) and Term Loan (up to ₹50 lakh, 8%) [S1].',
-    card2Title: '12-Month Solvency Model',
-    card2Body: "Each business's 12-month season pattern, leanest months and cash-flow cover, from its research dossier.",
-    card3Title: 'Mode B Debt Liberation',
-    card3Body: 'Consolidating informal 3-senkda (36% APR) sahukar debt into low-cost institutional banking facilities.',
-    card4Title: '1-Page Lead-Bank DPR',
+    card2Title: 'Good and bad months',
+    card2Body: "Which months earn more or less in each business, and whether it can repay, from its research file.",
+    card3Title: 'Pay off a moneylender loan',
+    card3Body: 'Swap a costly moneylender loan (3 senkda = 36% a year) for a cheaper bank loan.',
+    card4Title: 'Download report (DPR)',
     card4Body: 'One-page advisory DPR made by the server from the verified loan rules and the business dossier; not a loan sanction.',
     viewDetails: 'View details',
     closeDossier: 'Close Statutory Dossier',
@@ -181,12 +182,12 @@ const PILLAR_DOSSIERS = {
   en: {
     1: {
       number: 'PILLAR 01',
-      title: 'NSFDC Dual-Tier Credit Architecture',
+      title: 'Your loan and repayments',
       color: '#0E7A53',
       mandate: 'MoSJE Mandate · Concessional Lending Framework',
       summary: 'Direct institutional credit structuring conforming to statutory National Scheduled Castes Finance and Development Corporation guidelines.',
       specifications: [
-        { label: 'Micro Credit Facility (MCF)', value: 'Project cost up to ₹1,40,000; loan up to ₹1,25,000 at 6.5% p.a.; repaid in quarterly instalments within 3 years, including a 3-month pause [S1]' },
+        { label: 'Micro Credit Facility (MCF)', value: 'Project cost up to ₹1,40,000; loan up to ₹1,25,000 at 6.5% p.a.; repaid with a payment every 3 months within 3 years, including a 3-month pause [S1]' },
         { label: 'Term Loan Facility', value: 'Project cost up to ₹50,00,000; loan up to ₹45,00,000 at 8% p.a.; repaid within 7 years, including a 6-month pause [S1]' },
         { label: 'Beneficiary Eligibility', value: 'Scheduled Caste (SC) micro-entrepreneurs; household income ≤ ₹5,00,000' },
         { label: 'Margin Money Structure', value: 'Up to 90% concessional loan routing with 10% entrepreneur margin contribution' }
@@ -194,39 +195,39 @@ const PILLAR_DOSSIERS = {
     },
     2: {
       number: 'PILLAR 02',
-      title: '12-Month Solvency Stress Simulator',
+      title: 'Good and bad months',
       color: '#B47228',
-      mandate: 'Monsoon Cash-Flow Resilience & DSCR Verification',
+      mandate: 'Can the business repay through its weak months?',
       summary: 'Dynamic month-by-month cash flow modeling across 24 empirical trade dossiers to prevent debt distress during seasonal contractions.',
       specifications: [
-        { label: 'Lean Season Simulation', value: 'Shows each business\'s 12-month season pattern from its research dossier, with the leanest months marked' },
-        { label: 'Solvency Benchmark', value: 'Shows the cash-flow cover (DSCR) printed in each business\'s dossier, Year 1 to 3, or NOT FOUND' },
+        { label: 'Lean Season Simulation', value: 'Shows each month against an average month (+N% / −N%), from the business\'s research file, with the weakest months marked' },
+        { label: 'Can the business repay?', value: 'Year 1 to 3: how many rupees the business earns for every ₹1 of loan payment, as printed in its research file, or NOT FOUND' },
         { label: 'Empirical Coverage', value: '24 trade dossiers (agro-processing, tailoring, retail, artisanal crafts); the server checks each figure it shows against the dossier file' },
         { label: 'Stress Buffer Alert', value: 'Lists what each dossier leaves open (gaps and remaining questions) before you apply' }
       ]
     },
     3: {
       number: 'PILLAR 03',
-      title: 'Mode B Debt Liberation (Sahukar Refinance)',
+      title: 'Pay off a moneylender loan',
       color: '#E86043',
-      mandate: 'Usurious Loans Act & Rule of Damdupat Statutory Relief',
+      mandate: 'An old law may limit moneylender interest',
       summary: 'Systematic consolidation of informal high-interest moneylender debt into low-cost institutional banking facilities.',
       specifications: [
         { label: 'Informal Debt Conversion', value: 'Compares 3- to 5-senkda moneylender debt (36% to 60% a year) with a bank loan EMI (team\'s refinancing engine, ASSUMED)' },
-        { label: 'Rule of Damdupat Threshold', value: 'Automatically triggers legal violation alerts when total interest paid equals or exceeds principal' },
-        { label: 'Statutory Shield', value: 'Flags debts where the Usurious Loans Act, 1918 may help; check with legal aid' },
+        { label: 'Interest more than the loan', value: 'Shows a note when interest already paid is equal to or more than the loan' },
+        { label: 'Old law', value: 'Under an old law (Usurious Loans Act, 1918), the moneylender may not be able to ask for more interest. Check with free legal aid.' },
         { label: 'Household Cash Liberation', value: 'Shows the monthly moneylender interest next to the bank EMI for your own debt figures' }
       ]
     },
     4: {
       number: 'PILLAR 04',
-      title: 'Statutory 1-Page Lead-Bank DPR',
+      title: 'Download report (DPR)',
       color: '#4A6274',
       mandate: '1-page advisory DPR for the bank and the State Channelising Agency',
       summary: 'A one-page Detailed Project Report made from the verified loan rules and the business dossier, every figure tagged. Advisory only: not a loan sanction.',
       specifications: [
         { label: 'Appraisal Layout', value: 'One page, made by the server; advisory only, not a loan sanction' },
-        { label: 'Statutory Financial Metrics', value: 'NSFDC loan and quarterly repayments, dossier figures (sizes, surplus, DSCR, season), checks and gaps; every figure tagged' },
+        { label: 'Statutory Financial Metrics', value: 'NSFDC loan and payments every 3 months, research-file figures (sizes, money left each year, whether it can repay, good and bad months), checks and gaps; every figure tagged' },
         { label: 'Branch Approval Routing', value: 'Pre-formatted for Lead District Managers (LDMs) and District Industry Centres (DICs)' },
         { label: 'Scheme Alignment', value: 'Full statutory mapping to NSFDC Term Loan / MCF and PM Vishwakarma craft guidelines' }
       ]
@@ -411,6 +412,8 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState('login'); // 'login' | 'register'
   const [currentUser, setCurrentUser] = useState(null);
+  // "My account" panel (Stage A): opened from the name chip on the dashboard and the front page.
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [authError, setAuthError] = useState(null);
 
   // Auth Form Fields
@@ -508,6 +511,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
+    setIsAccountOpen(false);
     clearSession();
     setCurrentUser(null);
     navigateToLanding();
@@ -742,6 +746,15 @@ export default function App() {
   };
 
   // Shared Auth Modal Renderer
+  const renderAccountPanel = () => (isAccountOpen && currentUser ? (
+    <AccountPanel
+      currentUser={currentUser}
+      onSaved={(u) => setCurrentUser(u)}
+      onSignOut={handleLogout}
+      onClose={() => setIsAccountOpen(false)}
+    />
+  ) : null);
+
   const renderAuthModal = () => {
     if (!isAuthModalOpen) return null;
     return (
@@ -1058,7 +1071,7 @@ export default function App() {
                 alt="UdyamSetuAI Emblem"
                 className="h-8 sm:h-9 w-auto object-contain group-hover:scale-105 transition-transform"
               />
-              <span className="font-extrabold text-lg sm:text-xl text-[#111311] tracking-tight font-sans-ui">
+              <span className="font-extrabold text-base sm:text-xl text-[#111311] tracking-tight font-sans-ui">
                 UdyamSetuAI
               </span>
             </button>
@@ -1086,10 +1099,15 @@ export default function App() {
             {/* User Profile / Status */}
             {currentUser ? (
               <div className="flex items-center space-x-1.5">
-                <div className="flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-100 text-[#111311] text-xs font-medium border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setIsAccountOpen(true)}
+                  title="My account"
+                  className="flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#111311] text-xs font-medium border border-slate-200 cursor-pointer"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                  <span className="max-w-[120px] sm:max-w-[160px] truncate">{currentUser.name}</span>
-                </div>
+                  <span className="max-w-[80px] sm:max-w-[160px] truncate">{currentUser.name}</span>
+                </button>
                 <button
                   onClick={handleLogout}
                   className="p-1 rounded-lg bg-white hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 transition-colors cursor-pointer"
@@ -1112,11 +1130,15 @@ export default function App() {
             )}
 
             {/* Back to Landing Page Button */}
+            {/* On phones only the arrow shows, so the header fits the screen (Stage A, owner's decision). */}
             <button
               onClick={navigateToLanding}
-              className="inline-flex items-center gap-1 px-3 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 shadow-sm transition-colors cursor-pointer"
+              aria-label={language === 'hi' ? 'मुख्य पृष्ठ' : 'Landing Page'}
+              title={language === 'hi' ? 'मुख्य पृष्ठ' : 'Landing Page'}
+              className="inline-flex items-center gap-1 px-2 sm:px-3 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium text-slate-700 shadow-sm transition-colors cursor-pointer"
             >
-              <span>{language === 'hi' ? '← मुख्य पृष्ठ' : '← Landing Page'}</span>
+              <span aria-hidden="true">←</span>
+              <span className="hidden sm:inline">{language === 'hi' ? 'मुख्य पृष्ठ' : 'Landing Page'}</span>
             </button>
           </div>
         </header>
@@ -1134,6 +1156,7 @@ export default function App() {
 
         {/* Global Auth Modal Container */}
         {renderAuthModal()}
+        {renderAccountPanel()}
       </div>
     );
   }
@@ -1187,15 +1210,27 @@ export default function App() {
             </button>
           ) : (
             <div className="flex items-center space-x-2">
-              <button 
-                onClick={navigateToDashboard} 
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#0E7A53] hover:bg-[#0c6846] text-white text-xs font-mono-num font-bold shadow-md transition-all hover:scale-105 cursor-pointer"
-                title={`${currentUser.name} · Open Dedicated Workspace`}
-              >
-                <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
-                <span className="max-w-[120px] truncate">{currentUser.name}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
+              {/* Name opens "My account"; the arrow still opens the dashboard (Stage A). */}
+              <span className="inline-flex items-center rounded-full bg-[#0E7A53] text-white text-xs font-mono-num font-bold shadow-md">
+                <button
+                  type="button"
+                  onClick={() => setIsAccountOpen(true)}
+                  className="inline-flex items-center gap-1.5 pl-3.5 pr-2 py-1.5 rounded-l-full hover:bg-[#0c6846] cursor-pointer"
+                  title="My account"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+                  <span className="max-w-[120px] truncate">{currentUser.name}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={navigateToDashboard}
+                  className="pl-1.5 pr-3 py-1.5 rounded-r-full border-l border-white/30 hover:bg-[#0c6846] cursor-pointer"
+                  title="Open dashboard"
+                  aria-label="Open dashboard"
+                >
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
+                </button>
+              </span>
               <button 
                 onClick={handleLogout}
                 className="p-1.5 rounded-full bg-white/90 hover:bg-white text-slate-500 hover:text-red-600 shadow-sm border border-black/10 transition-all cursor-pointer"
@@ -1717,6 +1752,7 @@ export default function App() {
 
       {/* Global Authentication Modal */}
       {renderAuthModal()}
+        {renderAccountPanel()}
 
     </div>
   );

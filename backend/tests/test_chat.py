@@ -356,3 +356,122 @@ def test_prompt_says_to_calculate_the_loan_as_soon_as_the_three_inputs_are_known
     s = chat.SYSTEM
     assert "calculate_loan immediately" in s and "before any business questions" in s
     assert "only for what is missing" in s
+
+
+# ---------------------------------------------------------------------------
+# Stage A: the chat panel's language switch ("hi" or "en"). No real AI call.
+
+DEVANAGARI = range(0x0900, 0x0980)
+
+
+def has_hindi(text):
+    return any(ord(ch) in DEVANAGARI for ch in text)
+
+
+def ask_in(language, *user_texts):
+    msgs = [{"role": "user", "content": t} for t in user_texts]
+    r = client.post("/api/chat", json={"messages": msgs, "language": language})
+    assert r.status_code == 200, r.text
+    return r.json()
+
+
+@pytest.mark.parametrize("language, word", [("hi", "Hindi"), ("en", "English")])
+def test_language_reaches_the_system_prompt(fake, language, word):
+    f = fake([say("ok")])
+    ask_in(language, "hello")
+    system = f.sent[0][0]["content"]
+    assert system.startswith(chat.SYSTEM)
+    assert f"only in {word}" in system and "\n10. The user chose" in system
+
+
+def test_no_language_keeps_todays_prompt(fake):
+    f = fake([say("ok")])
+    ask("hello")
+    assert f.sent[0][0]["content"] == chat.SYSTEM
+
+
+@pytest.mark.parametrize("bad", ["fr", "", 5, ["hi"]])
+def test_unknown_language_is_refused(bad):
+    r = client.post("/api/chat", json={"messages": [{"role": "user", "content": "hi"}], "language": bad})
+    assert r.status_code == 400
+
+
+def test_offline_message_in_hindi(monkeypatch):
+    monkeypatch.setattr(chat, "_api_key", lambda: None)
+    d = ask_in("hi", "नमस्ते")
+    assert d["status"] == "ai_offline" and has_hindi(d["reply"])
+    d = ask_in("en", "hello")
+    assert d["reply"] == chat.OFFLINE
+
+
+def test_key_rejected_message_in_hindi(monkeypatch):
+    import httpx as hx
+
+    def unauthorized(messages, tools):
+        req = hx.Request("POST", chat.GROQ_URL)
+        raise hx.HTTPStatusError("401", request=req, response=hx.Response(401, request=req))
+    monkeypatch.setattr(chat, "_call_model", unauthorized)
+    monkeypatch.setattr(chat, "_api_key", lambda: "bad")
+    d = ask_in("hi", "नमस्ते")
+    assert d["status"] == "ai_key_rejected" and has_hindi(d["reply"])
+    assert "GROQ_API_KEY" in d["reply"]   # the setting's name stays as it is
+
+
+def test_guard_fallback_in_hindi_keeps_the_tools_figures(fake):
+    fake([call("calculate_loan", project_cost=140000, family_income=150000, is_sc=True),
+          say("आपका लोन ₹1,25,000 है और आप हर महीने ₹38,000 कमाएँगे।")])
+    d = ask_in("hi", "लोहार, लागत 140000, कमाई 150000, SC")
+    assert d["guard"]["replaced"] is True
+    assert has_hindi(d["reply"])
+    assert "₹1,25,000" in d["reply"] and "38,000" not in d["reply"]
+
+
+def test_empty_fallback_in_hindi(fake):
+    fake([say("You will earn ₹99,999.")])
+    d = ask_in("hi", "नमस्ते")
+    assert d["guard"]["replaced"] is True and has_hindi(d["reply"])
+
+
+# Stage A, owner's decisions after the live test (12 Nov 2026)
+
+@pytest.mark.parametrize("text", ["Download the 1-page DPR.", "1 page report", "1‑पेज DPR तैयार है", "१-पेज रिपोर्ट", "1 पेज की रिपोर्ट", "1-Page DPR"])
+def test_one_page_is_not_a_figure(text):
+    assert chat.unsupported(text, set()) == []
+
+
+@pytest.mark.parametrize("text, bad", [("1 lakh loan", 100000), ("11-page report", 11), ("2-page report", 2), ("loan 1, page 3", 1)])
+def test_other_numbers_near_page_are_still_checked(text, bad):
+    assert bad in chat.unsupported(text, set())
+
+
+def test_rules_ask_for_plain_words_and_no_unsourced_lists():
+    assert "payment every 3 months" in chat.SYSTEM
+    assert "quarterly instalment" in chat.SYSTEM          # named as the word to avoid
+    assert "documents" in chat.SYSTEM and "schemes" in chat.SYSTEM
+
+
+def test_english_fallback_uses_plain_words(fake):
+    fake([call("calculate_loan", project_cost=140000, family_income=150000, is_sc=True),
+          say("Your loan is ₹1,25,000 and you will earn ₹38,000 a month.")])
+    d = ask_in("en", "blacksmith, 140000 project, income 150000, SC")
+    assert d["guard"]["replaced"] is True
+    assert "one every 3 months" in d["reply"] and "quarterly" not in d["reply"].lower()
+
+
+# Review finding, owner's ruling "fix now" (12 Nov 2026): rule 8's own words must not trip the guard.
+
+@pytest.mark.parametrize("text", ["You pay once every 3 months.", "A payment every 3 months after the pause.",
+                                  "आपको हर 3 महीने पर किस्त देनी होगी।", "हर ३ महीने में भुगतान"])
+def test_every_3_months_is_not_a_figure(text):
+    assert chat.unsupported(text, set()) == []
+
+
+@pytest.mark.parametrize("text, bad", [("every 4 months", 4), ("3 months of pause", 3), ("₹3 every 3 months", 3), ("हर 6 महीने", 6)])
+def test_other_threes_and_months_are_still_checked(text, bad):
+    assert bad in chat.unsupported(text, set())
+
+
+def test_reply_with_every_3_months_and_no_tool_result_is_kept(fake):
+    fake([say("You pay once every 3 months. What is your total project cost?")])
+    d = ask_in("en", "How much loan can I get for my business?")
+    assert d["guard"]["replaced"] is False

@@ -37,16 +37,16 @@ export default function HowItWorksView({ mandiKeyConfigured = null, onClose }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px]">
           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-            <span className="font-bold text-[#111311] block">1. NSFDC Dual-Tier Amortizer</span>
+            <span className="font-bold text-[#111311] block">1. Your loan and repayments</span>
             <span className="text-[#686D65] mt-0.5 block">Micro & Term loan at 6.5%/8.0% [S1]</span>
           </div>
           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-            <span className="font-bold text-[#111311] block">2. 12-Mo Seasonality Stress</span>
-            <span className="text-[#686D65] mt-0.5 block">Each business's leanest months, from its dossier</span>
+            <span className="font-bold text-[#111311] block">2. Good and bad months</span>
+            <span className="text-[#686D65] mt-0.5 block">Each business's weakest months, from its research file</span>
           </div>
           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-            <span className="font-bold text-[#111311] block">3. Rule of Damdupat Audit</span>
-            <span className="text-[#686D65] mt-0.5 block">Usurious Loans Act 1918 statutory legal shield</span>
+            <span className="font-bold text-[#111311] block">3. Pay off a moneylender loan</span>
+            <span className="text-[#686D65] mt-0.5 block">Interest already paid is more than the loan? Under an old law, the moneylender may not be able to ask for more interest. Check with free legal aid.</span>
           </div>
         </div>
       </div>

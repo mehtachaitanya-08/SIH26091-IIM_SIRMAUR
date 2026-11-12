@@ -1,7 +1,10 @@
 import React from 'react';
+import HowWeGotThis, { plainTag } from './HowWeGotThis';
+import { plainSizes } from '../../services/dossierView';
 
 /**
- * NsfdcAmortizerView — NSFDC loan and quarterly repayment schedule
+ * NsfdcAmortizerView — "Your loan and repayments": the NSFDC loan and its schedule (a payment every 3 months).
+ * Stage A: plain words on screen; source tags and ASSUMED notes sit under "How we got this".
  * Production: the user types project cost, family income and SC status (USER INPUT); the
  * verified server (or, offline, the same rules in the browser) gives the loan and schedule.
  * Nothing is shown until those are entered: NOT FOUND.
@@ -20,7 +23,7 @@ export default function NsfdcAmortizerView({
 }) {
   const fmt = (v) => (formatINR ? formatINR(v) : `₹${v}`);
   const tags = (loanStructure && loanStructure.tags) || {};
-  const tag = (k) => (tags[k] ? <span className="block text-[10px] font-normal text-[#0E7A53] font-mono-num">{tags[k]}</span> : null);
+  const tag = (k) => (tags[k] ? <HowWeGotThis tags={[tags[k]]} /> : null);
   const result = loanInputs && loanInputs.result;
 
   let body;
@@ -45,23 +48,25 @@ export default function NsfdcAmortizerView({
         <p className="font-bold text-[#111311]">
           {result.status === 'not_covered' ? 'Not covered by the NSFDC loan schemes.' : 'Not eligible for NSFDC loans.'}
         </p>
-        {(result.rejectionReasons || []).map((r, i) => <p key={i}>• {r} <span className="text-[10px] text-[#0E7A53]">[S1]</span></p>)}
+        {(result.rejectionReasons || []).map((r, i) => <p key={i}>• {r}</p>)}
         {(result.recommendedAlternatives || []).length > 0 && (
           <p className="text-[11px] text-[#686D65]">
-            Other schemes to look at (ASSUMED: not sourced, check each scheme's own guidelines): {result.recommendedAlternatives.join('; ')}
+            Other schemes to look at (check each scheme's own rules): {result.recommendedAlternatives.join('; ')}
           </p>
         )}
+        <HowWeGotThis tags={['S1']} notes={(result.recommendedAlternatives || []).length > 0 ? ['ASSUMED: the other schemes are not sourced; check each scheme\'s own guidelines.'] : []} />
       </div>
     );
   } else {
     body = (
       <>
         <p className="text-[11px] text-[#686D65]">
-          {loanStructure.schemeName} <span className="text-[#0E7A53]">[S1]</span> ·{' '}
-          {loanStructure.repaymentQuarters} quarterly instalments after a {loanStructure.moratoriumQuarters}-quarter pause ·{' '}
-          {loanStructure.interestRatePA}% p.a. [S1]
+          {loanStructure.schemeName} ·{' '}
+          {loanStructure.repaymentQuarters} payments, one every 3 months, after a pause of {loanStructure.moratoriumQuarters * 3} months with no payment ·{' '}
+          interest {loanStructure.interestRatePA}% a year
           {loanStructure.offline && <span className="ml-1 font-semibold text-red-700">(worked out in your browser: server offline)</span>}
         </p>
+        <HowWeGotThis tags={['S1']} working={`NSFDC rules: ${loanStructure.repaymentQuarters} payments of 3 months each after a ${loanStructure.moratoriumQuarters}-quarter pause, ${loanStructure.interestRatePA}% interest a year.`} />
         <div className="grid grid-cols-3 gap-3 text-xs">
           <div className="p-2.5 rounded-xl bg-white border border-[#E9ECEF]">
             <span className="text-[#686D65]">NSFDC loan:</span>
@@ -76,22 +81,24 @@ export default function NsfdcAmortizerView({
             {tag('promoterEquity')}
           </div>
           <div className="p-2.5 rounded-xl bg-white border border-[#E9ECEF]">
-            <span className="text-[#686D65]">Quarterly instalment:</span>
+            <span className="text-[#686D65]">Payment every 3 months:</span>
             <p className="font-bold text-[#E86043] font-mono-num">{fmt(amortizationSchedule.equatedQuarterlyInstallment)}</p>
             {tag('equatedQuarterlyInstallment')}
           </div>
         </div>
         <p className="text-[11px] text-[#686D65]">
-          Pause interest added to the loan: {fmt(loanStructure.interestAddedDuringPause)} ({tags.interestAddedDuringPause || 'CALCULATED'}) ·
-          Total paid over the loan: {fmt(loanStructure.totalDebtService)} (CALCULATED)
+          Interest during the pause, added to the loan: {fmt(loanStructure.interestAddedDuringPause)} ·
+          Total paid over the loan: {fmt(loanStructure.totalDebtService)}
         </p>
+        <HowWeGotThis tags={[tags.interestAddedDuringPause || 'CALCULATED']} working="Total paid over the loan: CALCULATED (all payments in the schedule below added up)." />
         {(result.warnings || []).map((w) => (
-          <p key={w.code} role="alert" className="rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-[11px] font-semibold text-amber-800">
-            Warning: {w.text} <span className="font-mono-num text-[10px]">[{w.tag}]</span>
-          </p>
+          <div key={w.code} role="alert" className="rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1.5 text-[11px] font-semibold text-amber-800">
+            Warning: {w.text}
+            <HowWeGotThis tags={[w.tag]} />
+          </div>
         ))}
         {(result.notes || []).map((n, i) => (
-          <p key={i} className="text-[11px] text-[#686D65]">Note: {n.text} <span className="font-mono-num text-[10px] text-[#0E7A53]">{n.tag}</span></p>
+          <div key={i} className="text-[11px] text-[#686D65]">Note: {n.text} <HowWeGotThis tags={[n.tag]} /></div>
         ))}
 
         <div className="max-h-48 overflow-y-auto border border-[#E9ECEF] rounded-xl bg-white text-[11px]">
@@ -112,9 +119,9 @@ export default function NsfdcAmortizerView({
                   <td className="p-2 font-bold">Q{q.quarter}</td>
                   <td className="p-2">
                     {q.isMoratorium ? (
-                      <span className="text-[11px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">Moratorium</span>
+                      <span className="text-[11px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">Pause (no payment)</span>
                     ) : (
-                      <span className="text-[11px] bg-emerald-100 text-[#0E7A53] px-1.5 py-0.5 rounded font-medium">Amortizing</span>
+                      <span className="text-[11px] bg-emerald-100 text-[#0E7A53] px-1.5 py-0.5 rounded font-medium">Paying back</span>
                     )}
                   </td>
                   <td className="p-2">{fmt(q.principalPayment)}</td>
@@ -126,11 +133,12 @@ export default function NsfdcAmortizerView({
             </tbody>
           </table>
         </div>
-        <p className="text-[10px] text-[#686D65]">
-          ASSUMED: loan rounded down to the rupee; pause interest added to the loan (NSFDC does not say how it is handled);
-          repaid over exactly {loanStructure.tenureYears} years ({loanStructure.totalQuarters} quarters), NSFDC says "within".
-          Advisory only, not a loan sanction.
-        </p>
+        <p className="text-[10px] text-[#686D65]">Advice only, not a loan sanction.</p>
+        <HowWeGotThis notes={[
+          'ASSUMED: loan rounded down to the rupee.',
+          'ASSUMED: interest during the pause is added to the loan (NSFDC does not say how it is handled).',
+          `ASSUMED: repaid over exactly ${loanStructure.tenureYears} years (${loanStructure.totalQuarters} quarters); NSFDC says "within".`
+        ]} />
       </>
     );
   }
@@ -140,9 +148,9 @@ export default function NsfdcAmortizerView({
       <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
         <div>
           <span className="text-[11px] font-mono-num text-[#686D65] font-semibold uppercase tracking-wider">
-            NSFDC Statutory Amortizer [S1]
+            Your loan and repayments
           </span>
-          <h4 className="font-bold text-sm text-[#111311] font-sans-ui mt-0.5">Quarterly Repayment Schedule</h4>
+          <h4 className="font-bold text-sm text-[#111311] font-sans-ui mt-0.5">Repayment schedule, a payment every 3 months</h4>
         </div>
         <button
           type="button"
@@ -155,11 +163,11 @@ export default function NsfdcAmortizerView({
 
       {mode === 'production' && loanInputs && (loanInputs.tiers || []).length > 0 && (
         <div className="space-y-1 text-xs">
-          <span className="font-semibold text-[#111311]">Sizes in this business's dossier (pick one, or type your own cost):</span>
+          <span className="font-semibold text-[#111311]">Sizes in this business's research file (pick one, or type your own cost):</span>
           <div className="flex flex-wrap gap-2">
             {/* Sizes with no cost in the dossier are listed once below, not as greyed NOT FOUND buttons
                 (teammate review, 11 Nov 2026). */}
-            {loanInputs.tiers.filter((t) => !t.disabled).map((t) => {
+            {loanInputs.tiers.map((t, i) => ({ ...t, plain: plainSizes(loanInputs.tiers)[i].plainLabel })).filter((t) => !t.disabled).map((t) => {
               const picked = !t.disabled && String(t.cost) === String(loanInputs.projectCost);
               return (
                 <button
@@ -167,26 +175,30 @@ export default function NsfdcAmortizerView({
                   type="button"
                   disabled={t.disabled}
                   onClick={() => !t.disabled && loanInputs.onPickTier(t.cost)}
-                  title={t.disabled ? t.reason : t.tag}
+                  title={plainTag(t.tag)}
                   className={`px-3 py-1.5 rounded-xl border text-left font-sans-ui ${
                     t.disabled ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed'
                       : picked ? 'bg-[#111311] text-white border-[#111311] cursor-pointer'
                       : 'bg-white text-[#111311] border-[#E9ECEF] hover:border-[#111311]/40 cursor-pointer'
                   }`}
                 >
-                  <span className="block font-semibold">{t.label}</span>
+                  <span className="block font-semibold">{t.plain}</span>
                   <span className="block font-mono-num">{t.disabled ? 'NOT FOUND' : fmt(t.cost)}</span>
-                  {!t.disabled && <span className={`block text-[10px] ${picked ? 'text-emerald-300' : 'text-[#0E7A53]'}`}>{t.tag}</span>}
                 </button>
               );
             })}
           </div>
+          <HowWeGotThis
+            tags={[...new Set(loanInputs.tiers.filter((t) => t.tag).map((t) => t.tag))]}
+            notes={plainSizes(loanInputs.tiers).map((n) => `${n.plainLabel} = "${n.originalLabel}" in the research file`)}
+          />
           {loanInputs.tiers.some((t) => t.disabled) && (
             <p className="text-[11px] text-[#686D65] whitespace-pre-line">
               {(() => {
-                const gone = loanInputs.tiers.filter((t) => t.disabled).map((t) => t.label);
+                const names = plainSizes(loanInputs.tiers);
+                const gone = names.filter((n, i) => loanInputs.tiers[i].disabled).map((n) => n.plainLabel);
                 return `यह जानकारी अभी नहीं है: लागत (${gone.join(', ')})\n`
-                  + `We don't have this yet: the cost of the ${gone.join(', ')} size (${gone.length}). Type your own cost instead.`;
+                  + `${gone.join(', ')}: cost not in research file. Type your own cost instead.`;
               })()}
             </p>
           )}
@@ -234,6 +246,11 @@ export default function NsfdcAmortizerView({
         </div>
       )}
 
+      {/* Typing fix (Stage A): the last loan stays on screen; this one line, in a fixed space,
+          says a new one is being worked out. */}
+      {mode === 'production' && loanInputs && result && !loanInputs.error && (
+        <p className="h-4 text-[11px] text-[#686D65]" aria-live="polite">{loanInputs.updating ? 'Updating…' : ''}</p>
+      )}
       {body}
 
       <div className="flex justify-end items-center pt-1 text-xs">
@@ -242,7 +259,7 @@ export default function NsfdcAmortizerView({
           onClick={onNavigateDpr}
           className="px-3 py-1.5 rounded-xl bg-[#111311] text-white font-bold hover:bg-slate-800 transition-all cursor-pointer font-sans-ui"
         >
-          Generate Lead-Bank DPR ↗
+          Download report (DPR) ↗
         </button>
       </div>
     </div>

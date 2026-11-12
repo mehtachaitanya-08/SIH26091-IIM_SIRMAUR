@@ -122,10 +122,14 @@ export function authenticateByGoogle(googleProfile = null) {
     users.push(user);
     persistUsers(users);
   } else {
-    // Update existing user with Google provider flag and avatar
-    user.authProvider = 'google';
-    if (profile.avatar) user.avatar = profile.avatar;
-    if (profile.name) user.name = profile.name;
+    // Update existing user with Google provider flag, avatar and name. A name the user changed
+    // in My account (nameSetByUser) is kept (review finding, owner's ruling 12 Nov 2026).
+    // The stored copy in the list is updated, so the list and the session stay the same.
+    const stored = users.find((u) => u.id === user.id);
+    stored.authProvider = 'google';
+    if (profile.avatar) stored.avatar = profile.avatar;
+    if (profile.name && !stored.nameSetByUser) stored.name = profile.name;
+    user = stored;
     persistUsers(users);
   }
 
@@ -196,4 +200,68 @@ export function clearSession() {
   } catch (err) {
     console.warn('userDatabase: Error removing session from localStorage', err);
   }
+}
+
+// "My account" (Stage A). Both functions write the users list AND the active session, so the
+// top bar, the side card and the next sign-in all see the same answer.
+function saveUser(updated) {
+  const users = getAllUsers().map((u) => (u.id === updated.id ? updated : u));
+  persistUsers(users);
+  const session = getCurrentSession();
+  if (session && session.id === updated.id) saveSession(updated);
+}
+
+/**
+ * Change what the user says about themselves: name, SC (CATEGORY_SC, CATEGORY_NOT_SC or null for
+ * "not said"), yearly family income (rupees, a number; '' or null = not given) and district (free text).
+ * The PIN, phone and id cannot be changed here.
+ */
+export function updateUser(id, changes = {}) {
+  const user = getAllUsers().find((u) => u.id === id);
+  if (!user) return { success: false, error: 'Account not found. Please sign in again.' };
+  const next = { ...user };
+  if ('name' in changes) {
+    const name = String(changes.name ?? '').trim();
+    if (!name) return { success: false, error: 'Please enter your name.' };
+    if (name !== user.name) next.nameSetByUser = true; // a later Google sign-in keeps it
+    next.name = name;
+  }
+  if ('category' in changes) {
+    const c = changes.category;
+    if (c !== null && c !== CATEGORY_SC && c !== CATEGORY_NOT_SC) {
+      return { success: false, error: 'Please choose Yes, No or Not said for SC.' };
+    }
+    next.category = c;
+  }
+  if ('income' in changes) {
+    const raw = changes.income;
+    if (raw === null || raw === undefined || String(raw).trim() === '') {
+      next.income = null;
+    } else {
+      const v = Number(raw);
+      if (!Number.isFinite(v) || v < 0) return { success: false, error: 'Yearly family income must be a number of rupees, 0 or more.' };
+      next.income = v;
+    }
+  }
+  if ('district' in changes) {
+    const d = String(changes.district ?? '').trim();
+    next.district = d || null;
+  }
+  saveUser(next);
+  return { success: true, user: next };
+}
+
+/** Change the 4-digit PIN. Needs the current PIN. Google accounts have no PIN. */
+export function changePin(id, currentPin, newPin) {
+  const user = getAllUsers().find((u) => u.id === id);
+  if (!user) return { success: false, error: 'Account not found. Please sign in again.' };
+  if (user.authProvider === 'google' || !user.pin) {
+    return { success: false, error: 'This account signs in with Google and has no PIN.' };
+  }
+  if (String(currentPin ?? '').trim() !== user.pin) return { success: false, error: 'The current PIN is not right.' };
+  const pin = String(newPin ?? '').trim();
+  if (!/^\d{4}$/.test(pin)) return { success: false, error: 'The new PIN must be exactly 4 digits.' };
+  const next = { ...user, pin };
+  saveUser(next);
+  return { success: true, user: next };
 }

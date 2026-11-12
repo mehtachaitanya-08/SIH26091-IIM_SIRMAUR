@@ -15,11 +15,14 @@ import {
 } from '../services/api';
 import { tierOptions, costOnBusinessLoad, flowSteps } from '../services/dossierView';
 import { CATEGORY_SC, CATEGORY_NOT_SC } from '../data/userDatabase';
+import { makeLatest, TYPING_PAUSE_MS } from '../services/latest';
 
 // Import SSOT Modular Dashboard Components
 import DashboardShell from './dashboard/DashboardShell';
 import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
+import ChatLauncher from './dashboard/ChatLauncher';
+import { chatNotice as noticeText } from '../services/chatText';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
 
 // The sidebar lists only scenarios the user saved. It used to start with three made-up "recent"
@@ -39,14 +42,8 @@ function loadScenarios() {
   }
 }
 
-// Chat messages in Hindi with plain English under them (owner's decision, 11 Nov 2026): the
-// English-only "AI offline" notice was missed by Hindi readers and taken for a broken chat.
-const CHAT_NOTICES = {
-  aiOff: 'चैट अभी बंद है।\nChat is off right now: this server has no AI key. The loan calculator still works.',
-  keyRejected: 'चैट अभी बंद है।\nChat is off right now: the AI key was rejected. The loan calculator still works.',
-  serverOffline: 'सर्वर बंद है।\nThe server is off, so the chat cannot answer. The loan calculator still works.',
-  error: 'कुछ गड़बड़ हुई।\nSomething went wrong with the chat.'
-};
+// Chat notices now follow the language picked in the chat panel (Stage A, services/chatText.js);
+// before a language is picked they are Hindi with English under them (owner's decision, 11 Nov 2026).
 
 const isPositiveNumber = (v) => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) > 0;
 const isNonNegativeNumber = (v) => v !== '' && v !== null && Number.isFinite(Number(v)) && Number(v) >= 0;
@@ -91,6 +88,11 @@ export default function ProductionDashboard({
   useEffect(() => {
     if (registeredAnswer !== null) setIsSc((prev) => (prev === null ? registeredAnswer : prev));
   }, [registeredAnswer]);
+  // My account (Stage A): an empty income box is filled from the saved yearly income, the same way.
+  const savedIncome = typeof currentUser?.income === 'number' && Number.isFinite(currentUser.income) ? String(currentUser.income) : null;
+  useEffect(() => {
+    if (savedIncome !== null) setFamilyIncome((prev) => (prev === '' ? savedIncome : prev));
+  }, [savedIncome]);
   const [loanResult, setLoanResult] = useState(null);
   const [loanError, setLoanError] = useState(null);
   // Answers the chat collected, kept with the business they belong to: {code, answers}
@@ -115,7 +117,10 @@ export default function ProductionDashboard({
   const [commandInput, setCommandInput] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
   const [chatBusy, setChatBusy] = useState(false);
-  const [chatNotice, setChatNotice] = useState(null);
+  const [chatNotice, setChatNotice] = useState(null); // {key, detail?}: shown in the chat's language
+  // Chat panel (Stage A): closed until the user opens it; language null until picked.
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatLanguage, setChatLanguage] = useState(null);
 
   // UI & Scenario Persistence States
   const [toastMessage, setToastMessage] = useState(null);
@@ -192,30 +197,48 @@ export default function ProductionDashboard({
 
   // The dossier's own printed cash-flow cover (DSCR) for the size matching the cost (or the nearest, ASSUMED)
   const [dossierCashflow, setDossierCashflow] = useState(null);
+  const [cashflowUpdating, setCashflowUpdating] = useState(false);
+  const cashflowLatest = useRef(makeLatest());
+  const cashflowCode = useRef(selectedDomainCode);
   useEffect(() => {
-    let isMounted = true;
-    setDossierCashflow(null);
-    if (!isPositiveNumber(projectCost)) return undefined;
-    // SC unknown -> not sent, so the server takes it as SC and says so as ASSUMED on screen. The page
-    // used to send "true" itself, which hid that assumption (review, 11 Nov 2026).
-    fetchDossierCashflow(selectedDomainCode, Number(projectCost),
-      isNonNegativeNumber(familyIncome) ? Number(familyIncome) : 0, typeof isSc === 'boolean' ? isSc : undefined)
-      .then((res) => { if (isMounted) setDossierCashflow(noteOffline(res)); })
-      .catch((err) => { if (isMounted) setDossierCashflow({ status: 'NOT FOUND', reason: err.message }); });
-    return () => { isMounted = false; };
+    const id = cashflowLatest.current.next();
+    // Typing fix (Stage A): the old figures stay on screen while the user types (they used to be
+    // cleared on every key, so the page jumped); they go only when the business changes or the
+    // cost is gone. The server is asked 0.4 s after the last key.
+    if (cashflowCode.current !== selectedDomainCode) { cashflowCode.current = selectedDomainCode; setDossierCashflow(null); }
+    if (!isPositiveNumber(projectCost)) { setDossierCashflow(null); setCashflowUpdating(false); return undefined; }
+    setCashflowUpdating(true);
+    const timer = setTimeout(() => {
+      // SC unknown -> not sent, so the server takes it as SC and says so as ASSUMED on screen. The page
+      // used to send "true" itself, which hid that assumption (review, 11 Nov 2026).
+      fetchDossierCashflow(selectedDomainCode, Number(projectCost),
+        isNonNegativeNumber(familyIncome) ? Number(familyIncome) : 0, typeof isSc === 'boolean' ? isSc : undefined)
+        .then((res) => { if (cashflowLatest.current.isCurrent(id)) { setDossierCashflow(noteOffline(res)); setCashflowUpdating(false); } })
+        .catch((err) => { if (cashflowLatest.current.isCurrent(id)) { setDossierCashflow({ status: 'NOT FOUND', reason: err.message }); setCashflowUpdating(false); } });
+    }, TYPING_PAUSE_MS);
+    return () => clearTimeout(timer);
   }, [selectedDomainCode, projectCost, familyIncome, isSc, noteOffline]);
 
   // NSFDC loan: only once the user has entered cost, income and SC status
   const loanReady = isPositiveNumber(projectCost) && isNonNegativeNumber(familyIncome) && typeof isSc === 'boolean';
+  const [loanUpdating, setLoanUpdating] = useState(false);
+  const loanLatest = useRef(makeLatest());
   useEffect(() => {
-    let isMounted = true;
-    setLoanResult(null);
-    setLoanError(null);
-    if (!loanReady) return undefined;
-    calculateNSFDCLoan(Number(projectCost), Number(familyIncome), { isSc }).then((res) => {
-      if (isMounted) setLoanResult(noteOffline(res));
-    }).catch((err) => { if (isMounted) setLoanError(err.message); });
-    return () => { isMounted = false; };
+    const id = loanLatest.current.next();
+    // Typing fix (Stage A): keep the last loan on screen with a one-line "updating…" until the
+    // new answer arrives; ask 0.4 s after the last key; a late reply to an older value is ignored.
+    if (!loanReady) { setLoanResult(null); setLoanError(null); setLoanUpdating(false); return undefined; }
+    setLoanUpdating(true);
+    const timer = setTimeout(() => {
+      calculateNSFDCLoan(Number(projectCost), Number(familyIncome), { isSc }).then((res) => {
+        if (!loanLatest.current.isCurrent(id)) return;
+        setLoanError(null); setLoanResult(noteOffline(res)); setLoanUpdating(false);
+      }).catch((err) => {
+        if (!loanLatest.current.isCurrent(id)) return;
+        setLoanError(err.message); setLoanUpdating(false);
+      });
+    }, TYPING_PAUSE_MS);
+    return () => clearTimeout(timer);
   }, [projectCost, familyIncome, isSc, loanReady, noteOffline]);
 
   // Shapes the views read. interestRatePA comes from the server's interestRatePa (p.a. %).
@@ -244,6 +267,7 @@ export default function ProductionDashboard({
     onFamilyIncomeChange: setFamilyIncome,
     onIsScChange: setIsSc,
     ready: loanReady,
+    updating: loanUpdating,
     result: loanResult,
     error: loanError,
     tiers: tierOptions(dossierDetail),
@@ -252,13 +276,19 @@ export default function ProductionDashboard({
   const steps = flowSteps({ businessPicked, costChosen, projectCost, familyIncome, isSc, loanReady });
 
   // Mode B Debt Restructuring: the server's figures only (team's engine, tagged ASSUMED by the server)
+  const debtLatest = useRef(makeLatest());
+  const [debtUpdating, setDebtUpdating] = useState(false);
   useEffect(() => {
-    let isMounted = true;
-    if (!debtEntered) { setDebtRefinanceData(null); return undefined; }
+    const id = debtLatest.current.next();
+    const isMounted = () => debtLatest.current.isCurrent(id);
+    if (!debtEntered) { setDebtRefinanceData(null); setDebtUpdating(false); return undefined; }
+    setDebtUpdating(true);
     // Only a positive income is sent: a share of a zero income is not a figure (review, 11 Nov 2026).
     const incomeOption = isPositiveNumber(debtIncome) ? { householdMonthlyIncome: Number(debtIncome) } : {};
-    restructureDebt(debtPrincipal, debtRateSenkda, debtMonthsActive, incomeOption).then((res) => {
-      if (!isMounted) return;
+    // Typing fix (Stage A): the old figures stay while typing; the server is asked 0.4 s after the last key.
+    const timer = setTimeout(() => restructureDebt(debtPrincipal, debtRateSenkda, debtMonthsActive, incomeOption).then((res) => {
+      if (!isMounted()) return;
+      setDebtUpdating(false);
       noteOffline(res);
       if (res.offline) { setDebtRefinanceData({ offline: true }); return; }
       const debt = (res.auditedDebts || res.audited_debts || [])[0] || {};
@@ -278,9 +308,9 @@ export default function ProductionDashboard({
         tag: res.tags?.source
       });
     }).catch((err) => {
-      if (isMounted) setDebtRefinanceData({ error: err.message });
-    });
-    return () => { isMounted = false; };
+      if (isMounted()) { setDebtRefinanceData({ error: err.message }); setDebtUpdating(false); }
+    }), TYPING_PAUSE_MS);
+    return () => clearTimeout(timer);
   }, [debtPrincipal, debtRateSenkda, debtMonthsActive, debtIncome, debtEntered, noteOffline]);
 
   // Query Daily Agmarknet Mandi Spot Prices via data.gov.in API
@@ -378,17 +408,17 @@ export default function ProductionDashboard({
     setChatBusy(true);
     setChatNotice(null);
     try {
-      const res = await sendChat(msgs);
+      const res = await sendChat(msgs, chatLanguage);
       if (res.offline) {
         setServerOffline(true);
         setChatMessages(chatMessages); // not answered: keep it out of the conversation, give it back in the box
         setCommandInput(text);
-        setChatNotice(CHAT_NOTICES.serverOffline);
+        setChatNotice({ key: 'serverOffline' });
         return;
       }
       setServerOffline(false);
       if (res.status !== 'ok') {
-        setChatNotice(res.status === 'ai_key_rejected' ? CHAT_NOTICES.keyRejected : CHAT_NOTICES.aiOff);
+        setChatNotice({ key: res.status === 'ai_key_rejected' ? 'keyRejected' : 'aiOff' });
       }
       if (res.reply) setChatMessages([...msgs, { role: 'assistant', content: res.reply }]);
       else { setChatMessages(chatMessages); setCommandInput(text); }
@@ -413,7 +443,7 @@ export default function ProductionDashboard({
     } catch (err) {
       setChatMessages(chatMessages);
       setCommandInput(text);
-      setChatNotice(`${CHAT_NOTICES.error} (${err.message})`);
+      setChatNotice({ key: 'error', detail: err.message });
     } finally {
       setChatBusy(false);
     }
@@ -425,6 +455,7 @@ export default function ProductionDashboard({
     if (initialSent.current || !initialQuestion || !initialQuestion.trim()) return;
     initialSent.current = true;
     if (onInitialQuestionUsed) onInitialQuestionUsed();
+    setChatOpen(true);  // the user asked on the front page: show the panel with the question in it
     handleChatSend(initialQuestion);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion]);
@@ -509,6 +540,7 @@ export default function ProductionDashboard({
         feasibility={feasibility}
         dossierDetail={dossierDetail}
         dossierCashflow={dossierCashflow}
+        cashflowUpdating={cashflowUpdating}
         flowSteps={steps}
         debtPrincipal={debtPrincipal}
         onPrincipalChange={enterDebt(setDebtPrincipal)}
@@ -520,12 +552,7 @@ export default function ProductionDashboard({
         onDebtIncomeChange={setDebtIncome}
         debtEntered={debtEntered}
         debtRefinanceData={debtRefinanceData}
-        commandInput={commandInput}
-        onCommandInputChange={setCommandInput}
-        onCommandSubmit={() => handleChatSend()}
-        chatMessages={chatMessages}
-        chatBusy={chatBusy}
-        chatNotice={chatNotice}
+        debtUpdating={debtUpdating}
         onShowToast={showToast}
         onDownloadPdf={handleDownloadDprPdf}
         formatINR={formatINR}
@@ -546,6 +573,21 @@ export default function ProductionDashboard({
         onRefresh={handleRefreshScenarios}
         onCreateSimulation={handleCreateNewSimulation}
         mode="production"
+      />
+
+      {/* Chat (Stage A): a button at the bottom right that opens the chat panel */}
+      <ChatLauncher
+        open={chatOpen}
+        onOpen={() => setChatOpen(true)}
+        onClose={() => setChatOpen(false)}
+        language={chatLanguage}
+        onLanguageChange={setChatLanguage}
+        messages={chatMessages}
+        busy={chatBusy}
+        notice={chatNotice ? `${noticeText(chatNotice.key, chatLanguage)}${chatNotice.detail ? ` (${chatNotice.detail})` : ''}` : null}
+        input={commandInput}
+        onInputChange={setCommandInput}
+        onSend={(text) => handleChatSend(text ?? null)}
       />
     </DashboardShell>
   );

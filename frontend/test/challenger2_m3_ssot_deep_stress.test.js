@@ -91,7 +91,8 @@ describe('CHALLENGER 2: EMPIRICAL DEEP STRESS & SSOT PARITY HARNESS (M3)', () =>
       const railCode = fs.readFileSync(railPath, 'utf8');
 
       assert.ok(railCode.includes('UdyamSetuAI'), 'NavRail must render UdyamSetuAI logo brand text');
-      assert.ok(railCode.includes('Enterprise Studio'), 'NavRail must render active simulator tab title');
+      // Stage A: plain-word tab name (was 'Enterprise Studio').
+      assert.ok(railCode.includes('Good and bad months'), 'NavRail must render active simulator tab title');
       assert.ok(railCode.includes('bg-white text-[#111311] shadow-sm'), 'Active tab must receive white pill styling');
       assert.ok(railCode.includes('Advisory Tools'), 'Must render Advisory Tools accordion header');
     });

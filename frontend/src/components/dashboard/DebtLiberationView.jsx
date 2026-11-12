@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import HowWeGotThis from './HowWeGotThis';
 
 /**
  * DebtLiberationView — Mode B Informal Moneylender Debt Refinancing
@@ -16,8 +17,8 @@ export default function DebtLiberationView({
   debtIncome = '',
   onDebtIncomeChange,
   debtRefinanceData,
+  debtUpdating = false,
   onClose,
-  onGenerateLegalPackage,
   formatINR,
   debtEntered = true,
   mode = 'mockup'
@@ -31,7 +32,7 @@ export default function DebtLiberationView({
       <div className="flex items-center justify-between pb-3 border-b border-[#E9ECEF]">
         <div>
           <span className="text-[11px] font-mono-num text-[#E86043] font-semibold">
-            Mode B · Informal Debt Refinancing
+            Pay off a moneylender loan
           </span>
           <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
             Moneylender Consolidation Calculator
@@ -119,6 +120,10 @@ export default function DebtLiberationView({
         )}
       </div>
 
+      {/* Typing fix (Stage A): one line in a fixed space while new figures are worked out. */}
+      {hasFigures && (
+        <p className="h-4 text-[11px] text-[#686D65]" aria-live="polite">{debtUpdating ? 'Updating…' : ''}</p>
+      )}
       {!hasFigures ? (
         <p className="p-3 rounded-xl bg-white border border-[#E9ECEF] text-xs text-[#686D65] whitespace-pre-line">
           {isMockup ? 'Sign in and open the dashboard to see the refinancing figures (see dashboard).'
@@ -162,27 +167,30 @@ export default function DebtLiberationView({
                 {'यह जानकारी अभी नहीं है: कमाई का हिस्सा (1)\nWe don\'t have this yet: share of your income (1). Enter your household income above.'}
               </p>
             )}
-            {d.tag && <p className="text-[10px] text-amber-700 pt-1">{d.tag}</p>}
+            <HowWeGotThis tags={[d.tag]} />
           </div>
 
           {d.damdupatViolated && (
             <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-[11px] text-red-800 flex items-center space-x-2">
               <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0" />
               <span>
-                <strong>Rule of Damdupat Triggered:</strong> Total interest paid ({formatINR ? formatINR(d.paidToDate) : `₹${d.paidToDate}`} over {d.monthsActive} months) exceeds principal ({formatINR ? formatINR(d.principal) : `₹${d.principal}`}). Moneylender barred from demanding further interest under Usurious Loans Act 1918! (ASSUMED: team's engine, not verified; check with legal aid.)
+                Interest already paid is more than the loan. Under an old law, the moneylender may not be able to ask for more interest. Check with free legal aid.
+                <HowWeGotThis
+                  tags={[d.tag]}
+                  working={`Interest paid so far: ${formatINR ? formatINR(d.paidToDate) : `₹${d.paidToDate}`} over ${d.monthsActive} months; loan: ${formatINR ? formatINR(d.principal) : `₹${d.principal}`}.`}
+                  notes={[
+                    'Rule of Damdupat (Usurious Loans Act 1918): interest charged may not be more than the loan itself.',
+                    'The team\'s engine shows this note when interest paid is equal to or more than the loan (paid ≥ loan).',
+                    'ASSUMED: team\'s engine, not verified; check with legal aid.'
+                  ]}
+                />
               </span>
             </div>
           )}
         </>
       )}
 
-      <button
-        type="button"
-        onClick={onGenerateLegalPackage}
-        className="w-full py-2.5 rounded-xl bg-[#111311] text-white font-bold text-xs hover:bg-slate-800 transition-all cursor-pointer font-sans-ui"
-      >
-        Generate Legal Settlement Package ↗
-      </button>
+      {/* The "Generate Legal Settlement Package" button made nothing; removed (Stage A). */}
     </div>
   );
 }

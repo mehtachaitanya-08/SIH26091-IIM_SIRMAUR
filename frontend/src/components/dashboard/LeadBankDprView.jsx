@@ -66,7 +66,7 @@ export default function LeadBankDprView({
               : loanInputs?.result && !loanInputs.result.isEligible
                 ? (loanInputs.result.status === 'not_covered' ? 'Not covered by the NSFDC loan schemes [S1]' : 'Not eligible for NSFDC loans [S1]')
               : loanInputs?.ready ? 'Working out the loan…'
-              : 'पहले लागत, कमाई और SC जानकारी भरें। / NOT FOUND: enter your project cost, income and SC status in the NSFDC Amortizer'}
+              : 'पहले लागत, कमाई और SC जानकारी भरें। / NOT FOUND: enter your project cost, income and SC status in "Your loan and repayments"'}
           </span>
         </div>
         {!isMockup && loanStructure && (
@@ -78,7 +78,7 @@ export default function LeadBankDprView({
           </div>
         )}
         <p className="text-[11px] text-[#686D65] pt-1">
-          Made by the server from verified sources: loan, quarterly summary, your answers to the business questions,
+          Made by the server from verified sources: loan, summary of payments every 3 months, your answers to the business questions,
           gaps (NOT FOUND) and sources, each figure tagged. Advisory document only: not a loan sanction.
         </p>
       </div>

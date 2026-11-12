@@ -23,10 +23,10 @@ export default function NavRail({
   // first-time user sees their own business first (teammate review, 11 Nov 2026).
   const tabs = [
     { id: 'home', label: 'Home' },
-    { id: 'simulator', label: 'Enterprise Studio' },
-    { id: 'amortizer', label: 'NSFDC Amortizer' },
-    { id: 'restructure', label: 'Debt Liberation' },
-    { id: 'dpr', label: '1-Page DPR' },
+    { id: 'simulator', label: 'Good and bad months' },
+    { id: 'amortizer', label: 'Your loan and repayments' },
+    { id: 'restructure', label: 'Pay off a moneylender loan' },
+    { id: 'dpr', label: 'Download report (DPR)' },
     { id: 'feasibility', label: 'Feasibility' },
     { id: 'howitworks', label: 'How it works' }
   ];

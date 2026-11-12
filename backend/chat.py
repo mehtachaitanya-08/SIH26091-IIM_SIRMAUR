@@ -59,7 +59,20 @@ Hard rules:
 4. Use question ids and answer choices exactly as get_questions returns them.
 5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy. Keep each reply under 80 words and ask at most 2 questions at a time.
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
-7. To give the DPR, call dpr_link and tell the user to press the Download DPR button."""
+7. To give the DPR, call dpr_link and tell the user to press the Download DPR button.
+8. Use the dashboard's plain words: say "payment every 3 months", not "quarterly instalment"; say "pause (no payment)", not "moratorium".
+9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet."""
+
+# Stage A: the chat panel sends the language the user picked; one line is added to the rules.
+# With no language (older callers), the prompt is exactly SYSTEM (rule 5: the user's language).
+LANGUAGES = {"hi": "Hindi", "en": "English"}
+
+
+def system_prompt(language=None):
+    if language not in LANGUAGES:
+        return SYSTEM
+    script = " (Devanagari script)" if language == "hi" else ""
+    return SYSTEM + f"\n10. The user chose {LANGUAGES[language]}: answer only in {LANGUAGES[language]}{script}, whatever language they type in."
 
 
 # ---------------------------------------------------------------------------
@@ -314,6 +327,12 @@ def allowed_numbers(tool_results, user_texts):
     return allowed
 
 
+# "1-page DPR" / "1-पेज" names the report, it is not a figure (owner's decision, 12 Nov 2026).
+# Only a lone 1 (or १) right before "page"/"पेज"/"पृष्ठ"; every other number is still checked.
+ONE_PAGE = re.compile(r"(?<![\d.,])[1१]\s*[-\u2010\u2011\u2013]?\s*(?=(?:page|पेज|पृष्ठ))", re.I)
+# Rule 8's own words, "every 3 months" / "हर 3 महीने", are not a figure (review finding, owner's
+# ruling 12 Nov 2026). Only this exact phrase; any other 3 is still checked.
+EVERY_3_MONTHS = re.compile(r"\b(every)\s+3\s+(months?)\b|(हर)\s*[3३]\s*(महीने|महीनों)", re.I)
 LIST_MARKER = re.compile(r"(?m)^(\s*(?:\*\*)?)\d{1,2}[.)](?=\s)")
 
 
@@ -321,6 +340,8 @@ def unsupported(text, allowed):
     """Numbers in the AI's text that the tools or the user did not give. Number words always count as unsupported.
     List numbering at the start of a line ("1." or "2)") is not a figure; everything after it is still checked."""
     text = LIST_MARKER.sub(lambda m: m.group(1) + "•", str(text))
+    text = ONE_PAGE.sub("one-", text)
+    text = EVERY_3_MONTHS.sub("every quarter", text)  # removed before checking; never shown to the user
     bad = [m.group(0) for m in NUM_WORDS.finditer(text)]
     for v, _ in numbers_in(text):
         if v in allowed or round(v, 2) in allowed:
@@ -329,16 +350,18 @@ def unsupported(text, allowed):
     return bad
 
 
-def _plain_summary(tool_results):
+def _plain_summary(tool_results, language=None):
     """A safe reply built only from the tools' own words and figures."""
+    if language == "hi":
+        return _plain_summary_hi(tool_results)
     lines = []
     for t in tool_results:
         r = t["result"]
         if t["tool"] == "calculate_loan" and r.get("isEligible"):
             from backend.dpr import inr
             lines.append(f"{r['scheme']}: loan {inr(r['loanAmount'])}, your share {inr(r['ownContribution'])}, "
-                         f"{r['interestRatePa']}% a year, {r['repaymentQuarters']} quarterly instalments of "
-                         f"{inr(r['quarterlyInstalment'])}.")
+                         f"{r['interestRatePa']}% a year, {r['repaymentQuarters']} payments of "
+                         f"{inr(r['quarterlyInstalment'])}, one every 3 months.")
         elif t["tool"] == "calculate_loan" and r.get("isEligible") is False:
             lines += [x["text"] for x in r.get("reasons", [])]
         elif t["tool"] == "run_advice":
@@ -349,12 +372,42 @@ def _plain_summary(tool_results):
             if pc.get("value"):
                 lines.append(f"{r['code']} dossier, {r['tier']['label']}: project cost {inr(pc['value'])}.")
             if r.get("status") == "ok":
-                yrs = [f"Year {y['year']} {y['value']}" for y in r["dscr"]["years"] if y.get("value") is not None]
-                lines.append(f"The dossier's own cash-flow cover (DSCR): {', '.join(yrs)}.")
+                yrs = [f"Year {y['year']}: ₹{y['value']}" for y in r["dscr"]["years"] if y.get("value") is not None]
+                lines.append(f"Earnings for every ₹1 of loan payment ({r['code']} research file): {', '.join(yrs)}.")
             elif r.get("reason"):
-                lines.append(f"Cash-flow cover: NOT FOUND ({r['reason']})")
+                lines.append(f"Can the business repay: NOT FOUND ({r['reason']})")
     if not lines:
         lines = ["I can only give figures that the server has calculated. Please tell me your business and project cost."]
+    return " ".join(lines)
+
+
+def _plain_summary_hi(tool_results):
+    """The same safe reply in Hindi (Stage A). The tools' own reason texts are in English and are
+    passed through as they are: nothing is machine-translated."""
+    from backend.dpr import inr
+    lines = []
+    for t in tool_results:
+        r = t["result"]
+        if t["tool"] == "calculate_loan" and r.get("isEligible"):
+            lines.append(f"{r['scheme']}: लोन {inr(r['loanAmount'])}, आपका हिस्सा {inr(r['ownContribution'])}, "
+                         f"ब्याज {r['interestRatePa']}% सालाना, हर 3 महीने पर {inr(r['quarterlyInstalment'])} की "
+                         f"{r['repaymentQuarters']} किस्तें।")
+        elif t["tool"] == "calculate_loan" and r.get("isEligible") is False:
+            lines.append("NSFDC लोन नहीं मिल सकता:")
+            lines += [x["text"] for x in r.get("reasons", [])]
+        elif t["tool"] == "run_advice":
+            lines += [x["text"] for x in r.get("results", []) if x.get("status") == "result"]
+        elif t["tool"] == "dossier_figures" and r.get("tier"):
+            pc = r["tier"]["project_cost"]
+            if pc.get("value"):
+                lines.append(f"{r['code']} रिसर्च फ़ाइल, {r['tier']['label']}: प्रोजेक्ट लागत {inr(pc['value'])}।")
+            if r.get("status") == "ok":
+                yrs = [f"वर्ष {y['year']}: ₹{y['value']}" for y in r["dscr"]["years"] if y.get("value") is not None]
+                lines.append(f"कर्ज़ की हर ₹1 किस्त पर व्यवसाय की कमाई (रिसर्च फ़ाइल): {', '.join(yrs)}।")
+            elif r.get("reason"):
+                lines.append(f"कर्ज़ चुकाने की क्षमता: जानकारी नहीं है ({r['reason']})")
+    if not lines:
+        lines = ["मैं सिर्फ़ वही आँकड़े बता सकता हूँ जो सर्वर ने निकाले हैं। कृपया अपना व्यवसाय और प्रोजेक्ट की लागत बताइए।"]
     return " ".join(lines)
 
 
@@ -426,6 +479,12 @@ def _model_with_retry(messages, tools):
 
 OFFLINE = ("The AI assistant is offline right now. You can still use the dashboard: choose your business, "
            "answer its questions, and use the loan calculator.")
+OFFLINE_HI = ("AI सहायक अभी बंद है। आप डैशबोर्ड फिर भी इस्तेमाल कर सकते हैं: अपना व्यवसाय चुनें, "
+              "उसके सवालों के जवाब दें, और लोन कैलकुलेटर इस्तेमाल करें।")
+KEY_REJECTED = ("The AI key was rejected. Ask the team to check GROQ_API_KEY. "
+                "You can still use the dashboard's loan calculator.")
+KEY_REJECTED_HI = ("AI की चाबी (key) नहीं मानी गई। टीम से GROQ_API_KEY जाँचने को कहें। "
+                   "लोन कैलकुलेटर फिर भी चलता है।")
 
 
 @router.post("/api/chat")
@@ -442,13 +501,17 @@ async def chat_endpoint(request: Request):
             return _error("each message needs role 'user' or 'assistant' and text content", 400)
         convo.append({"role": m["role"], "content": m["content"][:2000]})
     user_texts = [m["content"] for m in convo if m["role"] == "user"]
+    language = body.get("language")
+    if language is not None and (not isinstance(language, str) or language not in LANGUAGES):
+        return _error("'language' must be 'hi' or 'en'", 400)
+    offline = OFFLINE_HI if language == "hi" else OFFLINE
 
     if not _api_key():
-        return {"status": "ai_offline", "reply": OFFLINE, "tool_results": [], "guard": {"replaced": False}, "model": None}
+        return {"status": "ai_offline", "reply": offline, "tool_results": [], "guard": {"replaced": False}, "model": None}
 
     history = [dict(m, content=m["content"][:MAX_ASSISTANT_CHARS] + ("…" if len(m["content"]) > MAX_ASSISTANT_CHARS else ""))
                if m["role"] == "assistant" else m for m in convo[-MAX_HISTORY:]]
-    messages = [{"role": "system", "content": SYSTEM}] + history
+    messages = [{"role": "system", "content": system_prompt(language)}] + history
     tools = tool_specs()
     results = []
     reply = None
@@ -471,17 +534,16 @@ async def chat_endpoint(request: Request):
                 messages.append({"role": "tool", "tool_call_id": c.get("id", ""),
                                  "content": json.dumps(res, separators=(",", ":"), ensure_ascii=False)[:MAX_TOOL_CHARS]})
     except KeyRejected:
-        return {"status": "ai_key_rejected", "reply": "The AI key was rejected. Ask the team to check GROQ_API_KEY. "
-                "You can still use the dashboard's loan calculator.", "tool_results": results,
+        return {"status": "ai_key_rejected", "reply": KEY_REJECTED_HI if language == "hi" else KEY_REJECTED, "tool_results": results,
                 "guard": {"replaced": False}, "model": MODEL}
     except Exception as exc:
         log.warning("chat failed: %s", type(exc).__name__)
-        return {"status": "ai_offline", "reply": OFFLINE, "tool_results": results, "guard": {"replaced": False}, "model": MODEL}
+        return {"status": "ai_offline", "reply": offline, "tool_results": results, "guard": {"replaced": False}, "model": MODEL}
 
     if reply is None:
-        reply = _plain_summary(results)
+        reply = _plain_summary(results, language)
     bad = unsupported(reply, allowed_numbers([r["result"] for r in results], user_texts))
     guard = {"replaced": bool(bad), "unsupported": bad}
     if bad:
-        reply = _plain_summary(results)
+        reply = _plain_summary(results, language)
     return {"status": "ok", "reply": reply, "tool_results": results, "guard": guard, "model": MODEL}

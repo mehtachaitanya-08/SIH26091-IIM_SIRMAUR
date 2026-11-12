@@ -5,7 +5,6 @@ import DebtLiberationView from './DebtLiberationView';
 import LeadBankDprView from './LeadBankDprView';
 import FeasibilityView from './FeasibilityView';
 import HowItWorksView from './HowItWorksView';
-import CommandBar from './CommandBar';
 
 /**
  * CenterWorkspace — Central Operational Console
@@ -24,6 +23,7 @@ export default function CenterWorkspace({
   feasibility = null,
   dossierDetail = null,
   dossierCashflow = null,
+  cashflowUpdating = false,
   flowSteps = null,
   debtPrincipal = 120000,
   onPrincipalChange,
@@ -34,13 +34,8 @@ export default function CenterWorkspace({
   debtIncome = '',
   onDebtIncomeChange,
   debtRefinanceData,
+  debtUpdating = false,
   debtEntered = true,
-  commandInput = '',
-  onCommandInputChange,
-  onCommandSubmit,
-  chatMessages = null,
-  chatBusy = false,
-  chatNotice = null,
   onShowToast,
   onDownloadPdf,
   formatINR,
@@ -93,9 +88,9 @@ export default function CenterWorkspace({
             onClick={() => onSelectTab && onSelectTab('simulator')}
             className="bg-[#F8F9FA] rounded-xl p-4 border border-[#E9ECEF] hover:border-[#111311]/30 transition-all cursor-pointer shadow-sm hover:shadow"
           >
-            <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Simulate enterprise</h4>
+            <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Good and bad months</h4>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              Your business's season, market and gaps from verified sources.
+              Which months earn more or less in your business, and money left each year.
             </p>
           </div>
 
@@ -103,9 +98,9 @@ export default function CenterWorkspace({
             onClick={() => onSelectTab && onSelectTab('amortizer')}
             className="bg-[#F8F9FA] rounded-xl p-4 border border-[#E9ECEF] hover:border-[#111311]/30 transition-all cursor-pointer shadow-sm hover:shadow"
           >
-            <h4 className="font-bold text-xs text-[#111311] font-sans-ui">NSFDC amortizer</h4>
+            <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Your loan and repayments</h4>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              NSFDC loan and quarterly repayment schedule for your project cost.
+              Your NSFDC loan and a payment every 3 months, for your project cost.
             </p>
           </div>
 
@@ -113,9 +108,9 @@ export default function CenterWorkspace({
             onClick={() => onSelectTab && onSelectTab('restructure')}
             className="bg-[#F8F9FA] rounded-xl p-4 border border-[#E9ECEF] hover:border-[#111311]/30 transition-all cursor-pointer shadow-sm hover:shadow"
           >
-            <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Debt liberation</h4>
+            <h4 className="font-bold text-xs text-[#111311] font-sans-ui">Pay off a moneylender loan</h4>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              Refinance 3-senkda moneylender debt into bank credit.
+              Swap a costly moneylender loan for a cheaper bank loan.
             </p>
           </div>
         </div>
@@ -168,6 +163,7 @@ export default function CenterWorkspace({
           onNavigateFeasibility={() => onSelectTab && onSelectTab('feasibility')}
           dossierDetail={dossierDetail}
           dossierCashflow={dossierCashflow}
+          cashflowUpdating={cashflowUpdating}
           costEntered={Number(loanInputs?.projectCost) > 0}
           formatINR={formatINR}
           mode={mode}
@@ -199,9 +195,9 @@ export default function CenterWorkspace({
           debtIncome={debtIncome}
           onDebtIncomeChange={onDebtIncomeChange}
           debtRefinanceData={debtRefinanceData}
+          debtUpdating={debtUpdating}
           debtEntered={debtEntered}
           onClose={() => onSelectTab && onSelectTab('home')}
-          onGenerateLegalPackage={() => onShowToast && onShowToast('Generated Usurious Loans Act Legal Defense Package')}
           formatINR={formatINR}
           mode={mode}
         />
@@ -240,18 +236,8 @@ export default function CenterWorkspace({
         />
       )}
 
-      {/* Chat: pinned to the bottom of the column so the answer stays on screen */}
-      <CommandBar
-        commandInput={commandInput}
-        onInputChange={onCommandInputChange}
-        onSubmit={onCommandSubmit}
-        chatMessages={chatMessages}
-        chatBusy={chatBusy}
-        chatNotice={chatNotice}
-        onSelectChip={(tab) => onSelectTab && onSelectTab(tab)}
-        onShowToast={onShowToast}
-        mode={mode}
-      />
+      {/* The chat is now a panel opened from the bottom-right button (ChatLauncher, Stage A).
+          CommandBar.jsx is kept in the repo but no longer shown. */}
 
     </main>
   );

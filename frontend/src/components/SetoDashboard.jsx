@@ -74,10 +74,10 @@ export default function SetoDashboard({
           <nav className="space-y-1">
             {[
               { id: 'home', label: isHi ? 'होम' : 'Home', active: true },
-              { id: 'simulator', label: isHi ? 'एंटरप्राइज स्टूडियो' : 'Enterprise Studio' },
-              { id: 'amortizer', label: isHi ? 'एनएसएफडीसी अमोर्टाइज़र' : 'NSFDC Amortizer' },
-              { id: 'restructure', label: isHi ? 'कर्ज मुक्ति' : 'Debt Liberation' },
-              { id: 'dpr', label: isHi ? '1-पेज डीपीआर' : '1-Page DPR' }
+              { id: 'simulator', label: isHi ? 'एंटरप्राइज स्टूडियो' : 'Good and bad months' },
+              { id: 'amortizer', label: isHi ? 'एनएसएफडीसी अमोर्टाइज़र' : 'Your loan and repayments' },
+              { id: 'restructure', label: isHi ? 'कर्ज मुक्ति' : 'Pay off a moneylender loan' },
+              { id: 'dpr', label: isHi ? '1-पेज डीपीआर' : 'Download report (DPR)' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -180,12 +180,12 @@ export default function SetoDashboard({
           >
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs text-[#111311] font-sans-ui group-hover:text-[#0E7A53] transition-colors">
-                {isHi ? 'उद्यम अनुकरण' : 'Simulate enterprise'}
+                {isHi ? 'उद्यम अनुकरण' : 'Good and bad months'}
               </h4>
               <Sparkles className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0E7A53] transition-colors" />
             </div>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              {isHi ? '12 महीने का मौसमी पैटर्न और सबसे कमज़ोर महीने, व्यवसाय के डोज़ियर से।' : "12-month season pattern and leanest months, from the business's dossier."}
+              {isHi ? '12 महीने का मौसमी पैटर्न और सबसे कमज़ोर महीने, व्यवसाय के डोज़ियर से।' : "Which months earn more or less, from the business's research file."}
             </p>
           </div>
 
@@ -195,12 +195,12 @@ export default function SetoDashboard({
           >
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs text-[#111311] font-sans-ui group-hover:text-[#0E7A53] transition-colors">
-                {isHi ? 'अमोर्टाइज़र' : 'NSFDC amortizer'}
+                {isHi ? 'अमोर्टाइज़र' : 'Your loan and repayments'}
               </h4>
               <Sparkles className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0E7A53] transition-colors" />
             </div>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              {isHi ? '6.5% / 8.0% [S1] पर तिमाही किस्तें (11 या 26 किस्तें ASSUMED: NSFDC कहता है "भीतर")।' : 'Quarterly instalments at 6.5% / 8.0% [S1] (11 or 26 instalments ASSUMED: NSFDC says "within").'}
+              {isHi ? '6.5% / 8.0% [S1] पर तिमाही किस्तें (11 या 26 किस्तें ASSUMED: NSFDC कहता है "भीतर")।' : 'A payment every 3 months, interest 6.5% or 8.0% a year (NSFDC rules).'}
             </p>
           </div>
 
@@ -210,12 +210,12 @@ export default function SetoDashboard({
           >
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs text-[#111311] font-sans-ui group-hover:text-[#0E7A53] transition-colors">
-                {isHi ? 'कर्ज मुक्ति' : 'Debt liberation'}
+                {isHi ? 'कर्ज मुक्ति' : 'Pay off a moneylender loan'}
               </h4>
               <Sparkles className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#0E7A53] transition-colors" />
             </div>
             <p className="text-[11px] text-[#686D65] mt-1.5 leading-relaxed font-sans-ui">
-              {isHi ? '3-सेंकड़ा साहुकार कर्ज को संस्थागत बैंक ऋण में बदलें।' : 'Refinance 3-senkda moneylender debt into bank credit.'}
+              {isHi ? '3-सेंकड़ा साहुकार कर्ज को संस्थागत बैंक ऋण में बदलें।' : 'Swap a costly moneylender loan for a cheaper bank loan.'}
             </p>
           </div>
         </div>
@@ -242,14 +242,14 @@ export default function SetoDashboard({
               <span className="text-base font-bold text-[#0E7A53] font-mono-num">see dashboard</span>
             </div>
             <div className="bg-white p-3 rounded-xl border border-[#E9ECEF]">
-              <span className="text-[#686D65] block text-[11px]">Quarterly EQI</span>
+              <span className="text-[#686D65] block text-[11px]">Payment every 3 months</span>
               <span className="text-base font-bold text-[#E86043] font-mono-num">see dashboard</span>
             </div>
           </div>
 
           <div className="pt-2 flex items-center justify-between text-xs text-[#686D65]">
             <span className="font-sans-ui">
-              Includes 2 Quarters Moratorium · 26 Amortizing Quarters · Damdupat Audit
+              Includes a pause with no payment · payments every 3 months · moneylender interest check
             </span>
             <button
               type="button"

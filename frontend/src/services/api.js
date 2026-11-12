@@ -189,9 +189,12 @@ export async function downloadDpr(payload) {
  */
 export const CHAT_MAX_MESSAGES = 30; // backend/chat.py MAX_TURNS
 
-export async function sendChat(messages) {
+// language: 'hi' or 'en' from the chat panel's switch (Stage A); left out when not chosen yet.
+export async function sendChat(messages, language) {
+  const body = { messages: messages.slice(-CHAT_MAX_MESSAGES) };
+  if (language === 'hi' || language === 'en') body.language = language;
   try {
-    return await getJson('/api/chat', { method: 'POST', body: { messages: messages.slice(-CHAT_MAX_MESSAGES) } });
+    return await getJson('/api/chat', { method: 'POST', body });
   } catch (err) {
     if (err instanceof ServerOfflineError) return { status: 'server_offline', reply: null, offline: true };
     throw err;

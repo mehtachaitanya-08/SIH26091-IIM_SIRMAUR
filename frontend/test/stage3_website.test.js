@@ -354,7 +354,9 @@ describe('4. Production dashboard render', () => {
     assert.ok(html.includes('Choose your business'));
     assert.ok(!html.includes('Start here'), 'made-up starter scenario card is back');
     assert.ok(html.includes('Feasibility'));
-    assert.ok(html.includes('Ask UdyamSetuAI'), 'chat box placeholder missing');
+    // Stage A: the chat is a bottom-right button that opens a panel (was an 'Ask UdyamSetuAI' box).
+    assert.ok(html.includes('मदद / Ask AI'), 'chat button missing');
+    assert.ok(!html.includes('Ask UdyamSetuAI'), 'old chat box still shown');
     for (const s of INVENTED) assert.ok(!html.includes(s), `renders "${s}"`);
   });
 

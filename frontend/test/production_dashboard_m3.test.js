@@ -103,7 +103,8 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
     it('SeasonalitySimulatorView shows NOT FOUND, never a made-up curve or SAFE rating', () => {
       const simPath = path.join(componentsDir, 'SeasonalitySimulatorView.jsx');
       const code = fs.readFileSync(simPath, 'utf8');
-      assert.ok(code.includes('Seasonality & Stress Simulator'));
+      // Stage A: plain-word title (was 'Seasonality & Stress Simulator').
+      assert.ok(code.includes('Good and bad months'));
       assert.ok(code.includes('NOT FOUND'));
       assert.ok(!code.includes('Solvency Rating: SAFE'));
     });
@@ -111,16 +112,19 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
     it('NsfdcAmortizerView renders equated quarterly installments and moratorium rows', () => {
       const amortPath = path.join(componentsDir, 'NsfdcAmortizerView.jsx');
       const code = fs.readFileSync(amortPath, 'utf8');
-      assert.ok(code.includes('NSFDC Statutory Amortizer'));
-      assert.ok(code.includes('Moratorium'));
-      assert.ok(code.includes('Amortizing'));
+      // Stage A: plain words (were 'NSFDC Statutory Amortizer', 'Moratorium', 'Amortizing').
+      assert.ok(code.includes('Your loan and repayments'));
+      assert.ok(code.includes('Pause (no payment)'));
+      assert.ok(code.includes('Paying back'));
     });
 
     it('DebtLiberationView renders interactive sliders and Damdupat violation alert', () => {
       const debtPath = path.join(componentsDir, 'DebtLiberationView.jsx');
       const code = fs.readFileSync(debtPath, 'utf8');
-      assert.ok(code.includes('Mode B · Informal Debt Refinancing'));
-      assert.ok(code.includes('Rule of Damdupat Triggered:'));
+      // Stage A: plain words on screen (were 'Mode B · Informal Debt Refinancing' and 'Rule of Damdupat
+      // Triggered:'); the law's name is kept under "How we got this".
+      assert.ok(code.includes('Pay off a moneylender loan'));
+      assert.ok(code.includes('Interest already paid is more than the loan. Under an old law, the moneylender may not be able to ask for more interest. Check with free legal aid.'));
       assert.ok(code.includes('Usurious Loans Act 1918'));
       assert.ok(code.includes('min={20000}'));
       assert.ok(code.includes('max={300000}'));
