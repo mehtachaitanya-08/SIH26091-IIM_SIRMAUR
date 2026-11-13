@@ -38,6 +38,10 @@ export default function CenterWorkspace({
   debtEntered = true,
   onShowToast,
   onDownloadPdf,
+  applicant = null,
+  onApplicantChange,
+  onApplicantClear,
+  dprProblems = null,
   formatINR,
   mandiPriceData = null,
   mandiKeyConfigured = null,
@@ -215,6 +219,10 @@ export default function CenterWorkspace({
           onDownloadPdf={onDownloadPdf}
           formatINR={formatINR}
           mode={mode}
+          applicant={applicant}
+          onApplicantChange={onApplicantChange}
+          onApplicantClear={onApplicantClear}
+          dprProblems={dprProblems}
         />
       )}
 

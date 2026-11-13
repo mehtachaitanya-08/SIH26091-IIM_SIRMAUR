@@ -432,3 +432,27 @@ def test_plain_text_and_web_addresses_are_left_as_written():
     assert dpr_mod._plain("C_6 in a {set} of words") == "C_6 in a {set} of words"
     defs = dpr_mod.research_sources("D20")
     assert any("publications_reports" in v for v in defs.values())
+
+
+# Stage 1c, decision 13 (owner, 13 Nov 2026): a running check, not only a source scan. Marked values go
+# through a real request; the program's own log (every logger, DEBUG and up) and its printed output
+# must hold none of them. Limit: this does not cover the web server's request log, which records the
+# address and status, never the request body.
+def test_applicant_values_never_reach_the_log_when_a_dpr_is_made(caplog, capsys):
+    import logging
+    marks = {"name": "MARK-NAME-7731", "pan": "MARKP7731Q", "aadhaarLast4": "7731", "district": "MARK-DIST-7731",
+             "promoters": [{"name": "MARK-PROM-7731", "aadhaarLast4": "4417"}]}
+    with caplog.at_level(logging.DEBUG):
+        # Review finding 10: prove the capture works before trusting "nothing logged" (one known line
+        # through the root logger, a backend logger and the web server's logger).
+        for name in ("", "backend.dpr", "uvicorn.error"):
+            logging.getLogger(name).warning("CAPTURE-CHECK-%s", name or "root")
+        assert all(f"CAPTURE-CHECK-{n}" in caplog.text for n in ("root", "backend.dpr", "uvicorn.error"))
+        _, t = text_of(dpr(dict(BASE, applicant=marks)))
+        bad = dpr(dict(BASE, applicant=dict(marks, aadhaarLast4="MARK-BAD-7731")))
+    assert "MARK-NAME-7731" in t                           # the values did reach the PDF
+    assert bad.status_code == 400
+    out = capsys.readouterr()
+    logged = caplog.text + out.out + out.err
+    for v in ("MARK-NAME-7731", "MARKP7731Q", "MARK-DIST-7731", "MARK-PROM-7731", "MARK-BAD-7731", "XXXX-XXXX-7731"):
+        assert v not in logged, v

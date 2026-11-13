@@ -174,7 +174,7 @@ export async function fetchFeasibility(code) {
 
 /**
  * DPR (Detailed Project Report) PDF made by the server.
- * @param {{code, projectCost, familyIncome, isSc, answers?, applicantName?}} payload
+ * @param {{code, projectCost, familyIncome, isSc, answers?, applicantName?, applicant?}} payload
  * @returns {Promise<Blob>} the PDF. Throws ServerOfflineError or ServerError (the server's message).
  */
 export async function downloadDpr(payload) {
@@ -263,9 +263,11 @@ export function chatRoute(toolResults) {
  * Body for POST /api/dpr. Answers collected by the chat are kept with the business they belong to
  * ({code, answers}) and sent only for that business: another business's question ids are rejected.
  */
-export function dprPayload({ code, projectCost, familyIncome, isSc, answers = null, applicantName = null }) {
+export function dprPayload({ code, projectCost, familyIncome, isSc, answers = null, applicantName = null, applicant = null }) {
   const out = { code, projectCost, familyIncome, isSc, answers: answers && answers.code === code ? { ...answers.answers } : {} };
   if (applicantName) out.applicantName = applicantName;
+  // Stage 1c: the DPR-tab form's values (services/applicantForm.js), sent only when something was typed.
+  if (applicant && typeof applicant === 'object' && Object.keys(applicant).length) out.applicant = applicant;
   return out;
 }
 

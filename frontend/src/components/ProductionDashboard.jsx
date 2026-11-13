@@ -24,6 +24,7 @@ import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
 import ChatLauncher from './dashboard/ChatLauncher';
 import { chatNotice as noticeText, questionLanguage } from '../services/chatText';
+import { emptyApplicant, accountPrefill, withAccount, checkApplicant, applicantPayload } from '../services/applicantForm';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
 
 // The sidebar lists only scenarios the user saved. It used to start with three made-up "recent"
@@ -97,6 +98,36 @@ export default function ProductionDashboard({
   useEffect(() => {
     if (savedIncome !== null) setFamilyIncome((prev) => (prev === '' ? savedIncome : prev));
   }, [savedIncome]);
+  // Stage 1c: the DPR-tab form (owner's decisions 1-18, 13 Nov 2026). Kept in this memory only: never
+  // saved, gone on reload, close or sign-out. A change of signed-in user (a guest signing in, too) clears
+  // it first and then fills the new account's name and district; an account change updates only the
+  // pre-filled boxes the user has not edited.
+  const prefill = useMemo(() => accountPrefill(currentUser), [currentUser?.name, currentUser?.district]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [applicant, setApplicant] = useState(() => emptyApplicant(prefill));
+  const [dprProblems, setDprProblems] = useState(null);
+  const applicantEdited = useRef(new Set());
+  const applicantUser = useRef(currentUser?.id ?? null);
+  useEffect(() => {
+    const id = currentUser?.id ?? null;
+    if (applicantUser.current !== id) {
+      applicantUser.current = id;
+      applicantEdited.current = new Set();
+      setApplicant(emptyApplicant(prefill));          // clear, then the new account's pre-fill
+      setDprProblems(null);
+    } else {
+      setApplicant((prev) => withAccount(prev, prefill, applicantEdited.current));
+    }
+  }, [currentUser?.id, prefill]); // eslint-disable-line react-hooks/exhaustive-deps
+  const handleApplicantChange = (next, key) => {
+    applicantEdited.current.add(key);
+    setApplicant(next);
+    setDprProblems(null);
+  };
+  const handleApplicantClear = () => {
+    applicantEdited.current = new Set();
+    setApplicant(emptyApplicant(prefill));
+    setDprProblems(null);
+  };
   const [loanResult, setLoanResult] = useState(null);
   const [loanError, setLoanError] = useState(null);
   // Answers the chat collected, kept with the business they belong to: {code, answers}
@@ -480,14 +511,22 @@ export default function ProductionDashboard({
       showToast('Enter project cost, family income and SC status first');
       return;
     }
+    const problems = checkApplicant(applicant);
+    if (problems.length) {
+      setActiveTab('dpr');
+      setDprProblems(problems);
+      showToast('DPR not made: please fix the form');
+      return;
+    }
     try {
+      // The name comes from the form's name box, pre-filled from the account (decision 14).
       const blob = await downloadDpr(dprPayload({
         code: activeDomain.code,
         projectCost: Number(projectCost),
         familyIncome: Number(familyIncome),
         isSc,
         answers: adviceAnswers,
-        applicantName: currentUser?.name || null
+        applicant: applicantPayload(applicant)
       }));
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -497,9 +536,11 @@ export default function ProductionDashboard({
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+      setDprProblems(null);
       showToast(`Downloaded DPR for ${activeDomain.code}`);
     } catch (err) {
       if (err.name === 'ServerOfflineError') setServerOffline(true);
+      else setDprProblems([{ key: 'server', message: err.message }]);
       showToast(`DPR not made: ${err.message}`);
     }
   };
@@ -568,6 +609,10 @@ export default function ProductionDashboard({
         debtUpdating={debtUpdating}
         onShowToast={showToast}
         onDownloadPdf={handleDownloadDprPdf}
+        applicant={applicant}
+        onApplicantChange={handleApplicantChange}
+        onApplicantClear={handleApplicantClear}
+        dprProblems={dprProblems}
         formatINR={formatINR}
         mandiPriceData={mandiPriceData}
         mandiKeyConfigured={mandiKeyConfigured}
