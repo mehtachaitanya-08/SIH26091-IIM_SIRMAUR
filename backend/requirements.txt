@@ -11,6 +11,8 @@ httpx==0.28.1
 reportlab==5.1.0
 pillow==13.0.0
 charset-normalizer==3.5.2
+# Hindi in the DPR PDF (Stage 1d): reportlab joins Hindi letters with it; font in backend/fonts
+uharfbuzz==0.56.4
 # tests only
 pytest==9.2.0
 pypdf==6.21.4

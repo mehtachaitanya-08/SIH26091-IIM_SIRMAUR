@@ -80,7 +80,7 @@ export const FIELDS = [
   f('water', 'land', 'Water', 'पानी'),
   f('power', 'land', 'Power', 'बिजली'),
   f('rawMaterial', 'operations', 'Raw material available in the catchment', 'आसपास उपलब्ध कच्चा माल', 'long'),
-  f('catchment', 'operations', 'Catchment', 'सेवा क्षेत्र', 'long'),
+  f('catchment', 'operations', 'Catchment', 'आसपास का क्षेत्र (कैचमेंट)', 'long'),
   f('employment', 'operations', 'Employment (people)', 'रोज़गार (लोग)'),
   f('renewableEnergy', 'operations', 'Renewable energy', 'नवीकरणीय ऊर्जा', 'long'),
   f('suppliers', 'operations', 'Suppliers of plant and machinery', 'संयंत्र और मशीनरी के आपूर्तिकर्ता', 'long'),

@@ -1,6 +1,6 @@
 """
-English DPR (Detailed Project Report) PDF for a business and a project cost (Phase 1, Stage 1b;
-owner's decisions 1-30, 12 Nov 2026).
+DPR (Detailed Project Report) PDF for a business and a project cost, in English with Hindi (Phase 1,
+Stage 1b, owner's decisions 1-30, 12 Nov 2026; Hindi: Stage 1d, decisions 1-18, 13 Nov 2026).
 
 Page 1 is a summary in plain words. Then every section of the two bank forms the owner chose, FIDF and
 AIF, each once, in one merged order (NSFDC wording where a form names its own scheme). Figures come from
@@ -11,6 +11,11 @@ as sent and never stored or logged; Aadhaar is the last 4 digits only. Open item
 Feasibility tab: the DPR prints no raw gap list. This is an advisory document, not a loan sanction.
 
 Fonts: DejaVu Sans (backend/fonts, licence in backend/fonts/LICENSE-DejaVu.txt), so the rupee sign prints.
+Hindi (Stage 1d): Noto Sans Devanagari (licence and source in backend/fonts/LICENSE-NotoSansDevanagari-OFL.txt),
+its letters joined ("shaped") by reportlab with uharfbuzz. Only Hindi text is shaped: English inside a Hindi
+line uses an unshaped copy of DejaVu, so no English letters are ever joined (fi, st). The Hindi wording is our
+own (no source has it); every Hindi line was shown to the owner. Without uharfbuzz or the Noto font the PDF is
+English only, with a note on page 1.
 """
 
 import io
@@ -27,6 +32,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase import ttfonts
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
@@ -40,7 +46,68 @@ FONTS = Path(__file__).resolve().parent / "fonts"
 pdfmetrics.registerFont(TTFont("DejaVu", str(FONTS / "DejaVuSans.ttf")))
 pdfmetrics.registerFont(TTFont("DejaVu-Bold", str(FONTS / "DejaVuSans-Bold.ttf")))
 
+
+class PlainTTFont(TTFont):
+    """DejaVu that is never shaped (Stage 1d, decision 1): reportlab's shaping step skips a font whose
+    hbFont raises AttributeError (ttfonts.shapeFragWord), so English words inside a Hindi line keep plain
+    letters (no joined fi, st, Rs)."""
+
+    def hbFont(self, fontSize=10):
+        raise AttributeError("this font is never shaped")
+
+
+HI_FONT, HI_BOLD, PLAIN_FONT = "Noto", "Noto-Bold", "DejaVu-Plain"
+_plain_twin = PlainTTFont(PLAIN_FONT, str(FONTS / "DejaVuSans.ttf"))
+_plain_twin.face.name = b"DejaVuSans-Plain"       # its own name, or reportlab maps it back to DejaVu
+pdfmetrics.registerFont(_plain_twin)
+try:
+    pdfmetrics.registerFont(TTFont(HI_FONT, str(FONTS / "NotoSansDevanagari-Regular.ttf")))
+    pdfmetrics.registerFont(TTFont(HI_BOLD, str(FONTS / "NotoSansDevanagari-Bold.ttf")))
+    NOTO_CHARS = set(pdfmetrics.getFont(HI_FONT).face.charToGlyph)
+except Exception:                                  # font missing: English only, with a note (decision 13)
+    NOTO_CHARS = set()
+
+
+def hindi_ready():
+    """Checked on every PDF build (decision 16): uharfbuzz installed and the Noto font loaded."""
+    return ttfonts.uharfbuzz is not None and bool(NOTO_CHARS)
+
 TITLE = "Detailed Project Report (DPR)"
+TITLE_HI = "विस्तृत परियोजना रिपोर्ट (डीपीआर)"
+# Hindi section headings (Stage 1d, decisions 3-4): our own wording, no source has it; words reused from the
+# dashboard's Hindi form labels (Stage 1c) where they exist. No English letters (decision 17: no bold twin).
+HEADINGS_HI = {
+    "Summary in plain words": "सरल शब्दों में सारांश",
+    "1. Applicant and promoters": "1. आवेदक और प्रवर्तक", "2. Project summary": "2. परियोजना सारांश",
+    "3. Introduction": "3. परिचय", "4. Benefits and justification": "4. लाभ और औचित्य",
+    "5. Objectives": "5. उद्देश्य", "6. Project and operating model": "6. परियोजना और संचालन मॉडल",
+    "7. Land and site": "7. भूमि और स्थल", "8. Technical details and machinery": "8. तकनीकी विवरण और मशीनरी",
+    "9. Process flow chart": "9. प्रक्रिया प्रवाह चार्ट",
+    "10. Organisation, management and employment": "10. संगठन, प्रबंधन और रोज़गार",
+    "11. Experience and existing banking": "11. अनुभव और मौजूदा बैंकिंग",
+    "12. Cost of project and operating cost": "12. परियोजना लागत और संचालन लागत",
+    "13. Means of finance": "13. वित्त के साधन", "14. Estimates of output and its value": "14. उत्पादन और उसके मूल्य का अनुमान",
+    "15. Year-by-year figures": "15. वर्षवार आँकड़े", "16. Project worth and cost-benefit": "16. परियोजना का मूल्य और लागत-लाभ",
+    "17. Financial parameters": "17. वित्तीय मानदंड",
+    "18. Credit facility and repayment schedule": "18. ऋण सुविधा और चुकौती कार्यक्रम",
+    "19. Collateral": "19. जमानत (संपार्श्विक)", "20. Approvals, pollution and risks": "20. स्वीकृतियाँ, प्रदूषण और जोखिम",
+    "21. Raw material and catchment": "21. कच्चा माल और आसपास का क्षेत्र (कैचमेंट)", "22. Demand and marketing": "22. माँग और विपणन",
+    "23. Renewable energy": "23. नवीकरणीय ऊर्जा", "24. Suppliers of plant and machinery": "24. संयंत्र और मशीनरी के आपूर्तिकर्ता",
+    "25. Expected outcomes": "25. अपेक्षित परिणाम", "26. Construction timeline": "26. निर्माण की समय-सीमा",
+    "27. Milestones (first 12 months)": "27. मुख्य पड़ाव (पहले 12 महीने)", "28. Layout": "28. लेआउट",
+    "29. Enclosures checklist": "29. संलग्नकों की सूची", "30. Declaration": "30. घोषणा", "Sources": "स्रोत",
+}
+# The AIF declaration in Hindi (decision 3): our translation, printed under the English, which governs.
+DECLARATION_HI = ("अनुवाद; अंग्रेज़ी पाठ ही मान्य होगा (translation; English governs): मैं …………………………… प्रमाणित करता/करती हूँ कि "
+                  "ऊपर मेरे/हमारे द्वारा दी गई जानकारी/विषय-वस्तु मेरी/हमारी जानकारी और विश्वास के अनुसार सही है और कोई "
+                  "महत्वपूर्ण बात छिपाई नहीं गई है। यदि आवेदन में दी गई कोई जानकारी गलत पाई जाती है, तो बैंक मेरा/हमारा आवेदन "
+                  "किसी भी चरण में अस्वीकार कर सकता है और मैं/हम {scheme_hi} के अंतर्गत पात्र नहीं रहूँगा/रहूँगी/रहेंगे।")
+# The three NSFDC reasons loan.py can give (its fixed wording), each as a short Hindi line (review fix 2).
+REASONS_HI = {
+    "Applicant is not from a Scheduled Caste.": "• आवेदक अनुसूचित जाति से नहीं हैं।",
+    "Annual family income is above ₹5,00,000.": "• वार्षिक पारिवारिक आय ₹5,00,000 से अधिक है।",
+    "Project cost is above ₹50,00,000, the Term Loan limit.": "• परियोजना लागत ₹50,00,000 (Term Loan की सीमा) से अधिक है।",
+}
 BLANK = "________________"                  # a line for the applicant to fill in by hand
 BLANK_SHORT = "________"                    # the same in narrow table columns, so it never breaks (review finding 8)
 GROUP_NAMES = {"machinery": "Machinery", "tools": "Tools", "vehicle": "Vehicle", "civil_works": "Civil works",
@@ -119,18 +186,107 @@ ST = {
     "cell": ParagraphStyle("cell", fontName="DejaVu", fontSize=7, leading=8.5),
     "cellb": ParagraphStyle("cellb", fontName="DejaVu-Bold", fontSize=7, leading=8.5),
 }
+# Hindi twins of the English styles: Noto as the base font and shaping on (decision 1). English styles above
+# stay unshaped.
+ST["hi"] = ParagraphStyle("hi", parent=ST["p"], fontName=HI_FONT, shaping=1)
+ST["his"] = ParagraphStyle("his", parent=ST["s"], fontName=HI_FONT, shaping=1)
+ST["hic"] = ParagraphStyle("hic", parent=ST["cell"], fontName=HI_FONT, shaping=1)
+ST["hicb"] = ParagraphStyle("hicb", parent=ST["cellb"], fontName=HI_BOLD, shaping=1)
+ST["hih"] = ParagraphStyle("hih", parent=ST["h"], fontName=HI_BOLD, fontSize=9.5, leading=12, spaceBefore=0,
+                           shaping=1, keepWithNext=1)
+HI_OF = {"p": "hi", "s": "his", "cell": "hic", "cellb": "hicb", "h": "hih", "title": "hih"}
+
+DEVA = re.compile(r"[\u0900-\u097F\uA8E0-\uA8FF\u1CD0-\u1CFF]")   # Devanagari and its two extension blocks
+HINDI_MISSING = "Hindi could not be printed on this server: uharfbuzz or the Noto font is missing."
+HINDI_PLACEHOLDER = "[Hindi text: cannot print on this server]"
+
+
+DANDA = "\u0964\u0965"                         # । ॥ : in Noto, but need no joining
+
+
+def _hi_markup(text, bold=False):
+    """Hindi text for a shaped paragraph (decisions 1, 2, 18; review fix 3).
+    Every word is split into runs by font: Hindi letters in Noto; English letters, characters Noto lacks
+    ($ & @, bullets, arrows) and, outside bold headings, digits and ₹ in the unshaped twin, so figures look
+    the same as in the English column; other punctuation stays with its neighbours. reportlab shapes a word
+    with the font of its first run, so a run of Hindi letters never shares a word with a twin run: they are
+    split with a space. Only a । or ॥ may sit straight after a figure ("₹1,25,000।"), as it needs no joining."""
+    noto = HI_BOLD if bold else HI_FONT
+    words = []
+    for word in str(text).split(" "):
+        if not word:
+            words.append("")
+            continue
+        if not DEVA.search(word):
+            # a heading's number ("1.") in bold Noto, so it matches its words; other words in the twin
+            in_noto = bold and all(ord(ch) in NOTO_CHARS for ch in word)
+            words.append(f'<font name="{noto if in_noto else PLAIN_FONT}">{escape(word)}</font>')
+            continue
+        runs = []                                  # [kind, characters]; kind N (Hindi letters), n (। ॥), T (twin)
+        for ch in word:
+            if ch in DANDA:
+                kind = "n"
+            elif DEVA.search(ch) or ch in "\u200c\u200d":
+                kind = "N"
+            elif ord(ch) not in NOTO_CHARS or (not bold and (ch.isdigit() or ch == "₹")):
+                kind = "T"
+            else:
+                kind = None                        # punctuation in both fonts: stays with its neighbours
+            if runs and (kind is None or runs[-1][0] in (kind, None)):
+                if runs[-1][0] is None:
+                    runs[-1][0] = kind
+                runs[-1][1].append(ch)
+            else:
+                runs.append([kind, [ch]])
+        merged = []                                # adjacent runs in the same font are one run: [font, chars]
+        for k, c in runs:
+            font = PLAIN_FONT if k == "T" else noto
+            if merged and merged[-1][0] == font:
+                merged[-1][1] += c
+            else:
+                merged.append([font, list(c)])
+        parts, first = [], merged[0][0]
+        for i, (font, c) in enumerate(merged):
+            piece = f'<font name="{font}">{escape("".join(c))}</font>'
+            # glue only a lone । / ॥ to a word that starts in the twin (that word is never shaped); else a space
+            glue = i > 0 and first == PLAIN_FONT and all(ch in DANDA for ch in c)
+            parts.append(("" if glue or i == 0 else " ") + piece)
+        words.append("".join(parts))
+    return " ".join(words)
+
+
+def _no_hindi(text):
+    """Without the Hindi tools: each run of Hindi words becomes one placeholder (never boxes, never unshaped)."""
+    words, out = str(text).split(" "), []
+    for w in words:
+        if DEVA.search(w):
+            if not out or out[-1] != HINDI_PLACEHOLDER:
+                out.append(HINDI_PLACEHOLDER)
+        else:
+            out.append(w)
+    return " ".join(out)
 
 
 def P(text, style="p"):
-    return Paragraph(escape(str(text)), ST[style])
+    """A paragraph; Hindi in it is shaped in Noto, or replaced by the placeholder when Hindi cannot print."""
+    text = str(text)
+    if DEVA.search(text):
+        if hindi_ready():
+            return Paragraph(_hi_markup(text, bold=style in ("cellb", "h", "title")), ST[HI_OF[style]])
+        text = _no_hindi(text)
+    return Paragraph(escape(text), ST[style])
 
 
 def H(text):
-    return Paragraph(escape(text), ST["h"])
+    """An English section heading, then its Hindi line under it (decisions 3-4) when Hindi can print."""
+    out = [Paragraph(escape(text), ST["h"])]
+    if text in HEADINGS_HI and hindi_ready():
+        out.append(Paragraph(_hi_markup(HEADINGS_HI[text], bold=True), ST["hih"]))
+    return out
 
 
 def _table(rows, widths, header=True):
-    data = [[c if isinstance(c, Paragraph) else Paragraph(escape(str(c)), ST["cellb" if (header and i == 0) else "cell"])
+    data = [[c if isinstance(c, Paragraph) else P(c, "cellb" if (header and i == 0) else "cell")
              for c in row] for i, row in enumerate(rows)]
     t = Table(data, colWidths=[w * mm for w in widths], repeatRows=1 if header else 0)
     style = [("GRID", (0, 0), (-1, -1), 0.3, colors.grey), ("VALIGN", (0, 0), (-1, -1), "TOP"),
@@ -466,50 +622,115 @@ def _ref_label(code, yfs):
 
 # --------------------------------------------------------------------------- the document
 
-def _summary(code, req, out, yfs, research_loan, notes):
-    f = [Paragraph(escape(f"{TITLE} — {NAMES[code]} ({code})"), ST["title"]),
-         P(f"Prepared {date.today().isoformat()} by the UdyamSetuAI advisory server. Advisory document only: "
-           f"this is not a loan sanction.", "s"),
-         H("Summary in plain words")]
-    f.append(P(f"Business: {NAMES[code]} ({code}). Project cost you entered: {inr(req.project_cost)}. "
-               f"Scheduled Caste: {'yes' if req.is_sc else 'no'} (self-declared). "
-               f"Yearly family income: {inr(req.annual_family_income)}."))
+def scheme_names(out):
+    """The NSFDC scheme for the declaration, in English and in Hindi (review fix 1: written out, no replacing)."""
+    if out["status"] == "eligible" and out["loan"]["loan_amount"]["value"] > 0:
+        name = out["loan"]["scheme"]["value"]
+        if "Scheme" in name:
+            return f"the NSFDC {name}", f"NSFDC {name}"
+        return f"the NSFDC {name} scheme", f"NSFDC {name} योजना"
+    return "the NSFDC loan schemes", "NSFDC ऋण योजनाओं"
+
+
+def _loan_hi(research_loan):
+    """'research file's own loan, ₹3,15,000' -> Hindi with the same amount."""
+    amount = re.search(r"₹[\d,]+(?:\.\d+)?", research_loan or "")
+    if not research_loan or not amount:
+        return None
+    who = "संदर्भ इकाई के अपने ऋण" if research_loan.startswith("reference unit") else "शोध फ़ाइल के अपने ऋण"
+    return f"{who} ({amount.group(0)})"
+
+
+def summary_pairs(code, req, out, yfs, research_loan, notes):
+    """Page 1 as (English, Hindi) pairs (decisions 5, 7, 8): the Hindi uses only the English line's figures."""
+    sc_en, sc_hi = ("yes", "हाँ") if req.is_sc else ("no", "नहीं")
+    pairs = [(f"Business: {NAMES[code]} ({code}). Project cost you entered: {inr(req.project_cost)}. "
+              f"Scheduled Caste: {sc_en} (self-declared). Yearly family income: {inr(req.annual_family_income)}.",
+              f"व्यवसाय: {code}। आपके द्वारा दर्ज परियोजना लागत: {inr(req.project_cost)}। अनुसूचित जाति: {sc_hi} (स्व-घोषित)। "
+              f"वार्षिक पारिवारिक आय: {inr(req.annual_family_income)}।")]
     if out["status"] != "eligible":
-        f.append(P(("Not eligible for an NSFDC loan." if out["status"] == "not_eligible"
-                    else "Not covered by the NSFDC loan schemes.") + " Reasons:"))
-        for r in out["reasons"]:
-            f.append(P(f"• {r['text']} NSFDC: \"{r['quote']}\" {r['tag']}", "s"))
-        f.append(P("So this report shows no NSFDC loan; the business sections follow for the bank."))
+        not_ok = out["status"] == "not_eligible"
+        pairs.append((("Not eligible for an NSFDC loan." if not_ok else "Not covered by the NSFDC loan schemes.") + " Reasons:",
+                      ("NSFDC ऋण के लिए पात्र नहीं।" if not_ok else "NSFDC ऋण योजनाओं के दायरे में नहीं।")
+                      + " कारण (NSFDC के अपने शब्द बाईं ओर):"))
+        for r in out["reasons"]:                   # review fix 2: one small line each, as before Stage 1d
+            pairs.append((f"• {r['text']} NSFDC: \"{r['quote']}\" {r['tag']}",
+                          REASONS_HI.get(r["text"], "• कारण: बाईं ओर अंग्रेज़ी में देखें।")))
+        pairs.append(("So this report shows no NSFDC loan; the business sections follow for the bank.",
+                      "इसलिए इस रिपोर्ट में कोई NSFDC ऋण नहीं है; बैंक के लिए व्यवसाय के खंड आगे दिए हैं।"))
     elif out["loan"]["loan_amount"]["value"] <= 0:
-        f.append(P("NSFDC loan: the loan works out to ₹0 at this project cost, so this report shows no NSFDC loan payments."))
+        pairs.append(("NSFDC loan: the loan works out to ₹0 at this project cost, so this report shows no NSFDC loan payments.",
+                      "NSFDC ऋण: इस परियोजना लागत पर ऋण ₹0 बनता है, इसलिए इस रिपोर्ट में NSFDC ऋण की कोई किस्त नहीं है।"))
     else:
         L, S = out["loan"], out["summary"]
-        f.append(P(f"NSFDC loan: {inr(L['loan_amount']['value'])} ({L['scheme']['value']}, {L['interest_rate_pa']['value']}% a year). "
-                   f"Your own money: {inr(L['own_contribution']['value'])}. "
-                   f"After a pause with no payment, you pay {L['repayment_quarters']['value']} payments, one every 3 months, "
-                   f"of about {inr(S['equated_quarterly_instalment']['value'])}."))
+        amt, own, eqi = inr(L["loan_amount"]["value"]), inr(L["own_contribution"]["value"]), inr(S["equated_quarterly_instalment"]["value"])
+        rate, n = L["interest_rate_pa"]["value"], L["repayment_quarters"]["value"]
+        pairs.append((f"NSFDC loan: {amt} ({L['scheme']['value']}, {rate}% a year). Your own money: {own}. "
+                      f"After a pause with no payment, you pay {n} payments, one every 3 months, of about {eqi}.",
+                      f"NSFDC ऋण: {amt} ({L['scheme']['value']}, {rate}% सालाना)। आपका अपना पैसा: {own}। "
+                      f"बिना भुगतान की छूट अवधि के बाद आप हर 3 महीने में लगभग {eqi} की {n} किस्तें देंगे।"))
     if yfs.get("status") == "ok":
-        pat = [c["value"] for c in yfs["rows"]["profit_after_tax"]]
+        pat = ", ".join("—" if v is None else inr(round(v)) for v in (c["value"] for c in yfs["rows"]["profit_after_tax"]))
         s = yfs["summary"]
-        line = "Profit after tax, Years 1-5: " + ", ".join("—" if v is None else inr(round(v)) for v in pat) + "."
+        en, hi = f"Profit after tax, Years 1-5: {pat}.", f"कर के बाद लाभ, वर्ष 1-5: {pat}।"
         if s["avg_dscr"].get("value") is not None:
-            line += f" On average the business earns ₹{s['avg_dscr']['value']:.2f} for every ₹1 of loan payment."
+            d = f"{s['avg_dscr']['value']:.2f}"
+            en += f" On average the business earns ₹{d} for every ₹1 of loan payment."
+            hi += f" औसतन व्यवसाय ऋण भुगतान के हर ₹1 पर ₹{d} कमाता है।"
         if s["break_even"].get("value") is not None:
-            line += f" It breaks even at about {s['break_even']['value']:.0f}% of capacity."
-        f.append(P(line))
-        # review finding 7: always said, not only when an average DSCR exists
-        f.append(P(f"These Year 1-5 figures are for {_size_text(code, yfs)}, not your {inr(req.project_cost)} project"
-                   + (f"; their loan payments use the {research_loan}, which can differ from your NSFDC loan"
-                      if research_loan else "") + "."))
+            be = f"{s['break_even']['value']:.0f}"
+            en += f" It breaks even at about {be}% of capacity."
+            hi += f" यह लगभग {be}% क्षमता पर लागत निकाल लेता है (ब्रेक-ईवन)।"
+        pairs.append((en, hi))
+        # review finding 7 (Stage 1b): always said, not only when an average DSCR exists
+        size_hi = ("UP MSME प्रोजेक्ट प्रोफ़ाइल की संदर्भ इकाई (छोटा-बड़ा नहीं किया गया)" if _is_ref(yfs)
+                   else f"शोध फ़ाइल की \"{yfs['size']['label']}\" आकार वाली इकाई")
+        loan_hi = _loan_hi(research_loan)
+        pairs.append((f"These Year 1-5 figures are for {_size_text(code, yfs)}, not your {inr(req.project_cost)} project"
+                      + (f"; their loan payments use the {research_loan}, which can differ from your NSFDC loan"
+                         if research_loan else "") + ".",
+                      f"ये वर्ष 1-5 के आँकड़े {size_hi} के हैं, आपकी {inr(req.project_cost)} की परियोजना के नहीं"
+                      + (f"; इनकी ऋण किस्तें {loan_hi} पर आधारित हैं, जो आपके NSFDC ऋण से अलग हो सकता है" if loan_hi else "")
+                      + "।"))
     else:
-        f.append(P(f"Year-by-year figures: {year_figures.TO_BE_FILLED}."))
-    for n in notes:
-        f.append(P(f"Note: {n['text']} [{n['tag']}]", "s"))
-    f.append(P("Open items for this business (things the research files do not hold yet) are listed in the "
-               "dashboard's Feasibility tab, not in this report.", "s"))
-    f.append(P("Tags: [S#] official source (list at the end), CALCULATED worked out from tagged figures, ASSUMED our "
-               "stated assumption, USER INPUT entered by the applicant, \"Dxx dossier\" / research file = the team's "
-               "research file for this business, self-declared = typed by the applicant, not checked.", "s"))
+        pairs.append((f"Year-by-year figures: {year_figures.TO_BE_FILLED}.", "वर्षवार आँकड़े: बैंक के साथ भरे जाएँगे।"))
+    for n_ in notes:
+        pairs.append((f"Note: {n_['text']} [{n_['tag']}]", "नोट: बाएँ अंग्रेज़ी कॉलम देखें।"))
+    pairs.append(("Open items for this business (things the research files do not hold yet) are listed in the "
+                  "dashboard's Feasibility tab, not in this report.",
+                  "इस व्यवसाय के खुले बिंदु (जो शोध फ़ाइलों में अभी नहीं हैं) डैशबोर्ड के व्यवहार्यता (Feasibility) टैब में हैं, "
+                  "इस रिपोर्ट में नहीं।"))
+    pairs.append(("Tags: [S#] official source (list at the end), CALCULATED worked out from tagged figures, ASSUMED our "
+                  "stated assumption, USER INPUT entered by the applicant, \"Dxx dossier\" / research file = the team's "
+                  "research file for this business, self-declared = typed by the applicant, not checked.",
+                  "टैग: [S#] आधिकारिक स्रोत (सूची अंत में), CALCULATED = टैग किए गए आँकड़ों से निकाला गया, ASSUMED = "
+                  "हमारी बताई गई मान्यता, USER INPUT = आवेदक द्वारा दर्ज, \"Dxx dossier\" / research file = इस व्यवसाय "
+                  "की टीम की शोध फ़ाइल, self-declared = आवेदक द्वारा लिखा गया, जाँचा नहीं गया।"))
+    return pairs
+
+
+SMALL = ("Note:", "Open items", "Tags:", "•")         # printed in the small style
+
+
+def _summary(code, req, out, yfs, research_loan, notes):
+    ready = hindi_ready()
+    f = [Paragraph(escape(f"{TITLE} — {NAMES[code]} ({code})"), ST["title"])]
+    if ready:
+        f.append(P(TITLE_HI, "h"))                 # the code is in the English title above (review fix 3)
+    f += [P(f"Prepared {date.today().isoformat()} by the UdyamSetuAI advisory server. Advisory document only: "
+            f"this is not a loan sanction.", "s"), *H("Summary in plain words")]
+    pairs = summary_pairs(code, req, out, yfs, research_loan, notes)
+    if not ready:                                  # decision 13: English only, with a note
+        f.append(P(HINDI_MISSING, "s"))
+        f += [P(en, "s" if en.startswith(SMALL) else "p") for en, _ in pairs]
+        return f
+    # Two columns, English | Hindi, one table row per paragraph, so a long page can run onto page 2 (decision 5)
+    rows = [[P(en, "s" if en.startswith(SMALL) else "p"), P(hi, "s" if en.startswith(SMALL) else "p")] for en, hi in pairs]
+    t = Table(rows, colWidths=[90 * mm, 90 * mm])
+    t.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                           ("RIGHTPADDING", (0, 0), (-1, -1), 6), ("TOPPADDING", (0, 0), (-1, -1), 0),
+                           ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
+    f.append(t)
     return f
 
 
@@ -528,7 +749,7 @@ def _build(code, req, answers, a, notes):
     F.append(PageBreak())
 
     # 1. Applicant and promoters (AIF 1-3; FIDF 1)
-    F.append(H("1. Applicant and promoters"))
+    F.extend(H("1. Applicant and promoters"))
     F.append(_pairs([
         ("Name of the applicant", _v(a, "name")), ("Entity type", _v(a, "entityType")),
         ("Legal status", _v(a, "legalStatus")), ("Registration (Udyam / CIN)", _sd(a.get("registrationNo"))),
@@ -552,7 +773,7 @@ def _build(code, req, answers, a, notes):
                          ("Woman / minority", f"{_yn(p.get('isWoman'))} / {_yn(p.get('isMinority'))}")]))
 
     # 2. Project summary (FIDF 1)
-    F.append(H("2. Project summary"))
+    F.extend(H("2. Project summary"))
     rows = [("Project", f"{NAMES[code]} ({code})"),
             ("Unit size used for the figures", _size_text(code, yfs) if ok else year_figures.TO_BE_FILLED),
             ("Total project cost", f"{inr(req.project_cost)} [USER INPUT]")]
@@ -568,18 +789,18 @@ def _build(code, req, answers, a, notes):
     F.append(_pairs(rows))
 
     # 3-6: research text (decisions 4, 14, 28, 29) and the applicant's objective (decision 5)
-    F.append(H("3. Introduction"))
+    F.extend(H("3. Introduction"))
     F.append(_research(code, _item_lines(_section(feas, "market")), cited))
-    F.append(H("4. Benefits and justification"))
+    F.extend(H("4. Benefits and justification"))
     F.append(_research(code, _strengths(feas), cited))
-    F.append(H("5. Objectives"))
+    F.extend(H("5. Objectives"))
     F.append(P(_v(a, "objective") + (" [USER INPUT]" if a.get("objective") else "")))
-    F.append(H("6. Project and operating model"))
+    F.extend(H("6. Project and operating model"))
     F.append(P(f"Category of infrastructure: {_v(a, 'infrastructureCategory')}"))
     F.append(_research(code, _item_lines(_section(feas, "pricing")), cited))
 
     # 7. Land and site (AIF 8; FIDF 5 site)
-    F.append(H("7. Land and site"))
+    F.extend(H("7. Land and site"))
     F.append(_pairs([("Land area", _v(a, "landArea")), ("Title / ownership", _v(a, "landTitle")),
                      ("Lease details", _v(a, "leaseDetails")), ("Coordinates", _v(a, "coordinates")),
                      ("Change of land use", _v(a, "changeOfLandUse")),
@@ -588,7 +809,7 @@ def _build(code, req, answers, a, notes):
                      ("Water", _v(a, "water")), ("Power", _v(a, "power"))]))
 
     # 8-9. Technical details and machinery; process flow chart (AIF 9; FIDF 5)
-    F.append(H("8. Technical details and machinery"))
+    F.extend(H("8. Technical details and machinery"))
     lines = (yfs.get("size") or {}).get("capex_lines") or []
     mach = [c for c in lines if c["counted"]]
     if mach:
@@ -598,18 +819,18 @@ def _build(code, req, answers, a, notes):
         F.append(P(f"Itemised machinery: see {_size_text(code, yfs)}; the capital cost is in section 12."))
     else:
         F.append(P(year_figures.TO_BE_FILLED))
-    F.append(H("9. Process flow chart"))
+    F.extend(H("9. Process flow chart"))
     F.append(P(_v(a, "processFlow")))
 
     # 10-11. Organisation, employment; experience and banking (FIDF 6; AIF 4-6, 15)
-    F.append(H("10. Organisation, management and employment"))
+    F.extend(H("10. Organisation, management and employment"))
     F.append(_pairs([("Employment (people)", _v(a, "employment")), ("Organisation and management", BLANK)]))
-    F.append(H("11. Experience and existing banking"))
+    F.extend(H("11. Experience and existing banking"))
     F.append(_pairs([("Relevant experience", _v(a, "experience")), ("Year-wise turnover", _v(a, "turnoverHistory")),
                      ("Existing loans and credit facilities", _v(a, "existingLoans")), ("GST returns", _v(a, "gstReturns"))]))
 
     # 12. Cost of project (FIDF 7A, AIF 11a) and operating cost (FIDF 7B)
-    F.append(H("12. Cost of project and operating cost"))
+    F.extend(H("12. Cost of project and operating cost"))
     if lines:
         F.append(_table([["Item", "Units", "Quantity", "Rate", "Group", "Total"]] +
                         [[c["item"], BLANK_SHORT, BLANK_SHORT, BLANK_SHORT, GROUP_NAMES.get(c["group"], c["group"]),
@@ -628,7 +849,7 @@ def _build(code, req, answers, a, notes):
         F.append(_table(_year_rows(yfs, {"recurring_cost"}, research_loan), [60, 24, 24, 24, 24, 24]))
 
     # 13. Means of finance (FIDF 10, AIF 11b)
-    F.append(H("13. Means of finance"))
+    F.extend(H("13. Means of finance"))
     if has_loan:
         L = out["loan"]
         F.append(_pairs([
@@ -640,12 +861,12 @@ def _build(code, req, answers, a, notes):
         F.append(P("no NSFDC loan (see page 1)."))
 
     # 14-17. Output, year figures, project worth, financial parameters (FIDF 8A-8C, AIF 11c-11d)
-    F.append(H("14. Estimates of output and its value"))
+    F.extend(H("14. Estimates of output and its value"))
     if ok:
         F.append(_table(_year_rows(yfs, {"turnover", "gross_benefit"}, research_loan), [60, 24, 24, 24, 24, 24]))
     else:
         F.append(P(year_figures.TO_BE_FILLED))
-    F.append(H("15. Year-by-year figures"))
+    F.extend(H("15. Year-by-year figures"))
     if ok:
         F.append(_table(_year_rows(yfs, {k for k, _ in ROW_LABELS}, research_loan), [60, 24, 24, 24, 24, 24]))
         F.append(P("Key: " + "; ".join(f"{k} = {v}" for k, v in KEYS.items()) + ". Years 6-8: —.", "s"))
@@ -660,7 +881,7 @@ def _build(code, req, answers, a, notes):
     else:
         F.append(P(year_figures.TO_BE_FILLED))
 
-    F.append(H("16. Project worth and cost-benefit"))
+    F.extend(H("16. Project worth and cost-benefit"))
     if ok:
         F.append(_table(_year_rows(yfs, {"capital_cost", "recurring_cost", "total_cost", "gross_benefit", "net_benefit"},
                                    research_loan), [60, 24, 24, 24, 24, 24]))
@@ -680,7 +901,7 @@ def _build(code, req, answers, a, notes):
     else:
         F.append(P(year_figures.TO_BE_FILLED))
 
-    F.append(H("17. Financial parameters"))
+    F.extend(H("17. Financial parameters"))
     if ok:
         s = yfs["summary"]
         rows = [("IRR without subsidy", sv("irr", pct=True)), ("IRR with subsidy", "not applicable: " + year_figures.SUBSIDY_NOTE),
@@ -700,7 +921,7 @@ def _build(code, req, answers, a, notes):
         F.append(P(year_figures.TO_BE_FILLED))
 
     # 18-19. Credit facility and repayment; collateral (AIF 11e-11g)
-    F.append(H("18. Credit facility and repayment schedule"))
+    F.extend(H("18. Credit facility and repayment schedule"))
     if has_loan:
         L, S = out["loan"], out["summary"]
         F.append(_pairs([
@@ -726,12 +947,12 @@ def _build(code, req, answers, a, notes):
                    "= interest + principal. Every 3-month payment is listed in the dashboard.", "s"))
     else:
         F.append(P("no NSFDC loan (see page 1)."))
-    F.append(H("19. Collateral"))
+    F.extend(H("19. Collateral"))
     F.append(P("not applicable: the loan is below ₹2 crore (NSFDC projects are capped at ₹50 lakh [S1])." if has_loan
                else "not applicable: no NSFDC loan (see page 1)."))
 
     # 20. Approvals, pollution and risks (AIF 11h, 17; FIDF 6)
-    F.append(H("20. Approvals, pollution and risks"))
+    F.extend(H("20. Approvals, pollution and risks"))
     F.append(P("Approvals:", "s"))
     F.append(_research(code, _item_lines(_section(feas, "compliance")), cited))
     if has_rules:
@@ -749,30 +970,30 @@ def _build(code, req, answers, a, notes):
     F.append(_research(code, _item_lines(_section(feas, "swot_competition")), cited))
 
     # 21-24 (AIF 12-14, 16, 18)
-    F.append(H("21. Raw material and catchment"))
+    F.extend(H("21. Raw material and catchment"))
     F.append(_pairs([("Raw material available in the catchment", _v(a, "rawMaterial")), ("Catchment", _v(a, "catchment"))]))
-    F.append(H("22. Demand and marketing"))
+    F.extend(H("22. Demand and marketing"))
     F.append(_research(code, _item_lines(_section(feas, "market")), cited))
     season = dossier_figures.figures(code)["seasonality"]
     if season.get("status") != "NOT FOUND" and season.get("months"):
         low = sorted(season["months"], key=lambda m: m["value"])[:3]
         F.append(P("Weakest months: " + ", ".join(f"{m['month']} ({round((m['value'] - 1) * 100):+d}% vs an average month)"
                                                  for m in low) + f" [{code} dossier]", "s"))
-    F.append(H("23. Renewable energy"))
+    F.extend(H("23. Renewable energy"))
     F.append(P(_v(a, "renewableEnergy")))
-    F.append(H("24. Suppliers of plant and machinery"))
+    F.extend(H("24. Suppliers of plant and machinery"))
     F.append(P(_v(a, "suppliers")))
 
     # 25. Expected outcomes (FIDF 9)
-    F.append(H("25. Expected outcomes"))
+    F.extend(H("25. Expected outcomes"))
     if ok:
         F.append(_table(_year_rows(yfs, {"net_benefit", "profit_after_tax"}, research_loan), [60, 24, 24, 24, 24, 24]))
     F.append(P(f"Employment: {_v(a, 'employment')}"))
 
     # 26-28. Construction timeline, milestones, layout (AIF 10; FIDF 11-12)
-    F.append(H("26. Construction timeline"))
+    F.extend(H("26. Construction timeline"))
     F.append(_pairs([("Construction timeline", _v(a, "constructionTimeline")), ("Start date", _v(a, "startDate"))]))
-    F.append(H("27. Milestones (first 12 months)"))
+    F.extend(H("27. Milestones (first 12 months)"))
     grid = [["Activity"] + [f"M{m}" for m in range(1, 13)]]
     if has_loan:
         pause_months = out["loan"]["moratorium_quarters"]["value"] * 3
@@ -781,26 +1002,27 @@ def _build(code, req, answers, a, notes):
     F.append(_table(grid, [40] + [11.6] * 12))
     F.append(P("pause = no payment (pause), from the loan terms [S1]; pay = a payment falls due every 3 months. "
                f"The other rows are for the applicant. Applicant's milestones: {_v(a, 'milestones')}", "s"))
-    F.append(H("28. Layout"))
+    F.extend(H("28. Layout"))
     F.append(P(_v(a, "layout")))
 
     # 29-30. Enclosures checklist (FIDF 14) and declaration (AIF, reworded for NSFDC)
-    F.append(H("29. Enclosures checklist"))
+    F.extend(H("29. Enclosures checklist"))
     ticked = set(a.get("enclosures") or [])
     F.append(_table([["Enclosure", "Attached"]] + [[e, "yes" if e in ticked else BLANK] for e in ENCLOSURES], [120, 60]))
-    F.append(H("30. Declaration"))
-    if has_loan:                                   # review finding 3: name NSFDC and the scheme
-        name = out["loan"]["scheme"]["value"]
-        scheme = f"the NSFDC {name}" + ("" if "Scheme" in name else " scheme")
-    else:
-        scheme = "the NSFDC loan schemes"
+    F.extend(H("30. Declaration"))
+    scheme, scheme_hi = scheme_names(out)          # Stage 1b finding 3; Stage 1d review fix 1
     F.append(P("I ……………………………Certify that the information / contents as above furnished by me / us are true to the "
                "best of my / our knowledge and belief and nothing material has been concealed. In case, any information "
                "furnished in the application is found false, my / our application may be rejected out at any stage by "
                f"the Bank and not eligible under {scheme}."))
+    if hindi_ready():                               # decision 3: our Hindi translation; the English governs
+        F.append(Table([[P(DECLARATION_HI.format(scheme_hi=scheme_hi), "s")]], colWidths=[180 * mm],
+                       style=[("BOX", (0, 0), (-1, -1), 0.3, colors.grey), ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                              ("RIGHTPADDING", (0, 0), (-1, -1), 4)]))
+        F.append(Spacer(1, 4))                     # a gap above the Date line (review)
     F.append(P(f"Date: {_v(a, 'date')}    Place: {_v(a, 'place')}    Signature of the Applicant: {BLANK}"))
 
-    F.append(H("Sources"))
+    F.extend(H("Sources"))
     s1 = out["sources"]["[S1]"]
     F.append(P(f"[S1] {s1['document']} — {s1['url']} ({s1['note']})", "s"))
     F.append(P(f"{code} dossier: {dossier_figures.figures(code)['dossier']} (team research file).", "s"))
