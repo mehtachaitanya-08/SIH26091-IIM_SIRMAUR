@@ -49,7 +49,7 @@ MAX_TURNS = 30
 TIMEOUT_S = 30.0
 
 SYSTEM = """You are the UdyamSetuAI assistant for Scheduled Caste (SC) rural entrepreneurs in India, inside a loan-advice dashboard.
-Your job: find the user's business, ask that business's yes/no questions, work out the NSFDC loan, explain results, and offer the 1-page DPR (bank report).
+Your job: find the user's business, ask that business's yes/no questions, work out the NSFDC loan, explain results, and offer the DPR (Detailed Project Report for the bank).
 
 Hard rules:
 1. NEVER state a number (amount, rate, count, year, percentage) unless it appears in a tool result in this conversation or the user said it. Do not do arithmetic yourself. If you need a figure, call a tool.
@@ -304,7 +304,7 @@ TOOLS = {
                         {"code": {"type": "string"}, "project_cost": {"type": "number"}}),
     "feasibility": (_t_feasibility, "Feasibility report summary (sections and gaps) for a verified business.",
                     {"code": {"type": "string"}}),
-    "dpr_link": (_t_dpr_link, "Prepare the 1-page DPR download for the user.",
+    "dpr_link": (_t_dpr_link, "Prepare the DPR (Detailed Project Report) download for the user.",
                  {"code": {"type": "string"}, "project_cost": {"type": "number"}, "family_income": {"type": "number"},
                   "is_sc": {"type": "boolean"}, "answers": {"type": "object"}}),
 }
@@ -424,7 +424,8 @@ def allowed_numbers(tool_results, user_texts):
     return allowed
 
 
-# "1-page DPR" / "1-पेज" names the report, it is not a figure (owner's decision, 12 Nov 2026).
+# The report was once called the "1-page DPR"; the AI may still say it ("1-page" / "1-पेज"), and that 1
+# names the report, it is not a figure (owner's decision, 12 Nov 2026).
 # Only a lone 1 (or १) right before "page"/"पेज"/"पृष्ठ"; every other number is still checked.
 ONE_PAGE = re.compile(r"(?<![\d.,])[1१]\s*[-\u2010\u2011\u2013]?\s*(?=(?:page|पेज|पृष्ठ))", re.I)
 # Rule 8's own words, "every 3 months" / "हर 3 महीने", are not a figure (review finding, owner's

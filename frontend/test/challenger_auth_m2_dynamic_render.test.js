@@ -84,9 +84,10 @@ describe('1. Dynamic Profile Rendering Across All Views (Empirical Challenger 2)
       assert.ok(html.includes('MoSJE/NSFDC/2026/UP-LKN-992100'), 'Expected certificate ID "MoSJE/NSFDC/2026/UP-LKN-992100"');
     });
 
-    it('renders dynamic beneficiary in 1-Page Lead-Bank DPR summary', () => {
+    it('renders dynamic beneficiary in Lead-Bank DPR summary', () => {
       const html = renderSetoDashboardWithState({ currentUser: profile }, { activeTab: 'dpr' });
-      assert.ok(html.includes('1-Page Detailed Project Report (DPR)'), 'Expected DPR title');
+      // Stage 1b: plain title, no page count (owner's decision 20)
+      assert.ok(html.includes('Detailed Project Report (DPR)') && !html.includes('1-Page'), 'Expected DPR title');
       assert.ok(html.includes('Ananya Sharma (SC · Verified)'), 'Expected DPR beneficiary line with dynamic name and category');
     });
   });

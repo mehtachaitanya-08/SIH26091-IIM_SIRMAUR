@@ -58,7 +58,7 @@ const TRANSLATIONS = {
     orbitTitleItalic: 'opportunity',
     orbitTitlePost: ' mean today?',
     // "instant bank-sanction DPRs" had no source and contradicts the DPR's own "not a loan sanction".
-    orbitBody: 'It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and one-page advisory DPRs.',
+    orbitBody: 'It means access to 6.5% institutional loans instead of 3-senkda sahukars, 12-month solvency stress testing, and advisory DPRs for the bank.',
     // Immersion
     // "67% of rural producers…" had no source anywhere in the research files (only in the design
     // brief), so it went (owner's decision, 11 Nov 2026). The gauge now shows the 12 months of a year.
@@ -77,7 +77,7 @@ const TRANSLATIONS = {
     card3Title: 'Pay off a moneylender loan',
     card3Body: 'Swap a costly moneylender loan (3 senkda = 36% a year) for a cheaper bank loan.',
     card4Title: 'Download report (DPR)',
-    card4Body: 'One-page advisory DPR made by the server from the verified loan rules and the business dossier; not a loan sanction.',
+    card4Body: 'Advisory DPR (Detailed Project Report) made by the server from the verified loan rules and the business dossier; not a loan sanction.',
     viewDetails: 'View details',
     closeDossier: 'Close Statutory Dossier',
     // Auth Modal
@@ -118,12 +118,12 @@ const TRANSLATIONS = {
     termAmount: '₹50 लाख तक',
     termLabel: 'सावधि ऋण सुविधा @ 8.0%',
     dprAmount: 'अग्रणी बैंक मानक',
-    dprLabel: 'सांविधिक 1-पृष्ठीय डीपीआर',
+    dprLabel: 'सांविधिक डीपीआर (विस्तृत परियोजना रिपोर्ट)',
     // Orbit
     orbitTitlePre: 'आज ',
     orbitTitleItalic: 'अवसर',
     orbitTitlePost: ' का क्या अर्थ है?',
-    orbitBody: 'इसका अर्थ है 3-सेंकड़ा साहूकार के बजाय 6.5% संस्थागत ऋण, 12 महीने का सॉल्वेंसी स्ट्रेस टेस्ट और एक-पृष्ठीय सलाहकारी डीपीआर तक सीधी पहुँच।',
+    orbitBody: 'इसका अर्थ है 3-सेंकड़ा साहूकार के बजाय 6.5% संस्थागत ऋण, 12 महीने का सॉल्वेंसी स्ट्रेस टेस्ट और बैंक के लिए सलाहकारी डीपीआर तक सीधी पहुँच।',
     // Immersion
     gaugeCenter: '12',
     riskGaugeLabel: 'साल के महीने',
@@ -139,8 +139,8 @@ const TRANSLATIONS = {
     card2Body: 'हर व्यवसाय का 12 महीने का मौसमी पैटर्न, सबसे कमज़ोर महीने और ऋण चुकाने की क्षमता, उसके शोध डोज़ियर से।',
     card3Title: 'मोड बी साहूकारी ऋण मुक्ति',
     card3Body: 'अनौपचारिक 3-सेंकड़ा (36% वार्षिक) साहूकार ऋण को कम ब्याज वाली संस्थागत बैंकिंग सुविधा में बदलना।',
-    card4Title: '1-पृष्ठीय लीड-बैंक डीपीआर',
-    card4Body: 'सत्यापित ऋण नियमों एवं व्यवसाय डोज़ियर से सर्वर द्वारा बना एक-पृष्ठीय सलाहकारी डीपीआर; ऋण स्वीकृति नहीं।',
+    card4Title: 'लीड-बैंक डीपीआर',
+    card4Body: 'सत्यापित ऋण नियमों एवं व्यवसाय डोज़ियर से सर्वर द्वारा बना सलाहकारी डीपीआर (विस्तृत परियोजना रिपोर्ट); ऋण स्वीकृति नहीं।',
     viewDetails: 'विवरण देखें',
     closeDossier: 'सांविधिक दस्तावेज बंद करें',
     // Auth Modal
@@ -215,11 +215,11 @@ const PILLAR_DOSSIERS = {
       number: 'PILLAR 04',
       title: 'Download report (DPR)',
       color: '#4A6274',
-      mandate: '1-page advisory DPR for the bank and the State Channelising Agency',
-      summary: 'A one-page Detailed Project Report made from the verified loan rules and the business dossier, every figure tagged. Advisory only: not a loan sanction.',
+      mandate: 'Advisory DPR for the bank and the State Channelising Agency',
+      summary: 'A Detailed Project Report covering every section of the FIDF and AIF bank formats, made from the verified loan rules and the business dossier, every figure tagged. Advisory only: not a loan sanction.',
       specifications: [
-        { label: 'Appraisal Layout', value: 'One page, made by the server; advisory only, not a loan sanction' },
-        { label: 'Statutory Financial Metrics', value: 'NSFDC loan and payments every 3 months, research-file figures (sizes, money left each year, whether it can repay, good and bad months), checks and gaps; every figure tagged' },
+        { label: 'Appraisal Layout', value: 'Page 1 in plain words, then every bank-format section; made by the server; advisory only, not a loan sanction' },
+        { label: 'Statutory Financial Metrics', value: 'NSFDC loan and payments every 3 months, research-file figures (sizes, money left each year, whether it can repay, good and bad months), checks, and Years 1-5 with IRR and payback; every figure tagged' },
         { label: 'Branch Approval Routing', value: 'Pre-formatted for Lead District Managers (LDMs) and District Industry Centres (DICs)' },
         { label: 'Scheme Alignment', value: 'Full statutory mapping to NSFDC Term Loan / MCF and PM Vishwakarma craft guidelines' }
       ]
@@ -267,13 +267,13 @@ const PILLAR_DOSSIERS = {
     },
     4: {
       number: 'स्तंभ 04',
-      title: 'सांविधिक 1-पृष्ठीय लीड-बैंक डीपीआर',
+      title: 'सांविधिक लीड-बैंक डीपीआर',
       color: '#4A6274',
-      mandate: 'बैंक एवं राज्य चैनलाइज़िंग एजेंसी के लिए 1-पृष्ठीय सलाहकारी डीपीआर',
-      summary: 'सत्यापित ऋण नियमों एवं व्यवसाय डोज़ियर से बना एक-पृष्ठीय डीपीआर, हर आँकड़ा टैग सहित। केवल सलाह: ऋण स्वीकृति नहीं।',
+      mandate: 'बैंक एवं राज्य चैनलाइज़िंग एजेंसी के लिए सलाहकारी डीपीआर',
+      summary: 'FIDF और AIF बैंक प्रारूपों के हर खंड वाली विस्तृत परियोजना रिपोर्ट, सत्यापित ऋण नियमों एवं व्यवसाय डोज़ियर से बनी, हर आँकड़ा टैग सहित। केवल सलाह: ऋण स्वीकृति नहीं।',
       specifications: [
-        { label: 'मूल्यांकन प्रारूप', value: 'एक पृष्ठ, सर्वर द्वारा तैयार; केवल सलाह, ऋण स्वीकृति नहीं' },
-        { label: 'सांविधिक वित्तीय मापदंड', value: 'NSFDC ऋण एवं तिमाही किस्तें, डोज़ियर आँकड़े (आकार, बचत, DSCR, मौसम), जाँच एवं कमियाँ; हर आँकड़ा टैग सहित' },
+        { label: 'मूल्यांकन प्रारूप', value: 'पृष्ठ 1 सरल शब्दों में, फिर बैंक प्रारूप का हर खंड; सर्वर द्वारा तैयार; केवल सलाह, ऋण स्वीकृति नहीं' },
+        { label: 'सांविधिक वित्तीय मापदंड', value: 'NSFDC ऋण एवं तिमाही किस्तें, डोज़ियर आँकड़े (आकार, बचत, DSCR, मौसम), जाँच, और वर्ष 1-5 के आँकड़े IRR एवं पेबैक सहित; हर आँकड़ा टैग सहित' },
         { label: 'शाखा अनुमोदन रूटिंग', value: 'लीड डिस्ट्रिक्ट मैनेजर्स (LDMs) और जिला उद्योग केंद्र (DICs) के लिए पूर्व-प्रारूपित' },
         { label: 'योजना संरेखण', value: 'एनएसएफडीसी सावधि ऋण / एमसीएफ और पीएम विश्वकर्मा शिल्प दिशानिर्देशों के साथ पूर्ण मैपिंग' }
       ]

@@ -137,9 +137,19 @@ describe('Milestone M3: Modular SSOT Dashboard & Synchronization Suite', () => {
     it('LeadBankDprView renders Lead-Bank appraisal and download action', () => {
       const dprPath = path.join(componentsDir, 'LeadBankDprView.jsx');
       const code = fs.readFileSync(dprPath, 'utf8');
-      assert.ok(code.includes('1-Page Detailed Project Report (DPR)'));
+      // Stage 1b: no page count in the title (owner's decision 20: plain title)
+      assert.ok(code.includes('Detailed Project Report (DPR)') && !code.includes('1-Page'));
       assert.ok(code.includes('Download DPR PDF'));
       assert.ok(code.includes('not a loan sanction'));
+    });
+
+    // Review (owner: fix now): the Hindi screen used the other word for page (पृष्ठ) and still said one page / gaps.
+    it('Hindi DPR text no longer says one page or gaps', () => {
+      const app = fs.readFileSync(path.join(componentsDir, '..', '..', 'App.jsx'), 'utf8');
+      for (const bad of ['1-पृष्ठीय', 'एक-पृष्ठीय', 'एक पृष्ठ', 'जाँच एवं कमियाँ']) {
+        assert.ok(!app.includes(bad), bad);
+      }
+      assert.ok(app.includes('पृष्ठ 1 सरल शब्दों में'));
     });
   });
 

@@ -77,7 +77,7 @@ export default function SetoDashboard({
               { id: 'simulator', label: isHi ? 'एंटरप्राइज स्टूडियो' : 'Good and bad months' },
               { id: 'amortizer', label: isHi ? 'एनएसएफडीसी अमोर्टाइज़र' : 'Your loan and repayments' },
               { id: 'restructure', label: isHi ? 'कर्ज मुक्ति' : 'Pay off a moneylender loan' },
-              { id: 'dpr', label: isHi ? '1-पेज डीपीआर' : 'Download report (DPR)' }
+              { id: 'dpr', label: isHi ? 'डीपीआर रिपोर्ट' : 'Download report (DPR)' }
             ].map((tab) => (
               <button
                 key={tab.id}

@@ -341,7 +341,7 @@ describe('CHALLENGER M3 EMPIRICAL ADVERSARIAL STRESS SUITE', () => {
       assert.ok(prodCode.includes('udyamsetuai_production_scenarios'), 'Missing correct localStorage key');
     });
 
-    it('ProductionDashboard downloads the 1-page DPR PDF made by the server', () => {
+    it('ProductionDashboard downloads the DPR PDF made by the server', () => {
       assert.ok(prodCode.includes('handleDownloadDprPdf'), 'ProductionDashboard missing handleDownloadDprPdf');
       assert.ok(prodCode.includes('downloadDpr('), 'Must call the server DPR (POST /api/dpr)');
       assert.ok(!prodCode.includes('STATUTORY SANCTION READY'), 'Must not claim a sanction');

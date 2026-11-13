@@ -173,7 +173,7 @@ export async function fetchFeasibility(code) {
 }
 
 /**
- * 1-page DPR PDF made by the server.
+ * DPR (Detailed Project Report) PDF made by the server.
  * @param {{code, projectCost, familyIncome, isSc, answers?, applicantName?}} payload
  * @returns {Promise<Blob>} the PDF. Throws ServerOfflineError or ServerError (the server's message).
  */

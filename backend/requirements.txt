@@ -7,7 +7,7 @@ starlette==1.10.0
 uvicorn==0.54.0
 # chatbot: calls the Groq API
 httpx==0.28.1
-# 1-page DPR PDF (versions as in the root requirements.txt); fonts in backend/fonts
+# DPR PDF (versions as in the root requirements.txt); fonts in backend/fonts
 reportlab==5.1.0
 pillow==13.0.0
 charset-normalizer==3.5.2

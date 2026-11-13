@@ -203,7 +203,7 @@ export default function CenterWorkspace({
         />
       )}
 
-      {/* Viewport 4: 1-Page DPR */}
+      {/* Viewport 4: DPR */}
       {activeTab === 'dpr' && (
         <LeadBankDprView
           activeDomain={activeDomain}

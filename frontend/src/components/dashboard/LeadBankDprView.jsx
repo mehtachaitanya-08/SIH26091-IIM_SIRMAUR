@@ -2,7 +2,7 @@ import React from 'react';
 import { Download } from 'lucide-react';
 
 /**
- * LeadBankDprView — 1-page Detailed Project Report (DPR)
+ * LeadBankDprView — Detailed Project Report (DPR)
  * The PDF is made by the server (POST /api/dpr) from verified data only, each figure with its tag.
  * It is an advisory document, not a loan sanction.
  */
@@ -34,7 +34,7 @@ export default function LeadBankDprView({
             For the bank / State Channelising Agency
           </span>
           <h4 className="font-bold text-sm text-[#111311] font-sans-ui">
-            1-Page Detailed Project Report (DPR)
+            Detailed Project Report (DPR)
           </h4>
         </div>
         <button
@@ -78,8 +78,9 @@ export default function LeadBankDprView({
           </div>
         )}
         <p className="text-[11px] text-[#686D65] pt-1">
-          Made by the server from verified sources: loan, summary of payments every 3 months, your answers to the business questions,
-          gaps (NOT FOUND) and sources, each figure tagged. Advisory document only: not a loan sanction.
+          Made by the server from verified sources: page 1 in plain words, then the loan, the payments every 3 months,
+          Years 1-5 with IRR and payback, your answers to the business questions and the sources, each figure tagged.
+          Open items stay in the Feasibility tab. Advisory document only: not a loan sanction.
         </p>
       </div>
 

@@ -131,9 +131,10 @@ def pdf_text(code, cost):
 
 
 @pytest.mark.parametrize("code,cost", [("D01", 350000), ("D08", 850000), ("D24", 1500000), ("D20", 140000), ("D18", 140000)])
-def test_dpr_one_page_with_dossier_figures(code, cost):
+def test_dpr_with_dossier_figures(code, cost):
+    # Changed from the old single-page check (owner's decision, 12 Nov 2026: no page limit any more)
     n, text = pdf_text(code, cost)
-    assert n == 1
+    assert n >= 4
     assert f"{code} dossier" in text
     assert "not yet verified" not in text
 
@@ -143,10 +144,10 @@ def test_dpr_d01_shows_its_printed_dscr():
     assert "2.84" in text and "₹3,50,000" in text
 
 
-def test_dpr_long_name_decimal_amounts_and_all_answers_still_one_page():
+def test_dpr_long_name_decimal_amounts_and_all_answers_still_give_a_pdf():
     qs = businesses.detail("D20")["questions"]
     answers = {q["id"]: q["choices"][0] for q in qs}
     r = post("/api/dpr", {"code": "D20", "projectCost": 140000.75, "familyIncome": 100000.5, "isSc": True,
                           "answers": answers, "applicantName": "A" * 40 + " " + "B" * 39})
     assert r.status_code == 200, r.text
-    assert len(PdfReader(io.BytesIO(r.content)).pages) == 1
+    assert len(PdfReader(io.BytesIO(r.content)).pages) >= 4   # changed from "== 1": no page limit any more

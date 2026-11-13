@@ -473,7 +473,7 @@ export default function ProductionDashboard({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialQuestion]);
 
-  // 1-page DPR PDF, made by the server from verified data
+  // DPR PDF, made by the server from verified data
   const handleDownloadDprPdf = async () => {
     if (!loanReady) {
       setActiveTab('amortizer');
