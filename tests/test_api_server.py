@@ -189,6 +189,9 @@ class TestUdyamSetuAIServer(unittest.TestCase):
         """OPTIONS request returns 204 with required CORS headers."""
         status, _, headers = self._send_request("OPTIONS", "/api/health")
         self.assertIn(status, (200, 204))
+        # Header names are case-insensitive; the server sends "Access-Control-Allow-Origin" (the test looked
+        # it up only in lower case, so it always read None: a test fault, fixed 13 Nov 2026).
+        headers = {k.lower(): v for k, v in headers.items()}
         origin = headers.get("access-control-allow-origin")
         self.assertEqual(origin, "*")
         methods = headers.get("access-control-allow-methods")

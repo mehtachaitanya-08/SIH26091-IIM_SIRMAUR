@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * UserCard — Bottom Profile Card
  * Shows only what the signed-in user told us, marked self-declared. Nothing on it is checked
- * by anyone, so it carries no "verified" badge: the old "Statutory Profile Verified" button and
+ * by anyone, so it carries no "verified" badge: the old statutory "profile verified" button and
  * the fixed "Income ≤ ₹5.00L" line showed every user as checked (teammate review, 11 Nov 2026).
  */
 
