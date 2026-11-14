@@ -82,12 +82,21 @@ def _first(d, pred):
     raise AssertionError("no matching item")
 
 
+def _link_or_copy(src, dst):
+    """A folder shortcut (symlink) to src; where it is refused (Windows without admin rights:
+    "WinError 1314"), a full copy instead (the checker also reads sources/, so all of it)."""
+    try:
+        dst.symlink_to(src, target_is_directory=True)
+    except OSError:
+        shutil.copytree(src, dst)
+
+
 def _break(code, tmp_path, mutate):
     """Copy repo layout pieces the checker needs into tmp, mutate the data, run the checker."""
     (tmp_path / "data" / "businesses").mkdir(parents=True)
     (tmp_path / "backend").mkdir()
     shutil.copy(REPO / "backend" / "check_data.py", tmp_path / "backend" / "check_data.py")
-    (tmp_path / "research_dossiers").symlink_to(REPO / "research_dossiers")
+    _link_or_copy(REPO / "research_dossiers", tmp_path / "research_dossiers")
     shutil.copy(DATA / "skip_list.json", tmp_path / "data" / "businesses" / "skip_list.json")
     d = json.loads((DATA / f"{code}.json").read_text(encoding="utf-8"))
     mutate(d)
@@ -211,7 +220,7 @@ def test_check_data_catches_each_break(tmp_path, mutate):
 def test_check_dossier_catches_a_changed_quote(tmp_path):
     src = REPO / "research_dossiers" / "D20_Metal_Smithy_Dossier.md"
     (tmp_path / "research_dossiers").mkdir()
-    (tmp_path / "research_dossiers" / "sources").symlink_to(REPO / "research_dossiers" / "sources")
+    _link_or_copy(REPO / "research_dossiers" / "sources", tmp_path / "research_dossiers" / "sources")
     text = src.read_text(encoding="utf-8")
     # check_dossier.py checks the quotes in the Source log, so break one there (row S5)
     head, log = text.split("## Source log", 1)
@@ -396,3 +405,20 @@ def test_questions_offer_dont_know_and_fixed_state_choices(code):
         assert "dont_know" in q["choices"], q
         if q["id"] == "state":
             assert q["choices"] == ["maharashtra", "other", "dont_know"]
+
+
+
+# Owner's Windows check, 14 Nov 2026 (decision 3): Windows refuses symlinks without admin rights
+# ("WinError 1314"), so the tests copy the files instead. Simulated here by making symlink_to fail.
+def test_symlink_refused_the_checker_tests_copy_instead(tmp_path, monkeypatch):
+    import pathlib
+
+    def refuse(self, *a, **k):
+        raise OSError(1314, "A required privilege is not held by the client")
+    monkeypatch.setattr(pathlib.Path, "symlink_to", refuse)
+    dst = tmp_path / "copied"
+    _link_or_copy(REPO / "research_dossiers", dst)
+    assert not dst.is_symlink() and (dst / "D20_Metal_Smithy_Dossier.md").is_file() and (dst / "sources").is_dir()
+    # In copy mode the checker still passes unchanged data and still catches a break (right reason).
+    assert _break("D20", tmp_path / "clean", lambda d: None).returncode == 0
+    assert _break("D20", tmp_path / "broken", _wrong_unit).returncode == 1

@@ -5,19 +5,69 @@ import React from 'react';
  * Lists the scenarios the user saved, filters them by keyword, and saves new ones. The tick
  * boxes did nothing and the empty-list hint pointed at scenarios that do not exist, so both went
  * (teammate review, 11 Nov 2026).
+ * Examples (owner's decision, 14 Nov 2026): three example cards come back above the user's own list,
+ * titled "Examples to start from" and marked "Example", so they never read as someone's saved work.
  */
 export default function ScenariosSidebar({
   searchQuery = '',
   onSearchChange,
   filteredScenarios = [],
+  examples = [],
   onSelectScenario,
   onRefresh,
   onCreateSimulation,
   mode = 'mockup'
 }) {
+  const renderCard = (scenario) => (
+    <div
+      key={scenario.id}
+      onClick={() => onSelectScenario && onSelectScenario(scenario)}
+      className="p-2.5 rounded-xl hover:bg-[#F8F9FA] transition-all cursor-pointer border border-transparent hover:border-[#E9ECEF]"
+    >
+      <div className="flex items-start space-x-2">
+        <div className="flex-1">
+          <p className="font-bold text-[#111311] font-sans-ui">{scenario.name}</p>
+          <p className="text-[11px] text-[#686D65] mt-0.5 font-sans-ui">{scenario.subtitle}</p>
+
+          {scenario.image && (
+            <div className="mt-2 rounded-xl overflow-hidden h-20 w-full relative">
+              <img
+                src={scenario.image}
+                alt={scenario.imageAlt || 'Scenario preview'}
+                onError={(e) => {
+                  if (scenario.imageFallback) {
+                    e.currentTarget.src = scenario.imageFallback;
+                  }
+                }}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          <div className="flex items-center justify-between mt-2">
+            {scenario.badge && (
+              <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
+                {scenario.badge}
+              </span>
+            )}
+
+            <span className="text-[11px] text-[#686D65] font-mono-num">{scenario.time}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <aside className="lg:col-span-3 bg-white p-5 sm:p-6 border-l border-[#E9ECEF] flex flex-col justify-between overflow-y-auto">
       <div className="space-y-4">
+        {examples.length > 0 && (
+          <div className="space-y-2 text-xs">
+            <h3 className="font-bold text-base text-[#111311] font-sans-ui">Examples to start from</h3>
+            {examples.map(renderCard)}
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-base text-[#111311] font-sans-ui">
             Recent scenarios
@@ -54,45 +104,7 @@ export default function ScenariosSidebar({
               </p>
             </div>
           ) : (
-            filteredScenarios.map((scenario) => (
-              <div
-                key={scenario.id}
-                onClick={() => onSelectScenario && onSelectScenario(scenario)}
-                className="p-2.5 rounded-xl hover:bg-[#F8F9FA] transition-all cursor-pointer border border-transparent hover:border-[#E9ECEF]"
-              >
-                <div className="flex items-start space-x-2">
-                  <div className="flex-1">
-                    <p className="font-bold text-[#111311] font-sans-ui">{scenario.name}</p>
-                    <p className="text-[11px] text-[#686D65] mt-0.5 font-sans-ui">{scenario.subtitle}</p>
-
-                    {scenario.image && (
-                      <div className="mt-2 rounded-xl overflow-hidden h-20 w-full relative">
-                        <img
-                          src={scenario.image}
-                          alt={scenario.imageAlt || 'Scenario preview'}
-                          onError={(e) => {
-                            if (scenario.imageFallback) {
-                              e.currentTarget.src = scenario.imageFallback;
-                            }
-                          }}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-
-                    <div className="flex items-center justify-between mt-2">
-                      {scenario.badge && (
-                        <span className="text-[11px] text-[#0E7A53] font-medium font-mono-num">
-                          {scenario.badge}
-                        </span>
-                      )}
-
-                      <span className="text-[11px] text-[#686D65] font-mono-num">{scenario.time}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))
+            filteredScenarios.map(renderCard)
           )}
         </div>
       </div>

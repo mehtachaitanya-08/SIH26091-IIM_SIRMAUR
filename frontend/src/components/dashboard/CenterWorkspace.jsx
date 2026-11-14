@@ -5,6 +5,8 @@ import DebtLiberationView from './DebtLiberationView';
 import LeadBankDprView from './LeadBankDprView';
 import FeasibilityView from './FeasibilityView';
 import HowItWorksView from './HowItWorksView';
+import EnginesPanel from './EnginesPanel';
+import MandiPanel from './MandiPanel';
 
 /**
  * CenterWorkspace — Central Operational Console
@@ -55,14 +57,13 @@ export default function CenterWorkspace({
   // STATUTORY-VERIFIED" for everyone (teammate review, 11 Nov 2026).
   const districtBadge = currentUser?.district || null;
 
-  // The mandi card shows only a real live price. Without one it is left out, rather than a row
-  // of NOT FOUND, an API key status and the dataset ID (owner's decision, 11 Nov 2026).
-  const liveMandi = mandiPriceData?.isLive && typeof mandiPriceData.modalPrice === 'number' ? mandiPriceData : null;
 
   return (
-    <main className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between space-y-6 bg-white">
+    <main className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-start space-y-6 bg-white">
       {/* No overflow on this column: the page scrolls, so the chat bar can stay pinned to the
-          bottom of the screen (an overflow here stopped the pinning; review, 11 Nov 2026). */}
+          bottom of the screen (an overflow here stopped the pinning; review, 11 Nov 2026).
+          Blocks stack at the top (justify-start): "space-between" spread them out and left two empty
+          gaps of 194 px on Home (owner's Windows check, 14 Nov 2026). */}
       
       {/* Top Clean Executive Header */}
       <div className="border-b border-[#E9ECEF] pb-4">
@@ -78,7 +79,7 @@ export default function CenterWorkspace({
           {districtBadge && (
             <div className="flex items-center space-x-2 text-xs">
               <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 text-[#495057] font-mono-num text-[11px] font-medium border border-slate-200">
-                {districtBadge}
+                {`${districtBadge} (self-declared)`}
               </span>
             </div>
           )}
@@ -140,23 +141,13 @@ export default function CenterWorkspace({
         </ol>
       )}
 
-      {/* Live mandi price: only for a business linked to a crop, and only when data.gov.in gave one */}
-      {activeTab === 'home' && mode === 'production' && liveMandi && (
-        <div className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E9ECEF] space-y-1 animate-fadeIn">
-          <span className="text-[11px] text-[#686D65] font-medium font-sans-ui">
-            आज का मंडी भाव / Today's mandi price
-          </span>
-          <p className="font-bold text-[#0E7A53] text-base font-mono-num">
-            ₹{liveMandi.modalPrice.toLocaleString('en-IN')} <span className="text-[11px] font-normal text-[#686D65]">per quintal</span>
-          </p>
-          <p className="text-xs text-[#111311] font-sans-ui">
-            {liveMandi.commodity}{liveMandi.market ? `, ${liveMandi.market}` : ''}{liveMandi.state ? `, ${liveMandi.state}` : ''}
-          </p>
-          <span className="text-[10px] text-[#686D65] block">
-            {liveMandi.tag} · crop for this business ASSUMED (team's list)
-          </span>
-        </div>
+      {/* The old Home panels, back on the owner's decision (14 Nov 2026), with honest wording only:
+          the government market-price panel (a price only when data.gov.in gave one) and the three
+          calculators with NSFDC's verified rates. */}
+      {activeTab === 'home' && mode === 'production' && (
+        <MandiPanel mandiPriceData={mandiPriceData} mandiKeyConfigured={mandiKeyConfigured} />
       )}
+      {activeTab === 'home' && mode === 'production' && <EnginesPanel />}
 
       {/* Viewport 1: Simulator */}
       {activeTab === 'simulator' && (

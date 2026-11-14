@@ -118,11 +118,16 @@ describe('size pre-fill never overwrites a cost someone chose', () => {
 describe('leftover claims', () => {
   const src = (p) => fs.readFileSync(new URL(`../src/${p}`, import.meta.url), 'utf8');
   it('no August-only lean-month claims; 6.5%/8% tagged; quarter counts not tagged as NSFDC wording', () => {
-    for (const f of ['App.jsx', 'components/dashboard/CenterWorkspace.jsx', 'components/dashboard/HowItWorksView.jsx', 'components/SetoDashboard.jsx']) {
+    for (const f of ['App.jsx', 'components/dashboard/CenterWorkspace.jsx', 'components/dashboard/HowItWorksView.jsx',
+      'components/dashboard/EnginesPanel.jsx', 'components/dashboard/MandiPanel.jsx', 'components/SetoDashboard.jsx']) {
       assert.ok(!/August (monsoon )?lean-month/i.test(src(f)), f);
     }
     // The engines panel moved to the "How it works" tab (11 Nov 2026); its rates keep their [S1] tag.
-    assert.ok(src('components/dashboard/HowItWorksView.jsx').includes('6.5%/8.0% [S1]'));
+    // Changed 14 Nov 2026: the panel is now one shared file (EnginesPanel.jsx), shown in "How it works"
+    // and, on the owner's decision, on Home again.
+    assert.ok(src('components/dashboard/EnginesPanel.jsx').includes('6.5%/8.0% [S1]'));
+    assert.ok(src('components/dashboard/HowItWorksView.jsx').includes('<EnginesPanel />'));
+    assert.ok(src('components/dashboard/CenterWorkspace.jsx').includes('<EnginesPanel />'));
     assert.ok(!src('components/SetoDashboard.jsx').includes("6.5% / 8.0%. [S1]'"));
   });
   it('surplus label states what it is net of; gaps title fits remaining questions; no dead not-yet-verified branch', () => {

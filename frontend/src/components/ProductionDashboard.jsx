@@ -31,6 +31,18 @@ import ScenariosSidebar from './dashboard/ScenariosSidebar';
 // cards ("Start here", "Template", a stock photo), which read as someone's past work
 // (teammate review, 11 Nov 2026).
 const DEFAULT_PRODUCTION_SCENARIOS = [];
+// The three example cards come back (owner's decision, 14 Nov 2026), shown apart from the saved list,
+// titled "Examples to start from" and marked "Example". They are never saved to this browser.
+// The photo is a real one from public/images (no online fallback).
+const EXAMPLE_SCENARIOS = [
+  { id: 'example-D20', domainCode: 'D20', tab: 'feasibility', name: 'D20 Metal Smithy',
+    subtitle: 'Verified business · feasibility and loan', time: 'Example' },
+  { id: 'example-D18', domainCode: 'D18', tab: 'amortizer', name: 'D18 Tailoring Workshop',
+    subtitle: 'Research-file sizes and season · no yes/no questions yet',
+    image: '/images/scenario_tailoring.jpg', imageAlt: 'A tailor at a sewing machine', time: 'Example' },
+  { id: 'example-debt', tab: 'restructure', name: 'Moneylender debt relief',
+    subtitle: 'Moneylender senkda debt → bank credit', time: 'Example' },
+];
 
 // Saved scenarios are stored as {v: 2, list}. Older saves (a bare list) carried invented
 // figures (e.g. DSCR badges), so they are not shown again.
@@ -376,7 +388,9 @@ export default function ProductionDashboard({
       if (!isMounted) return;
       setMandiPriceData({ ...data, commodityTag: "ASSUMED: team's business-to-crop list" });
     }).catch((err) => {
-      if (isMounted) setMandiPriceData({ status: 'no_live_data', isLive: false, modalPrice: null, records: [], reason: err.message });
+      // keep the crop: an error is no reason to say the business has none (review, 14 Nov 2026)
+      if (isMounted) setMandiPriceData({ status: 'no_live_data', isLive: false, modalPrice: null, records: [],
+        commodity, state: 'Uttar Pradesh', reason: err.message });
     });
 
     return () => { isMounted = false; };
@@ -553,7 +567,8 @@ export default function ProductionDashboard({
   const banner = serverOffline ? (
     <div role="alert" className="mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 font-sans-ui">
       Server offline. Business data, feasibility, DPR and the assistant need the server. The NSFDC loan is still worked out
-      in your browser with the same rules. Start the server with: backend/.venv/bin/uvicorn backend.app:app --port 8000
+      in your browser with the same rules. To start the server: on Windows double-click start.bat; on a Mac
+      double-click start.command (on Linux run ./start.command).
     </div>
   ) : null;
 
@@ -624,6 +639,7 @@ export default function ProductionDashboard({
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         filteredScenarios={filteredScenarios}
+        examples={EXAMPLE_SCENARIOS}
         onSelectScenario={(scenario) => {
           if (scenario.domainCode) selectBusiness(scenario.domainCode);
           if (scenario.tab) setActiveTab(scenario.tab);

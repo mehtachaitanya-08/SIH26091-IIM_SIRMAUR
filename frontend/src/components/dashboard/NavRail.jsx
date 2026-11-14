@@ -58,7 +58,7 @@ export default function NavRail({
             </span>
             {currentUser?.district && (
               <span className="text-[11px] font-mono-num text-[#0E7A53] font-medium">
-                {currentUser.district}
+                {`${currentUser.district} (self-declared)`}
               </span>
             )}
           </div>

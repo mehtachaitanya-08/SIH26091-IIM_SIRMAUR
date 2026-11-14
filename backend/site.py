@@ -24,6 +24,16 @@ npm install
 npm run build</pre></body>"""
 
 
+@router.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    """Browsers ask for /favicon.ico on every page; answer with the site's own icon instead of a 404
+    (owner's Windows check, 14 Nov 2026)."""
+    icon = SITE_DIR.resolve() / "icon.svg"
+    if icon.is_file():
+        return FileResponse(icon, media_type="image/svg+xml")
+    return JSONResponse({"error": "File not found: /favicon.ico", "status": 404}, status_code=404)
+
+
 @router.get("/{path:path}", include_in_schema=False)
 def website(path: str):
     if path == "api" or path.startswith("api/"):

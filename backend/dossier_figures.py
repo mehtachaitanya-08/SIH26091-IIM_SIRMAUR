@@ -231,8 +231,14 @@ def figures(code):
                                    "tag": "the dossier's Year 3 (stabilised) yearly figure"}
     for t, d in zip(tiers, _dscr(code, lines, len(tiers))):
         t["dscr"] = d
-    return {"code": code, "name": NAMES[code], "dossier": str(_path(code).relative_to(REPO)),
+    return {"code": code, "name": NAMES[code], "dossier": repo_relative(_path(code)),
             "tiers": tiers, "seasonality": _season(code, lines)}
+
+
+def repo_relative(path, root=None):
+    """The file's place in the repo with forward slashes on every computer (Windows wrote "\\", so the
+    API answer changed with the operating system; owner's Windows check, 14 Nov 2026)."""
+    return path.relative_to(REPO if root is None else root).as_posix()
 
 
 def all_figures():
