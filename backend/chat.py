@@ -26,7 +26,7 @@ from pathlib import Path
 import httpx
 from fastapi import APIRouter, Request
 
-from backend import businesses, dossier_figures, feasibility, loan, ratelimit
+from backend import businesses, dossier_figures, feasibility, loan, ratelimit, schemes
 from backend.compat import NAMES, _body, _error, _whole_rupees
 from backend.schemas import LoanRequest
 
@@ -48,13 +48,13 @@ MAX_RATE_WAIT_S = 30.0   # longest wait after a 429 before the one retry
 MAX_TURNS = 30
 TIMEOUT_S = 30.0
 
-SYSTEM = """You are the UdyamSetuAI assistant for Scheduled Caste (SC) rural entrepreneurs in India, inside a loan-advice dashboard.
-Your job: find the user's business, ask that business's yes/no questions, work out the NSFDC loan, explain results, and offer the DPR (Detailed Project Report for the bank).
+SYSTEM = """You are the UdyamSetuAI assistant for rural entrepreneurs across India (including Scheduled Caste (SC), ST, OBC, General, Women, and Artisan categories), inside a loan-advice and schemes dashboard.
+Your job: find the user's business, ask that business's yes/no questions, evaluate multi-category statutory schemes (PMEGP, PM Vishwakarma, NSFDC, NSTFDC, NBCFDC, PMFME, MUDRA) or work out the NSFDC loan, explain results, and offer the DPR (Detailed Project Report for the bank).
 
 Hard rules:
 1. NEVER state a number (amount, rate, count, year, percentage) unless it appears in a tool result in this conversation or the user said it. Do not do arithmetic yourself. If you need a figure, call a tool.
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
-2a. As soon as you know the project cost, the yearly family income and whether the user is SC, call calculate_loan immediately and give the loan before any business questions. If one of the three is missing, ask only for what is missing, then calculate. If the user gives a new amount, call calculate_loan again with it. If the loan is already known and the user asks something else, answer that; mention the payment at most once.
+2a. As soon as you know the project cost, the yearly family income and whether the user is SC (or their caste category), call evaluate_schemes or calculate_loan immediately and give the loan before any business questions. If one of the inputs is missing, ask only for what is missing, then calculate. If the user gives a new amount, call calculate_loan again with it or call evaluate_schemes. If the loan is already known and the user asks something else, answer that; mention the payment at most once.
 3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so. For weak, slow or busy months, the season, or when sales fall, call dossier_figures and give its weakestMonths with their % vs an average month (vsAverageMonthPct), labelled with the dossier; feasibility holds no figures. A season question needs only the business: call dossier_figures with the business code alone and NEVER ask for the project cost, income or SC status first.
 3a. Never ask the user for a business code: users do not know codes. Ask what business they run, in their own words, and find it with list_businesses. Say the business name first, e.g. "Oil Expellers (D08 dossier)".
 4. Use question ids and answer choices exactly as get_questions returns them.
@@ -62,7 +62,7 @@ Hard rules:
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
 7. To give the DPR, call dpr_link and tell the user to press the Download DPR button.
 8. Use the dashboard's plain words: say "payment every 3 months", not "quarterly instalment"; say "pause (no payment)", not "moratorium". Never say "quarter" or "quarterly"; in Hindi say "हर 3 महीने", never "तिमाही". When you give the loan, give the payment every 3 months (paymentEvery3Months).
-9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet.
+9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet. When evaluate_schemes returns eligible schemes, explain them plainly using the exact figures returned.
 9a. Never promise or predict that a loan will be approved or sanctioned. Say that the bank / State Channelising Agency decides, and offer what you can do: work out the loan and prepare the DPR."""
 
 # Stage A: the chat panel sends the language the user picked; rule 10 is added to the rules.
@@ -381,6 +381,63 @@ def _t_dpr_link(code, project_cost, family_income, is_sc, answers=None):
                      "isSc": is_sc, "answers": answers or {}}}
 
 
+def _t_evaluate_schemes(caste_category="General", gender="male", is_rural=True, project_cost=None,
+                        annual_income=0, trade_name=None, trade_code=None, is_artisan=False,
+                        is_food_processing=False, is_woman=None):
+    notes = []
+    if project_cost is None:
+        return {"error": "project_cost is required"}
+    cost = _whole_rupees(project_cost, "project_cost", notes)
+    income = _whole_rupees(annual_income or 0, "annual_income", notes) if annual_income is not None else 0
+    caste = str(caste_category or "General").strip().upper()
+    gen = str(gender or "male").strip().lower()
+    woman = bool(is_woman) if is_woman is not None else (gen == "female")
+
+    res = schemes.evaluate(
+        caste_category=caste,
+        gender=gen,
+        is_rural=bool(is_rural),
+        annual_income=income,
+        project_cost=cost,
+        trade_name=trade_name,
+        trade_code=trade_code,
+        is_artisan=bool(is_artisan),
+        is_food_processing=bool(is_food_processing),
+        is_woman=woman,
+    )
+
+    top = []
+    for s in res["eligible_schemes"][:3]:
+        top.append({
+            "schemeCode": s["scheme_code"],
+            "schemeName": s["scheme_name"],
+            "subsidyAmount": s["subsidy_amount"],
+            "subsidyRatePct": s["subsidy_rate_pct"],
+            "promoterEquity": s["promoter_equity"],
+            "promoterEquityPct": s["promoter_equity_pct"],
+            "loanPrincipal": s["loan_principal"],
+            "interestRatePa": s["interest_rate_pa"],
+            "tenureMonths": s["tenure_months"],
+            "monthlyEmi": s["monthly_emi"],
+            "strategicBenefit": s["strategic_benefit"],
+        })
+
+    return {
+        "status": "success",
+        "projectCost": cost,
+        "annualIncome": income,
+        "casteCategory": caste,
+        "eligibleCount": len(res["eligible_schemes"]),
+        "topSchemes": top,
+        "bestRecommendation": res.get("best_recommendation"),
+        "ineligibleSummary": [
+            {"schemeCode": r["scheme_code"], "reason": r["reason"][:140]}
+            for r in res["ineligible_reasons"][:3]
+        ],
+        "notes": notes,
+    }
+
+
 TOOLS = {
     "list_businesses": (_t_list_businesses, "List all 24 business codes with name and verified status.", {}),
     "business_summary": (_t_business_summary, "Short summary of one business (code like D20).",
@@ -392,6 +449,21 @@ TOOLS = {
     "calculate_loan": (_t_calculate_loan, "NSFDC eligibility and loan for a project cost, family income and SC status.",
                        {"project_cost": {"type": "number"}, "family_income": {"type": "number"},
                         "is_sc": {"type": "boolean"}}),
+    "evaluate_schemes": (
+        _t_evaluate_schemes,
+        "Evaluate multi-category statutory government schemes (PMEGP, PM Vishwakarma, NSFDC, NSTFDC, NBCFDC, PMFME, MUDRA) for an applicant's demographic profile and business idea.",
+        {
+            "caste_category": {"type": "string", "enum": ["SC", "ST", "OBC", "General", "EWS", "Minority"]},
+            "gender": {"type": "string", "enum": ["female", "male", "other"]},
+            "is_rural": {"type": "boolean"},
+            "project_cost": {"type": "number"},
+            "annual_income": {"type": "number"},
+            "trade_name": {"type": "string"},
+            "trade_code": {"type": "string"},
+            "is_artisan": {"type": "boolean"},
+            "is_food_processing": {"type": "boolean"},
+        }
+    ),
     "dossier_figures": (_t_dossier_figures, "A business's dossier figures: sizes with project cost, surplus, the dossier's own "
                         "cash-flow cover (DSCR) and season: each month vs an average month and the weakest months "
                         "(weakestMonths, with %). Use it for any question about weak, slow or busy months, the season, or "
@@ -405,7 +477,8 @@ TOOLS = {
                   "is_sc": {"type": "boolean"}, "answers": {"type": "object"}}),
 }
 REQUIRED = {"dossier_figures": ["code"], "business_summary": ["code"], "get_questions": ["code"], "run_advice": ["code"],
-            "calculate_loan": ["project_cost", "family_income", "is_sc"], "feasibility": ["code"],
+            "calculate_loan": ["project_cost", "family_income", "is_sc"],
+            "evaluate_schemes": ["project_cost"], "feasibility": ["code"],
             "dpr_link": ["code", "project_cost", "family_income", "is_sc"]}
 
 

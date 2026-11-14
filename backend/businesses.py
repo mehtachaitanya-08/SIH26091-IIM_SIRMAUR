@@ -55,10 +55,40 @@ def _load(code: str) -> dict:
     return json.loads((DATA / f"{code}.json").read_text(encoding="utf-8"))
 
 
+CUSTOM_BUSINESSES: Dict[str, dict] = {}
+
+
+def register_custom_business(dossier: dict):
+    code = str(dossier.get("code", "D99")).strip().upper()
+    CUSTOM_BUSINESSES[code] = dossier
+    if code == "D99":
+        CUSTOM_BUSINESSES["D99_CUSTOM"] = dossier
+
+
+def clear_custom_businesses():
+    CUSTOM_BUSINESSES.clear()
+
+
 def check_code(code: str):
+    code_upper = code.strip().upper()
+    if code_upper in CUSTOM_BUSINESSES:
+        return False
     if code not in ALL_CODES:
         raise UnknownCode(code)
     return code in VERIFIED
+
+
+def get_business(code: str) -> dict:
+    code_upper = code.strip().upper()
+    if code_upper in CUSTOM_BUSINESSES:
+        return CUSTOM_BUSINESSES[code_upper]
+    if code_upper in ("D99", "D99_CUSTOM"):
+        from backend.custom_trade import get_default_custom_dossier
+        d = get_default_custom_dossier(code_upper)
+        register_custom_business(d)
+        return d
+    check_code(code_upper)
+    return detail(code)
 
 
 def listing() -> dict:
@@ -72,6 +102,9 @@ def listing() -> dict:
 
 
 def detail(code: str) -> dict:
+    code_upper = code.strip().upper()
+    if code_upper in CUSTOM_BUSINESSES:
+        return CUSTOM_BUSINESSES[code_upper]
     if not check_code(code):
         return {"code": code, "status": "verified", "questions": [], "note": NO_QUESTIONS}
     d = _load(code)

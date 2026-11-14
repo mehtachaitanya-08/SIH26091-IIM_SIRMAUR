@@ -97,11 +97,32 @@ class DossierMismatch(RuntimeError):
     """A dossier line no longer says what the figures were read from."""
 
 
+CUSTOM_FIGURES = {}
+CUSTOM_LINES = {}
+
+
+def register_custom_figures(code: str, figs: dict, lines=None):
+    code_upper = code.strip().upper()
+    CUSTOM_FIGURES[code_upper] = figs
+    if lines:
+        CUSTOM_LINES[code_upper] = lines
+    figures.cache_clear()
+
+
+def clear_custom_figures():
+    CUSTOM_FIGURES.clear()
+    CUSTOM_LINES.clear()
+    figures.cache_clear()
+
+
 def _path(code):
     return next(DOSSIERS.glob(f"{code}_*_Dossier.md"))
 
 
 def _lines(code):
+    code_upper = code.strip().upper()
+    if code_upper in CUSTOM_LINES:
+        return CUSTOM_LINES[code_upper]
     return _path(code).read_text(encoding="utf8").split("\n")
 
 
@@ -211,6 +232,9 @@ def _dscr(code, lines, n_tiers):
 
 @lru_cache(maxsize=None)
 def figures(code):
+    code_upper = code.strip().upper()
+    if code_upper in CUSTOM_FIGURES:
+        return CUSTOM_FIGURES[code_upper]
     if code not in NAMES:
         raise KeyError(code)
     lines = _lines(code)

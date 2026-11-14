@@ -199,6 +199,8 @@ def dossiers():
 @router.get("/api/dossiers/{code}")
 def dossier(code: str):
     code = code.strip().upper()
+    if code in businesses.CUSTOM_BUSINESSES:
+        return businesses.CUSTOM_BUSINESSES[code]
     if code not in NAMES:
         return _error(f"Dossier '{code}' not found", 404, details={"availableCodes": list(NAMES)})
     f = _figures(code)

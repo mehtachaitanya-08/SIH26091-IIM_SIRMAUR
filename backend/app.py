@@ -12,7 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend import businesses, chat, compat, dossier_figures, dpr, feasibility, loan, mandi, site
+from backend import businesses, chat, compat, custom_trade, dossier_figures, dpr, feasibility, loan, mandi, schemes, site
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
 
 app = FastAPI(
@@ -108,6 +108,8 @@ app.include_router(mandi.router)
 app.include_router(feasibility.router)
 app.include_router(dpr.router)
 app.include_router(chat.router)
+app.include_router(schemes.router)
+app.include_router(custom_trade.router)
 
 # The teammate's /api addresses, served from verified sources. It ends with a catch-all 404 for /api.
 app.include_router(compat.router)

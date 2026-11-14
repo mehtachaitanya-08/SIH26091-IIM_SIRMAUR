@@ -6,6 +6,42 @@
 
 const STORAGE_USERS_KEY = 'udyamsetuai_users_db_v1';
 const STORAGE_SESSION_KEY = 'udyamsetuai_active_session_v1';
+const STORAGE_ONBOARDED_KEY = 'udyamsetu_onboarded';
+const STORAGE_ONBOARDING_PROFILE_KEY = 'udyamsetu_onboarding_profile';
+
+// In-memory fallback for SSR
+let inMemoryOnboarded = null;
+let inMemoryOnboardingProfile = null;
+
+export function getOnboardingStatus() {
+  if (!hasLocalStorage()) return inMemoryOnboarded;
+  try {
+    const val = window.localStorage.getItem(STORAGE_ONBOARDED_KEY);
+    return val !== null ? val : inMemoryOnboarded;
+  } catch {
+    return inMemoryOnboarded;
+  }
+}
+
+export function getOnboardingProfile() {
+  if (!hasLocalStorage()) return inMemoryOnboardingProfile;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_ONBOARDING_PROFILE_KEY);
+    return raw ? JSON.parse(raw) : inMemoryOnboardingProfile;
+  } catch {
+    return inMemoryOnboardingProfile;
+  }
+}
+
+export function saveOnboardingProfile(profile) {
+  inMemoryOnboarded = 'true';
+  inMemoryOnboardingProfile = profile;
+  if (!hasLocalStorage()) return;
+  try {
+    window.localStorage.setItem(STORAGE_ONBOARDED_KEY, 'true');
+    window.localStorage.setItem(STORAGE_ONBOARDING_PROFILE_KEY, JSON.stringify(profile));
+  } catch {}
+}
 
 // Demo account (phone 9876543210, PIN 2026) so judges can sign in at once. It holds no district,
 // income, caste or "verified" flag: nobody answered those for it, and a made-up district and
@@ -28,6 +64,34 @@ const SEED_USERS = [
 // The answer to "Are you SC?" at sign-up, stored as the user gave it (self-declared).
 export const CATEGORY_SC = 'Scheduled Caste (SC)';
 export const CATEGORY_NOT_SC = 'Not SC';
+export const CATEGORY_ST = 'Scheduled Tribe (ST)';
+export const CATEGORY_OBC = 'Other Backward Classes (OBC)';
+export const CATEGORY_GENERAL = 'General';
+export const CATEGORY_EWS = 'Economically Weaker Section (EWS)';
+export const CATEGORY_MINORITY = 'Minority';
+
+export const VALID_CATEGORIES = [
+  CATEGORY_SC,
+  CATEGORY_NOT_SC,
+  CATEGORY_ST,
+  CATEGORY_OBC,
+  CATEGORY_GENERAL,
+  CATEGORY_EWS,
+  CATEGORY_MINORITY
+];
+
+export function normalizeCategory(c) {
+  if (!c) return null;
+  const s = String(c).trim();
+  if (s === 'SC' || s === CATEGORY_SC) return { code: 'SC', full: CATEGORY_SC };
+  if (s === 'ST' || s === CATEGORY_ST) return { code: 'ST', full: CATEGORY_ST };
+  if (s === 'OBC' || s === CATEGORY_OBC) return { code: 'OBC', full: CATEGORY_OBC };
+  if (s === 'General' || s === CATEGORY_GENERAL) return { code: 'General', full: CATEGORY_GENERAL };
+  if (s === 'EWS' || s === CATEGORY_EWS) return { code: 'EWS', full: CATEGORY_EWS };
+  if (s === 'Minority' || s === CATEGORY_MINORITY) return { code: 'Minority', full: CATEGORY_MINORITY };
+  if (s === CATEGORY_NOT_SC) return { code: 'General', full: CATEGORY_NOT_SC };
+  return null;
+}
 
 // In-memory fallback for SSR
 let inMemoryUsers = [...SEED_USERS];
@@ -98,7 +162,32 @@ export function authenticateByCredentials(phone, pin) {
 // Google sign-in was removed on 12 Nov 2026 (owner: "no need for it"); it never had a real
 // client ID, so no Google account was ever created. Sign-in is mobile number + 4-digit PIN only.
 
-export function registerUser({ name, phone, pin, trade, category, email }) {
+export function registerUser({
+  name,
+  phone,
+  pin,
+  trade,
+  category,
+  casteCategory,
+  email,
+  state,
+  district,
+  annualIncome,
+  income,
+  isWoman,
+  isArtisan,
+  isDivyang,
+  locationType,
+  isRural,
+  projectCost,
+  promoterEquity,
+  hasMoneylenderDebt,
+  debtPrincipal,
+  debtRateQuote,
+  debtMonthsActive,
+  customTradeIdea,
+  preferredLanguage
+} = {}) {
   if (!phone || !phone.trim()) {
     return { success: false, error: 'Mobile number is required for registration.' };
   }
@@ -110,9 +199,31 @@ export function registerUser({ name, phone, pin, trade, category, email }) {
   if (getUserByPhone(phone)) {
     return { success: false, error: 'A user with this mobile number is already registered.' };
   }
-  if (category !== CATEGORY_SC && category !== CATEGORY_NOT_SC) {
-    return { success: false, error: 'Please answer: are you Scheduled Caste (SC)?' };
+
+  // Resolve category from either category or casteCategory
+  let resolvedCategory = category;
+  let resolvedCasteCategory = casteCategory;
+  if (!resolvedCategory && resolvedCasteCategory) {
+    const norm = normalizeCategory(resolvedCasteCategory);
+    if (norm) {
+      resolvedCategory = norm.full;
+      resolvedCasteCategory = norm.code;
+    }
+  } else if (resolvedCategory) {
+    const norm = normalizeCategory(resolvedCategory);
+    if (norm) {
+      resolvedCasteCategory = norm.code;
+      if (!VALID_CATEGORIES.includes(resolvedCategory)) {
+        resolvedCategory = norm.full;
+      }
+    }
   }
+
+  if (!resolvedCategory || (!VALID_CATEGORIES.includes(resolvedCategory) && !['SC', 'ST', 'OBC', 'General', 'EWS', 'Minority'].includes(resolvedCategory))) {
+    return { success: false, error: 'Please choose a valid caste category.' };
+  }
+
+  const resolvedIncome = annualIncome !== undefined ? Number(annualIncome) : income !== undefined ? Number(income) : null;
 
   const newUser = {
     id: `REG-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -120,8 +231,26 @@ export function registerUser({ name, phone, pin, trade, category, email }) {
     email: email?.trim() || `${phone.trim()}@udyamsetuai.org`,
     phone: phone.trim(),
     pin: pin.trim(),
-    category,
+    category: resolvedCategory,
+    casteCategory: resolvedCasteCategory || null,
     trade: trade || 'Rural Enterprise',
+    state: state?.trim() || null,
+    district: district?.trim() || null,
+    income: Number.isFinite(resolvedIncome) ? resolvedIncome : null,
+    annualIncome: Number.isFinite(resolvedIncome) ? resolvedIncome : null,
+    isWoman: Boolean(isWoman),
+    isArtisan: Boolean(isArtisan),
+    isDivyang: Boolean(isDivyang),
+    locationType: locationType || null,
+    isRural: isRural !== undefined ? Boolean(isRural) : null,
+    projectCost: projectCost ? Number(projectCost) : null,
+    promoterEquity: promoterEquity ? Number(promoterEquity) : null,
+    hasMoneylenderDebt: Boolean(hasMoneylenderDebt),
+    debtPrincipal: debtPrincipal ? Number(debtPrincipal) : null,
+    debtRateQuote: debtRateQuote || null,
+    debtMonthsActive: debtMonthsActive ? Number(debtMonthsActive) : null,
+    customTradeIdea: customTradeIdea || null,
+    preferredLanguage: preferredLanguage || 'hi',
     authProvider: 'local',
     createdAt: new Date().toISOString()
   };
@@ -189,24 +318,87 @@ export function updateUser(id, changes = {}) {
   }
   if ('category' in changes) {
     const c = changes.category;
-    if (c !== null && c !== CATEGORY_SC && c !== CATEGORY_NOT_SC) {
+    if (c !== null && !VALID_CATEGORIES.includes(c)) {
       return { success: false, error: 'Please choose Yes, No or Not said for SC.' };
     }
     next.category = c;
+    const norm = normalizeCategory(c);
+    if (norm) next.casteCategory = norm.code;
+    else if (c === null) next.casteCategory = null;
   }
-  if ('income' in changes) {
-    const raw = changes.income;
+  if ('casteCategory' in changes) {
+    const cc = changes.casteCategory;
+    const validCasteCodes = ['SC', 'ST', 'OBC', 'General', 'EWS', 'Minority', null];
+    if (cc !== null && !validCasteCodes.includes(cc)) {
+      return { success: false, error: 'Please choose a valid caste category.' };
+    }
+    next.casteCategory = cc;
+    const norm = normalizeCategory(cc);
+    if (norm) next.category = norm.full;
+    else if (cc === null) next.category = null;
+  }
+  if ('annualIncome' in changes || 'income' in changes) {
+    const raw = 'annualIncome' in changes ? changes.annualIncome : changes.income;
     if (raw === null || raw === undefined || String(raw).trim() === '') {
       next.income = null;
+      next.annualIncome = null;
     } else {
       const v = Number(raw);
       if (!Number.isFinite(v) || v < 0) return { success: false, error: 'Yearly family income must be a number of rupees, 0 or more.' };
       next.income = v;
+      next.annualIncome = v;
     }
   }
   if ('district' in changes) {
     const d = String(changes.district ?? '').trim();
     next.district = d || null;
+  }
+  if ('state' in changes) {
+    const s = String(changes.state ?? '').trim();
+    next.state = s || null;
+  }
+  if ('trade' in changes) {
+    const t = String(changes.trade ?? '').trim();
+    next.trade = t || null;
+  }
+  if ('isWoman' in changes) {
+    next.isWoman = Boolean(changes.isWoman);
+  }
+  if ('isArtisan' in changes) {
+    next.isArtisan = Boolean(changes.isArtisan);
+  }
+  if ('isDivyang' in changes) {
+    next.isDivyang = Boolean(changes.isDivyang);
+  }
+  if ('locationType' in changes) {
+    next.locationType = changes.locationType;
+  }
+  if ('isRural' in changes) {
+    next.isRural = Boolean(changes.isRural);
+  }
+  if ('projectCost' in changes) {
+    next.projectCost = changes.projectCost ? Number(changes.projectCost) : null;
+  }
+  if ('promoterEquity' in changes) {
+    next.promoterEquity = changes.promoterEquity ? Number(changes.promoterEquity) : null;
+  }
+  if ('hasMoneylenderDebt' in changes) {
+    next.hasMoneylenderDebt = Boolean(changes.hasMoneylenderDebt);
+  }
+  if ('debtPrincipal' in changes) {
+    next.debtPrincipal = changes.debtPrincipal ? Number(changes.debtPrincipal) : null;
+  }
+  if ('debtRateQuote' in changes) {
+    next.debtRateQuote = changes.debtRateQuote || null;
+  }
+  if ('debtMonthsActive' in changes) {
+    next.debtMonthsActive = changes.debtMonthsActive ? Number(changes.debtMonthsActive) : null;
+  }
+  if ('customTradeIdea' in changes) {
+    next.customTradeIdea = changes.customTradeIdea || null;
+  }
+  if ('preferredLanguage' in changes) {
+    next.preferredLanguage = changes.preferredLanguage || 'hi';
   }
   saveUser(next);
   return { success: true, user: next };

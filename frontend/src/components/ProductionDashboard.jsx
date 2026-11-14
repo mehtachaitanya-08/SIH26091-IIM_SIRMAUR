@@ -15,7 +15,7 @@ import {
   fetchDossier
 } from '../services/api';
 import { tierOptions, costOnBusinessLoad, flowSteps } from '../services/dossierView';
-import { CATEGORY_SC, CATEGORY_NOT_SC } from '../data/userDatabase';
+import { CATEGORY_SC, CATEGORY_NOT_SC, getOnboardingStatus, getOnboardingProfile } from '../data/userDatabase';
 import { makeLatest, TYPING_PAUSE_MS } from '../services/latest';
 
 // Import SSOT Modular Dashboard Components
@@ -23,11 +23,25 @@ import DashboardShell from './dashboard/DashboardShell';
 import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
 import ChatLauncher from './dashboard/ChatLauncher';
+import OnboardingModal from './OnboardingModal';
 
 // Re-exported only so the tests can render these two on their own from the one SSR bundle they
 // build (test/stage1f_friendly_home.test.js, 14 Nov 2026 review: the tests used to grep the source).
 export { default as ChatLauncher } from './dashboard/ChatLauncher';
 export { default as MandiPanel } from './dashboard/MandiPanel';
+export {
+  default as OnboardingModal,
+  CATALOG_TRADES,
+  CASTE_CATEGORIES,
+  MAJOR_STATES,
+  COST_PRESETS,
+  sanitizePhone,
+  validatePhone,
+  translateSector,
+  getFilteredTrades,
+  validateIncome,
+  clampIncome
+} from './OnboardingModal';
 import { chatNotice as noticeText, questionLanguage } from '../services/chatText';
 import { emptyApplicant, accountPrefill, withAccount, checkApplicant, applicantPayload } from '../services/applicantForm';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
@@ -103,8 +117,8 @@ export default function ProductionDashboard({
   const savedIncome = typeof currentUser?.income === 'number' && Number.isFinite(currentUser.income) ? String(currentUser.income) : null;
   const [familyIncome, setFamilyIncome] = useState(() => savedIncome ?? '');
   // The user's own sign-up answer, either way: a "No" used to be dropped and asked again (review, 11 Nov 2026).
-  const registeredSc = currentUser?.category === CATEGORY_SC || currentUser?.category === 'SC';
-  const registeredNotSc = currentUser?.category === CATEGORY_NOT_SC;
+  const registeredSc = currentUser?.category === CATEGORY_SC || currentUser?.category === 'SC' || currentUser?.casteCategory === 'SC';
+  const registeredNotSc = currentUser?.category === CATEGORY_NOT_SC || (currentUser?.casteCategory && currentUser?.casteCategory !== 'SC');
   const registeredAnswer = registeredSc ? true : registeredNotSc ? false : null;
   const [isSc, setIsSc] = useState(registeredAnswer);
   // The session can arrive after the first render: pre-fill once it does, unless the user already chose.
@@ -115,6 +129,57 @@ export default function ProductionDashboard({
   useEffect(() => {
     if (savedIncome !== null) setFamilyIncome((prev) => (prev === '' ? savedIncome : prev));
   }, [savedIncome]);
+
+  // Onboarding Intake Modal state
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+
+  useEffect(() => {
+    const onboarded = getOnboardingStatus();
+    if (!onboarded) {
+      setIsOnboardingOpen(true);
+    }
+  }, []);
+
+  // Eliminate D01 cold-drop: hydrate selectedDomainCode from user's picked trade or saved onboarding session
+  useEffect(() => {
+    try {
+      const stored = getOnboardingProfile();
+      if (stored) {
+        if (stored.tradeCode) {
+          setSelectedDomainCode(stored.tradeCode);
+          setBusinessPicked(true);
+        }
+        if (stored.projectCost) {
+          setProjectCost(String(stored.projectCost));
+          setCostChosen(true);
+        }
+        if (stored.annualIncome) {
+          setFamilyIncome(String(stored.annualIncome));
+        }
+        if (stored.casteCategory) {
+          setIsSc(stored.casteCategory === 'SC');
+        }
+        setApplicant((prev) => ({
+          ...prev,
+          name: stored.name || prev.name,
+          district: stored.district || prev.district,
+          state: stored.state || prev.state || 'Uttar Pradesh',
+          isWoman: stored.isWoman ? 'yes' : 'no',
+          isMinority: stored.casteCategory === 'Minority' ? 'yes' : 'no'
+        }));
+        return;
+      }
+    } catch (e) {
+      console.warn('Profile hydration error', e);
+    }
+    if (currentUser?.trade) {
+      const match = currentUser.trade.match(/^D\d{2}/i);
+      if (match) {
+        setSelectedDomainCode(match[0].toUpperCase());
+        setBusinessPicked(true);
+      }
+    }
+  }, [currentUser?.trade]);
   // Stage 1c: the DPR-tab form (owner's decisions 1-18, 13 Nov 2026). Kept in this memory only: never
   // saved, gone on reload, close or sign-out. A change of signed-in user (a guest signing in, too) clears
   // it first and then fills the new account's name and district; an account change updates only the
@@ -576,13 +641,75 @@ export default function ProductionDashboard({
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(val);
   }
 
-  const banner = serverOffline ? (
-    <div role="alert" className="mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 font-sans-ui">
-      Server offline. Business data, feasibility, DPR and the assistant need the server. The NSFDC loan is still worked out
-      in your browser with the same rules. To start the server: on Windows double-click start.bat; on a Mac
-      double-click start.command (on Linux run ./start.command).
-    </div>
-  ) : null;
+  const handleOnboardingComplete = useCallback((profileData) => {
+    if (!profileData) return;
+    if (profileData.tradeCode) {
+      setSelectedDomainCode(profileData.tradeCode);
+      setBusinessPicked(true);
+    }
+    if (profileData.projectCost) {
+      setProjectCost(String(profileData.projectCost));
+      setCostChosen(true);
+    }
+    if (profileData.annualIncome) {
+      setFamilyIncome(String(profileData.annualIncome));
+    }
+    if (profileData.casteCategory) {
+      setIsSc(profileData.casteCategory === 'SC');
+    }
+    setApplicant((prev) => ({
+      ...prev,
+      name: profileData.name || prev.name,
+      district: profileData.district || prev.district,
+      state: profileData.state || prev.state || 'Uttar Pradesh',
+      isWoman: profileData.isWoman ? 'yes' : 'no',
+      isMinority: profileData.casteCategory === 'Minority' ? 'yes' : 'no'
+    }));
+    if (profileData.hasMoneylenderDebt) {
+      if (profileData.debtPrincipal) setDebtPrincipal(String(profileData.debtPrincipal));
+      if (profileData.debtRateQuote) {
+        const match = String(profileData.debtRateQuote).match(/(\d+(\.\d+)?)/);
+        if (match) setDebtRateSenkda(match[1]);
+      }
+      if (profileData.debtMonthsActive) setDebtMonthsActive(String(profileData.debtMonthsActive));
+      setDebtEntered(true);
+    }
+    setIsOnboardingOpen(false);
+    showToast(language === 'hi' ? 'प्रोफ़ाइल सफलतापूर्वक सहेजी गई' : 'Profile updated successfully');
+  }, [language, showToast]);
+
+  const banner = (
+    <>
+      {serverOffline && (
+        <div role="alert" className="mb-4 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 font-sans-ui">
+          Server offline. Business data, feasibility, DPR and the assistant need the server. The NSFDC loan is still worked out
+          in your browser with the same rules. To start the server: on Windows double-click start.bat; on a Mac
+          double-click start.command (on Linux run ./start.command).
+        </div>
+      )}
+      <div className="mb-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border border-emerald-200 flex flex-wrap items-center justify-between gap-2 text-xs font-sans-ui shadow-sm">
+        <div className="flex items-center space-x-2">
+          <span className="w-6 h-6 rounded-lg bg-[#0E7A53] text-white flex items-center justify-center text-xs font-bold">✨</span>
+          <span className="font-semibold text-slate-800">
+            {language === 'hi' ? 'उद्यम प्रोफ़ाइल एवं योजना चयन' : 'Venture Profile & Scheme Intake'}:
+          </span>
+          <span className="text-slate-600 font-medium">
+            {activeDomain?.name || selectedDomainCode} · {applicant?.district ? `${applicant.district}, ` : ''}{applicant?.state || 'Uttar Pradesh'}
+          </span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            type="button"
+            onClick={() => setIsOnboardingOpen(true)}
+            className="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50 text-[#0E7A53] border border-[#0E7A53]/30 font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center space-x-1"
+          >
+            <span>✏️</span>
+            <span>{language === 'hi' ? 'मेरी प्रोफ़ाइल / नया उद्यम +' : 'Edit Profile / New Venture +'}</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <DashboardShell
@@ -675,6 +802,15 @@ export default function ProductionDashboard({
         onInputChange={setCommandInput}
         onSend={(text) => handleChatSend(text ?? null)}
         online={!serverOffline}
+      />
+
+      {/* Onboarding Intake & Profile Modal */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        onComplete={handleOnboardingComplete}
+        currentUser={currentUser}
+        initialLanguage={language}
       />
     </DashboardShell>
   );

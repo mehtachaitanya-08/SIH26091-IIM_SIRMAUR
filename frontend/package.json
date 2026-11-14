@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:ssr": "vite build --ssr src/components/SetoDashboard.jsx --outDir dist-ssr && vite build --ssr src/components/ProductionDashboard.jsx --outDir dist-ssr/prod",
+    "pretest": "npm run build:ssr",
+    "test": "node --test test/*.test.js"
   },
   "dependencies": {
     "gsap": "^3.15.1",

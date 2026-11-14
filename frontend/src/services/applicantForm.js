@@ -113,9 +113,39 @@ export function emptyApplicant(prefill = {}) {
   return { ...blank(FIELDS), promoters: [emptyPromoter()], enclosures: [], ...prefill };
 }
 
-/** Decision 4: only the account's name and district. */
+/**
+ * Account pre-fill: seeds name, district, state, category, isWoman, and other demographic fields
+ * from the user account or onboarding intake into the DPR applicant profile.
+ */
 export function accountPrefill(user) {
-  return { name: String(user?.name ?? ''), district: String(user?.district ?? '') };
+  const prefill = {
+    name: String(user?.name ?? ''),
+    district: String(user?.district ?? '')
+  };
+  if (user?.state) {
+    prefill.state = String(user.state);
+  }
+  if (user?.village) {
+    prefill.village = String(user.village);
+  }
+  if (user?.category || user?.casteCategory) {
+    prefill.category = String(user.casteCategory || user.category);
+  }
+  if (user?.isWoman !== undefined && user?.isWoman !== null) {
+    prefill.isWoman = (user.isWoman === true || user.isWoman === 'yes') ? 'yes' : 'no';
+  }
+  if (user?.isMinority !== undefined && user?.isMinority !== null) {
+    prefill.isMinority = (user.isMinority === true || user.isMinority === 'yes' || user.category === 'Minority' || user.casteCategory === 'Minority') ? 'yes' : 'no';
+  } else if (user?.category === 'Minority' || user?.casteCategory === 'Minority') {
+    prefill.isMinority = 'yes';
+  }
+  if (user?.isArtisan !== undefined && user?.isArtisan !== null) {
+    prefill.isArtisan = user.isArtisan;
+  }
+  if (user?.isDivyang !== undefined && user?.isDivyang !== null) {
+    prefill.isDivyang = user.isDivyang;
+  }
+  return prefill;
 }
 
 /** Decision 14b: an account change updates the pre-filled boxes the user has not edited. */

@@ -31,7 +31,7 @@ ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
 RESOURCE = "9ef84268-d588-465a-a308-a864a43d0070"  # teammate's Agmarknet daily price resource
 URL = f"https://api.data.gov.in/resource/{RESOURCE}"
 PLACEHOLDER = "your_api_key_here"
-TIMEOUT_S = 4.0
+TIMEOUT_S = 15.0
 
 
 def _api_key():
@@ -43,8 +43,11 @@ def _api_key():
     return "" if key == PLACEHOLDER else key
 
 
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) UdyamSetuAI/1.0"}
+
+
 def _get(url, params, timeout):
-    r = httpx.get(url, params=params, timeout=timeout)
+    r = httpx.get(url, params=params, headers=HEADERS, timeout=timeout)
     r.raise_for_status()
     return r.json()
 
