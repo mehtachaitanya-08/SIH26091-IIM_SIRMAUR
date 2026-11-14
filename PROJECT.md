@@ -1,7 +1,7 @@
-# Project: GraminAI Production Dashboard & Backend Integration
+# Project: UdyamSetuAI Production Dashboard & Backend Integration
 
 ## Architecture
-- **Backend**: Python 3.12 deterministic financial engines (`engine/nsfdc_calculator.py`, `engine/multi_archetype_financial_engine.py`) exposed via zero-dependency HTTP REST service (`engine/server.py` on `127.0.0.1:8000`).
+- **Backend**: FastAPI server (`backend/app.py`, `127.0.0.1:8000`) serving the website and `/api`, on the verified loan logic (`backend/loan.py`) and the deterministic engines in `engine/`. The old `engine/server.py` is kept only for its tests (`tests/`).
 - **Frontend**: Vite + React 19 + Tailwind CSS + Lucide React + GSAP ScrollTrigger + Lenis.
 - **API Proxy**: Vite dev server proxies `/api` requests to backend on port 8000; `frontend/src/services/api.js` provides client calls with deterministic client-side fallback.
 - **Authentication**: mobile number + 4-digit PIN, saved in this browser only (`frontend/src/data/userDatabase.js`). Google sign-in was removed on 12 Nov 2026 (owner: "no need for it"; it never had a real client ID). One demo account (mobile 9876543210, PIN 2026) lets judges sign in at once.
@@ -29,7 +29,7 @@
 | M1 | Backend REST Server & API Integration | `engine/server.py`, `tests/test_api_server.py`, `vite.config.js`, `frontend/src/services/api.js` | none | DONE |
 | M2 | Sign-in (Google sign-in later removed, 12 Nov 2026) & Demo Elimination | `userDatabase.js`, `App.jsx`, test fixtures alignment | M1 | DONE |
 | M3 | Modular Dashboard & Synchronization | `frontend/src/components/dashboard/`, `SetoDashboard.jsx`, `ProductionDashboard.jsx` | M2 | DONE |
-| M4 | E2E Verification & Forensic Integrity Gate | Full test suites, clean build, zero mock data grep, adversarial audit | M3 | IN_PROGRESS |
+| M4 | E2E Verification & Forensic Integrity Gate | Full test suites, clean build, zero mock data grep, adversarial audit | M3 | DONE (14 Nov 2026): server 870/0, older 88/0, website 316/0 including the browser tests; Windows run to be confirmed on the owner's laptop |
 
 ## Interface Contracts
 
