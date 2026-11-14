@@ -11,7 +11,7 @@ const box = 'w-full bg-white border border-[#E9ECEF] rounded-xl p-2 text-xs font
 
 const scValue = (category) => (category === CATEGORY_SC || category === 'SC' ? 'yes' : category === CATEGORY_NOT_SC ? 'no' : '');
 
-export default function AccountPanel({ currentUser, onSaved, onSignOut, onClose }) {
+export default function AccountPanel({ currentUser, onSaved, onSignOut, onClose, onOpenPrivacy, onPurgeData }) {
   const [name, setName] = useState(currentUser?.name || '');
   const [sc, setSc] = useState(scValue(currentUser?.category));
   const [income, setIncome] = useState(currentUser?.income ?? '');
@@ -101,21 +101,31 @@ export default function AccountPanel({ currentUser, onSaved, onSignOut, onClose 
           </form>
         )}
 
-        <div className="pt-3 border-t border-[#E9ECEF] flex items-center justify-between">
-          <button type="button" onClick={onSignOut} className="px-3 py-1.5 rounded-xl border border-red-200 bg-white text-red-700 text-xs font-bold hover:bg-red-50 cursor-pointer">Sign out</button>
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm("Under DPDP Act 2023, do you want to permanently erase all locally saved profiles, scenarios, and session data?")) {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.reload();
-              }
-            }}
-            className="px-3 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 cursor-pointer shadow-sm"
-          >
-            Purge All My Data (DPDP)
-          </button>
+        <div className="pt-3 border-t border-[#E9ECEF] space-y-3">
+          <div className="flex items-center justify-between">
+            <button type="button" onClick={onSignOut} className="px-3 py-1.5 rounded-xl border border-[#E9ECEF] bg-white text-[#111311] text-xs font-bold hover:bg-slate-50 cursor-pointer">Sign out</button>
+            {onOpenPrivacy && (
+              <button type="button" onClick={onOpenPrivacy} className="text-xs font-semibold text-[#0E7A53] hover:underline cursor-pointer">Privacy Policy</button>
+            )}
+          </div>
+          <div className="text-[11px] text-[#686D65] leading-snug">
+            Your right to erasure (DPDP Act, 2023): this removes every account, profile and saved scenario kept in this browser. It cannot be undone.{' '}
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm('This permanently erases everything saved on this device: accounts, profiles, saved scenarios and your session. Continue?')) {
+                  if (onPurgeData) onPurgeData();
+                  else {
+                    try { localStorage.clear(); sessionStorage.clear(); } catch {}
+                    window.location.assign('/');
+                  }
+                }
+              }}
+              className="font-semibold text-[#B42318] hover:underline cursor-pointer"
+            >
+              Erase my data on this device
+            </button>
+          </div>
         </div>
       </div>
     </div>

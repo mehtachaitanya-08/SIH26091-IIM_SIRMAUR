@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { updateUser, registerUser, getCurrentSession } from '../data/userDatabase.js';
+import { Check } from 'lucide-react';
+import { updateUser, getCurrentSession, saveOnboardingProfile, consentRecord } from '../data/userDatabase.js';
+import { POLICY_VERSION } from '../content/privacyPolicy.js';
 
 export const CATALOG_TRADES = [
   { code: 'D01', nameEn: 'Village FMCG Retail', nameHi: 'ग्रामीण किराना एवं प्रोविजन स्टोर', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '', tier: '₹1.3L – ₹5.6L' },
@@ -29,14 +31,16 @@ export const CATALOG_TRADES = [
 ];
 
 export const CASTE_CATEGORIES = [
-  { code: 'SC', labelEn: 'Scheduled Caste (SC)', labelHi: 'अनुसूचित जाति (SC)', descEn: 'Eligible for NSFDC concessional loans and PMEGP special capital subsidy', descHi: 'NSFDC रियायती ऋण व PMEGP विशेष सब्सिडी हेतु पात्र' },
-  { code: 'ST', labelEn: 'Scheduled Tribe (ST)', labelHi: 'अनुसूचित जनजाति (ST)', descEn: 'Eligible for NSTFDC concessional loans and PMEGP special capital subsidy', descHi: 'NSTFDC रियायती ऋण व PMEGP विशेष सब्सिडी हेतु पात्र' },
-  { code: 'OBC', labelEn: 'Other Backward Classes (OBC)', labelHi: 'अन्य पिछड़ा वर्ग (OBC)', descEn: 'Eligible for NBCFDC term loans and PMEGP special margin money', descHi: 'NBCFDC सावधि ऋण व PMEGP विशेष मार्जिन मनी हेतु पात्र' },
-  { code: 'General', labelEn: 'General Category', labelHi: 'सामान्य वर्ग', descEn: 'Eligible for PMEGP, PM MUDRA and PMFME schemes', descHi: 'PMEGP, पीएम मुद्रा एवं PMFME योजनाओं हेतु पात्र' },
-  { code: 'EWS', labelEn: 'Economically Weaker Section (EWS)', labelHi: 'आर्थिक रूप से कमजोर वर्ग (EWS)', descEn: 'Eligible for PMEGP, PM MUDRA concessional coverage and priority', descHi: 'PMEGP, पीएम मुद्रा एवं प्राथमिकता ऋण हेतु पात्र' },
-  { code: 'Minority', labelEn: 'Minority Community', labelHi: 'अल्पसंख्यक समुदाय', descEn: 'Eligible for NMDFC, PMEGP special subsidy and priority credit', descHi: 'NMDFC, PMEGP विशेष सब्सिडी व प्राथमिक ऋण हेतु पात्र' },
+  { code: 'SC', labelEn: 'Scheduled Caste (SC)', labelHi: 'अनुसूचित जाति (SC)', descEn: 'NSFDC concessional loans; PMEGP special category', descHi: 'NSFDC रियायती ऋण; PMEGP विशेष श्रेणी' },
+  { code: 'ST', labelEn: 'Scheduled Tribe (ST)', labelHi: 'अनुसूचित जनजाति (ST)', descEn: 'NSTFDC concessional loans; PMEGP special category', descHi: 'NSTFDC रियायती ऋण; PMEGP विशेष श्रेणी' },
+  { code: 'OBC', labelEn: 'Other Backward Classes (OBC)', labelHi: 'अन्य पिछड़ा वर्ग (OBC)', descEn: 'NBCFDC loans; PMEGP special category', descHi: 'NBCFDC ऋण; PMEGP विशेष श्रेणी' },
+  { code: 'General', labelEn: 'General Category', labelHi: 'सामान्य वर्ग', descEn: 'PMEGP, PM MUDRA and PMFME', descHi: 'PMEGP, पीएम मुद्रा एवं PMFME' },
+  { code: 'EWS', labelEn: 'Economically Weaker Section (EWS)', labelHi: 'आर्थिक रूप से कमजोर वर्ग (EWS)', descEn: 'PMEGP and PM MUDRA', descHi: 'PMEGP एवं पीएम मुद्रा' },
+  { code: 'Minority', labelEn: 'Minority Community', labelHi: 'अल्पसंख्यक समुदाय', descEn: 'NMDFC loans; PMEGP special category', descHi: 'NMDFC ऋण; PMEGP विशेष श्रेणी' },
 ];
 
+// All 28 states and 8 Union Territories (it listed 20 states, so applicants from Delhi, Goa,
+// the North-East or J&K could not pick their own; review, 14 Nov 2026).
 export const MAJOR_STATES = [
   'Uttar Pradesh',
   'Bihar',
@@ -57,7 +61,23 @@ export const MAJOR_STATES = [
   'Kerala',
   'Assam',
   'Uttarakhand',
-  'Himachal Pradesh'
+  'Himachal Pradesh',
+  'Arunachal Pradesh',
+  'Goa',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Sikkim',
+  'Tripura',
+  'Andaman and Nicobar Islands',
+  'Chandigarh',
+  'Dadra and Nagar Haveli and Daman and Diu',
+  'Delhi',
+  'Jammu and Kashmir',
+  'Ladakh',
+  'Lakshadweep',
+  'Puducherry'
 ];
 
 export const COST_PRESETS = [
@@ -112,29 +132,80 @@ export function clampIncome(income) {
   return Math.max(0, num);
 }
 
+// ---------------------------------------------------------------------------
+// Shared styles: the landing page's look (cream ground, ink, Instrument Serif headings,
+// Space Grotesk labels, green only for focus and links).
+// ---------------------------------------------------------------------------
+const inputCls = (hasError) => `w-full px-4 py-2.5 rounded-xl border text-sm text-[#111311] bg-white placeholder:text-[#686D65]/60 focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 focus:border-[#0E7A53] transition-colors ${
+  hasError ? 'border-red-400' : 'border-black/15'
+}`;
+const labelCls = 'block text-xs font-semibold text-[#111311] mb-1.5';
+const hintCls = 'text-[11px] text-[#686D65] leading-snug';
+const eyebrowCls = 'text-[10px] font-mono-num uppercase tracking-widest text-[#686D65]';
+const choiceCls = (selected) => `w-full text-left p-3 rounded-2xl border transition-colors cursor-pointer ${
+  selected ? 'border-[#111311] bg-[#F8F6F0]' : 'border-black/10 bg-white hover:border-black/30'
+}`;
+
+function Mark({ on }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 ${
+        on ? 'bg-[#111311] border-[#111311] text-white' : 'border-black/25 bg-white'
+      }`}
+    >
+      {on && <Check className="w-2.5 h-2.5" strokeWidth={3} />}
+    </span>
+  );
+}
+
+function ToggleRow({ checked, onChange, label, sub }) {
+  return (
+    <label className={`${choiceCls(checked)} flex items-center justify-between gap-3`}>
+      <span>
+        <span className="block text-xs font-semibold text-[#111311]">{label}</span>
+        {sub && <span className={`block ${hintCls} mt-0.5`}>{sub}</span>}
+      </span>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="w-4 h-4 accent-[#111311] flex-shrink-0 cursor-pointer"
+      />
+    </label>
+  );
+}
+
+function FieldError({ text }) {
+  return text ? <p role="alert" className="text-xs text-red-700 mt-1 font-semibold">{text}</p> : null;
+}
+
 export default function OnboardingModal({
   isOpen,
   onClose,
   onComplete,
   currentUser = null,
-  initialLanguage = 'hi'
+  initialLanguage = 'hi',
+  onOpenPrivacy,
+  onUserUpdated
 }) {
   const [lang, setLang] = useState(initialLanguage);
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState({});
 
-  // Step 1: Language & Identity
+  // Step 1: Identity
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
 
-  // Step 2: Socio-Demographics
-  const [casteCategory, setCasteCategory] = useState('SC');
+  // Step 2: About you. Nothing is pre-chosen: caste and income are sensitive and optional
+  // (DPDP Act; they used to start as "SC" and ₹1.8 lakh, which read as the user's own answers).
+  const [casteCategory, setCasteCategory] = useState('');
   const [isWoman, setIsWoman] = useState(false);
   const [isArtisan, setIsArtisan] = useState(false);
   const [isDivyang, setIsDivyang] = useState(false);
-  const [annualIncome, setAnnualIncome] = useState('180000');
+  const [annualIncome, setAnnualIncome] = useState('');
 
-  // Step 3: Geography & Scale
+  // Step 3: Place and budget
   const [stateName, setStateName] = useState('Uttar Pradesh');
   const [district, setDistrict] = useState('');
   const [locationType, setLocationType] = useState('rural');
@@ -145,11 +216,12 @@ export default function OnboardingModal({
   const [debtRateQuote, setDebtRateQuote] = useState('3 senkda');
   const [debtMonthsActive, setDebtMonthsActive] = useState('12');
 
-  // Step 4: Enterprise Intent
+  // Step 4: Business
   const [isCustomTrade, setIsCustomTrade] = useState(false);
   const [selectedTradeCode, setSelectedTradeCode] = useState('D01');
   const [customTradeIdea, setCustomTradeIdea] = useState('');
   const [tradeFilter, setTradeFilter] = useState('All');
+  const [consent, setConsent] = useState(false);
 
   // Hydrate from currentUser if provided
   useEffect(() => {
@@ -159,20 +231,26 @@ export default function OnboardingModal({
       if (currentUser.casteCategory) {
         setCasteCategory(currentUser.casteCategory);
       } else if (currentUser.category) {
-        if (currentUser.category.includes('SC')) setCasteCategory('SC');
-        else if (currentUser.category.includes('ST')) setCasteCategory('ST');
-        else if (currentUser.category.includes('OBC')) setCasteCategory('OBC');
-        else if (currentUser.category.includes('Minority')) setCasteCategory('Minority');
-        else setCasteCategory('General');
+        // "Not SC" says only what the person is not, so it pre-selects nothing (it used to match
+        // "SC" and pre-select Scheduled Caste).
+        const c = currentUser.category;
+        if (c.startsWith('Not')) setCasteCategory('');
+        else if (c.includes('(SC)') || c === 'SC') setCasteCategory('SC');
+        else if (c.includes('(ST)') || c === 'ST') setCasteCategory('ST');
+        else if (c.includes('OBC')) setCasteCategory('OBC');
+        else if (c.includes('Minority')) setCasteCategory('Minority');
+        else if (c.includes('EWS')) setCasteCategory('EWS');
+        else if (c.includes('General')) setCasteCategory('General');
       }
-      if (currentUser.income) setAnnualIncome(String(currentUser.income));
-      else if (currentUser.annualIncome) setAnnualIncome(String(currentUser.annualIncome));
+      if (currentUser.income !== null && currentUser.income !== undefined) setAnnualIncome(String(currentUser.income));
+      else if (currentUser.annualIncome !== null && currentUser.annualIncome !== undefined) setAnnualIncome(String(currentUser.annualIncome));
       if (currentUser.district) setDistrict(currentUser.district);
       if (currentUser.state) setStateName(currentUser.state);
       if (currentUser.isWoman !== undefined) setIsWoman(Boolean(currentUser.isWoman));
       if (currentUser.isArtisan !== undefined) setIsArtisan(Boolean(currentUser.isArtisan));
       if (currentUser.isDivyang !== undefined) setIsDivyang(Boolean(currentUser.isDivyang));
       if (currentUser.locationType) setLocationType(currentUser.locationType);
+      if (currentUser.sensitiveDataConsent) setConsent(true);
       if (currentUser.trade) {
         const match = currentUser.trade.match(/^D\d{2}/i);
         if (match) setSelectedTradeCode(match[0].toUpperCase());
@@ -202,110 +280,136 @@ export default function OnboardingModal({
 
   const t = {
     hi: {
-      modalTitle: 'उद्यमसेतु मार्गदर्शन प्रवेश (Onboarding Intake)',
-      modalSubtitle: 'सरकारी योजनाओं, रियायती ब्याज दर और डीपीआर निर्माण हेतु आपकी प्राथमिक जानकारी',
+      modalTitle: 'अपनी प्रोफ़ाइल बनाएँ',
+      modalSubtitle: 'चार छोटे चरण। इससे हम आपके लिए योजनाएँ, ऋण और DPR तैयार करते हैं। सब कुछ केवल इसी डिवाइस पर सहेजा जाता है।',
+      stepOf: (n) => `चरण ${n} / 4`,
       step1: '1. पहचान',
-      step2: '2. सामाजिक वर्ग',
+      step2: '2. आपके बारे में',
       step3: '3. स्थान व बजट',
-      step4: '4. उद्यम चयन',
-      nameLabel: 'आवेदक का पूरा नाम *',
+      step4: '4. व्यवसाय',
+      nameLabel: 'आवेदक का पूरा नाम',
       namePlaceholder: 'उदा. राम कुमार / सुनीता देवी',
-      phoneLabel: '10 अंकों का मोबाइल नंबर *',
+      phoneLabel: '10 अंकों का मोबाइल नंबर',
       phonePlaceholder: '9876543210',
       phoneError: 'कृपया 10 अंकों का वैध भारतीय मोबाइल नंबर दर्ज करें (6-9 से शुरू)',
       nameError: 'कृपया कम से कम 2 अक्षरों का नाम दर्ज करें',
-      categoryLabel: 'सामाजिक / जाति वर्ग (Caste Category) *',
-      categoryNote: 'संबंधित निगम (NSFDC, NSTFDC, NBCFDC आदि) की रियायती ब्याज दर व PMEGP सब्सिडी निर्धारण हेतु',
-      togglesHeading: 'विशेष लाभार्थी श्रेणियां (Special Categories)',
-      womanLabel: 'महिला उद्यमी (Woman Entrepreneur)',
-      womanSub: 'अतिरिक्त ब्याज छूट और महिला समृद्धि योजना हेतु पात्र',
-      artisanLabel: 'पारंपरिक कारीगर / शिल्पकार (PM Vishwakarma)',
-      artisanSub: '18 पारंपरिक शिल्पों हेतु 5% रियायती ऋण व ₹15,000 टूलकिट वाउचर',
-      divyangLabel: 'दिव्यांगजन (Person with Disability)',
-      divyangSub: 'विशेष सहायता एवं प्राथमिकता ऋण आवंटन',
-      incomeLabel: 'वार्षिक पारिवारिक आय (Annual Family Income in ₹) *',
-      incomeNote: '₹3.00 लाख या ₹5.00 लाख से कम आय पर ब्याज अनुदान व सब्सिडी पात्रता',
+      identityNote: 'आपका नाम और मोबाइल नंबर DPR (विस्तृत परियोजना रिपोर्ट) पर छपते हैं।',
+      categoryLabel: 'सामाजिक वर्ग',
+      categoryNote: 'वैकल्पिक। केवल यह दिखाने के लिए कि कौन-सी योजनाएँ आप पर लागू हो सकती हैं। हम इसकी जाँच नहीं करते।',
+      preferNot: 'नहीं बताना चाहते',
+      preferNotSub: 'वर्ग पर निर्भर योजनाएँ नहीं दिखेंगी',
+      togglesHeading: 'जो आप पर लागू हो (वैकल्पिक)',
+      womanLabel: 'महिला उद्यमी',
+      womanSub: 'महिलाओं के लिए विशेष योजनाएँ और PMEGP विशेष श्रेणी',
+      artisanLabel: 'पारंपरिक कारीगर / शिल्पकार',
+      artisanSub: 'पीएम विश्वकर्मा के 18 पारंपरिक शिल्प',
+      divyangLabel: 'दिव्यांगजन',
+      divyangSub: 'PMEGP विशेष श्रेणी',
+      incomeLabel: 'वार्षिक पारिवारिक आय (₹)',
+      incomeNote: 'वैकल्पिक। कई योजनाओं की आय सीमा होती है (जैसे NSFDC ₹5 लाख तक)।',
       incomeError: 'कृपया वैध वार्षिक आय दर्ज करें (₹0 या अधिक)',
-      stateLabel: 'राज्य (State) *',
-      districtLabel: 'ज़िला (District) *',
-      districtPlaceholder: 'उदा. Varanasi, Lucknow, Agra',
+      perYear: 'लाख प्रति वर्ष',
+      stateLabel: 'राज्य / केंद्र शासित प्रदेश',
+      districtLabel: 'ज़िला',
+      districtPlaceholder: 'उदा. वाराणसी',
       districtError: 'कृपया अपना ज़िला दर्ज करें',
-      locationLabel: 'क्षेत्र का प्रकार (Location Type)',
-      rural: 'ग्रामीण (Rural - 35% सब्सिडी हेतु पात्र)',
-      urban: 'शहरी (Urban - 25% सब्सिडी हेतु पात्र)',
-      costLabel: 'अनुमानित परियोजना लागत (Project Cost in ₹) *',
-      costChips: 'त्वरित बजट चयन:',
+      locationLabel: 'क्षेत्र',
+      rural: 'ग्रामीण',
+      ruralSub: 'PMEGP में अधिक सब्सिडी (25% / विशेष श्रेणी 35%)',
+      urban: 'शहरी',
+      urbanSub: 'PMEGP सब्सिडी 15% / विशेष श्रेणी 25%',
+      costLabel: 'अनुमानित परियोजना लागत (₹)',
+      costChips: 'जल्दी चुनें',
       costError: 'कृपया वैध परियोजना लागत दर्ज करें (कम से कम ₹10,000)',
-      equityLabel: 'अपनी बचत / स्वयं का योगदान (Promoter Equity in ₹)',
-      equityNote: 'PMEGP के तहत केवल 5% से 10% स्वयं का अंशदान आवश्यक होता है',
-      debtHeading: 'साहूकार / महाजन का पुराना कर्ज (Moneylender Debt)',
-      debtCheck: 'क्या आप पर किसी निजी साहूकार या महाजन का पुराना कर्ज है?',
-      debtPrincipalLabel: 'बकाया मूलधन (Principal Amount in ₹)',
-      debtRateLabel: 'मासिक ब्याज दर (Dialectal Quote)',
-      debtRatePlaceholder: 'उदा. 3 senkda (3% प्रति माह) या 36% p.a.',
-      debtMonthsLabel: 'कर्ज चुकाते हुए कितने महीने हुए? (Months Active)',
-      intentHeading: 'आप कौन सा उद्यम या व्यवसाय शुरू करना चाहते हैं?',
-      catalogTab: '24 प्रमाणित ग्रामीण उद्यमों में से चुनें',
-      customTab: 'अपना नया व्यावसायिक विचार दर्ज करें (Custom Idea)',
-      customPlaceholder: 'उदा. सोलर वाटर पंप मरम्मत एवं माइक्रो इंस्टॉलेशन, मशरूम फार्मिंग व पैकेजिंग...',
-      customNote: 'हमारा एआई आपके विचार का विश्लेषण करके स्वतः 8-अनुसूचियों वाली वित्तीय व्यवहार्यता रिपोर्ट तैयार करेगा।',
-      back: 'पीछे जाएं',
-      next: 'आगे बढ़ें',
-      finish: 'प्रोफ़ाइल सहेजें एवं डैशबोर्ड शुरू करें',
-      close: 'बंद करें'
+      equityLabel: 'आपकी अपनी बचत जो आप लगा सकते हैं (₹)',
+      equityNote: 'PMEGP में विशेष श्रेणी के लिए 5% और सामान्य के लिए 10% अपना हिस्सा।',
+      debtCheck: 'क्या आप पर किसी साहूकार या महाजन का कर्ज़ है?',
+      debtHeading: 'हम दिखाएँगे कि बैंक ऋण से यह कितना सस्ता पड़ सकता है',
+      debtPrincipalLabel: 'बकाया मूलधन (₹)',
+      debtRateLabel: 'ब्याज दर, जैसे साहूकार बताता है',
+      debtRatePlaceholder: 'उदा. 3 सेंकड़ा (3% प्रति माह) या 36% सालाना',
+      debtMonthsLabel: 'कितने महीनों से चल रहा है',
+      intentHeading: 'आप कौन-सा व्यवसाय शुरू करना चाहते हैं?',
+      catalogTab: 'हमारे 24 व्यवसायों में से',
+      customTab: 'अपना विचार लिखें',
+      allSectors: 'सभी',
+      customLabel: 'व्यवसाय का विचार',
+      customPlaceholder: 'उदा. सोलर पंप मरम्मत, मशरूम की खेती और पैकिंग...',
+      customNote: 'नए विचार के आँकड़े हमारे सबसे मिलते-जुलते शोधित व्यवसायों से अनुमानित होते हैं, इसलिए इन्हें मोटा अनुमान मानें।',
+      customError: 'कृपया अपना व्यावसायिक विचार लिखें',
+      consentA: 'मैंने ',
+      consentLink: 'गोपनीयता नीति',
+      consentB: ' पढ़ ली है और योजनाएँ व ऋण दिखाने के लिए ऊपर दी गई जानकारी (वर्ग, दिव्यांगता, आय और कर्ज़ सहित) के उपयोग की सहमति देता/देती हूँ।',
+      consentError: 'सहेजने के लिए कृपया सहमति दें।',
+      back: 'पीछे',
+      next: 'आगे',
+      finish: 'सहेजें और डैशबोर्ड खोलें'
     },
     en: {
-      modalTitle: 'UdyamSetu Guided Intake & Venture Profile',
-      modalSubtitle: 'Direct statutory eligibility routing, concessional credit evaluation & DPR generation',
+      modalTitle: 'Set up your profile',
+      modalSubtitle: 'Four short steps. We use them to match schemes, size your loan and fill in your DPR. Everything is saved on this device only.',
+      stepOf: (n) => `Step ${n} of 4`,
       step1: '1. Identity',
-      step2: '2. Demographics',
-      step3: '3. Scale & Geo',
-      step4: '4. Enterprise Intent',
-      nameLabel: 'Full Legal Name *',
+      step2: '2. About you',
+      step3: '3. Place & budget',
+      step4: '4. Business',
+      nameLabel: 'Full Legal Name',
       namePlaceholder: 'e.g. Sunita Devi / Ram Kumar',
-      phoneLabel: '10-Digit Mobile Number *',
+      phoneLabel: '10-Digit Mobile Number',
       phonePlaceholder: '9876543210',
       phoneError: 'Please enter a valid 10-digit Indian mobile number (starting with 6-9)',
       nameError: 'Please enter a valid name (at least 2 characters)',
-      categoryLabel: 'Socio-Demographic Caste Category *',
-      categoryNote: 'Determines concessional credit from NSFDC, NSTFDC, NBCFDC & PMEGP subsidy slabs',
-      togglesHeading: 'Special Beneficiary Affirmations',
-      womanLabel: 'Woman Entrepreneur',
-      womanSub: 'Eligible for Mahila Samridhi & enhanced PMEGP capital subsidies',
-      artisanLabel: 'Traditional Artisan / Craftsman (PM Vishwakarma)',
-      artisanSub: '5% concessional credit + ₹15,000 digital toolkit voucher',
-      divyangLabel: 'Person with Disability (Divyangjan)',
-      divyangSub: 'Special reservation and interest subvention benefits',
-      incomeLabel: 'Annual Family Income (₹ per year) *',
-      incomeNote: 'Statutory ceiling benchmark for MoSJE concessional interest slabs',
+      identityNote: 'Your name and mobile number appear on your DPR (Detailed Project Report).',
+      categoryLabel: 'Social category',
+      categoryNote: 'Optional. Used only to show which schemes may apply to you. We do not verify it.',
+      preferNot: 'Prefer not to say',
+      preferNotSub: 'Category-based schemes will not be shown',
+      togglesHeading: 'Anything that applies to you (optional)',
+      womanLabel: 'Woman entrepreneur',
+      womanSub: 'Schemes for women and the PMEGP special category',
+      artisanLabel: 'Traditional artisan or craftsperson',
+      artisanSub: 'The 18 traditional crafts under PM Vishwakarma',
+      divyangLabel: 'Person with disability (Divyangjan)',
+      divyangSub: 'PMEGP special category',
+      incomeLabel: 'Yearly family income (₹)',
+      incomeNote: 'Optional. Many schemes have an income limit (for example NSFDC, up to ₹5 lakh).',
       incomeError: 'Please enter a valid annual income (₹0 or more)',
-      stateLabel: 'State / UT *',
-      districtLabel: 'District *',
-      districtPlaceholder: 'e.g. Varanasi, Lucknow, Agra',
+      perYear: 'lakh a year',
+      stateLabel: 'State / Union Territory',
+      districtLabel: 'District',
+      districtPlaceholder: 'e.g. Varanasi',
       districtError: 'Please enter your district',
-      locationLabel: 'Location Type',
-      rural: 'Rural (35% Special PMEGP Subsidy eligible)',
-      urban: 'Urban (25% Special PMEGP Subsidy eligible)',
-      costLabel: 'Target Project Outlay (₹) *',
-      costChips: 'Quick Project Budget Chips:',
+      locationLabel: 'Location',
+      rural: 'Rural',
+      ruralSub: 'Higher PMEGP subsidy (25%, special category 35%)',
+      urban: 'Urban',
+      urbanSub: 'PMEGP subsidy 15%, special category 25%',
+      costLabel: 'Planned project cost (₹)',
+      costChips: 'Quick pick',
       costError: 'Please enter a valid project cost (at least ₹10,000)',
-      equityLabel: 'Promoter Equity Available (Your Savings in ₹)',
-      equityNote: 'Statutory equity requirement is only 5% for special categories under PMEGP',
-      debtHeading: 'Informal Moneylender Debt Liberation',
-      debtCheck: 'Do you owe debt to private village sahukars or moneylenders?',
-      debtPrincipalLabel: 'Outstanding Principal (₹)',
-      debtRateLabel: 'Quoted Interest Rate (Dialectal Quote)',
-      debtRatePlaceholder: 'e.g. 3 senkda (3% monthly) or 36% p.a.',
-      debtMonthsLabel: 'Months Debt Has Been Serviced',
-      intentHeading: 'Which enterprise or trade do you intend to launch?',
-      catalogTab: 'Select from 24 Researched Rural Trades',
-      customTab: 'Enter a Custom Business Idea',
-      customPlaceholder: 'e.g. Solar water pump repair and installation, organic honey processing...',
-      customNote: 'Our synthesizer will map your uncatalogued idea to nearest-neighbor archetypes and compute a complete financial feasibility dossier.',
+      equityLabel: 'Your own savings you can put in (₹)',
+      equityNote: 'Under PMEGP your share is 5% in a special category and 10% otherwise.',
+      debtCheck: 'Do you owe money to a village moneylender (sahukar)?',
+      debtHeading: 'We will show how much a bank loan could save you',
+      debtPrincipalLabel: 'Amount still owed (₹)',
+      debtRateLabel: 'Interest rate, as the moneylender says it',
+      debtRatePlaceholder: 'e.g. 3 senkda (3% a month) or 36% a year',
+      debtMonthsLabel: 'Months it has been running',
+      intentHeading: 'Which business do you want to start?',
+      catalogTab: 'Pick from our 24 businesses',
+      customTab: 'Describe your own idea',
+      allSectors: 'All',
+      customLabel: 'Your business idea',
+      customPlaceholder: 'e.g. Solar pump repair, organic honey processing...',
+      customNote: 'Figures for a new idea are estimated from the closest of our researched businesses, so treat them as a rough guide.',
+      customError: 'Please describe your business idea',
+      consentA: 'I have read the ',
+      consentLink: 'Privacy Policy',
+      consentB: ' and consent to the details above (including category, disability, income and debt) being used to show me schemes and loans.',
+      consentError: 'Please tick the consent box to save.',
       back: 'Back',
       next: 'Next',
-      finish: 'Save Profile & Launch Dashboard',
-      close: 'Close'
+      finish: 'Save and open dashboard'
     }
   }[lang];
 
@@ -319,11 +423,7 @@ export default function OnboardingModal({
         errs.phone = t.phoneError;
       }
     } else if (step === 2) {
-      if (!casteCategory) {
-        errs.category = 'Category required';
-      }
-      const numIncome = Number(annualIncome);
-      if (annualIncome !== '' && (!Number.isFinite(numIncome) || numIncome < 0)) {
+      if (!validateIncome(annualIncome)) {
         errs.annualIncome = t.incomeError;
       }
     } else if (step === 3) {
@@ -336,7 +436,10 @@ export default function OnboardingModal({
       }
     } else if (step === 4) {
       if (isCustomTrade && (!customTradeIdea || customTradeIdea.trim().length < 3)) {
-        errs.customTrade = lang === 'hi' ? 'कृपया अपना व्यावसायिक विचार लिखें' : 'Please describe your business idea';
+        errs.customTrade = t.customError;
+      }
+      if (!consent) {
+        errs.consent = t.consentError;
       }
     }
     setErrors(errs);
@@ -359,17 +462,19 @@ export default function OnboardingModal({
 
     const selectedTrade = CATALOG_TRADES.find((x) => x.code === selectedTradeCode);
     const finalTradeCode = isCustomTrade ? 'D99' : (selectedTrade?.code || 'D01');
-    const finalTradeName = isCustomTrade 
-      ? (customTradeIdea.trim() || 'Custom Enterprise') 
+    const finalTradeName = isCustomTrade
+      ? (customTradeIdea.trim() || 'Custom Enterprise')
       : (lang === 'hi' ? selectedTrade?.nameHi : selectedTrade?.nameEn) || 'Village FMCG Retail';
 
-    const cleanedIncome = clampIncome(annualIncome);
+    // An empty income box stays "not given" (null); it used to be saved as ₹0.
+    const cleanedIncome = String(annualIncome).trim() === '' ? null : clampIncome(annualIncome);
+    const consentGiven = consentRecord(POLICY_VERSION);
 
     const profileData = {
       name: name.trim(),
       phone: sanitizePhone(phone),
       preferredLanguage: lang,
-      casteCategory,
+      casteCategory: casteCategory || null,
       isWoman: Boolean(isWoman),
       isArtisan: Boolean(isArtisan),
       isDivyang: Boolean(isDivyang),
@@ -380,7 +485,7 @@ export default function OnboardingModal({
       locationType,
       isRural: locationType === 'rural',
       projectCost: Math.max(10000, Number(projectCost) || 250000),
-      promoterEquity: Math.max(0, Number(promoterEquity) || 25000),
+      promoterEquity: Math.max(0, Number(promoterEquity) || 0),
       hasMoneylenderDebt: Boolean(hasMoneylenderDebt),
       debtPrincipal: hasMoneylenderDebt ? Math.max(0, Number(debtPrincipal) || 0) : 0,
       debtRateQuote: hasMoneylenderDebt ? debtRateQuote : '',
@@ -388,23 +493,17 @@ export default function OnboardingModal({
       tradeCode: finalTradeCode,
       tradeName: finalTradeName,
       customTradeIdea: isCustomTrade ? customTradeIdea.trim() : '',
-      isCustomTrade: Boolean(isCustomTrade)
+      isCustomTrade: Boolean(isCustomTrade),
+      sensitiveDataConsent: consentGiven
     };
 
-    // 1. Persist to localStorage
-    if (typeof window !== 'undefined' && window.localStorage) {
-      try {
-        window.localStorage.setItem('udyamsetu_onboarded', 'true');
-        window.localStorage.setItem('udyamsetu_onboarding_profile', JSON.stringify(profileData));
-      } catch (err) {
-        console.warn('OnboardingModal: storage error', err);
-      }
-    }
-
-    // 2. Update user database if current user exists
+    // 1. Save on this device, under this account (userDatabase.js keeps one profile per account).
     const session = getCurrentSession();
-    if (currentUser?.id || session?.id) {
-      const activeId = currentUser?.id || session?.id;
+    const activeId = currentUser?.id || session?.id || null;
+    saveOnboardingProfile(profileData, activeId);
+
+    // 2. Update the signed-in account
+    if (activeId) {
       const res = updateUser(activeId, {
         name: profileData.name,
         casteCategory: profileData.casteCategory,
@@ -425,10 +524,13 @@ export default function OnboardingModal({
         debtRateQuote: profileData.debtRateQuote,
         debtMonthsActive: profileData.debtMonthsActive,
         customTradeIdea: profileData.customTradeIdea,
-        preferredLanguage: profileData.preferredLanguage
+        preferredLanguage: profileData.preferredLanguage,
+        sensitiveDataConsent: consentGiven
       });
       if (res && !res.success) {
         console.warn('OnboardingModal: updateUser warning', res.error);
+      } else if (res && onUserUpdated) {
+        onUserUpdated(res.user);
       }
     }
 
@@ -441,158 +543,106 @@ export default function OnboardingModal({
     }
   };
 
+  const stepLabels = [t.step1, t.step2, t.step3, t.step4];
+
   return (
     <div
       role="dialog"
       aria-modal="true"
+      aria-labelledby="onboarding-title"
       className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-5 overflow-y-auto"
     >
-      <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-in fade-in zoom-in-95 duration-200">
-        
-        {/* Header Bar */}
-        <div className="bg-[#0E7A53] text-white px-6 py-4 flex items-center justify-between border-b border-[#0B6544] flex-shrink-0">
-          <div className="flex items-center space-x-3">
-            <span className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm font-bold">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </span>
+      <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-black/10 overflow-hidden flex flex-col max-h-[92vh] animate-fadeIn font-sans-ui">
+
+        {/* Header */}
+        <div className="bg-[#F8F6F0] px-6 sm:px-8 pt-6 pb-4 border-b border-black/10 flex-shrink-0">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-base sm:text-lg font-bold font-sans-ui leading-tight">
+              <p className={eyebrowCls}>{t.stepOf(step)}</p>
+              <h2 id="onboarding-title" className="font-editorial text-3xl sm:text-4xl text-[#111311] leading-tight mt-1">
                 {t.modalTitle}
               </h2>
-              <p className="text-[11px] text-white/80 hidden sm:block">
+              <p className="text-xs text-[#686D65] mt-1 max-w-xl leading-relaxed hidden sm:block">
                 {t.modalSubtitle}
               </p>
             </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            {/* Language Switcher */}
-            <div className="flex items-center bg-white/15 rounded-xl p-0.5 border border-white/20">
+            <div className="flex items-center rounded-full border border-black/10 bg-white p-0.5 text-[11px] font-mono-num font-bold flex-shrink-0">
               <button
                 type="button"
-                onClick={() => {
-                  if (lang !== 'hi') {
-                    setLang('hi');
-                    setTradeFilter((prev) => translateSector(prev, 'hi'));
-                  }
-                }}
-                className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  lang === 'hi' ? 'bg-white text-[#0E7A53] shadow-sm' : 'text-white hover:text-white/80'
-                }`}
+                onClick={() => { if (lang !== 'hi') { setLang('hi'); setTradeFilter((prev) => translateSector(prev, 'hi')); } }}
+                className={`px-2.5 py-1 rounded-full cursor-pointer ${lang === 'hi' ? 'bg-[#111311] text-white' : 'text-[#686D65] hover:text-[#111311]'}`}
               >
                 हिंदी
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  if (lang !== 'en') {
-                    setLang('en');
-                    setTradeFilter((prev) => translateSector(prev, 'en'));
-                  }
-                }}
-                className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                  lang === 'en' ? 'bg-white text-[#0E7A53] shadow-sm' : 'text-white hover:text-white/80'
-                }`}
+                onClick={() => { if (lang !== 'en') { setLang('en'); setTradeFilter((prev) => translateSector(prev, 'en')); } }}
+                className={`px-2.5 py-1 rounded-full cursor-pointer ${lang === 'en' ? 'bg-[#111311] text-white' : 'text-[#686D65] hover:text-[#111311]'}`}
               >
                 English
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Step Progress Bar */}
-        <div className="bg-slate-50 px-6 py-2.5 border-b border-slate-200 flex items-center justify-between text-xs font-semibold text-slate-600 flex-shrink-0">
-          <div className="flex items-center space-x-2 sm:space-x-4 w-full">
+          {/* Steps */}
+          <ol className="mt-5 grid grid-cols-4 gap-2">
             {[1, 2, 3, 4].map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => {
-                  if (s < step) setStep(s);
-                  else if (s > step && validateCurrentStep()) setStep(s);
-                }}
-                className={`flex items-center space-x-1.5 transition-all cursor-pointer ${
-                  step === s 
-                    ? 'text-[#0E7A53] font-bold' 
-                    : s < step 
-                    ? 'text-slate-700 font-medium' 
-                    : 'text-slate-400'
-                }`}
-              >
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
-                  step === s 
-                    ? 'bg-[#0E7A53] text-white shadow' 
-                    : s < step 
-                    ? 'bg-emerald-100 text-emerald-800' 
-                    : 'bg-slate-200 text-slate-500'
-                }`}>
-                  {s < step ? '✓' : s}
-                </span>
-                <span className="hidden sm:inline">
-                  {s === 1 ? t.step1 : s === 2 ? t.step2 : s === 3 ? t.step3 : t.step4}
-                </span>
-              </button>
+              <li key={s}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (s < step) setStep(s);
+                    else if (s === step + 1 && validateCurrentStep()) setStep(s);
+                  }}
+                  aria-current={step === s ? 'step' : undefined}
+                  className="w-full text-left cursor-pointer group"
+                >
+                  <span className={`block h-[2px] rounded-full mb-2 transition-colors ${s <= step ? 'bg-[#111311]' : 'bg-black/10'}`} />
+                  <span className={`block text-[10px] sm:text-[11px] font-mono-num uppercase tracking-wider truncate ${
+                    step === s ? 'text-[#111311] font-bold' : s < step ? 'text-[#111311]' : 'text-[#686D65]/70'
+                  }`}>
+                    {stepLabels[s - 1]}
+                  </span>
+                </button>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
 
-        {/* Modal Scrollable Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-slate-800 font-sans-ui">
-          
-          {/* STEP 1: Language & Identity */}
+        {/* Body */}
+        <div className="px-6 sm:px-8 py-6 overflow-y-auto space-y-6 flex-1 text-[#111311]" data-lenis-prevent>
+
+          {/* STEP 1: Identity */}
           {step === 1 && (
-            <div className="space-y-5 animate-in fade-in duration-150">
-              <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 text-xs text-emerald-900 flex items-start space-x-3">
-                <span className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-800 flex-shrink-0">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </span>
-                <div>
-                  <p className="font-bold text-sm text-[#0E7A53] mb-0.5">
-                    {lang === 'hi' ? 'उद्यमी पहचान एवं संपर्क विवरण' : 'Beneficiary Identification & Contact'}
-                  </p>
-                  <p className="text-slate-600 leading-relaxed">
-                    {lang === 'hi' 
-                      ? 'डीपीआर (विस्तृत परियोजना रिपोर्ट) और ऋण आवेदन के लिए आपका नाम और मोबाइल नंबर आवश्यक है।' 
-                      : 'Your legal name and verified phone are used for Lead-Bank DPR generation and scheme eligibility.'}
-                  </p>
-                </div>
-              </div>
+            <div className="space-y-5 animate-fadeIn">
+              <p className={hintCls}>{t.identityNote}</p>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1.5">
-                  {t.nameLabel}
-                </label>
+                <label htmlFor="ob-name" className={labelCls}>{t.nameLabel}</label>
                 <input
+                  id="ob-name"
                   type="text"
+                  autoComplete="name"
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
                     if (errors.name) setErrors((prev) => ({ ...prev, name: null }));
                   }}
                   placeholder={t.namePlaceholder}
-                  className={`w-full px-4 py-3 rounded-2xl border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 transition-all ${
-                    errors.name ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                  }`}
+                  className={inputCls(errors.name)}
                 />
-                {errors.name && (
-                  <p className="text-xs text-red-600 mt-1 font-semibold">{errors.name}</p>
-                )}
+                <FieldError text={errors.name} />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1.5">
-                  {t.phoneLabel}
-                </label>
+                <label htmlFor="ob-phone" className={labelCls}>{t.phoneLabel}</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-mono font-bold text-slate-500">
-                    +91
-                  </span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-mono-num text-[#686D65]">+91</span>
                   <input
+                    id="ob-phone"
                     type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel-national"
                     maxLength={14}
                     value={phone}
                     onChange={(e) => {
@@ -600,191 +650,105 @@ export default function OnboardingModal({
                       if (errors.phone) setErrors((prev) => ({ ...prev, phone: null }));
                     }}
                     placeholder={t.phonePlaceholder}
-                    style={{ paddingLeft: '3.75rem' }}
-                    className={`w-full pr-4 py-3 rounded-2xl border text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 transition-all ${
-                      errors.phone ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                    }`}
+                    style={{ paddingLeft: '3.5rem' }}
+                    className={`${inputCls(errors.phone)} font-mono-num`}
                   />
                 </div>
-                {errors.phone && (
-                  <p className="text-xs text-red-600 mt-1 font-semibold">{errors.phone}</p>
-                )}
+                <FieldError text={errors.phone} />
               </div>
             </div>
           )}
 
-          {/* STEP 2: Socio-Demographics */}
+          {/* STEP 2: About you */}
           {step === 2 && (
-            <div className="space-y-6 animate-in fade-in duration-150">
+            <div className="space-y-6 animate-fadeIn">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-bold text-slate-800">
-                    {t.categoryLabel}
-                  </label>
-                  <span className="text-[11px] text-[#0E7A53] font-semibold">
-                    {t.categoryNote}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <p className={labelCls}>{t.categoryLabel}</p>
+                <p className={`${hintCls} mb-2.5`}>{t.categoryNote}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" role="radiogroup" aria-label={t.categoryLabel}>
                   {CASTE_CATEGORIES.map((c) => {
                     const isSelected = casteCategory === c.code;
                     return (
-                      <div
+                      <button
                         key={c.code}
+                        type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setCasteCategory(c.code)}
-                        className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
-                          isSelected 
-                            ? 'border-[#0E7A53] bg-emerald-50/60 shadow-sm' 
-                            : 'border-slate-200 hover:border-slate-300 bg-white'
-                        }`}
+                        className={choiceCls(isSelected)}
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-xs text-slate-900">
-                            {lang === 'hi' ? c.labelHi : c.labelEn}
-                          </span>
-                          <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${
-                            isSelected ? 'bg-[#0E7A53] text-white' : 'border border-slate-300'
-                          }`}>
-                            {isSelected && '✓'}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-500 leading-snug">
-                          {lang === 'hi' ? c.descHi : c.descEn}
-                        </p>
-                      </div>
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="font-semibold text-xs text-[#111311]">{lang === 'hi' ? c.labelHi : c.labelEn}</span>
+                          <Mark on={isSelected} />
+                        </span>
+                        <span className={`block ${hintCls} mt-1`}>{lang === 'hi' ? c.descHi : c.descEn}</span>
+                      </button>
                     );
                   })}
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={casteCategory === ''}
+                    onClick={() => setCasteCategory('')}
+                    className={`${choiceCls(casteCategory === '')} sm:col-span-2`}
+                  >
+                    <span className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-xs text-[#111311]">{t.preferNot}</span>
+                      <Mark on={casteCategory === ''} />
+                    </span>
+                    <span className={`block ${hintCls} mt-1`}>{t.preferNotSub}</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Special Toggles */}
-              <div className="pt-2 border-t border-slate-200 space-y-3">
-                <p className="text-xs font-bold text-slate-800">
-                  {t.togglesHeading}
-                </p>
-
-                {/* Woman Entrepreneur */}
-                <div 
-                  onClick={() => setIsWoman(!isWoman)}
-                  className={`p-3 rounded-2xl border flex items-center justify-between transition-all cursor-pointer ${
-                    isWoman ? 'border-purple-300 bg-purple-50/60' : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                      WE
-                    </span>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{t.womanLabel}</p>
-                      <p className="text-[11px] text-slate-500">{t.womanSub}</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={isWoman}
-                    onChange={() => {}}
-                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 cursor-pointer"
-                  />
-                </div>
-
-                {/* Traditional Artisan */}
-                <div 
-                  onClick={() => setIsArtisan(!isArtisan)}
-                  className={`p-3 rounded-2xl border flex items-center justify-between transition-all cursor-pointer ${
-                    isArtisan ? 'border-amber-300 bg-amber-50/60' : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                      PMV
-                    </span>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{t.artisanLabel}</p>
-                      <p className="text-[11px] text-slate-500">{t.artisanSub}</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={isArtisan}
-                    onChange={() => {}}
-                    className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
-                  />
-                </div>
-
-                {/* Divyangjan */}
-                <div 
-                  onClick={() => setIsDivyang(!isDivyang)}
-                  className={`p-3 rounded-2xl border flex items-center justify-between transition-all cursor-pointer ${
-                    isDivyang ? 'border-blue-300 bg-blue-50/60' : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
-                      PwD
-                    </span>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{t.divyangLabel}</p>
-                      <p className="text-[11px] text-slate-500">{t.divyangSub}</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={isDivyang}
-                    onChange={() => {}}
-                    className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
-                  />
-                </div>
+              <div className="pt-5 border-t border-black/10 space-y-2">
+                <p className={labelCls}>{t.togglesHeading}</p>
+                <ToggleRow checked={isWoman} onChange={setIsWoman} label={t.womanLabel} sub={t.womanSub} />
+                <ToggleRow checked={isArtisan} onChange={setIsArtisan} label={t.artisanLabel} sub={t.artisanSub} />
+                <ToggleRow checked={isDivyang} onChange={setIsDivyang} label={t.divyangLabel} sub={t.divyangSub} />
               </div>
 
-              {/* Annual Income */}
-              <div className="pt-2 border-t border-slate-200">
-                <label className="block text-xs font-bold text-slate-800 mb-1">
-                  {t.incomeLabel}
-                </label>
-                <p className="text-[11px] text-slate-500 mb-2">{t.incomeNote}</p>
+              <div className="pt-5 border-t border-black/10">
+                <label htmlFor="ob-income" className={labelCls}>{t.incomeLabel}</label>
+                <p className={`${hintCls} mb-2`}>{t.incomeNote}</p>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
-                    ₹
-                  </span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#686D65]">₹</span>
                   <input
+                    id="ob-income"
                     type="number"
                     min="0"
                     step="10000"
+                    inputMode="numeric"
                     value={annualIncome}
                     onChange={(e) => {
                       setAnnualIncome(e.target.value);
                       if (errors.annualIncome) setErrors((prev) => ({ ...prev, annualIncome: null }));
                     }}
-                    style={{ paddingLeft: '2.5rem' }}
-                    className={`w-full pr-4 py-2.5 rounded-2xl border text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
-                      errors.annualIncome ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                    }`}
+                    style={{ paddingLeft: '2.25rem' }}
+                    className={`${inputCls(errors.annualIncome)} font-mono-num`}
                   />
                 </div>
-                {errors.annualIncome && (
-                  <p className="text-xs text-red-600 mt-1 font-semibold">{errors.annualIncome}</p>
-                )}
+                <FieldError text={errors.annualIncome} />
                 {Number(annualIncome) > 0 && (
-                  <p className="text-[11px] font-mono text-[#0E7A53] mt-1 font-semibold">
-                    ≈ ₹{(Number(annualIncome) / 100000).toFixed(2)} Lakh / year
+                  <p className="text-[11px] font-mono-num text-[#686D65] mt-1">
+                    ≈ ₹{(Number(annualIncome) / 100000).toFixed(2)} {t.perYear}
                   </p>
                 )}
               </div>
             </div>
           )}
 
-          {/* STEP 3: Geography & Scale */}
+          {/* STEP 3: Place and budget */}
           {step === 3 && (
-            <div className="space-y-6 animate-in fade-in duration-150">
+            <div className="space-y-6 animate-fadeIn">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
-                    {t.stateLabel}
-                  </label>
+                  <label htmlFor="ob-state" className={labelCls}>{t.stateLabel}</label>
                   <select
+                    id="ob-state"
                     value={stateName}
                     onChange={(e) => setStateName(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-2xl border border-slate-300 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 cursor-pointer"
+                    className={`${inputCls(false)} cursor-pointer`}
                   >
                     {MAJOR_STATES.map((s) => (
                       <option key={s} value={s}>{s}</option>
@@ -793,10 +757,9 @@ export default function OnboardingModal({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
-                    {t.districtLabel}
-                  </label>
+                  <label htmlFor="ob-district" className={labelCls}>{t.districtLabel}</label>
                   <input
+                    id="ob-district"
                     type="text"
                     value={district}
                     onChange={(e) => {
@@ -804,69 +767,50 @@ export default function OnboardingModal({
                       if (errors.district) setErrors((prev) => ({ ...prev, district: null }));
                     }}
                     placeholder={t.districtPlaceholder}
-                    className={`w-full px-3 py-2 rounded-2xl border text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
-                      errors.district ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                    }`}
+                    className={inputCls(errors.district)}
                   />
-                  {errors.district && (
-                    <p className="text-xs text-red-600 mt-1 font-semibold">{errors.district}</p>
-                  )}
+                  <FieldError text={errors.district} />
                 </div>
               </div>
 
-              {/* Location Type (Rural/Urban) */}
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1.5">
-                  {t.locationLabel}
-                </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div
-                    onClick={() => setLocationType('rural')}
-                    className={`p-3 rounded-2xl border-2 transition-all cursor-pointer ${
-                      locationType === 'rural' ? 'border-[#0E7A53] bg-emerald-50/60' : 'border-slate-200 bg-white'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px] flex-shrink-0">
-                        RUR
+                <p className={labelCls}>{t.locationLabel}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" role="radiogroup" aria-label={t.locationLabel}>
+                  {[
+                    { v: 'rural', label: t.rural, sub: t.ruralSub },
+                    { v: 'urban', label: t.urban, sub: t.urbanSub }
+                  ].map((o) => (
+                    <button
+                      key={o.v}
+                      type="button"
+                      role="radio"
+                      aria-checked={locationType === o.v}
+                      onClick={() => setLocationType(o.v)}
+                      className={choiceCls(locationType === o.v)}
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-semibold text-[#111311]">{o.label}</span>
+                        <Mark on={locationType === o.v} />
                       </span>
-                      <span className="text-xs font-bold text-slate-900">{t.rural}</span>
-                    </div>
-                  </div>
-                  <div
-                    onClick={() => setLocationType('urban')}
-                    className={`p-3 rounded-2xl border-2 transition-all cursor-pointer ${
-                      locationType === 'urban' ? 'border-[#0E7A53] bg-emerald-50/60' : 'border-slate-200 bg-white'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2.5">
-                      <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-[10px] flex-shrink-0">
-                        URB
-                      </span>
-                      <span className="text-xs font-bold text-slate-900">{t.urban}</span>
-                    </div>
-                  </div>
+                      <span className={`block ${hintCls} mt-1`}>{o.sub}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Project Cost & Quick Chips */}
-              <div className="pt-2 border-t border-slate-200">
-                <label className="block text-xs font-bold text-slate-800 mb-1">
-                  {t.costLabel}
-                </label>
-                <div className="flex flex-wrap gap-1.5 mb-2.5">
-                  <span className="text-[11px] font-semibold text-slate-500 py-1 mr-1">
-                    {t.costChips}
-                  </span>
+              <div className="pt-5 border-t border-black/10">
+                <label htmlFor="ob-cost" className={labelCls}>{t.costLabel}</label>
+                <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+                  <span className={`${eyebrowCls} mr-1`}>{t.costChips}</span>
                   {COST_PRESETS.map((preset) => (
                     <button
                       key={preset.value}
                       type="button"
                       onClick={() => setProjectCost(String(preset.value))}
-                      className={`px-2.5 py-1 text-xs font-mono font-bold rounded-xl border transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 text-xs font-mono-num rounded-full border transition-colors cursor-pointer ${
                         Number(projectCost) === preset.value
-                          ? 'bg-[#0E7A53] text-white border-[#0E7A53]'
-                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
+                          ? 'bg-[#111311] text-white border-[#111311]'
+                          : 'bg-white text-[#111311] border-black/15 hover:border-black/40'
                       }`}
                     >
                       {preset.label}
@@ -874,119 +818,87 @@ export default function OnboardingModal({
                   ))}
                 </div>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
-                    ₹
-                  </span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#686D65]">₹</span>
                   <input
+                    id="ob-cost"
                     type="number"
                     min="10000"
                     step="5000"
+                    inputMode="numeric"
                     value={projectCost}
                     onChange={(e) => {
                       setProjectCost(e.target.value);
                       if (errors.projectCost) setErrors((prev) => ({ ...prev, projectCost: null }));
                     }}
-                    style={{ paddingLeft: '2.5rem' }}
-                    className={`w-full pr-4 py-2.5 rounded-2xl border text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
-                      errors.projectCost ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                    }`}
+                    style={{ paddingLeft: '2.25rem' }}
+                    className={`${inputCls(errors.projectCost)} font-mono-num`}
                   />
                 </div>
-                {errors.projectCost && (
-                  <p className="text-xs text-red-600 mt-1 font-semibold">{errors.projectCost}</p>
-                )}
+                <FieldError text={errors.projectCost} />
               </div>
 
-              {/* Promoter Equity */}
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
-                  {t.equityLabel}
-                </label>
-                <p className="text-[11px] text-slate-500 mb-1.5">{t.equityNote}</p>
+                <label htmlFor="ob-equity" className={labelCls}>{t.equityLabel}</label>
+                <p className={`${hintCls} mb-2`}>{t.equityNote}</p>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
-                    ₹
-                  </span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#686D65]">₹</span>
                   <input
+                    id="ob-equity"
                     type="number"
                     min="0"
                     step="5000"
+                    inputMode="numeric"
                     value={promoterEquity}
                     onChange={(e) => setPromoterEquity(e.target.value)}
-                    style={{ paddingLeft: '2.5rem' }}
-                    className="w-full pr-4 py-2.5 rounded-2xl border border-slate-300 text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30"
+                    style={{ paddingLeft: '2.25rem' }}
+                    className={`${inputCls(false)} font-mono-num`}
                   />
                 </div>
               </div>
 
-              {/* Moneylender Debt Toggle & Fields */}
-              <div className="pt-2 border-t border-slate-200">
-                <div 
-                  onClick={() => setHasMoneylenderDebt(!hasMoneylenderDebt)}
-                  className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer flex items-center justify-between ${
-                    hasMoneylenderDebt ? 'border-rose-400 bg-rose-50/60' : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <span className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-[11px] flex-shrink-0">
-                      DEBT
-                    </span>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{t.debtCheck}</p>
-                      <p className="text-[11px] text-slate-500">{t.debtHeading}</p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={hasMoneylenderDebt}
-                    onChange={() => {}}
-                    className="w-4 h-4 rounded text-rose-600 focus:ring-rose-500 cursor-pointer"
-                  />
-                </div>
+              <div className="pt-5 border-t border-black/10 space-y-3">
+                <ToggleRow checked={hasMoneylenderDebt} onChange={setHasMoneylenderDebt} label={t.debtCheck} sub={t.debtHeading} />
 
                 {hasMoneylenderDebt && (
-                  <div className="mt-3 p-4 bg-rose-50/50 rounded-2xl border border-rose-200 space-y-3 animate-in fade-in duration-150">
+                  <div className="p-4 bg-[#F8F6F0] rounded-2xl border border-black/5 space-y-3 animate-fadeIn">
                     <div>
-                      <label className="block text-xs font-bold text-slate-800 mb-1">
-                        {t.debtPrincipalLabel}
-                      </label>
+                      <label htmlFor="ob-debt" className={labelCls}>{t.debtPrincipalLabel}</label>
                       <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
-                          ₹
-                        </span>
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#686D65]">₹</span>
                         <input
+                          id="ob-debt"
                           type="number"
+                          min="0"
+                          inputMode="numeric"
                           value={debtPrincipal}
                           onChange={(e) => setDebtPrincipal(e.target.value)}
-                          style={{ paddingLeft: '2.5rem' }}
-                          className="w-full pr-4 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold bg-white focus:outline-none"
+                          style={{ paddingLeft: '2.25rem' }}
+                          className={`${inputCls(false)} font-mono-num`}
                         />
                       </div>
                     </div>
-
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-bold text-slate-800 mb-1">
-                          {t.debtRateLabel}
-                        </label>
+                        <label htmlFor="ob-rate" className={labelCls}>{t.debtRateLabel}</label>
                         <input
+                          id="ob-rate"
                           type="text"
                           value={debtRateQuote}
                           onChange={(e) => setDebtRateQuote(e.target.value)}
                           placeholder={t.debtRatePlaceholder}
-                          className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs bg-white focus:outline-none"
+                          className={inputCls(false)}
                         />
                       </div>
-
                       <div>
-                        <label className="block text-xs font-bold text-slate-800 mb-1">
-                          {t.debtMonthsLabel}
-                        </label>
+                        <label htmlFor="ob-months" className={labelCls}>{t.debtMonthsLabel}</label>
                         <input
+                          id="ob-months"
                           type="number"
+                          min="0"
+                          inputMode="numeric"
                           value={debtMonthsActive}
                           onChange={(e) => setDebtMonthsActive(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono bg-white focus:outline-none"
+                          className={`${inputCls(false)} font-mono-num`}
                         />
                       </div>
                     </div>
@@ -996,164 +908,143 @@ export default function OnboardingModal({
             </div>
           )}
 
-          {/* STEP 4: Enterprise Intent */}
+          {/* STEP 4: Business */}
           {step === 4 && (
-            <div className="space-y-5 animate-in fade-in duration-150">
+            <div className="space-y-5 animate-fadeIn">
               <div>
-                <h3 className="text-xs font-bold text-slate-800 mb-2">
-                  {t.intentHeading}
-                </h3>
-
-                {/* Option Tabs */}
-                <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200 mb-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsCustomTrade(false)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-                      !isCustomTrade ? 'bg-white text-[#0E7A53] shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    {t.catalogTab}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsCustomTrade(true)}
-                    className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
-                      isCustomTrade ? 'bg-white text-[#0E7A53] shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    {t.customTab}
-                  </button>
+                <h3 className="font-editorial text-2xl text-[#111311] mb-3">{t.intentHeading}</h3>
+                <div className="grid grid-cols-2 gap-1 p-1 bg-[#F4F1EA] rounded-2xl">
+                  {[{ v: false, label: t.catalogTab }, { v: true, label: t.customTab }].map((o) => (
+                    <button
+                      key={String(o.v)}
+                      type="button"
+                      onClick={() => setIsCustomTrade(o.v)}
+                      className={`py-2 px-2 text-xs font-semibold rounded-xl transition-colors cursor-pointer ${
+                        isCustomTrade === o.v ? 'bg-white text-[#111311] shadow-sm' : 'text-[#686D65] hover:text-[#111311]'
+                      }`}
+                    >
+                      {o.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
               {!isCustomTrade ? (
                 <div className="space-y-3">
-                  {/* Sector Filter Chips */}
-                  <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs">
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
                     {sectors.map((sec) => (
                       <button
                         key={sec}
                         type="button"
                         onClick={() => setTradeFilter(sec)}
-                        className={`px-3 py-1 rounded-full whitespace-nowrap font-medium transition-all cursor-pointer ${
+                        className={`px-3 py-1 rounded-full whitespace-nowrap text-xs border transition-colors cursor-pointer ${
                           tradeFilter === sec
-                            ? 'bg-[#0E7A53] text-white shadow-sm'
-                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            ? 'bg-[#111311] text-white border-[#111311]'
+                            : 'bg-white text-[#686D65] border-black/10 hover:text-[#111311] hover:border-black/30'
                         }`}
                       >
-                        {sec}
+                        {sec === 'All' ? t.allSectors : sec}
                       </button>
                     ))}
                   </div>
 
-                  {/* 24-Trade Catalog Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-72 overflow-y-auto pr-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-72 overflow-y-auto pr-1" role="radiogroup" aria-label={t.intentHeading}>
                     {filteredTrades.map((trade) => {
                       const isSelected = selectedTradeCode === trade.code;
                       return (
-                        <div
+                        <button
                           key={trade.code}
+                          type="button"
+                          role="radio"
+                          aria-checked={isSelected}
                           onClick={() => setSelectedTradeCode(trade.code)}
-                          className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
-                            isSelected 
-                              ? 'border-[#0E7A53] bg-emerald-50/70 shadow-sm' 
-                              : 'border-slate-200 hover:border-slate-300 bg-white'
-                          }`}
+                          className={`${choiceCls(isSelected)} flex flex-col justify-between`}
                         >
-                          <div className="flex items-start justify-between mb-1.5">
-                            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-200">
-                              {trade.code}
-                            </span>
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
-                              {lang === 'hi' ? trade.sectorHi : trade.sectorEn}
-                            </span>
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-bold text-xs text-slate-900 leading-tight mb-0.5">
-                              {lang === 'hi' ? trade.nameHi : trade.nameEn}
-                            </p>
-                          </div>
-                          <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px]">
-                            <span className="font-mono text-emerald-800 font-semibold">{trade.tier}</span>
-                            {isSelected && (
-                              <span className="w-4 h-4 rounded-full bg-[#0E7A53] text-white flex items-center justify-center font-bold text-[9px]">
-                                ✓
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                          <span className="flex items-center justify-between gap-2 mb-1.5">
+                            <span className="text-[11px] font-mono-num font-bold text-[#111311]">{trade.code}</span>
+                            <Mark on={isSelected} />
+                          </span>
+                          <span className="block font-semibold text-xs text-[#111311] leading-tight">
+                            {lang === 'hi' ? trade.nameHi : trade.nameEn}
+                          </span>
+                          <span className="mt-2 pt-1.5 border-t border-black/5 flex items-center justify-between gap-2 text-[10px]">
+                            <span className="text-[#686D65] uppercase tracking-wider truncate">{lang === 'hi' ? trade.sectorHi : trade.sectorEn}</span>
+                            <span className="font-mono-num text-[#111311] whitespace-nowrap">{trade.tier}</span>
+                          </span>
+                        </button>
                       );
                     })}
                   </div>
                 </div>
               ) : (
-                <div className="space-y-4 p-4 bg-emerald-50/40 rounded-2xl border border-emerald-200">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-800 mb-1.5">
-                      {lang === 'hi' ? 'व्यवसायिक विचार या गतिविधि का नाम' : 'Business Concept / Venture Name'}
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={customTradeIdea}
-                      onChange={(e) => {
-                        setCustomTradeIdea(e.target.value);
-                        if (errors.customTrade) setErrors((prev) => ({ ...prev, customTrade: null }));
-                      }}
-                      placeholder={t.customPlaceholder}
-                      className={`w-full p-3 rounded-xl border text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
-                        errors.customTrade ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                      }`}
-                    />
-                    {errors.customTrade && (
-                      <p className="text-xs text-red-600 mt-1 font-semibold">{errors.customTrade}</p>
-                    )}
-                  </div>
-                  <div className="p-3 bg-white/90 rounded-xl border border-emerald-200 text-[11px] text-slate-700 leading-relaxed flex items-start space-x-2">
-                    <span className="font-bold text-[#0E7A53] uppercase text-[10px] tracking-wide mt-0.5">Note:</span>
-                    <span>{t.customNote}</span>
-                  </div>
+                <div className="space-y-2">
+                  <label htmlFor="ob-idea" className={labelCls}>{t.customLabel}</label>
+                  <textarea
+                    id="ob-idea"
+                    rows={3}
+                    value={customTradeIdea}
+                    onChange={(e) => {
+                      setCustomTradeIdea(e.target.value);
+                      if (errors.customTrade) setErrors((prev) => ({ ...prev, customTrade: null }));
+                    }}
+                    placeholder={t.customPlaceholder}
+                    className={inputCls(errors.customTrade)}
+                  />
+                  <FieldError text={errors.customTrade} />
+                  <p className={hintCls}>{t.customNote}</p>
                 </div>
               )}
+
+              {/* DPDP Act s.6: consent before sensitive details are saved */}
+              <div className="pt-5 border-t border-black/10">
+                <label className={`flex items-start gap-2.5 p-3 rounded-2xl border cursor-pointer ${errors.consent ? 'border-red-400 bg-red-50/40' : 'border-black/10 bg-[#F8F6F0]'}`}>
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => {
+                      setConsent(e.target.checked);
+                      if (errors.consent) setErrors((prev) => ({ ...prev, consent: null }));
+                    }}
+                    className="mt-0.5 w-4 h-4 accent-[#111311] flex-shrink-0 cursor-pointer"
+                  />
+                  <span className="text-[11px] text-[#111311] leading-snug">
+                    {t.consentA}
+                    {onOpenPrivacy ? (
+                      <button type="button" onClick={onOpenPrivacy} className="font-semibold text-[#0E7A53] hover:underline cursor-pointer">
+                        {t.consentLink}
+                      </button>
+                    ) : t.consentLink}
+                    {t.consentB}
+                  </span>
+                </label>
+                <FieldError text={errors.consent} />
+              </div>
             </div>
           )}
-
         </div>
 
-        {/* Modal Footer Controls */}
-        <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between flex-shrink-0">
+        {/* Footer */}
+        <div className="px-6 sm:px-8 py-4 border-t border-black/10 bg-white flex items-center justify-between flex-shrink-0">
           {step > 1 ? (
             <button
               type="button"
               onClick={handleBack}
-              className="px-4 py-2 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl border border-black/15 hover:border-black/40 text-[#111311] font-mono-num font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
             >
-              ← {t.back}
+              {t.back}
             </button>
           ) : (
-            <div />
+            <span />
           )}
 
-          {step < 4 ? (
-            <button
-              type="button"
-              onClick={handleNext}
-              className="px-6 py-2.5 rounded-xl bg-[#0E7A53] hover:bg-[#0B6544] text-white font-bold text-xs transition-all cursor-pointer shadow-md flex items-center space-x-1.5"
-            >
-              <span>{t.next}</span>
-              <span>→</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleFinish}
-              className="px-6 py-2.5 rounded-xl bg-[#0E7A53] hover:bg-[#0B6544] text-white font-bold text-xs transition-all cursor-pointer shadow-lg flex items-center space-x-2"
-            >
-              <span>{t.finish}</span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={step < 4 ? handleNext : handleFinish}
+            className="px-6 py-2.5 rounded-xl bg-[#111311] hover:bg-black text-white font-mono-num font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-md"
+          >
+            {step < 4 ? t.next : t.finish}
+          </button>
         </div>
-
       </div>
     </div>
   );

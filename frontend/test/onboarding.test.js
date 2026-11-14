@@ -275,7 +275,7 @@ describe('6. OnboardingModal Bilingual SSR Rendering', () => {
       isOpen: true,
       initialLanguage: 'hi'
     }));
-    assert.ok(html.includes('उद्यमसेतु मार्गदर्शन प्रवेश'));
+    assert.ok(html.includes('अपनी प्रोफ़ाइल बनाएँ'));
     assert.ok(html.includes('1. पहचान'));
     assert.ok(html.includes('आवेदक का पूरा नाम'));
     assert.ok(html.includes('10 अंकों का मोबाइल नंबर'));
@@ -286,7 +286,7 @@ describe('6. OnboardingModal Bilingual SSR Rendering', () => {
       isOpen: true,
       initialLanguage: 'en'
     }));
-    assert.ok(html.includes('UdyamSetu Guided Intake'));
+    assert.ok(html.includes('Set up your profile'));
     assert.ok(html.includes('1. Identity'));
     assert.ok(html.includes('Full Legal Name'));
     assert.ok(html.includes('10-Digit Mobile Number'));

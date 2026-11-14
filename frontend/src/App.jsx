@@ -18,11 +18,13 @@ import SetoDashboard from './components/SetoDashboard';
 import ProductionDashboard from './components/ProductionDashboard';
 import AccountPanel from './components/dashboard/AccountPanel';
 import PrivacyModal from './components/PrivacyModal';
-import { 
-  getCurrentSession, 
+import { POLICY_VERSION } from './content/privacyPolicy';
+import {
+  getCurrentSession,
   authenticateByCredentials,
   registerUser,
   clearSession,
+  consentRecord,
   CATEGORY_SC,
   CATEGORY_NOT_SC
 } from './data/userDatabase';
@@ -426,6 +428,16 @@ export default function App() {
   // Empty until the user answers: SC was pre-selected and labelled "Verified", so every account
   // claimed a checked caste status nobody checked (teammate review, 11 Nov 2026).
   const [regCategory, setRegCategory] = useState('');
+  // DPDP Act s.6: an account is made only after the user ticks that they read the Privacy Policy.
+  const [regConsent, setRegConsent] = useState(false);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const openPrivacy = useCallback(() => setIsPrivacyOpen(true), []);
+  // "Erase my data on this device": everything this site saved in this browser, then a fresh start.
+  const purgeAllData = useCallback(() => {
+    try { window.localStorage.clear(); } catch {}
+    try { window.sessionStorage.clear(); } catch {}
+    window.location.assign('/');
+  }, []);
 
   // A question typed into the front page's chat bar, sent by the dashboard once it opens.
   const [pendingQuestion, setPendingQuestion] = useState(null);
@@ -473,12 +485,19 @@ export default function App() {
   const handleRegister = (e) => {
     e.preventDefault();
     setAuthError(null);
+    if (!regConsent) {
+      setAuthError(language === 'hi'
+        ? 'खाता बनाने के लिए कृपया गोपनीयता नीति पढ़कर सहमति दें।'
+        : 'Please read the Privacy Policy and tick the consent box to create an account.');
+      return;
+    }
     const result = registerUser({
       name: regName,
       phone: regPhone,
       pin: regPin,
       trade: regTrade,
-      category: regCategory
+      category: regCategory,
+      privacyConsent: consentRecord(POLICY_VERSION)
     });
     if (result.success) {
       setCurrentUser(result.user);
@@ -728,8 +747,6 @@ export default function App() {
     }
   };
 
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
-
   // Shared Auth Modal Renderer
   const renderAccountPanel = () => (isAccountOpen && currentUser ? (
     <AccountPanel
@@ -737,8 +754,29 @@ export default function App() {
       onSaved={(u) => setCurrentUser(u)}
       onSignOut={handleLogout}
       onClose={() => setIsAccountOpen(false)}
+      onOpenPrivacy={openPrivacy}
+      onPurgeData={purgeAllData}
     />
   ) : null);
+
+  const renderPrivacyModal = () => (
+    <PrivacyModal
+      isOpen={isPrivacyOpen}
+      onClose={() => setIsPrivacyOpen(false)}
+      language={language}
+      onPurgeData={purgeAllData}
+    />
+  );
+
+  const privacyLink = (label) => (
+    <button
+      type="button"
+      onClick={openPrivacy}
+      className="font-semibold text-[#0E7A53] hover:underline cursor-pointer"
+    >
+      {label}
+    </button>
+  );
 
   const renderAuthModal = () => {
     if (!isAuthModalOpen) return null;
@@ -858,6 +896,12 @@ export default function App() {
               >
                 {t.submitLogin}
               </button>
+
+              <p className="text-[11px] text-[#686D65] font-sans-ui text-center leading-snug">
+                {language === 'hi' ? 'लॉगिन करके आप हमारी ' : 'By signing in you agree to our '}
+                {privacyLink(language === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy')}
+                {language === 'hi' ? ' से सहमत होते हैं।' : '.'}
+              </p>
 
               <div className="pt-2 text-center text-xs text-[#686D65] font-sans-ui">
                 <span>{t.needAccount} </span>
@@ -981,6 +1025,23 @@ export default function App() {
                   </option>
                 </select>
               </div>
+
+              <label className="flex items-start gap-2.5 p-3 rounded-xl bg-[#F8F6F0] border border-black/5 text-[11px] text-[#111311] font-sans-ui leading-snug cursor-pointer">
+                <input
+                  type="checkbox"
+                  required
+                  checked={regConsent}
+                  onChange={(e) => setRegConsent(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-[#111311] flex-shrink-0 cursor-pointer"
+                />
+                <span>
+                  {language === 'hi' ? 'मैंने ' : 'I have read the '}
+                  {privacyLink(language === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy')}
+                  {language === 'hi'
+                    ? ' पढ़ ली है, मेरी उम्र 18 वर्ष या उससे अधिक है, और मैं उसमें बताए उद्देश्यों के लिए अपनी जानकारी के उपयोग की सहमति देता/देती हूँ।'
+                    : ', I am 18 or older, and I consent to my details being used for the purposes it describes.'}
+                </span>
+              </label>
 
               <button
                 type="submit"
@@ -1113,22 +1174,22 @@ export default function App() {
             onNavigateHome={navigateToLanding}
             initialQuestion={pendingQuestion}
             onInitialQuestionUsed={() => setPendingQuestion(null)}
+            onOpenPrivacy={openPrivacy}
+            onProfileSaved={(u) => { if (u) setCurrentUser(u); }}
           />
         </main>
+
+        <footer className="px-4 sm:px-6 pb-4 pt-1 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[#686D65] font-sans-ui">
+          <span>{language === 'hi' ? 'केवल सलाह: ऋण स्वीकृति नहीं।' : 'Advisory only: not a loan sanction.'}</span>
+          <button type="button" onClick={openPrivacy} className="underline hover:text-[#111311] cursor-pointer">
+            {language === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy'}
+          </button>
+        </footer>
 
         {/* Global Auth Modal Container */}
         {renderAuthModal()}
         {renderAccountPanel()}
-        <PrivacyModal
-          isOpen={isPrivacyOpen}
-          onClose={() => setIsPrivacyOpen(false)}
-          language={language}
-          onPurgeData={() => {
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.reload();
-          }}
-        />
+        {renderPrivacyModal()}
       </div>
     );
   }
@@ -1673,7 +1734,7 @@ export default function App() {
               <div className="w-3.5 h-3.5 rounded-full bg-[#0E7A53] animate-pulse flex-shrink-0"></div>
               <div>
                 <h4 className="text-xs sm:text-sm font-bold text-[#111311] font-mono-num uppercase tracking-wider">
-                  {language === 'hi' ? 'इंटरैक्टिव पूर्वावलोकन मॉकअप (दृश्य 06)' : 'Interactive Preview Mockup (Scene 06)'}
+                  {language === 'hi' ? 'डैशबोर्ड की झलक' : 'Dashboard preview'}
                 </h4>
                 <p className="text-[11px] text-[#686D65] mt-0.5 font-sans-ui">
                   {language === 'hi' 
@@ -1693,7 +1754,7 @@ export default function App() {
               }}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#111311] hover:bg-black text-white text-xs font-mono-num font-bold shadow-md hover:scale-105 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span>{language === 'hi' ? 'पूर्ण प्रोडक्शन डैशबोर्ड खोलें →' : 'Launch Full Production Dashboard →'}</span>
+              <span>{language === 'hi' ? 'पूरा डैशबोर्ड खोलें' : 'Open the full dashboard'}</span>
               <ArrowRight className="w-3.5 h-3.5 text-[#0E7A53]" />
             </button>
           </div>
@@ -1722,19 +1783,32 @@ export default function App() {
         />
       </div>
 
+      {/* ============================================================== */}
+      {/* FOOTER: disclaimer and Privacy Policy                          */}
+      {/* ============================================================== */}
+      <footer className="border-t border-black/10 bg-[#F4F1EA] mt-12">
+        <div className="max-w-[1500px] mx-auto px-6 sm:px-10 py-10 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-end">
+          <div className="space-y-3 max-w-2xl">
+            <img src="/images/logo.png" alt="UdyamSetuAI" className="h-9 w-auto object-contain" />
+            <p className="text-xs text-[#686D65] font-sans-ui leading-relaxed">
+              {language === 'hi'
+                ? 'UdyamSetuAI एक सलाह देने वाला मंच है, बैंक, ऋणदाता या सरकारी विभाग नहीं। सभी आँकड़े और DPR केवल जानकारी के लिए हैं; ऋण और सब्सिडी पर अंतिम निर्णय बैंक या संबंधित एजेंसी लेती है। आपका खाता और प्रोफ़ाइल केवल आपके इस डिवाइस पर सहेजे जाते हैं।'
+                : 'UdyamSetuAI is an advisory platform, not a bank, lender or government agency. All figures and DPRs are for information only; banks and the agencies concerned make every decision on loans and subsidies. Your account and profile are saved only on this device.'}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-mono-num uppercase tracking-widest text-[#111311]">
+            <button type="button" onClick={openPrivacy} className="hover:text-[#0E7A53] cursor-pointer">
+              {language === 'hi' ? 'गोपनीयता नीति' : 'Privacy Policy'}
+            </button>
+            <span className="text-[#686D65] normal-case tracking-normal font-sans-ui">© 2026 UdyamSetuAI · SIH26091</span>
+          </div>
+        </div>
+      </footer>
+
       {/* Global Authentication Modal */}
       {renderAuthModal()}
       {renderAccountPanel()}
-      <PrivacyModal
-        isOpen={isPrivacyOpen}
-        onClose={() => setIsPrivacyOpen(false)}
-        language={language}
-        onPurgeData={() => {
-          localStorage.clear();
-          sessionStorage.clear();
-          window.location.reload();
-        }}
-      />
+      {renderPrivacyModal()}
 
     </div>
   );

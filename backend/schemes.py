@@ -73,13 +73,18 @@ VISHWAKARMA_18_TRADES = [
 
 ARTISAN_CODES = {"D18", "D19", "D20", "D21"}
 
-FOOD_PROCESSING_CODES = {"D07", "D08", "D09", "D10", "D23"}
+# D23 (Vermicompost) was listed here, so a compost unit was offered the PMFME food-processing subsidy
+# (review, 14 Nov 2026). Only units that process food: grain/dal milling, oil, spices, dehydration.
+FOOD_PROCESSING_CODES = {"D07", "D08", "D09", "D10"}
 
+# "dairy", "milk", "fruit", "vegetable" and "food" on their own also matched dairy FARMING (D11
+# "Commercial Bovine Dairy"), fruit and vegetable SELLING and food stalls, none of which PMFME
+# covers. Processing words only; "milk processing" etc. still match through "processing".
 FOOD_PROCESSING_KEYWORDS = [
-    "flour", "atta", "dal", "grain", "oil", "expeller", "mustard", "spice", "masala",
-    "pickle", "papad", "dehydration", "bakery", "biscuit", "confectionery", "food",
-    "agro-processing", "dairy", "milk", "cheese", "paneer", "honey", "juice", "jam",
-    "jelly", "milling", "cold press", "processing", "fruit", "vegetable"
+    "flour", "atta", "dal mill", "dal milling", "grain mill", "oil mill", "oil expeller", "expeller",
+    "spice", "masala", "pickle", "papad", "dehydration", "bakery", "biscuit", "confectionery",
+    "food processing", "agro-processing", "cheese", "paneer", "ghee", "khoya", "honey processing",
+    "juice", "jam", "jelly", "milling", "cold press", "processing", "mustard oil"
 ]
 
 SERVICE_CODES = {"D03", "D15", "D16", "D17"}
@@ -106,6 +111,12 @@ def calculate_emi(principal: float, annual_rate_pct: float, tenure_months: int) 
     return round(emi, 2)
 
 
+def _has_word(text: str, kw: str) -> bool:
+    """kw as a whole word (an s/es plural allowed). Plain substring search matched "nai" in
+    "Chennai", "mistry" in "chemistry" and "phool" in "phoolgobhi farming" (review, 14 Nov 2026)."""
+    return re.search(rf"\b{re.escape(kw)}(?:s|es)?\b", text) is not None
+
+
 def is_trade_artisan(trade_name: Optional[str], trade_code: Optional[str], is_artisan_flag: bool) -> bool:
     if is_artisan_flag:
         return True
@@ -114,7 +125,7 @@ def is_trade_artisan(trade_name: Optional[str], trade_code: Optional[str], is_ar
     if trade_name:
         t_clean = trade_name.lower().strip()
         for kw in VISHWAKARMA_18_TRADES:
-            if kw in t_clean:
+            if _has_word(t_clean, kw):
                 return True
     return False
 
@@ -127,7 +138,7 @@ def is_trade_food(trade_name: Optional[str], trade_code: Optional[str], is_food_
     if trade_name:
         t_clean = trade_name.lower().strip()
         for kw in FOOD_PROCESSING_KEYWORDS:
-            if re.search(rf"\b{re.escape(kw)}\b", t_clean):
+            if _has_word(t_clean, kw):
                 return True
     return False
 
@@ -140,7 +151,7 @@ def is_trade_service(trade_name: Optional[str], trade_code: Optional[str], activ
     if trade_name:
         t_clean = trade_name.lower().strip()
         for kw in SERVICE_KEYWORDS:
-            if kw in t_clean:
+            if _has_word(t_clean, kw):
                 return True
     return False
 
@@ -153,7 +164,9 @@ class SchemeEvaluationRequest(BaseModel):
     caste_category: Optional[str] = "General"  # SC, ST, OBC, General, EWS, Minority
     gender: Optional[str] = "male"             # female, male, other
     is_rural: Optional[bool] = True
-    annual_income: Optional[float] = 0.0
+    # None = not given. It used to default to 0, so the NSFDC and NBCFDC income limits passed
+    # silently for anyone who did not say their income (review, 14 Nov 2026); a note now says so.
+    annual_income: Optional[float] = None
     project_cost: float
     trade_code: Optional[str] = None
     trade_name: Optional[str] = None
@@ -516,8 +529,8 @@ def _eval_pmegp(
     emi = calculate_emi(loan, 9.5, 60)
 
     benefit = (
-        f"Highest non-repayable capital subsidy of ₹{subsidy:,.0f} ({sub_pct:.0f}%) "
-        f"requiring only ₹{equity:,.0f} personal equity required."
+        f"Non-repayable margin-money subsidy of ₹{subsidy:,.0f} ({sub_pct:.0f}%), "
+        f"with ₹{equity:,.0f} ({equity_pct:.0f}%) as your own contribution."
     )
 
     eligible.append({
@@ -563,12 +576,21 @@ def _eval_vishwakarma(
         })
         return eligible, ineligible
 
-    # Tranche 1: up to ₹1,00,000 (18 mo); Tranche 2: up to ₹2,00,000 (30 mo)
-    tenure = 18 if cost <= 100000 else 30
-    loan = cost
-    equity = 0.0
+    # The first loan is Tranche 1: up to ₹1,00,000, repaid over 18 months. Tranche 2 (up to
+    # ₹2,00,000, 30 months) is open only after Tranche 1 is repaid, so it is never the first loan.
+    # The engine used to lend the whole cost (up to ₹3L) at once over 30 months (review, 14 Nov 2026).
+    tranche1_cap = 100000.0
+    loan = min(cost, tranche1_cap)
+    tenure = 18
+    equity = round(cost - loan, 2)
     toolkit_grant = 15000.0
     emi = calculate_emi(loan, 5.0, tenure)
+
+    benefit = ("Fixed 5.0% concessional interest rate (8.0% Govt subvention) and ₹15,000 toolkit e-voucher. "
+               "First loan (Tranche 1) up to ₹1,00,000 over 18 months; after it is repaid, Tranche 2 up to "
+               "₹2,00,000 over 30 months.")
+    if equity > 0:
+        benefit += f" The remaining ₹{equity:,.0f} of the project cost must come from your own funds or another loan."
 
     eligible.append({
         "scheme_code": "PM_VISHWAKARMA",
@@ -577,13 +599,15 @@ def _eval_vishwakarma(
         "subsidy_amount": toolkit_grant,
         "subsidy_rate_pct": round((toolkit_grant / cost) * 100, 1),
         "promoter_equity": equity,
-        "promoter_equity_pct": 0.0,
+        "promoter_equity_pct": round((equity / cost) * 100, 1),
         "loan_principal": loan,
         "interest_rate_pa": 5.0,
         "tenure_months": tenure,
         "moratorium_months": 0,
         "monthly_emi": emi,
-        "strategic_benefit": "Fixed 5.0% concessional interest rate (8.0% Govt subvention), ₹15,000 digital toolkit voucher grant, and 0% promoter equity required.",
+        "strategic_benefit": benefit,
+        "conditions": "Registered PM Vishwakarma artisan aged 18+, one member per family, and no similar "
+                      "credit-linked loan (PMEGP, PM SVANidhi, MUDRA) in the last 5 years.",
         "tag": "STATUTORY: MoMSME PM Vishwakarma Scheme Guidelines"
     })
 
@@ -617,9 +641,18 @@ def _eval_mudra(cost: float) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]
         equity_pct = 15.0
         loan = round(cost * 0.85, 2)
         tenure = 60
-    else:
+    elif cost <= 1000000:
         code = "MUDRA_TARUN"
         name = "PM MUDRA (Tarun)"
+        equity = round(cost * 0.15, 2)
+        equity_pct = 15.0
+        loan = round(cost * 0.85, 2)
+        tenure = 60
+    else:
+        # ₹10L to ₹20L is "Tarun Plus" (Union Budget 2024-25), only for borrowers who took and fully
+        # repaid an earlier Tarun loan. It was shown as plain "Tarun" (review, 14 Nov 2026).
+        code = "MUDRA_TARUN_PLUS"
+        name = "PM MUDRA (Tarun Plus)"
         equity = round(cost * 0.15, 2)
         equity_pct = 15.0
         loan = round(cost * 0.85, 2)
@@ -627,7 +660,12 @@ def _eval_mudra(cost: float) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]
 
     emi = calculate_emi(loan, 9.5, tenure)
 
+    conditions = None
+    if code == "MUDRA_TARUN_PLUS":
+        conditions = "Only for borrowers who have taken and fully repaid an earlier MUDRA Tarun loan."
+
     eligible.append({
+        "conditions": conditions,
         "scheme_code": code,
         "scheme_name": name,
         "ministry": "Department of Financial Services, Ministry of Finance",
@@ -721,7 +759,10 @@ def evaluate(params: Union[SchemeEvaluationRequest, Dict[str, Any], Any] = None,
     req = SchemeEvaluationRequest(**raw)
 
     cost = float(req.project_cost)
-    income = float(req.annual_income or 0.0)
+    if cost <= 0:
+        raise ValueError("project_cost must be greater than 0")
+    income_given = req.annual_income is not None
+    income = float(req.annual_income) if income_given else 0.0
     caste = (req.caste_category or "General").strip().upper()
     gender = (req.gender or "male").strip().lower()
     is_woman = req.is_woman if req.is_woman is not None else (gender == "female")
@@ -808,9 +849,12 @@ def evaluate(params: Union[SchemeEvaluationRequest, Dict[str, Any], Any] = None,
                 f"({top['subsidy_rate_pct']:.0f}%) requiring only ₹{top['promoter_equity']:,.0f} personal equity."
             )
         elif code == "PM_VISHWAKARMA":
+            own = ("no own contribution" if top["promoter_equity"] == 0
+                   else f"₹{top['promoter_equity']:,.0f} of the project cost from your own funds or another loan")
             rationale = (
                 f"{top['scheme_name']} provides the optimal outcome: fixed concessional 5.0% interest rate "
-                "(8.0% Govt interest subvention), ₹15,000 digital toolkit voucher grant, and 0% promoter equity required."
+                f"(8.0% Govt interest subvention), ₹15,000 toolkit e-voucher, a first loan of "
+                f"₹{top['loan_principal']:,.0f}, and {own}."
             )
         elif "PMFME" in code:
             rationale = (
@@ -841,13 +885,22 @@ def evaluate(params: Union[SchemeEvaluationRequest, Dict[str, Any], Any] = None,
             "rationale": rationale
         }
 
+    notes: List[str] = []
+    if not income_given and (is_sc or is_obc):
+        notes.append("Yearly family income was not given, so the income limits were not checked: "
+                     "NSFDC needs ₹5,00,000 or less (₹3,00,000 or less for Micro Credit and Mahila Samridhi), "
+                     "NBCFDC ₹3,00,000 or less.")
+    notes.append("Scheme rules change and banks decide eligibility. Confirm with the bank or the scheme's "
+                 "official portal before applying. Advisory only, not a loan sanction.")
+
     return {
+        "notes": notes,
         "status": "success",
         "applicant": {
             "caste_category": caste,
             "gender": gender,
             "is_rural": is_rural,
-            "annual_income": income,
+            "annual_income": income if income_given else None,
             "project_cost": cost,
             "trade_code": trade_code,
             "trade_name": trade_name,

@@ -23,13 +23,20 @@ fi
 echo " [2/5] Installing / checking Python packages..."
 backend/.venv/bin/python -m pip install -q --disable-pip-version-check -r backend/requirements.txt
 
-# 3. Website (built once; delete frontend/dist to rebuild)
+# 3. Website (built the first time, and again whenever the code changed: a "git pull" used to keep
+#    serving the old build, so fixes never showed; 14 Nov 2026)
+needs_build=0
 if [ ! -f frontend/dist/index.html ]; then
+  needs_build=1
+elif [ -n "$(find frontend/src frontend/public frontend/index.html frontend/package.json -type f -newer frontend/dist/index.html 2>/dev/null | head -n 1)" ]; then
+  needs_build=1
+fi
+if [ "$needs_build" = 1 ]; then
   if ! command -v npm >/dev/null 2>&1; then
     echo " Node.js was not found. Install the LTS version from https://nodejs.org (Mac: or 'brew install node'), then run this again."
     read -r -p " Press Enter to close." _; exit 1
   fi
-  echo " [3/5] Building the website (first time only, about a minute)..."
+  echo " [3/5] Building the website (first time, or after an update; about a minute)..."
   (cd frontend && npm install && npm run build)
 fi
 echo " [3/5] Website ready."

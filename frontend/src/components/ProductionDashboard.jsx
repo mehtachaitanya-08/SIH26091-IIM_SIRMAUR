@@ -94,7 +94,9 @@ export default function ProductionDashboard({
   onNavigateHome,
   initialTab = 'home',
   initialQuestion = null,
-  onInitialQuestionUsed
+  onInitialQuestionUsed,
+  onOpenPrivacy,
+  onProfileSaved
 }) {
   // Navigation & Viewport State
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -135,17 +137,20 @@ export default function ProductionDashboard({
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
 
+  // Onboarding answers are kept per account (userDatabase.js): a new account on a shared device gets
+  // the form, and never the previous person's caste, income or district.
+  const profileOwner = currentUser?.id ?? null;
   useEffect(() => {
-    const onboarded = getOnboardingStatus();
+    const onboarded = getOnboardingStatus(profileOwner);
     if (!onboarded) {
       setIsOnboardingOpen(true);
     }
-  }, []);
+  }, [profileOwner]);
 
   // Eliminate D01 cold-drop: hydrate selectedDomainCode from user's picked trade or saved onboarding session
   useEffect(() => {
     try {
-      const stored = getOnboardingProfile();
+      const stored = getOnboardingProfile(profileOwner);
       if (stored) {
         if (stored.tradeCode) {
           setSelectedDomainCode(stored.tradeCode);
@@ -181,7 +186,7 @@ export default function ProductionDashboard({
         setBusinessPicked(true);
       }
     }
-  }, [currentUser?.trade]);
+  }, [currentUser?.trade, profileOwner]);
   // Stage 1c: the DPR-tab form (owner's decisions 1-18, 13 Nov 2026). Kept in this memory only: never
   // saved, gone on reload, close or sign-out. A change of signed-in user (a guest signing in, too) clears
   // it first and then fills the new account's name and district; an account change updates only the
@@ -700,26 +705,22 @@ export default function ProductionDashboard({
           double-click start.command (on Linux run ./start.command).
         </div>
       )}
-      <div className="mb-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-white border border-emerald-200 flex flex-wrap items-center justify-between gap-2 text-xs font-sans-ui shadow-sm">
-        <div className="flex items-center space-x-2">
-          <span className="w-6 h-6 rounded-lg bg-[#0E7A53] text-white flex items-center justify-center text-xs font-bold">✨</span>
-          <span className="font-semibold text-slate-800">
-            {language === 'hi' ? 'उद्यम प्रोफ़ाइल एवं योजना चयन' : 'Venture Profile & Scheme Intake'}:
+      <div className="mb-3 px-4 py-2.5 rounded-2xl bg-white border border-black/10 flex flex-wrap items-center justify-between gap-2 text-xs font-sans-ui">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+          <span className="text-[10px] font-mono-num uppercase tracking-widest text-[#686D65]">
+            {language === 'hi' ? 'आपकी प्रोफ़ाइल' : 'Your profile'}
           </span>
-          <span className="text-slate-600 font-medium">
+          <span className="font-semibold text-[#111311]">
             {activeDomain?.name || selectedDomainCode} · {applicant?.district ? `${applicant.district}, ` : ''}{applicant?.state || 'Uttar Pradesh'}
           </span>
         </div>
-        <div className="flex items-center space-x-2">
-          <button
-            type="button"
-            onClick={() => setIsOnboardingOpen(true)}
-            className="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50 text-[#0E7A53] border border-[#0E7A53]/30 font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center space-x-1"
-          >
-            <span>✏️</span>
-            <span>{language === 'hi' ? 'मेरी प्रोफ़ाइल / नया उद्यम +' : 'Edit Profile / New Venture +'}</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsOnboardingOpen(true)}
+          className="px-3 py-1.5 rounded-xl bg-[#111311] hover:bg-black text-white font-mono-num font-bold text-[11px] uppercase tracking-wider transition-colors cursor-pointer"
+        >
+          {language === 'hi' ? 'प्रोफ़ाइल बदलें' : 'Edit profile'}
+        </button>
       </div>
     </>
   );
@@ -825,6 +826,8 @@ export default function ProductionDashboard({
         onComplete={handleOnboardingComplete}
         currentUser={currentUser}
         initialLanguage={language}
+        onOpenPrivacy={onOpenPrivacy}
+        onUserUpdated={onProfileSaved}
       />
 
       {/* Scenario Comparison & Sahukar Usury Delta Modal */}

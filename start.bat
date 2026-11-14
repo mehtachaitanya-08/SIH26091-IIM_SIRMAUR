@@ -34,8 +34,13 @@ if not exist "backend\.venv\Scripts\python.exe" (
 echo  [2/5] Installing / checking Python packages...
 "backend\.venv\Scripts\python.exe" -m pip install -q --disable-pip-version-check -r backend\requirements.txt || goto :failed
 
-REM ---- 3. Website (built once; delete frontend\dist to rebuild) -------------
-if exist "frontend\dist\index.html" goto :website_ready
+REM ---- 3. Website (built the first time, and again whenever the code changed) --
+REM Rebuilt when any file in frontend\src, frontend\public, index.html or package.json is newer than
+REM the last build: a "git pull" used to keep serving the old build, so fixes never showed (14 Nov 2026).
+if not exist "frontend\dist\index.html" goto :website_build
+powershell -NoProfile -Command "$b=(Get-Item 'frontend\dist\index.html').LastWriteTime; $n=@(Get-ChildItem 'frontend\src','frontend\public' -Recurse -File; Get-Item 'frontend\index.html','frontend\package.json') | Where-Object { $_.LastWriteTime -gt $b }; if ($n) { exit 1 } else { exit 0 }" >nul 2>nul
+if not errorlevel 1 goto :website_ready
+:website_build
 call npm --version >nul 2>nul
 if errorlevel 1 (
   echo  Node.js was not found. Installing Node.js LTS now ^(this needs internet^)...
@@ -45,7 +50,7 @@ if errorlevel 1 (
   pause
   exit /b 0
 )
-echo  [3/5] Building the website ^(first time only, about a minute^)...
+echo  [3/5] Building the website ^(first time, or after an update; about a minute^)...
 pushd frontend
 call npm install || (popd & goto :failed)
 call npm run build || (popd & goto :failed)

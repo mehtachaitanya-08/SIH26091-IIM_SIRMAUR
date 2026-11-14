@@ -382,13 +382,17 @@ def _t_dpr_link(code, project_cost, family_income, is_sc, answers=None):
 
 
 def _t_evaluate_schemes(caste_category="General", gender="male", is_rural=True, project_cost=None,
-                        annual_income=0, trade_name=None, trade_code=None, is_artisan=False,
-                        is_food_processing=False, is_woman=None):
+                        annual_income=None, trade_name=None, trade_code=None, is_artisan=False,
+                        is_food_processing=False, is_woman=None, is_divyang=False):
     notes = []
     if project_cost is None:
         return {"error": "project_cost is required"}
     cost = _whole_rupees(project_cost, "project_cost", notes)
-    income = _whole_rupees(annual_income or 0, "annual_income", notes) if annual_income is not None else 0
+    if not cost or cost <= 0:
+        return {"error": "project_cost must be more than 0"}
+    # Income not given stays None, so the engine says the income limits were not checked
+    # (it used to become 0 and pass every limit; review, 14 Nov 2026).
+    income = _whole_rupees(annual_income, "annual_income", notes) if annual_income is not None else None
     caste = str(caste_category or "General").strip().upper()
     gen = str(gender or "male").strip().lower()
     woman = bool(is_woman) if is_woman is not None else (gen == "female")
@@ -404,7 +408,9 @@ def _t_evaluate_schemes(caste_category="General", gender="male", is_rural=True, 
         is_artisan=bool(is_artisan),
         is_food_processing=bool(is_food_processing),
         is_woman=woman,
+        is_divyang=bool(is_divyang),
     )
+    notes.extend(res.get("notes", []))
 
     top = []
     for s in res["eligible_schemes"][:3]:
@@ -420,6 +426,7 @@ def _t_evaluate_schemes(caste_category="General", gender="male", is_rural=True, 
             "tenureMonths": s["tenure_months"],
             "monthlyEmi": s["monthly_emi"],
             "strategicBenefit": s["strategic_benefit"],
+            "conditions": s.get("conditions"),
         })
 
     return {
@@ -462,6 +469,8 @@ TOOLS = {
             "trade_code": {"type": "string"},
             "is_artisan": {"type": "boolean"},
             "is_food_processing": {"type": "boolean"},
+            "is_woman": {"type": "boolean"},
+            "is_divyang": {"type": "boolean"},
         }
     ),
     "dossier_figures": (_t_dossier_figures, "A business's dossier figures: sizes with project cost, surplus, the dossier's own "

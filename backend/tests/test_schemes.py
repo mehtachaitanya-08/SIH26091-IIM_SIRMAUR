@@ -369,17 +369,21 @@ def test_pm_vishwakarma_artisan_eligible():
     assert v["loan_principal"] == 100000.0
 
 
-def test_pm_vishwakarma_tranche_2_eligible():
-    """Blacksmith (D20), cost ₹2.5L -> Tranche 1 & 2 loan up to ₹2.5L @ 5.0%."""
+def test_pm_vishwakarma_first_loan_is_tranche_1_only():
+    """Blacksmith (D20), cost ₹2.5L -> the first loan is Tranche 1 (₹1L, 18 months); Tranche 2 only
+    after it is repaid, so the rest (₹1.5L) is the applicant's own share (review, 14 Nov 2026)."""
     res = schemes.evaluate(
         project_cost=250000,
         trade_code="D20",
         trade_name="Metal Smithy"
     )
     v = next(s for s in res["eligible_schemes"] if s["scheme_code"] == "PM_VISHWAKARMA")
-    assert v["loan_principal"] == 250000.0
+    assert v["loan_principal"] == 100000.0
+    assert v["promoter_equity"] == 150000.0
     assert v["interest_rate_pa"] == 5.0
-    assert v["tenure_months"] == 30
+    assert v["tenure_months"] == 18
+    assert "Tranche 2" in v["strategic_benefit"]
+    assert "5 years" in v["conditions"]
 
 
 def test_pm_vishwakarma_flag_override():
@@ -438,12 +442,23 @@ def test_mudra_kishore_up_to_5_lakh():
     assert m["promoter_equity"] == 45000.0   # 15%
 
 
-def test_mudra_tarun_up_to_20_lakh():
-    """Cost ₹15,00,000 -> MUDRA Tarun (85% loan, 15% equity)."""
-    res = schemes.evaluate(project_cost=1500000)
+def test_mudra_tarun_up_to_10_lakh():
+    """Cost ₹8,00,000 -> MUDRA Tarun (85% loan, 15% equity)."""
+    res = schemes.evaluate(project_cost=800000)
     m = next(s for s in res["eligible_schemes"] if s["scheme_code"] == "MUDRA_TARUN")
-    assert m["loan_principal"] == 1275000.0 # 85%
+    assert m["loan_principal"] == 680000.0  # 85%
+    assert m["promoter_equity"] == 120000.0  # 15%
+
+
+def test_mudra_tarun_plus_10_to_20_lakh():
+    """Cost ₹15,00,000 -> MUDRA Tarun Plus, only after repaying an earlier Tarun loan."""
+    res = schemes.evaluate(project_cost=1500000)
+    codes = [s["scheme_code"] for s in res["eligible_schemes"]]
+    assert "MUDRA_TARUN" not in codes
+    m = next(s for s in res["eligible_schemes"] if s["scheme_code"] == "MUDRA_TARUN_PLUS")
+    assert m["loan_principal"] == 1275000.0  # 85%
     assert m["promoter_equity"] == 225000.0  # 15%
+    assert "repaid" in m["conditions"]
 
 
 def test_mudra_cost_over_20_lakh_rejected():
@@ -642,3 +657,59 @@ def test_chat_run_tool_evaluate_schemes_missing_cost():
     """evaluate_schemes without project_cost returns clean error without crashing."""
     res = chat.run_tool("evaluate_schemes", json.dumps({"caste_category": "SC"}))
     assert "error" in res or res.get("status") != "success"
+
+
+# ==============================================================================
+# 11. REVIEW FIXES (14 Nov 2026)
+# ==============================================================================
+
+def test_vermicompost_is_not_food_processing():
+    """D23 Vermicompost is not a food-processing unit: no PMFME subsidy."""
+    res = schemes.evaluate(project_cost=300000, trade_code="D23", trade_name="Vermicompost")
+    assert "PMFME_FOOD_PROCESSING" not in [s["scheme_code"] for s in res["eligible_schemes"]]
+
+
+def test_dairy_farming_is_not_food_processing():
+    """D11 dairy farming (not milk processing) does not get PMFME; paneer making does."""
+    farm = schemes.evaluate(project_cost=500000, trade_code="D11", trade_name="Commercial Bovine Dairy")
+    assert "PMFME_FOOD_PROCESSING" not in [s["scheme_code"] for s in farm["eligible_schemes"]]
+    paneer = schemes.evaluate(project_cost=500000, trade_name="Paneer and ghee making")
+    assert "PMFME_FOOD_PROCESSING" in [s["scheme_code"] for s in paneer["eligible_schemes"]]
+
+
+def test_vegetable_selling_is_not_food_processing():
+    res = schemes.evaluate(project_cost=100000, trade_name="Fruit and vegetable vendor")
+    assert "PMFME_FOOD_PROCESSING" not in [s["scheme_code"] for s in res["eligible_schemes"]]
+
+
+def test_artisan_keywords_match_whole_words_only():
+    """'nai' in 'Chennai' or 'mistry' in 'chemistry' must not make a trade an artisan craft."""
+    assert schemes.is_trade_artisan("Chennai snacks stall", None, False) is False
+    assert schemes.is_trade_artisan("Chemistry tuition", None, False) is False
+    assert schemes.is_trade_artisan("Village barber (nai) shop", None, False) is True
+    assert schemes.is_trade_artisan("Potters cooperative", None, False) is True
+
+
+def test_missing_income_is_flagged_not_assumed_zero():
+    """No income given: NSFDC is still listed, but a note says the income limit was not checked."""
+    res = schemes.evaluate(caste_category="SC", project_cost=140000)
+    assert res["applicant"]["annual_income"] is None
+    assert any("income was not given" in n for n in res["notes"])
+    given = schemes.evaluate(caste_category="SC", project_cost=140000, annual_income=100000)
+    assert not any("income was not given" in n for n in given["notes"])
+
+
+def test_every_result_says_advisory_only():
+    res = schemes.evaluate(project_cost=200000)
+    assert any("not a loan sanction" in n for n in res["notes"])
+
+
+def test_chat_tool_passes_divyang_and_notes():
+    """A General-category divyang applicant counts as PMEGP special category (35% rural)."""
+    res = chat.run_tool("evaluate_schemes", json.dumps({
+        "project_cost": 400000, "caste_category": "General", "is_rural": True, "is_divyang": True}))
+    assert res["status"] == "success"
+    codes = [s["schemeCode"] for s in res["topSchemes"]]
+    assert "PMEGP_RURAL_SPECIAL" in codes
+    assert res["annualIncome"] is None
+    assert any("not a loan sanction" in n for n in res["notes"])

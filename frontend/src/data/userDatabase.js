@@ -9,38 +9,52 @@ const STORAGE_SESSION_KEY = 'udyamsetuai_active_session_v1';
 const STORAGE_ONBOARDED_KEY = 'udyamsetu_onboarded';
 const STORAGE_ONBOARDING_PROFILE_KEY = 'udyamsetu_onboarding_profile';
 
-// In-memory fallback for SSR
-let inMemoryOnboarded = null;
-let inMemoryOnboardingProfile = null;
+// The onboarding answers (caste, income, disability, debt...) are kept per account. They used to sit
+// under one key for the whole browser, so on a shared phone the next person to sign in saw the last
+// person's answers pre-filled and never got the onboarding form (privacy review, 14 Nov 2026).
+// No user id (a guest, or the tests) keeps the old single key.
+const onboardedKey = (userId) => (userId ? `${STORAGE_ONBOARDED_KEY}:${userId}` : STORAGE_ONBOARDED_KEY);
+const profileKey = (userId) => (userId ? `${STORAGE_ONBOARDING_PROFILE_KEY}:${userId}` : STORAGE_ONBOARDING_PROFILE_KEY);
 
-export function getOnboardingStatus() {
-  if (!hasLocalStorage()) return inMemoryOnboarded;
+// In-memory fallback for SSR, per key
+const inMemoryOnboarded = new Map();
+const inMemoryOnboardingProfile = new Map();
+
+export function getOnboardingStatus(userId = null) {
+  const fallback = inMemoryOnboarded.get(onboardedKey(userId)) ?? null;
+  if (!hasLocalStorage()) return fallback;
   try {
-    const val = window.localStorage.getItem(STORAGE_ONBOARDED_KEY);
-    return val !== null ? val : inMemoryOnboarded;
+    const val = window.localStorage.getItem(onboardedKey(userId));
+    return val !== null ? val : fallback;
   } catch {
-    return inMemoryOnboarded;
+    return fallback;
   }
 }
 
-export function getOnboardingProfile() {
-  if (!hasLocalStorage()) return inMemoryOnboardingProfile;
+export function getOnboardingProfile(userId = null) {
+  const fallback = inMemoryOnboardingProfile.get(profileKey(userId)) ?? null;
+  if (!hasLocalStorage()) return fallback;
   try {
-    const raw = window.localStorage.getItem(STORAGE_ONBOARDING_PROFILE_KEY);
-    return raw ? JSON.parse(raw) : inMemoryOnboardingProfile;
+    const raw = window.localStorage.getItem(profileKey(userId));
+    return raw ? JSON.parse(raw) : fallback;
   } catch {
-    return inMemoryOnboardingProfile;
+    return fallback;
   }
 }
 
-export function saveOnboardingProfile(profile) {
-  inMemoryOnboarded = 'true';
-  inMemoryOnboardingProfile = profile;
+export function saveOnboardingProfile(profile, userId = null) {
+  inMemoryOnboarded.set(onboardedKey(userId), 'true');
+  inMemoryOnboardingProfile.set(profileKey(userId), profile);
   if (!hasLocalStorage()) return;
   try {
-    window.localStorage.setItem(STORAGE_ONBOARDED_KEY, 'true');
-    window.localStorage.setItem(STORAGE_ONBOARDING_PROFILE_KEY, JSON.stringify(profile));
+    window.localStorage.setItem(onboardedKey(userId), 'true');
+    window.localStorage.setItem(profileKey(userId), JSON.stringify(profile));
   } catch {}
+}
+
+/** The consent the user gave to the privacy policy: which version, and when (ISO time). */
+export function consentRecord(version) {
+  return { version: String(version), acceptedAt: new Date().toISOString() };
 }
 
 // Demo account (phone 9876543210, PIN 2026) so judges can sign in at once. It holds no district,
@@ -186,7 +200,8 @@ export function registerUser({
   debtRateQuote,
   debtMonthsActive,
   customTradeIdea,
-  preferredLanguage
+  preferredLanguage,
+  privacyConsent
 } = {}) {
   if (!phone || !phone.trim()) {
     return { success: false, error: 'Mobile number is required for registration.' };
@@ -251,6 +266,7 @@ export function registerUser({
     debtMonthsActive: debtMonthsActive ? Number(debtMonthsActive) : null,
     customTradeIdea: customTradeIdea || null,
     preferredLanguage: preferredLanguage || 'hi',
+    privacyConsent: privacyConsent || null,
     authProvider: 'local',
     createdAt: new Date().toISOString()
   };
@@ -399,6 +415,12 @@ export function updateUser(id, changes = {}) {
   }
   if ('preferredLanguage' in changes) {
     next.preferredLanguage = changes.preferredLanguage || 'hi';
+  }
+  if ('privacyConsent' in changes) {
+    next.privacyConsent = changes.privacyConsent || null;
+  }
+  if ('sensitiveDataConsent' in changes) {
+    next.sensitiveDataConsent = changes.sensitiveDataConsent || null;
   }
   saveUser(next);
   return { success: true, user: next };

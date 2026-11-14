@@ -1,131 +1,172 @@
-import React from 'react';
-import { X, ShieldCheck, Database, Lock, Trash2, AlertCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
+import {
+  POLICY_VERSION,
+  POLICY_EFFECTIVE_DATE,
+  POLICY_SECTIONS_EN,
+  POLICY_SUMMARY_HI
+} from '../content/privacyPolicy';
 
 /**
- * PrivacyModal — Statutory DPDP Act 2023 Compliance & Consent Notice
- * Discloses purpose specification, ephemeral AI processing, local data custody,
- * and provides an immediate one-click "Purge All My Data" right-to-erasure action.
+ * PrivacyModal: the full Privacy Policy (content/privacyPolicy.js), in the landing page's style.
+ * Opened from the landing footer, the sign-in box, the dashboard header, My account and the
+ * onboarding consent box. It sits above all of them (z-[300]). "Erase my data on this device"
+ * calls onPurgeData after a confirmation.
  */
-export default function PrivacyModal({
-  isOpen,
-  onClose,
-  language = 'en',
-  onPurgeData
-}) {
-  if (!isOpen) return null;
+export default function PrivacyModal({ isOpen, onClose, language = 'en', onPurgeData }) {
+  const [view, setView] = useState(language === 'hi' ? 'hi' : 'en');
 
-  const isHi = language === 'hi';
+  useEffect(() => {
+    if (isOpen) setView(language === 'hi' ? 'hi' : 'en');
+  }, [isOpen, language]);
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+  const isHi = view === 'hi';
 
   const handlePurge = () => {
-    const confirmMsg = isHi
-      ? 'क्या आप सचमुच अपना सभी डेटा, सुरक्षित परिदृश्य और सत्र हटाना चाहते हैं?'
-      : 'Are you sure you want to purge all your locally saved data, scenarios, and active session?';
-    if (window.confirm(confirmMsg)) {
+    const msg = isHi
+      ? 'इस डिवाइस पर सहेजा आपका सारा डेटा (खाते, प्रोफ़ाइल, सहेजे परिदृश्य और सत्र) हमेशा के लिए मिट जाएगा। आगे बढ़ें?'
+      : 'This permanently erases everything saved on this device: accounts, profiles, saved scenarios and your session. Continue?';
+    if (window.confirm(msg)) {
       if (onPurgeData) onPurgeData();
-      onClose();
+      if (onClose) onClose();
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-2xl w-full p-6 space-y-4">
+    <div
+      className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-sm p-3 sm:p-6 animate-fadeIn"
+      onClick={onClose}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="privacy-title"
+        className="bg-[#F8F6F0] rounded-3xl shadow-2xl border border-black/10 w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-base text-slate-900 font-sans-ui">
-                {isHi ? 'गोपनीयता नीति एवं डेटा सुरक्षा (DPDP अधिनियम 2023)' : 'Privacy Policy & Data Protection (DPDP Act 2023)'}
-              </h3>
-              <p className="text-[11px] text-slate-500 font-sans-ui">
-                {isHi ? 'डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम, 2023 के तहत वैधानिक अनुपालन' : 'Statutory Compliance Notice under Digital Personal Data Protection Act, 2023'}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Content Clauses */}
-        <div className="space-y-3.5 text-xs text-slate-600 leading-relaxed font-sans-ui max-h-[60vh] overflow-y-auto pr-1">
-          {/* 1. Purpose Limitation */}
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <Lock className="w-3.5 h-3.5 text-emerald-700" />
-              <span>{isHi ? '1. उद्देश्य सीमांकन (Purpose Limitation)' : '1. Purpose Specification & Strict Limitation'}</span>
-            </div>
-            <p>
+        <div className="px-6 sm:px-8 pt-6 pb-4 border-b border-black/10 flex items-start justify-between gap-4 flex-shrink-0">
+          <div>
+            <p className="text-[10px] font-mono-num uppercase tracking-widest text-[#686D65]">
+              {isHi ? 'संस्करण' : 'Version'} {POLICY_VERSION} · {isHi ? 'प्रभावी' : 'Effective'} {POLICY_EFFECTIVE_DATE}
+            </p>
+            <h2 id="privacy-title" className="font-editorial text-3xl sm:text-4xl text-[#111311] leading-tight mt-1">
+              {isHi ? 'गोपनीयता नीति' : 'Privacy Policy'}
+            </h2>
+            <p className="text-xs text-[#686D65] font-sans-ui mt-1 max-w-xl leading-relaxed">
               {isHi
-                ? 'आपके द्वारा दर्ज की गई जाति (SC/ST/OBC), वार्षिक पारिवारिक आय, एवं ऋण संबंधी जानकारियाँ केवल भारत सरकार के वैधानिक रियायती ऋण (NSFDC, NSTFDC, PMEGP, PM Vishwakarma) की पात्रता जाँचने एवं विस्तृत परियोजना रिपोर्ट (DPR) तैयार करने हेतु उपयोग की जाती हैं। यह डेटा किसी भी वाणिज्यिक क्रेडिट ब्यूरो या विपणन कंपनी को नहीं बेचा जाता।'
-                : 'Sensitive information declared by applicants (including caste category, annual household income, and informal liabilities) is strictly processed to evaluate eligibility for Central/State concessional credit schemes and compile institutional Detailed Project Reports (DPR). Data is never commercialized, sold, or shared with credit rating agencies.'}
+                ? 'डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम, 2023 और अन्य भारतीय कानूनों के अनुसार।'
+                : 'Under the Digital Personal Data Protection Act, 2023 and other applicable Indian law.'}
             </p>
           </div>
-
-          {/* 2. Local-First Custody */}
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <Database className="w-3.5 h-3.5 text-emerald-700" />
-              <span>{isHi ? '2. लोकल-फर्स्ट डेटा भंडारण (Local-First Data Custody)' : '2. Local-First Client Storage'}</span>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center rounded-full border border-black/10 bg-white p-0.5 text-[11px] font-mono-num font-bold">
+              <button
+                type="button"
+                onClick={() => setView('en')}
+                className={`px-2.5 py-1 rounded-full cursor-pointer ${!isHi ? 'bg-[#111311] text-white' : 'text-[#686D65] hover:text-[#111311]'}`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setView('hi')}
+                className={`px-2.5 py-1 rounded-full cursor-pointer ${isHi ? 'bg-[#111311] text-white' : 'text-[#686D65] hover:text-[#111311]'}`}
+              >
+                हिन्दी
+              </button>
             </div>
-            <p>
-              {isHi
-                ? 'आपके सुरक्षित परिदृश्य और प्रोफ़ाइल विवरण आपके स्वयं के ब्राउज़र के लोकल स्टोरेज (localStorage) में सुरक्षित रहते हैं। कोई भी व्यक्तिगत वित्तीय रिकॉर्ड केंद्रीय सर्वर पर स्थायी रूप से संग्रहित नहीं किया जाता।'
-                : 'Simulations, intake profiles, and custom scenario records reside directly inside your browser’s local storage. No persistent tracking database retains your confidential financial drafts on central servers.'}
-            </p>
-          </div>
-
-          {/* 3. Ephemeral AI Inference */}
-          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-              <span>{isHi ? '3. क्षणिक AI प्रसंस्करण (Ephemeral AI Inference)' : '3. Ephemeral AI Processing'}</span>
-            </div>
-            <p>
-              {isHi
-                ? 'UdyamSetuAI का सहायक मॉडल (Groq LLM) केवल वास्तविक समय में प्रतिक्रिया देने के लिए सत्र डेटा को प्रोसेस करता है। यह डेटा सार्वजनिक मॉडल प्रशिक्षण हेतु कभी भी उपयोग में नहीं लाया जाता।'
-                : 'Inference queries processed through our Groq-hosted open-weight intelligence layer are purely stateless and ephemeral. Inputs are never retained or harvested for model training.'}
-            </p>
-          </div>
-
-          {/* 4. Right to Erasure / Purge */}
-          <div className="p-3.5 rounded-xl bg-red-50/70 border border-red-200 space-y-2">
-            <div className="flex items-center gap-1.5 font-bold text-red-900">
-              <AlertCircle className="w-4 h-4 text-red-600" />
-              <span>{isHi ? '4. डेटा मिटाने का अधिकार (Right to Erasure)' : '4. Right to Complete Erasure (One-Click Purge)'}</span>
-            </div>
-            <p className="text-red-700">
-              {isHi
-                ? 'DPDP अधिनियम 2023 की धारा 12 के तहत, आपको अपने सभी व्यक्तिगत डेटा को तुरंत मिटाने का पूर्ण अधिकार है। नीचे दिए गए बटन पर क्लिक करके आप अपना सारा डेटा एक क्लिक में पूरी तरह हटा सकते हैं।'
-                : 'Under Section 12 of the DPDP Act 2023, you hold the statutory right to erase all personal identifiers, sessions, and saved draft simulations with immediate effect.'}
-            </p>
             <button
               type="button"
-              onClick={handlePurge}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-sm transition-colors cursor-pointer"
+              onClick={onClose}
+              aria-label={isHi ? 'बंद करें' : 'Close'}
+              className="p-1.5 rounded-full text-[#686D65] hover:text-[#111311] hover:bg-black/5 cursor-pointer"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>{isHi ? 'मेरा समस्त डेटा तुरंत हटाएं (Purge All Data)' : 'Purge All My Data Immediately'}</span>
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
+        {/* Body */}
+        <div className="px-6 sm:px-8 py-5 overflow-y-auto flex-1 font-sans-ui text-[13px] leading-relaxed text-[#2A2D29] space-y-6" data-lenis-prevent>
+          {isHi ? (
+            <section className="space-y-3">
+              <h3 className="text-[11px] font-mono-num uppercase tracking-widest text-[#686D65]">सार</h3>
+              <ol className="space-y-2.5 list-decimal pl-5 marker:text-[#686D65]">
+                {POLICY_SUMMARY_HI.map((line, i) => <li key={i}>{line}</li>)}
+              </ol>
+              <button
+                type="button"
+                onClick={() => setView('en')}
+                className="text-xs font-semibold text-[#0E7A53] hover:underline cursor-pointer"
+              >
+                पूरी नीति अंग्रेज़ी में पढ़ें →
+              </button>
+            </section>
+          ) : (
+            <>
+              <nav aria-label="Sections" className="rounded-2xl bg-white border border-black/5 p-4">
+                <p className="text-[10px] font-mono-num uppercase tracking-widest text-[#686D65] mb-2">Contents</p>
+                <ol className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs">
+                  {POLICY_SECTIONS_EN.map((s) => (
+                    <li key={s.id}>
+                      {/* A button, not an <a href="#...">: App.jsx treats any hash change as navigation
+                          and would leave the dashboard. */}
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById(`policy-${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                        className="text-left text-[#111311] hover:text-[#0E7A53] hover:underline cursor-pointer"
+                      >
+                        {s.title}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+              {POLICY_SECTIONS_EN.map((s) => (
+                <section key={s.id} id={`policy-${s.id}`} className="space-y-2 scroll-mt-4">
+                  <h3 className="font-editorial text-xl text-[#111311]">{s.title}</h3>
+                  {s.blocks.map((b, i) => (b.list ? (
+                    <ul key={i} className="list-disc pl-5 space-y-1.5 marker:text-[#686D65]">
+                      {b.list.map((item, j) => <li key={j}>{item}</li>)}
+                    </ul>
+                  ) : (
+                    <p key={i}>{b.p}</p>
+                  )))}
+                </section>
+              ))}
+            </>
+          )}
+        </div>
+
         {/* Footer */}
-        <div className="pt-3 border-t border-slate-200 flex justify-end">
+        <div className="px-6 sm:px-8 py-4 border-t border-black/10 bg-white/60 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 flex-shrink-0">
+          {onPurgeData ? (
+            <button
+              type="button"
+              onClick={handlePurge}
+              className="text-xs font-semibold text-[#B42318] hover:underline cursor-pointer text-left"
+            >
+              {isHi ? 'इस डिवाइस से मेरा डेटा मिटाएँ' : 'Erase my data on this device'}
+            </button>
+          ) : <span />}
           <button
+            type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs transition-colors cursor-pointer"
+            className="px-6 py-2.5 rounded-xl bg-[#111311] hover:bg-black text-white font-mono-num font-bold text-xs uppercase tracking-wider cursor-pointer"
           >
-            {isHi ? 'समझ गया / स्वीकार है' : 'Understood & Accept'}
+            {isHi ? 'बंद करें' : 'Close'}
           </button>
         </div>
       </div>
     </div>
   );
 }
-
