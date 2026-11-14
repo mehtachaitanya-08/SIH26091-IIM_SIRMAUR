@@ -24,9 +24,11 @@ const noDistrict = { name: 'Asha Devi', category: 'SC', id: 'TEST-1E' };
 describe('1e Home: the old panels back, honestly', () => {
   const html = render(withDistrict);
 
-  it('A: the government market-price panel, with the key status and no dataset ID', () => {
-    for (const s of ['Open Government Data', 'Commodity &amp; Market', 'Modal Spot Price', 'API Integration Status',
-      'DATA_GOV_IN_API_KEY', 'Agmarknet (data.gov.in)']) assert.ok(html.includes(s), s);
+  it('A: the government market-price panel, in plain words since the owner\'s 14 Nov evening test (see stage1f)', () => {
+    // the key status is still shown, in plain words: "Checking…" until the health check answers
+    for (const s of ['mandi price', 'Crop &amp; market', 'Price per quintal', 'Agmarknet, Government of India', 'Checking…'])
+      assert.ok(html.includes(s), s);
+    assert.ok(!html.includes('9ef84268'), 'the data.gov.in dataset ID is never printed');
   });
 
   it('review: while the price is loading the panel says so, never "No crop linked"', () => {

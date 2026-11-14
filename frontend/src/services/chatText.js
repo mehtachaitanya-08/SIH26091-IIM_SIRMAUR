@@ -62,6 +62,15 @@ export function chatNotice(key, language) {
   return `${n.hi}\n${n.en}`;
 }
 
+/**
+ * The tip beside the closed chat button. Owner, 14 Nov 2026 (evening): "where even is the chatbot"
+ * — the small corner button alone was missed. Shown until the chat is opened once.
+ */
+export const CHAT_HINT = {
+  hi: 'मदद के लिए तैयार',
+  en: 'Ready to help. Ask in Hindi or English.'
+};
+
 /** Panel labels. */
 export const CHAT_UI = {
   hi: { placeholder: 'अपना सवाल लिखें…', send: 'भेजें', close: 'बंद करें', starters: 'इनमें से कोई सवाल पूछें:', thinking: 'सोच रहा है' },

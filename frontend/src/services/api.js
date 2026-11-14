@@ -285,7 +285,7 @@ export async function fetchMandiPrices(state = 'Uttar Pradesh', commodity = 'Mus
   } catch (err) {
     if (err instanceof ServerOfflineError) {
       return { status: 'no_live_data', isLive: false, state, commodity, modalPrice: null, records: [], offline: true,
-        reason: 'Server offline: no live mandi price. NOT FOUND.' };
+        reasonCode: 'offline', reason: 'Server offline: no live mandi price. NOT FOUND.' };
     }
     throw err;
   }

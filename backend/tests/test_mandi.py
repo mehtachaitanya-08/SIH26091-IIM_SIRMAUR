@@ -70,6 +70,42 @@ def test_failed_call_or_empty_records_is_no_live_data(monkeypatch):
     assert d["status"] == "no_live_data" and d["apiKeyConfigured"] is True
 
 
+class TestTheReplySaysWhyThereIsNoPrice:
+    """Review of 14 Nov 2026: with the key set, a failed call and an empty answer looked the same
+    to the dashboard, so a wrong key was shown to the farmer as "no price reported". Each reply now
+    carries a reasonCode, and a live price carries its arrival date instead of a tag that could
+    end in "NOT FOUND"."""
+
+    def test_each_no_price_reply_names_its_reason(self, monkeypatch, tmp_path):
+        monkeypatch.delenv("DATA_GOV_IN_API_KEY", raising=False)
+        monkeypatch.setattr(mandi, "ENV_FILE", tmp_path / "missing.env")
+        assert client.get("/api/mandi-prices").json()["reasonCode"] == "no_key"
+        monkeypatch.setenv("DATA_GOV_IN_API_KEY", "abc123")
+
+        def boom(url, params, timeout):
+            raise RuntimeError("timed out")
+
+        monkeypatch.setattr(mandi, "_get", boom)
+        assert client.get("/api/mandi-prices").json()["reasonCode"] == "call_failed"
+        monkeypatch.setattr(mandi, "_get", lambda url, params, timeout: {"records": []})
+        assert client.get("/api/mandi-prices").json()["reasonCode"] == "no_records"
+        monkeypatch.setattr(mandi, "_get", lambda url, params, timeout: {"records": [{"modal_price": ""}]})
+        assert client.get("/api/mandi-prices").json()["reasonCode"] == "no_price"
+
+    def test_a_live_price_without_an_arrival_date_never_says_not_found(self, monkeypatch):
+        monkeypatch.setenv("DATA_GOV_IN_API_KEY", "abc123")
+        monkeypatch.setattr(mandi, "_get", lambda url, params, timeout: {"records": [{"market": "Agra", "modal_price": "2275"}]})
+        d = client.get("/api/mandi-prices").json()
+        assert d["isLive"] is True and d["arrivalDate"] is None
+        assert "NOT FOUND" not in d["tag"]
+
+    def test_a_live_price_carries_its_arrival_date(self, monkeypatch):
+        monkeypatch.setenv("DATA_GOV_IN_API_KEY", "abc123")
+        monkeypatch.setattr(mandi, "_get", lambda url, params, timeout: {
+            "records": [{"market": "Agra", "modal_price": "2275", "arrival_date": "12/11/2026"}]})
+        assert client.get("/api/mandi-prices").json()["arrivalDate"] == "12/11/2026"
+
+
 def test_key_never_echoed(monkeypatch):
     monkeypatch.setenv("DATA_GOV_IN_API_KEY", "secret-key-xyz")
 

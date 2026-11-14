@@ -23,6 +23,11 @@ import DashboardShell from './dashboard/DashboardShell';
 import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
 import ChatLauncher from './dashboard/ChatLauncher';
+
+// Re-exported only so the tests can render these two on their own from the one SSR bundle they
+// build (test/stage1f_friendly_home.test.js, 14 Nov 2026 review: the tests used to grep the source).
+export { default as ChatLauncher } from './dashboard/ChatLauncher';
+export { default as MandiPanel } from './dashboard/MandiPanel';
 import { chatNotice as noticeText, questionLanguage } from '../services/chatText';
 import { emptyApplicant, accountPrefill, withAccount, checkApplicant, applicantPayload } from '../services/applicantForm';
 import ScenariosSidebar from './dashboard/ScenariosSidebar';
@@ -390,7 +395,7 @@ export default function ProductionDashboard({
     }).catch((err) => {
       // keep the crop: an error is no reason to say the business has none (review, 14 Nov 2026)
       if (isMounted) setMandiPriceData({ status: 'no_live_data', isLive: false, modalPrice: null, records: [],
-        commodity, state: 'Uttar Pradesh', reason: err.message });
+        commodity, state: 'Uttar Pradesh', reasonCode: 'call_failed', reason: err.message });
     });
 
     return () => { isMounted = false; };
@@ -662,6 +667,7 @@ export default function ProductionDashboard({
         input={commandInput}
         onInputChange={setCommandInput}
         onSend={(text) => handleChatSend(text ?? null)}
+        online={!serverOffline}
       />
     </DashboardShell>
   );

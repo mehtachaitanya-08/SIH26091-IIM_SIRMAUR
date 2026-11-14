@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { boldParts, STARTERS, CHAT_UI } from '../../services/chatText';
+import React, { useEffect, useRef, useState } from 'react';
+import { boldParts, STARTERS, CHAT_UI, CHAT_HINT } from '../../services/chatText';
 
 /**
  * ChatLauncher (Stage A) — the chat as a button at the bottom right ("मदद / Ask AI") that opens a
@@ -7,6 +7,9 @@ import { boldParts, STARTERS, CHAT_UI } from '../../services/chatText';
  * user asked a question on the front page. First open: pick हिन्दी or English, then 3 starter
  * questions. The header switch changes the language at any time. The conversation is kept while
  * the panel is closed (not after a page reload). Safe to render on the server (no window use).
+ * A "Ready to help" tip sits beside the closed button (owner, 14 Nov 2026: the chat was not
+ * found). It goes once the chat is opened or its x is pressed, and shows only while the server
+ * is up, because the chat cannot answer without it.
  */
 function Bubble({ role, content }) {
   const mine = role === 'user';
@@ -45,23 +48,52 @@ export default function ChatLauncher({
   notice = null,
   input = '',
   onInputChange,
-  onSend
+  onSend,
+  online = true
 }) {
   const endRef = useRef(null);
+  const [hint, setHint] = useState(true);
+  useEffect(() => {
+    if (open) setHint(false);
+  }, [open]);
   useEffect(() => {
     if (open && endRef.current && endRef.current.scrollIntoView) endRef.current.scrollIntoView({ block: 'end' });
   }, [open, messages.length, busy, notice]);
 
   if (!open) {
     return (
-      <button
-        type="button"
-        onClick={onOpen}
-        className="fixed bottom-4 right-4 z-[90] inline-flex items-center gap-2 rounded-full bg-[#0E7A53] hover:bg-[#0c6846] px-4 py-3 text-sm font-bold text-white shadow-lg cursor-pointer font-sans-ui"
-      >
-        <span aria-hidden="true" className="w-2 h-2 rounded-full bg-emerald-300" />
-        मदद / Ask AI
-      </button>
+      <div className="fixed bottom-4 right-4 z-[90] flex flex-col items-end gap-2 font-sans-ui">
+        {hint && online && (
+          <div className="relative max-w-[240px] rounded-2xl rounded-br-sm bg-white border border-[#E9ECEF] shadow-lg pl-3 pr-7 py-2">
+            <button
+              type="button"
+              onClick={onOpen}
+              className="text-left text-xs text-[#111311] cursor-pointer"
+            >
+              <span aria-hidden="true">👋 </span>
+              <span className="font-bold">{CHAT_HINT.hi}</span>
+              <br />
+              {CHAT_HINT.en}
+            </button>
+            <button
+              type="button"
+              onClick={() => setHint(false)}
+              aria-label="Hide this tip"
+              className="absolute top-1 right-1.5 px-1 text-xs text-[#686D65] hover:text-[#111311] cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex items-center gap-2 rounded-full bg-[#0E7A53] hover:bg-[#0c6846] px-4 py-3 text-sm font-bold text-white shadow-lg cursor-pointer"
+        >
+          <span aria-hidden="true" className="w-2 h-2 rounded-full bg-emerald-300" />
+          मदद / Ask AI
+        </button>
+      </div>
     );
   }
 
