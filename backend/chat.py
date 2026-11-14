@@ -55,7 +55,7 @@ Hard rules:
 1. NEVER state a number (amount, rate, count, year, percentage) unless it appears in a tool result in this conversation or the user said it. Do not do arithmetic yourself. If you need a figure, call a tool.
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
 2a. As soon as you know the project cost, the yearly family income and whether the user is SC, call calculate_loan immediately and give the loan before any business questions. If one of the three is missing, ask only for what is missing, then calculate. If the user gives a new amount, call calculate_loan again with it. If the loan is already known and the user asks something else, answer that; mention the payment at most once.
-3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so. For weak, slow or busy months, the season, or when sales fall, call dossier_figures and give its weakestMonths with their % vs an average month (vsAverageMonthPct), labelled with the dossier; feasibility holds no figures.
+3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so. For weak, slow or busy months, the season, or when sales fall, call dossier_figures and give its weakestMonths with their % vs an average month (vsAverageMonthPct), labelled with the dossier; feasibility holds no figures. A season question needs only the business: call dossier_figures with the business code alone and NEVER ask for the project cost, income or SC status first.
 3a. Never ask the user for a business code: users do not know codes. Ask what business they run, in their own words, and find it with list_businesses. Say the business name first, e.g. "Oil Expellers (D08 dossier)".
 4. Use question ids and answer choices exactly as get_questions returns them.
 5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy. Keep each reply under 80 words and ask at most 2 questions at a time.
@@ -205,6 +205,73 @@ def weakest_months(code, seasonality):
         row["tag"] = f"CALCULATED from the {code} dossier's month multiplier"
         out.append(row)
     return out
+
+
+MONTHS_HI = {"January": "जनवरी", "February": "फ़रवरी", "March": "मार्च", "April": "अप्रैल", "May": "मई", "June": "जून",
+             "July": "जुलाई", "August": "अगस्त", "September": "सितंबर", "October": "अक्टूबर", "November": "नवंबर",
+             "December": "दिसंबर"}
+
+
+def _join_names(names, lang):
+    if len(names) == 1:
+        return names[0]
+    return ", ".join(names[:-1]) + (" और " if lang == "hi" else " and ") + names[-1]
+
+
+def weak_months_text(r, lang="en"):
+    """The weakest months as ONE sentence written by the server from a dossier_figures result's weakestMonths, each
+    month with its own percent, months with the same percent grouped. Why the server writes it (owner's laptop test
+    of 14 Nov 2026, real model): the model paired months with the wrong percent ("August, February and July, each
+    25% below": July is 15%), and two answers left out March. The number guard checks that a NUMBER exists in the
+    tools, not that it stands next to the right MONTH, so a wrong pairing passes it. This text cannot pair wrongly."""
+    groups = {}
+    for m in r["weakestMonths"]:
+        groups.setdefault(m["vsAverageMonthPct"], []).append(m["month"])
+    parts = []
+    for pct, months in groups.items():
+        if lang == "hi":
+            names = _join_names([MONTHS_HI.get(x, x) for x in months], lang)
+            how = "औसत महीने के बराबर" if pct == 0 else f"औसत महीने से {abs(pct)}% " + ("कम" if pct < 0 else "ज़्यादा")
+        else:
+            names = _join_names(months, lang)
+            how = ("no different from an average month" if pct == 0
+                   else f"{abs(pct)}% {'below' if pct < 0 else 'above'} an average month")
+        parts.append(f"{names}, {how}")
+    name = r.get("name") or r["code"]
+    if lang == "hi":
+        return f"{name} ({r['code']} रिसर्च फ़ाइल): सबसे कमज़ोर महीने हैं " + "; ".join(parts) + "।"
+    return f"{name} ({r['code']} dossier): the weakest months are " + "; ".join(parts) + "."
+
+
+# When a reply talks about months (a month's name, or the user asked about weak, slow or seasonal months) and a
+# dossier_figures result with weakestMonths is in this conversation, the reply is the server's own sentence.
+# English "May" is left out of the month names on purpose: "May I ask ..." would trigger it.
+#
+# Review of 14 Nov 2026: Hindi month names are matched only as whole words (no letter of the script right before or
+# after), because मई, जून and मार्च sit inside ordinary words ("कमई", "जूनियर", "मार्चिंग"); and the season words
+# must be about months or a season, not "my start is slow" in a loan question, which would have thrown away the
+# model's loan answer and its follow-up question.
+_HI = r"[ऀ-ॣ०-ॿ]"   # letters and vowel signs, but not the danda "।" (U+0964) that ends a sentence
+MONTH_NAMES = re.compile(r"\b(?:January|February|March|April|June|July|August|September|October|November|December)\b|"
+                         rf"(?<!{_HI})(?:जनवरी|फ़रवरी|फरवरी|मार्च|अप्रैल|मई|जून|जुलाई|अगस्त|सितंबर|सितम्बर|अक्टूबर|नवंबर|नवम्बर|दिसंबर|दिसम्बर)(?!{_HI})",
+                         re.I)
+_ADJ = r"(?:weak\w*|slow\w*|worst|lean|dull|lowest|quiet|bad)"
+SEASON_WORDS = re.compile(
+    # "weakest months", "slow season", and the other order, "months are weakest" (gaps never cross a comma or stop)
+    rf"\b{_ADJ}\b[^.,?!\n]{{0,20}}\b(?:months?|season\w*|periods?|times?|part)\b"
+    rf"|\bmonths?\b[^.,?!\n]{{0,25}}\b{_ADJ}\b"
+    r"|\bseason\w*"
+    r"|\b(?:shop|sales?|business)\b[^.,?!\n]{0,20}\bslow\w*"
+    r"|\b(?:earn|sell|sales?|income|business)\b[^.,?!\n]{0,25}\b(?:least|lowest|dips?|falls?|drops?)\b"
+    r"|\b(?:least|lowest)\b[^.,?!\n]{0,25}\b(?:earn\w*|sales?|business)\b"
+    r"|कमज़ोर\s+महीने|कमजोर\s+महीने|सुस्त\s+महीने|मंदी|मौसम|सीज़न|सीजन|कम\s+बिक्री|सबसे\s+कम\s+(?:चलती|चलता|बिक्री|कमाई)",
+    re.I)
+
+
+def months_from_server(results, reply, user_text):
+    has_weakest = any(t["tool"] == "dossier_figures" and isinstance(t["result"], dict) and t["result"].get("weakestMonths")
+                      for t in results)
+    return has_weakest and bool(MONTH_NAMES.search(reply or "") or SEASON_WORDS.search(user_text or ""))
 
 
 def _t_business_summary(code):
@@ -476,8 +543,17 @@ EVERY_3_MONTHS = re.compile(r"\b(every)\s+3\s+(months?)\b|(हर)\s*[3३]\s*(�
 LIST_MARKER = re.compile(r"(?m)^(\s*(?:\*\*)?)\d{1,2}[.)](?=\s)")
 
 
-COUNT_NOUN = re.compile(r"\s*(?:businesses|business|months|sizes|questions|types|kinds|व्यवसाय|महीने|महीनों|सवाल|प्रकार)\b",
-                        re.I)
+# The counted word after a count the server supplied ("24 businesses"). The real model does not write it bare: in
+# the owner's laptop test of 14 Nov 2026 it wrote "I can help with **24** rural businesses", with bold marks and
+# a describing word between, and the first version of this rule replaced that harmless sentence. So: optional
+# bold marks, then up to two describing words from this short list (never "percent", "years", "lakh", "growth"),
+# then the noun. The end of the noun is checked with a look-ahead, not \b: Hindi nouns ending in a vowel sign
+# ("महीने") have no \b after them.
+COUNT_WORD = (r"(?:rural|verified|different|distinct|small|local|village|micro|available|supported|listed|covered|"
+              r"kinds of|types of|ग्रामीण|अलग-अलग|अलग|सत्यापित)")
+COUNT_NOUN = re.compile(rf"(?:\*{{1,2}})?\s*(?:{COUNT_WORD}\s+){{0,2}}"
+                        r"(?:businesses|business|months|sizes|questions|types|kinds|व्यवसायों|व्यवसाय|महीने|महीनों|सवाल|प्रकार)"
+                        r"(?=$|[^A-Za-zऀ-ॿ])", re.I)
 
 
 def unsupported(text, allowed):
@@ -511,6 +587,7 @@ def _plain_summary(tool_results, language=None):
     if language == "hi":
         return _plain_summary_hi(tool_results)
     lines = []
+    months_done = set()    # one months sentence per business, however many times the model looked it up
     for t in tool_results:
         r = t["result"]
         if t["tool"] == "calculate_loan" and r.get("isEligible"):
@@ -523,8 +600,9 @@ def _plain_summary(tool_results, language=None):
         elif t["tool"] == "run_advice":
             lines += [x["text"] for x in r.get("results", []) if x.get("status") == "result"]
         elif t["tool"] == "dossier_figures" and r.get("weakestMonths"):
-            lines.append(f"{r['code']} dossier, weakest months vs an average month: "
-                         + ", ".join(f"{m['month']} {m['vsAverageMonthPct']:+d}%" for m in r["weakestMonths"]) + ".")
+            if r["code"] not in months_done:
+                months_done.add(r["code"])
+                lines.append(weak_months_text(r, "en"))
         elif t["tool"] == "dossier_figures" and r.get("tier"):
             from backend.dpr import inr
             pc = r["tier"]["project_cost"]
@@ -545,6 +623,7 @@ def _plain_summary_hi(tool_results):
     passed through as they are: nothing is machine-translated."""
     from backend.dpr import inr
     lines = []
+    months_done = set()
     for t in tool_results:
         r = t["result"]
         if t["tool"] == "calculate_loan" and r.get("isEligible"):
@@ -557,8 +636,9 @@ def _plain_summary_hi(tool_results):
         elif t["tool"] == "run_advice":
             lines += [x["text"] for x in r.get("results", []) if x.get("status") == "result"]
         elif t["tool"] == "dossier_figures" and r.get("weakestMonths"):
-            lines.append(f"{r['code']} रिसर्च फ़ाइल, सबसे कमज़ोर महीने (औसत महीने की तुलना में): "
-                         + ", ".join(f"{m['month']} {m['vsAverageMonthPct']:+d}%" for m in r["weakestMonths"]) + "।")
+            if r["code"] not in months_done:
+                months_done.add(r["code"])
+                lines.append(weak_months_text(r, "hi"))
         elif t["tool"] == "dossier_figures" and r.get("tier"):
             pc = r["tier"]["project_cost"]
             if pc.get("value"):
@@ -767,5 +847,11 @@ async def chat_endpoint(request: Request):
     guard = {"replaced": bool(bad), "unsupported": bad}
     if bad:
         reply = _plain_summary(summary_from, language)
+    # The months are the server's own sentence, whatever the model wrote (see weak_months_text). After the number
+    # guard on purpose: its numbers come straight from the tool, so they cannot be unsupported.
+    last_user = user_texts[-1] if user_texts else ""
+    if months_from_server(results, reply, last_user):
+        reply = _plain_summary(summary_from, language or ("hi" if re.search(r"[ऀ-ॿ]", last_user) else "en"))
+        guard["monthsFromServer"] = True
     reply = with_approval_note(reply, user_texts[-1] if user_texts else "", language)
     return {"status": "ok", "reply": reply, "tool_results": results, "guard": guard, "model": MODEL}

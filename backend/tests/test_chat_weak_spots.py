@@ -73,14 +73,16 @@ def test_w1_weakest_months_with_percentages_pass_the_number_guard(fake):
           say("Village FMCG Retail (D01 dossier): your weakest months are August -25%, February -25% and July -15% "
               "compared with an average month.")])
     d = ask("I run a village grocery shop. Which months are weakest for me?")
-    assert d["guard"]["replaced"] is False and "-25%" in d["reply"]
+    # The number guard accepts the model's words. Since the live test of 14 Nov 2026 the reply itself is the
+    # server's own months sentence (see test_chat_live_findings.py), so it is that sentence that is shown.
+    assert d["guard"]["replaced"] is False and "25% below an average month" in d["reply"]
 
 
 def test_w1_a_made_up_percentage_is_still_replaced(fake):
     fake([call("dossier_figures", code="D01"), say("August is -30% versus an average month.")])
     d = ask("Which months are weakest for my grocery shop?")
     assert d["guard"]["replaced"] is True
-    assert "August -25%" in d["reply"]                                    # the safe summary now gives them
+    assert "August" in d["reply"] and "25% below an average month" in d["reply"]   # the safe summary now gives them
 
 
 # --------------------------------------------------------------------------- W2
