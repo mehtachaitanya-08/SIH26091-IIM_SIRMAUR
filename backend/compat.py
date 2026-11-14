@@ -124,12 +124,23 @@ def health():
             "total_dossiers": len(NAMES),
         },
         "mandiKeyConfigured": _mandi_key_set(),
+        "mandiSnapshot": _mandi_snapshot_summary(),
     }
 
 
 def _mandi_key_set():
     from backend import mandi  # yes/no only; the key itself is never sent
     return bool(mandi._api_key())
+
+
+def _mandi_snapshot_summary():
+    """When the saved-prices file was made and how many entries it holds, or None (14 Nov 2026): lets the owner see on
+    the live site which file Render has. It must never fail the health check, whatever the file holds."""
+    try:
+        from backend import mandi_snapshot
+        return mandi_snapshot.summary()
+    except Exception:
+        return None
 
 
 FIELD_NAMES = {"project_cost": "projectCost", "annual_family_income": "familyIncome", "is_sc": "isSc"}

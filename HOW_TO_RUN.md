@@ -132,6 +132,25 @@ On another host behind its own proxy, set `TRUST_PROXY_HEADERS=1` and `CLIENT_IP
 
 ---
 
+## Saved mandi prices (for the live site)
+
+data.gov.in **refuses connections from Render**, though it works from a home connection in India. So the live site cannot fetch a price itself. Instead it can show a **saved** price, labelled "Saved price", with its market, the date of that price, the date it was saved, and "not today's price". It is never shown as live and never invented.
+
+**To refresh the saved prices** (do this on your Windows laptop, before a demo):
+1. Double-click **`refresh_prices.bat`**. It asks data.gov.in for the six crops the dashboard uses and writes `data\mandi_snapshot.json`. It reads your key from the saved Windows setting `DATA_GOV_IN_API_KEY` and never prints it.
+2. Send that one changed file to GitHub (commit and push).
+3. On Render, deploy again (the service's **Manual Deploy** button). Then open `https://<your-service>.onrender.com/api/health`: `mandiSnapshot` shows when the file was made and how many crops it holds.
+
+**What the site does with it**
+- It uses a saved price only when it **cannot** get a live answer: no key is set, or the call failed (refused, timed out, data.gov.in busy or broken). If data.gov.in answers "no price today", that answer is shown. If data.gov.in **rejects the key** (a revoked or wrong key), the site shows the plain "not available" message, not a saved price, so a dead key is noticed.
+- A saved price is hidden once the price's own **arrival date** is more than **7 days** old (`MANDI_MAX_AGE_DAYS`), or if the date is missing or in the future. Quiet markets will then show the "could not be fetched" message again: that is by design. Refresh again to fix it.
+- After a failed connection the site remembers it for **10 minutes** (`MANDI_RETRY_MINUTES`) and serves the saved price straight away, so pages do not wait for the slow live call. On the laptop, where live normally works, one hiccup can therefore show saved prices for up to 10 minutes.
+- Which record is kept: for each crop, the one with the **newest arrival date** of the five data.gov.in returns. **Look at the first run's numbers.** On 14 Nov 2026 all five rows of every crop had the same arrival date, so this rule fell back to the first row, and prices differ widely between markets and varieties (for example Cotton ₹13,500 at one market against ₹7,700 to ₹8,705 at others, Gram ₹6,364 to ₹10,600). The saved price is one market's modal price for one variety, shown with that market's name, not an average or a fair price. Each saved entry also keeps its own saved-on date, so an entry kept from an older run never looks fresher than it is.
+- That the Render checkout contains the `data` folder (so the file is found there) is assumed, not yet proven: after the first deploy, `/api/health` must show `mandiSnapshot`.
+- Not checked: data.gov.in's terms for re-using its data. Please check the portal's licence before this goes live.
+
+---
+
 ## Common problems
 
 | Problem | Fix |

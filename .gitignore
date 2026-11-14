@@ -9,6 +9,9 @@
 secrets/
 credentials/
 
+# A half-written saved-prices file if scripts/refresh_mandi_snapshot.py is interrupted (14 Nov 2026)
+data/.mandi_snapshot.*.tmp
+
 # Dependencies & Build Artefacts
 node_modules/
 dist/

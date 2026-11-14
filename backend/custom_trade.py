@@ -638,7 +638,9 @@ def check_mandi_commodity(trade_name: str, state: str) -> Optional[dict]:
         return None
 
     try:
-        res = mandi.mandi_prices(state=state or "Uttar Pradesh", commodity=detected_commodity)
+        # lookup_live, not mandi_prices: a saved price (the route's fallback) must never reach a custom dossier as if
+        # it were a live one (backend/mandi_snapshot.py, 14 Nov 2026).
+        res = mandi.lookup_live(state=state or "Uttar Pradesh", commodity=detected_commodity)
         return {
             "commodity": detected_commodity,
             "data": res,

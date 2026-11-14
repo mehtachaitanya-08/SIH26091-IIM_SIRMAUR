@@ -14,6 +14,10 @@
  * never from the server's tag, which could end in "NOT FOUND" (finding 1). "Latest", not
  * "Today's": data.gov.in's first record can be days old (finding 3). An unknown key status says
  * "Checking…": every first paint used to say the server was off while it was fine (finding 4).
+ *
+ * SAVED PRICES (14 Nov 2026): when the server answers status "saved" (data.gov.in refuses Render, so the site shows the
+ * latest price saved from the owner's laptop) the panel says so plainly: badge "Saved price", the market and the price's
+ * own arrival date beside the price, the saved-on date, "not today's price", Hindi alongside, never Live, never green.
  */
 
 /**
@@ -25,6 +29,14 @@ export const MANDI_KEY_BADGE = 'data.gov.in key added';
 
 const NO_CROP = 'No crop linked to this business';
 const SEE_AGMARKNET = 'See prices at agmarknet.gov.in';
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/** '13/11/2026' (data.gov.in's dd/mm/yyyy, as the server sends it) as '13 Nov 2026'; null when it cannot be read. */
+function dmyText(s) {
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(s ?? '').trim());
+  if (!m || Number(m[2]) < 1 || Number(m[2]) > 12 || Number(m[1]) < 1 || Number(m[1]) > 31) return null;
+  return `${Number(m[1])} ${MONTHS[Number(m[2]) - 1]} ${m[3]}`;
+}
 
 /** Every string the panel shows, for one price reply and the health check's key status (true / false / null). */
 export function mandiPanelText(mandiPriceData = null, mandiKeyConfigured = null) {
@@ -50,13 +62,31 @@ export function mandiPanelText(mandiPriceData = null, mandiKeyConfigured = null)
     sourceLabel: 'Source',
     sourceMain: 'Agmarknet, Government of India',
     sourceNote: '',
-    live: Boolean(live)
+    live: Boolean(live),
+    saved: false
   };
 
   if (live) {
     t.priceMain = `₹${live.modalPrice.toLocaleString('en-IN')}`;
     t.priceNote = live.arrivalDate ? `Arrival date ${live.arrivalDate} · data.gov.in` : 'data.gov.in (no arrival date given)';
     t.sourceNote = 'Live from data.gov.in';
+    return t;
+  }
+
+  // A SAVED price (backend/mandi_snapshot.py, 14 Nov 2026): the live call could not be made, and the server has the
+  // latest price saved from a connection where data.gov.in answers. Checked BEFORE the loading, no-crop, offline and
+  // key-status branches below, so it wins over "not connected yet" and "could not be fetched", which is what the same
+  // situation used to show. It is never "Live" and never green. A reply that is incomplete (no price, or no arrival
+  // date that can be read) shows nothing claimed: it falls through to the gap wording below.
+  const arrivalText = dmyText(d.arrivalDate);
+  if (!loading && d.status === 'saved' && d.isLive !== true && typeof d.modalPrice === 'number' && d.modalPrice > 0 && arrivalText) {
+    const savedOnText = dmyText(d.savedOn);
+    t.saved = true;
+    t.badge = 'Saved price · सहेजा हुआ भाव';
+    t.commodity = d.commodity;                       // the market is on the price line: not repeated here
+    t.priceMain = `₹${d.modalPrice.toLocaleString('en-IN')}`;
+    t.priceNote = `${d.market || 'Market not named'} · price of ${arrivalText}`;
+    t.sourceNote = `Saved copy${savedOnText ? ` from ${savedOnText}` : ''} · not today's price · सहेजी हुई कॉपी, आज का भाव नहीं`;
     return t;
   }
   if (loading) {
@@ -71,6 +101,14 @@ export function mandiPanelText(mandiPriceData = null, mandiKeyConfigured = null)
     return t;
   }
   if (offline) {
+    t.priceMain = 'Price not available right now';
+    t.priceNote = SEE_AGMARKNET;
+    t.sourceNote = 'Not available right now';
+    return t;
+  }
+  if (d.reasonCode === 'key_rejected') {
+    // data.gov.in answered but did not accept the key (HTTP 401/403): never a saved price (the owner must notice a dead
+    // key), and no technical words for a farmer: the plain "not available" wording.
     t.priceMain = 'Price not available right now';
     t.priceNote = SEE_AGMARKNET;
     t.sourceNote = 'Not available right now';
