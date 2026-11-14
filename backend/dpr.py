@@ -881,6 +881,12 @@ def _build(code, req, answers, a, notes):
             F.append(P(f"Interest, loan payments and DSCR in this table use the {research_loan}"
                        + ("; the NSFDC loan above may differ." if has_loan else "; there is no NSFDC loan for this applicant."), "s"))
         F.append(P(year_figures.SUBSIDY_NOTE, "s"))
+    elif code in WORKSHEETS:                       # owner's Fix 8 decision for D18 (14 Nov 2026)
+        F.append(P(f"Worksheet to fill with the bank ({code} research file: these are the only figures it holds; "
+                   "every blank is a figure the research file does not hold, or a vendor quote still needed)."))
+        F.append(_table([["Item", "Value", "Source"]] +
+                        [[item, BLANK if v is None else inr(v), tag or "to fill with the bank"]
+                         for item, v, tag in WORKSHEETS[code]], [95, 35, 50]))
     else:
         F.append(P(year_figures.TO_BE_FILLED))
 
@@ -1046,6 +1052,29 @@ def _build(code, req, answers, a, notes):
             if src["tag"] in used and src["tag"] != "[S1]":
                 F.append(P(f"{src['tag']} {src['title']} — {src['issuer']} — {src['url']}", "s"))
     return F
+
+
+# Worksheets for businesses with no year-by-year figures (owner's Fix 8 decision, 14 Nov 2026): the inputs a bank
+# needs, with only the figures the research file prints (each with its tag); everything else is a blank line.
+# D18 Tailoring: research_dossiers/D18_Tailoring_Dossier.md §2a (Micro Finance size), §3 (OpEx), §4 (unit economics).
+WORKSHEETS = {
+    "D18": [
+        ("Single needle lock stitch machine with motor, 2 x ₹23,650 (Micro Finance size)", 47300, "[S6] MSME-DI profile, D18 research file §2a"),
+        ("Zig-zag embroidery machine, 1 x ₹52,000", 52000, "[S6] MSME-DI profile, D18 research file §2a"),
+        ("Installation and electrification (10% of machinery)", 9930, "ESTIMATE 99,300 x 10% ([S6] rule), D18 research file §2a"),
+        ("Cutting table, scissors, measuring tape, chalk, iron", None, "VENDOR QUOTE NEEDED"),
+        ("Pre-operative: Udyam, local licence, power connection deposit", None, None),
+        ("Working capital", None, None),
+        ("Stitching charge per garment (blouse, salwar suit, shirt, trouser)", None, None),
+        ("Garments per machine per day", None, None),
+        ("Working days per year", None, None),
+        ("Rent (per month)", None, None),
+        ("Electricity (per month)", None, None),
+        ("Thread, needles, buttons, consumables (per month)", None, None),
+        ("Hired tailors' wages (per month, Term Loan size)", None, None),
+        ("Owner's own drawing (per month)", None, None),
+    ],
+}
 
 
 def milestone_row(out):

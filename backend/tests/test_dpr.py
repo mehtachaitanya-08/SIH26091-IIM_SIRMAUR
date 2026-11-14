@@ -768,3 +768,18 @@ def test_fix7_6_excerpts_never_end_on_a_dossier_heading():
             assert not any(h and _plain_text(dpr_mod._plain(h)) in lines for h in heads), (code, sid)
     _, t = text_of(dpr(D01_HINDI))
     assert "Zero Default Across Tiers" not in t
+
+
+# 14 Nov 2026, owner's Fix 8 decision for D18 (option 1): instead of a bare "to be filled with the bank", a
+# worksheet of what the bank must fill, with only the figures the D18 research file itself prints.
+def test_fix8_d18_worksheet_lists_the_inputs_and_only_dossier_figures():
+    _, t = text_of(dpr({"code": "D18", "projectCost": 140000, "familyIncome": 100000, "isSc": True}))
+    assert "Worksheet to fill with the bank" in t
+    for item in ("Stitching charge per garment", "Garments per machine per day", "Rent", "Electricity",
+                 "Thread, needles, buttons, consumables", "Single needle lock stitch machine with motor"):
+        assert item in t, item
+    dossier = next((_Path(__file__).resolve().parents[2] / "research_dossiers").glob("D18_*.md")).read_text(encoding="utf8")
+    for fig in ("47,300", "52,000", "9,930"):
+        assert f"₹{fig}" in t and fig in dossier, fig                     # every figure is the research file's own
+    rows = dpr_mod.WORKSHEETS["D18"]
+    assert all(r[1] is None or r[2] for r in rows), "a figure without its tag"
