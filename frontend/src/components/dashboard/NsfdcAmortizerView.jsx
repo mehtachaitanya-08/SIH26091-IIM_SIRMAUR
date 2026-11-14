@@ -105,7 +105,7 @@ export default function NsfdcAmortizerView({
           <table className="w-full text-left border-collapse">
             <thead className="bg-[#F8F9FA] text-[#686D65] sticky top-0 border-b border-[#E9ECEF]">
               <tr>
-                <th className="p-2">Quarter</th>
+                <th className="p-2">Every 3 months</th>
                 <th className="p-2">Type</th>
                 <th className="p-2">Principal</th>
                 <th className="p-2">Interest paid</th>
@@ -116,7 +116,7 @@ export default function NsfdcAmortizerView({
             <tbody className="divide-y divide-[#E9ECEF] font-mono-num">
               {(amortizationSchedule.quarters || []).map((q) => (
                 <tr key={q.quarter} className={q.isMoratorium ? 'bg-amber-50/50' : ''}>
-                  <td className="p-2 font-bold">Q{q.quarter}</td>
+                  <td className="p-2 font-bold">{q.quarter}</td>
                   <td className="p-2">
                     {q.isMoratorium ? (
                       <span className="text-[11px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium">Pause (no payment)</span>
@@ -137,7 +137,7 @@ export default function NsfdcAmortizerView({
         <HowWeGotThis notes={[
           'ASSUMED: loan rounded down to the rupee.',
           'ASSUMED: interest during the pause is added to the loan (NSFDC does not say how it is handled).',
-          `ASSUMED: repaid over exactly ${loanStructure.tenureYears} years (${loanStructure.totalQuarters} quarters); NSFDC says "within".`
+          `ASSUMED: repaid over exactly ${loanStructure.tenureYears} years (${loanStructure.totalQuarters} periods of 3 months); NSFDC says "within".`
         ]} />
       </>
     );

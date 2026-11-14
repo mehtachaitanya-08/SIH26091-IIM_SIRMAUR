@@ -74,3 +74,12 @@ describe('1e banner: the "Server offline" message works on Windows too', () => {
     assert.ok(!code.includes('backend/.venv/bin/uvicorn'));
   });
 });
+
+describe('Fix 4 (owner, 14 Nov 2026): the loan table says "every 3 months", as the chat does', () => {
+  it('no "Quarter" heading and no "Q1" labels', () => {
+    const code = read('components/dashboard/NsfdcAmortizerView.jsx');
+    assert.ok(code.includes('>Every 3 months<'));
+    assert.ok(!code.includes('>Quarter<') && !code.includes('Q{q.quarter}'));
+    assert.ok(!/\(\$\{loanStructure\.totalQuarters\} quarters\)/.test(code));
+  });
+});

@@ -98,7 +98,7 @@ HEADINGS_HI = {
     "29. Enclosures checklist": "29. संलग्नकों की सूची", "30. Declaration": "30. घोषणा", "Sources": "स्रोत",
 }
 # The AIF declaration in Hindi (decision 3): our translation, printed under the English, which governs.
-DECLARATION_HI = ("अनुवाद; अंग्रेज़ी पाठ ही मान्य होगा (translation; English governs): मैं …………………………… प्रमाणित करता/करती हूँ कि "
+DECLARATION_HI = ("अनुवाद; अंग्रेज़ी पाठ ही मान्य होगा (translation; English governs): मैं {name} प्रमाणित करता/करती हूँ कि "
                   "ऊपर मेरे/हमारे द्वारा दी गई जानकारी/विषय-वस्तु मेरी/हमारी जानकारी और विश्वास के अनुसार सही है और कोई "
                   "महत्वपूर्ण बात छिपाई नहीं गई है। यदि आवेदन में दी गई कोई जानकारी गलत पाई जाती है, तो बैंक मेरा/हमारा आवेदन "
                   "किसी भी चरण में अस्वीकार कर सकता है और मैं/हम {scheme_hi} के अंतर्गत पात्र नहीं रहूँगा/रहूँगी/रहेंगे।")
@@ -408,7 +408,7 @@ def _item_lines(items):
         if in_note and raw.lstrip().startswith(">"):
             continue
         in_note = False
-        if it.get("header") and "cells" in it:
+        if it.get("header"):                       # table headers and dossier headings (Fix 7.6, 14 Nov 2026)
             continue
         if "cells" in it:
             cells = [_plain(c) for c in it["cells"]]
@@ -586,15 +586,18 @@ def _year_rows(yfs, names, research_loan):
 
 
 def _year_notes(yfs):
-    """The full labels word for word under the table (decision 23)."""
+    """The full labels word for word under the table (decision 23), each starting with the row it belongs to
+    (Fix 7.3, 14 Nov 2026: a bank reader could not match loose notes to rows)."""
+    labels = dict(ROW_LABELS)
     seen, out = set(), []
     for name, row in yfs["rows"].items():
         for c in row:
             for s in (c.get("tag", ""), c.get("note", ""), c.get("reason", "")):
-                if s and s not in seen and (s.startswith(("ASSUMED", "assumed", "CALCULATED:")) or c.get("note") == s
-                                            or c.get("reason") == s):
-                    seen.add(s)
-                    out.append(s)
+                if s and (s.startswith(("ASSUMED", "assumed", "CALCULATED:")) or c.get("note") == s or c.get("reason") == s):
+                    line = f"{labels.get(name, name)}: {s}"
+                    if line not in seen:
+                        seen.add(line)
+                        out.append(line)
     return out
 
 
@@ -927,8 +930,8 @@ def _build(code, req, answers, a, notes):
         F.append(_pairs([
             ("Scheme", f"{L['scheme']['value']} {L['scheme']['tag']}"),
             ("Interest rate", f"{L['interest_rate_pa']['value']}% a year {_t(L['interest_rate_pa']['tag'])}"),
-            ("Tenure", f"{L['tenure_years']['value']} years ({L['total_quarters']['value']} quarters) [ASSUMED: NSFDC says 'within']"),
-            ("Pause (no payment)", f"{L['moratorium_quarters']['value']} quarter(s); interest added to the loan "
+            ("Tenure", f"{L['tenure_years']['value']} years ({L['total_quarters']['value']} periods of 3 months) [ASSUMED: NSFDC says 'within']"),
+            ("Pause (no payment)", f"{L['moratorium_quarters']['value'] * 3} months; interest added to the loan "
              f"{inr(S['interest_added_during_pause']['value'])} [S1 for the pause; how its interest is handled is ASSUMED]"),
             ("Repayment", f"{L['repayment_quarters']['value']} payments, one every 3 months, of "
              f"{inr(S['equated_quarterly_instalment']['value'])} [CALCULATED]"),
@@ -938,12 +941,12 @@ def _build(code, req, answers, a, notes):
             F.append(P(f"Warning: {w['text']} {_t(w['tag'])}", "s"))
         F.append(Spacer(1, 3))
         # review finding 4: the pause interest added to the loan gets its own column, so each row adds up
-        F.append(_table([["Loan year", "Pause quarters", "Interest", "Interest added to the loan (pause)", "Principal",
+        F.append(_table([["Loan year", "Pause (3-month periods)", "Interest", "Interest added to the loan (pause)", "Principal",
                           "Payment", "Balance at year end"]] +
                         [[f"Year {y['year']}", str(y["pause_quarters"]), inr(y["interest"]), inr(y["interest_added"]),
                           inr(y["principal"]), inr(y["payment"]), inr(y["closing_balance"])] for y in repayment_by_year(out)],
                         [18, 18, 26, 30, 26, 26, 36]))
-        F.append(P("Yearly totals of the quarterly schedule [CALCULATED]. Each year: payment + interest added to the loan "
+        F.append(P("Yearly totals of the schedule (a payment every 3 months) [CALCULATED]. Each year: payment + interest added to the loan "
                    "= interest + principal. Every 3-month payment is listed in the dashboard.", "s"))
     else:
         F.append(P("no NSFDC loan (see page 1)."))
@@ -973,7 +976,9 @@ def _build(code, req, answers, a, notes):
     F.extend(H("21. Raw material and catchment"))
     F.append(_pairs([("Raw material available in the catchment", _v(a, "rawMaterial")), ("Catchment", _v(a, "catchment"))]))
     F.extend(H("22. Demand and marketing"))
-    F.append(_research(code, _item_lines(_section(feas, "market")), cited))
+    # Fix 7.5 (14 Nov 2026): the research file's season section (harvest cash, festivals, monsoon) is about
+    # demand; the market section is the classification text already printed in section 3.
+    F.append(_research(code, _item_lines(_section(feas, "season")), cited))
     season = dossier_figures.figures(code)["seasonality"]
     if season.get("status") != "NOT FOUND" and season.get("months"):
         low = sorted(season["months"], key=lambda m: m["value"])[:3]
@@ -996,11 +1001,11 @@ def _build(code, req, answers, a, notes):
     F.extend(H("27. Milestones (first 12 months)"))
     grid = [["Activity"] + [f"M{m}" for m in range(1, 13)]]
     if has_loan:
-        pause_months = out["loan"]["moratorium_quarters"]["value"] * 3
-        grid.append(["Loan repayment"] + ["pause" if m <= pause_months else "pay" for m in range(1, 13)])
+        grid.append(["Loan repayment"] + milestone_row(out))
     grid += [[BLANK] + [""] * 12 for _ in range(3)]
     F.append(_table(grid, [40] + [11.6] * 12))
-    F.append(P("pause = no payment (pause), from the loan terms [S1]; pay = a payment falls due every 3 months. "
+    F.append(P("pause = no payment (pause), from the loan terms [S1]; pay = a payment falls due (one every 3 months, "
+               "at the end of each 3-month period); blank = no payment that month. "
                f"The other rows are for the applicant. Applicant's milestones: {_v(a, 'milestones')}", "s"))
     F.extend(H("28. Layout"))
     F.append(P(_v(a, "layout")))
@@ -1011,12 +1016,13 @@ def _build(code, req, answers, a, notes):
     F.append(_table([["Enclosure", "Attached"]] + [[e, "yes" if e in ticked else BLANK] for e in ENCLOSURES], [120, 60]))
     F.extend(H("30. Declaration"))
     scheme, scheme_hi = scheme_names(out)          # Stage 1b finding 3; Stage 1d review fix 1
-    F.append(P("I ……………………………Certify that the information / contents as above furnished by me / us are true to the "
+    name = (a.get("name") or "").strip()            # Fix 7.1 (14 Nov 2026): the typed name fills the blank
+    F.append(P((f"I {name} certify" if name else "I ……………………………Certify") + " that the information / contents as above furnished by me / us are true to the "
                "best of my / our knowledge and belief and nothing material has been concealed. In case, any information "
                "furnished in the application is found false, my / our application may be rejected out at any stage by "
                f"the Bank and not eligible under {scheme}."))
     if hindi_ready():                               # decision 3: our Hindi translation; the English governs
-        F.append(Table([[P(DECLARATION_HI.format(scheme_hi=scheme_hi), "s")]], colWidths=[180 * mm],
+        F.append(Table([[P(DECLARATION_HI.format(scheme_hi=scheme_hi, name=name or "……………………………"), "s")]], colWidths=[180 * mm],
                        style=[("BOX", (0, 0), (-1, -1), 0.3, colors.grey), ("LEFTPADDING", (0, 0), (-1, -1), 4),
                               ("RIGHTPADDING", (0, 0), (-1, -1), 4)]))
         F.append(Spacer(1, 4))                     # a gap above the Date line (review)
@@ -1040,6 +1046,13 @@ def _build(code, req, answers, a, notes):
             if src["tag"] in used and src["tag"] != "[S1]":
                 F.append(P(f"{src['tag']} {src['title']} — {src['issuer']} — {src['url']}", "s"))
     return F
+
+
+def milestone_row(out):
+    """Months 1-12 of the loan (Fix 7.4, 14 Nov 2026): "pause" in the no-payment months, "pay" only in the
+    months a payment falls due (the end of each 3-month period after the pause), blank otherwise."""
+    pause_months = out["loan"]["moratorium_quarters"]["value"] * 3
+    return ["pause" if m <= pause_months else ("pay" if m % 3 == 0 else "") for m in range(1, 13)]
 
 
 def _footer(c, doc):

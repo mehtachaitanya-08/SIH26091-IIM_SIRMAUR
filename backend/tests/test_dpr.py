@@ -605,7 +605,7 @@ def test_1d_fix1_declaration_scheme_names_in_both_languages(body, en, hi):
     out = loan.build_loan(LoanRequest(project_cost=body["projectCost"], is_sc=body["isSc"],
                                       annual_family_income=body["familyIncome"]))
     assert dpr_mod.scheme_names(out) == (en, hi)
-    text = DECLARATION_TEXT = dpr_mod.DECLARATION_HI.format(scheme_hi=hi)
+    text = DECLARATION_TEXT = dpr_mod.DECLARATION_HI.format(scheme_hi=hi, name="……")   # name slot added 14 Nov (Fix 7.1)
     assert "योजना s" not in text and "loan योजना" not in text
     assert "अंग्रेज़ी पाठ ही मान्य होगा" in text and "रहूँगा/रहूँगी/रहेंगे" in text
 
@@ -709,3 +709,62 @@ def test_1d_gap_above_the_date_line():
 def test_1d_danda_after_a_hindi_word_has_no_space():
     for w in ("हैं।", "नहीं।", "(ब्रेक-ईवन)।", "हाँ॥"):
         assert _plain_text(dpr_mod._hi_markup(w)) == w, w
+
+
+# =========================================================================== 14 Nov 2026: owner's Fix 4 and Fix 7
+D01_HINDI = {"code": "D01", "projectCost": 140000, "familyIncome": 180000, "isSc": True}
+
+
+def test_fix4_the_pdf_says_every_3_months_never_quarters():
+    _, t = text_of(dpr(dict(BASE, projectCost=350000)))
+    assert "quarter" not in t.lower().replace("equated quarterly", ""), t[t.lower().find("quarter") - 80: t.lower().find("quarter") + 40]
+    assert "periods of 3 months" in t and "Pause (3-month periods)" in t
+
+
+def test_fix7_1_the_declaration_carries_the_typed_name_in_both_languages():
+    _, t = text_of(dpr(dict(D01_HINDI, applicant={"name": "Asha Devi"})))
+    assert "I Asha Devi certify that the information" in t
+    assert dpr_mod.DECLARATION_HI.startswith("अनुवाद") and "{name}" in dpr_mod.DECLARATION_HI
+    _, t2 = text_of(dpr(D01_HINDI))                                        # no name typed: the blank stays
+    assert "I ……………………………Certify that" in t2
+
+
+def test_fix7_2_sources_line_uses_forward_slashes():
+    _, t = text_of(dpr(D01_HINDI))
+    assert "research_dossiers/D01_Village_FMCG_Retail_Dossier.md" in t and "research_dossiers\\" not in t
+
+
+def test_fix7_3_every_note_under_the_year_table_names_its_row():
+    y = year_figures.years("D01", 140000)
+    labels = tuple(lbl for _, lbl in dpr_mod.ROW_LABELS)
+    notes = dpr_mod._year_notes(y)
+    assert notes and all(n.startswith(labels) for n in notes), [n for n in notes if not n.startswith(labels)][:3]
+
+
+def test_fix7_4_milestones_mark_pay_only_when_a_payment_falls_due():
+    out = loan.build_loan(LoanRequest(project_cost=140000, is_sc=True, annual_family_income=180000))
+    row = dpr_mod.milestone_row(out)
+    pause = out["loan"]["moratorium_quarters"]["value"] * 3
+    assert row[:pause] == ["pause"] * pause
+    assert [m for m, v in enumerate(row, 1) if v == "pay"] == [m for m in range(pause + 1, 13) if m % 3 == 0]
+
+
+def test_fix7_5_demand_section_is_not_a_copy_of_the_introduction():
+    _, t = text_of(dpr(D01_HINDI))
+    intro = t[t.index("3. Introduction"): t.index("4. Benefits")]
+    demand = t[t.index("22. Demand and marketing"): t.index("23. Renewable energy")]
+    first_words = " ".join(intro.split()[8:20])
+    assert first_words not in demand, first_words
+    assert "harvest" in demand.lower()
+
+
+def test_fix7_6_excerpts_never_end_on_a_dossier_heading():
+    from backend import feasibility
+    for code in ("D01", "D04", "D12", "D20"):
+        feas = feasibility.report(code)
+        for sid in ("market", "pricing", "season", "compliance", "swot_competition"):
+            heads = [it["text"] for it in dpr_mod._section(feas, sid) if it.get("header") and it.get("text")]
+            lines = dpr_mod._item_lines(dpr_mod._section(feas, sid))
+            assert not any(h and _plain_text(dpr_mod._plain(h)) in lines for h in heads), (code, sid)
+    _, t = text_of(dpr(D01_HINDI))
+    assert "Zero Default Across Tiers" not in t
