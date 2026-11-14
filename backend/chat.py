@@ -55,14 +55,15 @@ Hard rules:
 1. NEVER state a number (amount, rate, count, year, percentage) unless it appears in a tool result in this conversation or the user said it. Do not do arithmetic yourself. If you need a figure, call a tool.
 2. If an amount the user gives is ambiguous (total project cost, or their own money?), ASK which it is. Never guess.
 2a. As soon as you know the project cost, the yearly family income and whether the user is SC, call calculate_loan immediately and give the loan before any business questions. If one of the three is missing, ask only for what is missing, then calculate. If the user gives a new amount, call calculate_loan again with it. If the loan is already known and the user asks something else, answer that; mention the payment at most once.
-3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so.
+3. All 24 businesses are listed by list_businesses. Their figures (sizes, project cost, surplus, the dossier's own cash-flow cover, season) come from dossier_figures and are labelled with the business's dossier, e.g. "D08 dossier": say so. Only some businesses have yes/no questions; get_questions tells you. If a figure is NOT FOUND, say so. For weak, slow or busy months, the season, or when sales fall, call dossier_figures and give its weakestMonths with their % vs an average month (vsAverageMonthPct), labelled with the dossier; feasibility holds no figures.
 3a. Never ask the user for a business code: users do not know codes. Ask what business they run, in their own words, and find it with list_businesses. Say the business name first, e.g. "Oil Expellers (D08 dossier)".
 4. Use question ids and answer choices exactly as get_questions returns them.
 5. Reply in the user's language (Hindi or English). Be short and plain: rural users, low literacy. Keep each reply under 80 words and ask at most 2 questions at a time.
 6. Say when something is an assumption or NOT FOUND, as the tool results say.
 7. To give the DPR, call dpr_link and tell the user to press the Download DPR button.
 8. Use the dashboard's plain words: say "payment every 3 months", not "quarterly instalment"; say "pause (no payment)", not "moratorium". Never say "quarter" or "quarterly"; in Hindi say "हर 3 महीने", never "तिमाही". When you give the loan, give the payment every 3 months (paymentEvery3Months).
-9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet."""
+9. Do not list documents, other schemes or steps unless a tool result in this conversation gives them; if asked, say the dashboard does not have that list yet.
+9a. Never promise or predict that a loan will be approved or sanctioned. Say that the bank / State Channelising Agency decides, and offer what you can do: work out the loan and prepare the DPR."""
 
 # Stage A: the chat panel sends the language the user picked; rule 10 is added to the rules.
 # Stage A follow-up (12 Nov 2026): it may also send what the dashboard already shows (the
@@ -174,12 +175,36 @@ def _t_dossier_figures(code, project_cost=None):
         return {"error": f"unknown code {code}"}
     f = dossier_figures.figures(code)
     if project_cost is None:
-        return _public({"code": code, "name": NAMES[code], "tiers": f["tiers"], "seasonality": f["seasonality"]})
+        out = {"code": code, "name": NAMES[code], "tiers": f["tiers"], "seasonality": f["seasonality"]}
+        weakest = weakest_months(code, f["seasonality"])
+        if weakest:
+            out["weakestMonths"] = weakest
+        return _public(out)
     notes = []
     cost = _whole_rupees(project_cost, "project_cost", notes)
     out = dossier_figures.cashflow(code, LoanRequest(project_cost=cost, is_sc=True, annual_family_income=0))
     out["assumptions"] = notes + out.get("assumptions", [])
     return _public(out)
+
+
+def weakest_months(code, seasonality):
+    """The 3 lowest months (ties at the third included), each as % vs an average month: round((multiplier - 1) x 100),
+    the same formula as the DPR's section 22. The model may not do arithmetic, and the number guard blocked "-25%"
+    when only 0.75 was in the tool result (owner's live test, 14 Nov 2026). None when the dossier has no months."""
+    months = (seasonality or {}).get("months") or []
+    if seasonality.get("status") == "NOT FOUND" or not months:
+        return None
+    third = sorted(m["value"] for m in months)[min(2, len(months) - 1)]
+    low = sorted((m for m in months if m["value"] <= third), key=lambda m: m["value"])
+    out = []
+    for m in low:
+        pct = round((m["value"] - 1) * 100)
+        row = {"month": m["month"], "vsAverageMonthPct": pct}
+        if pct < 0:
+            row["belowAveragePct"] = -pct            # "25% below an average month" (review, 14 Nov 2026)
+        row["tag"] = f"CALCULATED from the {code} dossier's month multiplier"
+        out.append(row)
+    return out
 
 
 def _t_business_summary(code):
@@ -273,7 +298,8 @@ def _t_feasibility(code):
         return {"error": f"unknown code {code}"}
     if r["status"] != "verified":
         return r
-    return {"code": code, "sections": [s["title"] for s in r["sections"]],
+    return {"code": code, "note": "This summary holds no figures. For season or weakest months call dossier_figures.",
+            "sections": [s["title"] for s in r["sections"]],
             "gapCount": len(r["gaps"]),
             "firstGaps": [g["reason"][:120] for g in r["gaps"][:5]],
             "link": f"/api/feasibility/{code}"}
@@ -300,9 +326,12 @@ TOOLS = {
                        {"project_cost": {"type": "number"}, "family_income": {"type": "number"},
                         "is_sc": {"type": "boolean"}}),
     "dossier_figures": (_t_dossier_figures, "A business's dossier figures: sizes with project cost, surplus, the dossier's own "
-                        "cash-flow cover (DSCR) and season. Give project_cost to get the matching (or nearest) size.",
+                        "cash-flow cover (DSCR) and season: each month vs an average month and the weakest months "
+                        "(weakestMonths, with %). Use it for any question about weak, slow or busy months, the season, or "
+                        "when sales fall. Give project_cost to get the matching (or nearest) size.",
                         {"code": {"type": "string"}, "project_cost": {"type": "number"}}),
-    "feasibility": (_t_feasibility, "Feasibility report summary (sections and gaps) for a verified business.",
+    "feasibility": (_t_feasibility, "Feasibility report: section titles and open gaps only. It holds no figures; "
+                    "for season, weakest months or any number use dossier_figures.",
                     {"code": {"type": "string"}}),
     "dpr_link": (_t_dpr_link, "Prepare the DPR (Detailed Project Report) download for the user.",
                  {"code": {"type": "string"}, "project_cost": {"type": "number"}, "family_income": {"type": "number"},
@@ -371,9 +400,15 @@ HI_UNITS = r"लाख|करोड़|हज़ार|हजार|सौ|प�
 NUM_WORDS = re.compile(rf"\b(?:{EN_WORDS})\s+(?:{EN_UNITS})\b|(?:{HI_WORDS})\s*(?:{HI_UNITS})", re.I)
 
 
+def _ascii_minus(t):
+    """A minus written as − or – right before a number ("−25%") is read as "-" (review, 14 Nov 2026); a dash
+    between two numbers ("13–15%") is left alone."""
+    return re.sub(r"(?<!\d)\s?[\u2212\u2013](?=\d)", lambda m: m.group(0).replace("\u2212", "-").replace("\u2013", "-"), t)
+
+
 def numbers_in(text):
     """Every number in a text as (value, raw). Lakh/crore multiply; Hindi digits converted; sign kept."""
-    t = str(text).translate(HINDI_DIGITS)
+    t = _ascii_minus(str(text).translate(HINDI_DIGITS))
     out = []
     for m in NUM.finditer(t):
         sign, raw, unit = m.group(1), m.group(2).rstrip(","), (m.group(3) or "").lower()
@@ -404,6 +439,11 @@ def _walk_values(node, acc):
             _walk_values(k, acc)
             _walk_values(v, acc)
     elif isinstance(node, list):
+        if len(node) > 1:
+            # how many items the server returned (e.g. 24 businesses) is a fact it supplied (owner's choice B,
+            # 14 Nov 2026). Kept apart as ("count", n): it allows only a plain count ("24 businesses"), never
+            # money, a % or lakh ("Subsidy of ₹24" stays unsupported), and a made-up count is still unsupported.
+            acc.add(("count", float(len(node))))
         for v in node:
             _walk_values(v, acc)
 
@@ -414,8 +454,10 @@ def allowed_numbers(tool_results, user_texts):
     for t in user_texts:
         for v, _ in numbers_in(t):
             base.add(v)
-    allowed = set()
+    allowed = {v for v in base if isinstance(v, tuple)}
     for v in base:
+        if isinstance(v, tuple):
+            continue
         allowed.update({v, round(v, 2), float(math.floor(v)), float(round(v))})
         if 0 < v < 1:
             allowed.add(round(v * 100, 4))       # fraction -> per cent (0.065 -> 6.5)
@@ -434,6 +476,10 @@ EVERY_3_MONTHS = re.compile(r"\b(every)\s+3\s+(months?)\b|(हर)\s*[3३]\s*(�
 LIST_MARKER = re.compile(r"(?m)^(\s*(?:\*\*)?)\d{1,2}[.)](?=\s)")
 
 
+COUNT_NOUN = re.compile(r"\s*(?:businesses|business|months|sizes|questions|types|kinds|व्यवसाय|महीने|महीनों|सवाल|प्रकार)\b",
+                        re.I)
+
+
 def unsupported(text, allowed):
     """Numbers in the AI's text that the tools or the user did not give. Number words always count as unsupported.
     List numbering at the start of a line ("1." or "2)") is not a figure; everything after it is still checked."""
@@ -441,8 +487,20 @@ def unsupported(text, allowed):
     text = ONE_PAGE.sub("one-", text)
     text = EVERY_3_MONTHS.sub("every quarter", text)  # removed before checking; never shown to the user
     bad = [m.group(0) for m in NUM_WORDS.finditer(text)]
-    for v, _ in numbers_in(text):
+    plain = _ascii_minus(str(text).translate(HINDI_DIGITS))
+    for m in NUM.finditer(plain):
+        got = numbers_in(m.group(0))                 # the value of this one match (same parsing as numbers_in)
+        if not got:
+            continue
+        v = got[0][0]
         if v in allowed or round(v, 2) in allowed:
+            continue
+        # a count the server supplied is allowed only as a count: a counted word must follow it
+        # ("24 businesses", "12 months"), never money, a rate or years (review, 14 Nov 2026)
+        before = plain[:m.start()].rstrip()
+        is_count = (not m.group(1) and not m.group(3) and not re.search(r"(₹|rs\.?|inr|रु\.?)$", before, re.I)
+                    and COUNT_NOUN.match(plain, m.end()))
+        if is_count and ("count", v) in allowed:
             continue
         bad.append(int(v) if v == int(v) else v)
     return bad
@@ -464,6 +522,9 @@ def _plain_summary(tool_results, language=None):
             lines += [x["text"] for x in r.get("reasons", [])]
         elif t["tool"] == "run_advice":
             lines += [x["text"] for x in r.get("results", []) if x.get("status") == "result"]
+        elif t["tool"] == "dossier_figures" and r.get("weakestMonths"):
+            lines.append(f"{r['code']} dossier, weakest months vs an average month: "
+                         + ", ".join(f"{m['month']} {m['vsAverageMonthPct']:+d}%" for m in r["weakestMonths"]) + ".")
         elif t["tool"] == "dossier_figures" and r.get("tier"):
             from backend.dpr import inr
             pc = r["tier"]["project_cost"]
@@ -495,6 +556,9 @@ def _plain_summary_hi(tool_results):
             lines += [x["text"] for x in r.get("reasons", [])]
         elif t["tool"] == "run_advice":
             lines += [x["text"] for x in r.get("results", []) if x.get("status") == "result"]
+        elif t["tool"] == "dossier_figures" and r.get("weakestMonths"):
+            lines.append(f"{r['code']} रिसर्च फ़ाइल, सबसे कमज़ोर महीने (औसत महीने की तुलना में): "
+                         + ", ".join(f"{m['month']} {m['vsAverageMonthPct']:+d}%" for m in r["weakestMonths"]) + "।")
         elif t["tool"] == "dossier_figures" and r.get("tier"):
             pc = r["tier"]["project_cost"]
             if pc.get("value"):
@@ -578,6 +642,32 @@ def _model_with_retry(messages, tools):
     except Exception as exc:
         log.warning("Groq call failed (%s); retrying once", type(exc).__name__)
     return _call_model(messages, tools)  # a second failure propagates
+
+
+# W2 (owner's choice B, 14 Nov 2026): a question about approval always gets this fixed sentence, whatever the
+# model wrote. Short word list, whole words; "approved seeds" also triggers, which is harmless (still true).
+# Strong words trigger on their own; weak phrases only when the message also mentions a loan (review, 14 Nov 2026).
+APPROVAL_WORDS = re.compile(r"\b(?:approv\w*|sanction\w*|guarant\w*|pakk?a|man[jz]oor\w*)|पक्का|मंज़ूर|मंजूर|स्वीकृत|गारंटी", re.I)
+APPROVAL_WEAK = re.compile(r"\bwill\s+i\s+(?:get|receive)\b|\bsure\b|\bdefinitely\b|\bmilega\b|मिलेगा|मिलेगी", re.I)
+LOAN_WORD = re.compile(r"\bloans?\b|लोन|ऋण|कर्ज़|कर्ज", re.I)
+
+
+def asks_about_approval(text):
+    text = text or ""
+    return bool(APPROVAL_WORDS.search(text) or (APPROVAL_WEAK.search(text) and LOAN_WORD.search(text)))
+APPROVAL_NOTE = {
+    "en": "Approval is decided by the bank / State Channelising Agency, not by this assistant: this is advice only, "
+          "not a loan sanction.",
+    "hi": "लोन मंज़ूर करना बैंक / राज्य चैनलाइज़िंग एजेंसी तय करती है, यह सहायक नहीं: यह केवल सलाह है, लोन की मंज़ूरी नहीं।",
+}
+
+
+def with_approval_note(reply, user_text, language):
+    lang = language or ("hi" if re.search(r"[\u0900-\u097F]", user_text or "") else "en")
+    note = APPROVAL_NOTE[lang]
+    if not asks_about_approval(user_text) or note in reply:
+        return reply
+    return f"{reply.rstrip()} {note}"
 
 
 OFFLINE = ("The AI assistant is offline right now. You can still use the dashboard: choose your business, "
@@ -677,4 +767,5 @@ async def chat_endpoint(request: Request):
     guard = {"replaced": bool(bad), "unsupported": bad}
     if bad:
         reply = _plain_summary(summary_from, language)
+    reply = with_approval_note(reply, user_texts[-1] if user_texts else "", language)
     return {"status": "ok", "reply": reply, "tool_results": results, "guard": guard, "model": MODEL}
