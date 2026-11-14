@@ -254,9 +254,11 @@ class TestWhoIsAsking:
         monkeypatch.delenv("TRUST_PROXY_HEADERS", raising=False)
         assert ratelimit.visitor_key(self.req(forwarded="1.2.3.4")) == "10.0.0.1"
 
-    def test_behind_render_the_address_render_saw_is_used_not_one_the_visitor_wrote(self, monkeypatch):
-        # Render appends the real address at the END of X-Forwarded-For; anything before it is
-        # whatever the visitor chose to send, so a visitor must not be able to pick a new identity.
+    def test_without_a_cloudflare_header_the_last_forwarded_address_is_the_fallback(self, monkeypatch):
+        # FALLBACK ONLY. The first version assumed Render appends the real address at the END of
+        # X-Forwarded-For. The live test of 14 Nov 2026 showed it does not: 13 questions with 13
+        # different made-up headers were all allowed. This is what the code does when Cloudflare's own
+        # header is missing; see TestCloudflareNamesTheVisitorOnRender for the real rule.
         monkeypatch.setenv("RENDER", "true")
         assert ratelimit.visitor_key(self.req(forwarded="9.9.9.9, 8.8.8.8, 1.2.3.4")) == "1.2.3.4"
         assert ratelimit.visitor_key(self.req(forwarded="1.2.3.4")) == "1.2.3.4"
@@ -265,6 +267,74 @@ class TestWhoIsAsking:
         monkeypatch.setenv("RENDER", "true")
         assert ratelimit.visitor_key(self.req(forwarded=None)) == "10.0.0.1"
         assert ratelimit.visitor_key(SimpleNamespace(headers={}, client=None)) == "unknown"
+
+
+class TestCloudflareNamesTheVisitorOnRender:
+    """The live test of 14 Nov 2026 (13 chat questions, each with a different made-up X-Forwarded-For, none
+    refused) showed a visitor can pick their own identity through that header on Render. Render's responses
+    carry `Server: cloudflare`, and Cloudflare sets CF-Connecting-IP itself, overwriting anything a visitor
+    sends, so on Render that header is the visitor's real address."""
+
+    def req(self, headers=None, host="10.0.0.1"):
+        return SimpleNamespace(headers=headers or {}, client=SimpleNamespace(host=host))
+
+    def test_on_render_the_cloudflare_header_wins_over_a_made_up_forwarding_header(self, monkeypatch):
+        monkeypatch.setenv("RENDER", "true")
+        r = self.req({"cf-connecting-ip": "203.0.113.7", "x-forwarded-for": "9.9.9.9, 8.8.8.8"})
+        assert ratelimit.visitor_key(r) == "203.0.113.7"
+
+    def test_two_questions_from_one_visitor_with_different_made_up_headers_are_one_visitor(self, monkeypatch):
+        monkeypatch.setenv("RENDER", "true")
+        a = ratelimit.visitor_key(self.req({"cf-connecting-ip": "203.0.113.7", "x-forwarded-for": "1.1.1.1"}))
+        b = ratelimit.visitor_key(self.req({"cf-connecting-ip": "203.0.113.7", "x-forwarded-for": "2.2.2.2"}))
+        assert a == b == "203.0.113.7"
+
+    def test_ipv6_addresses_work_as_they_come(self, monkeypatch):
+        monkeypatch.setenv("RENDER", "true")
+        assert ratelimit.visitor_key(self.req({"cf-connecting-ip": "2001:db8::1"})) == "2001:db8::1"
+
+    def test_off_render_the_cloudflare_header_is_ignored_anyone_could_write_it(self, monkeypatch):
+        monkeypatch.delenv("RENDER", raising=False)
+        monkeypatch.delenv("TRUST_PROXY_HEADERS", raising=False)
+        assert ratelimit.visitor_key(self.req({"cf-connecting-ip": "203.0.113.7"})) == "10.0.0.1"
+
+    @pytest.mark.parametrize("blank", ["", "   "])
+    def test_a_blank_cloudflare_header_falls_back_to_the_forwarded_address(self, monkeypatch, blank):
+        monkeypatch.setenv("RENDER", "true")
+        assert ratelimit.visitor_key(self.req({"cf-connecting-ip": blank, "x-forwarded-for": "1.2.3.4"})) == "1.2.3.4"
+
+    def test_an_absurdly_long_header_cannot_be_used_to_fill_the_memory_with_long_keys(self, monkeypatch):
+        monkeypatch.setenv("RENDER", "true")
+        assert len(ratelimit.visitor_key(self.req({"cf-connecting-ip": "a" * 5000}))) == 64
+
+    def test_another_host_can_name_its_own_trusted_header(self, monkeypatch):
+        monkeypatch.delenv("RENDER", raising=False)
+        monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+        monkeypatch.setenv("CLIENT_IP_HEADER", "X-Real-IP")                # any capitalisation
+        assert ratelimit.visitor_key(self.req({"x-real-ip": "198.51.100.4", "x-forwarded-for": "1.1.1.1"})) == "198.51.100.4"
+
+    def test_a_proxy_host_with_no_header_named_still_uses_the_forwarded_address(self, monkeypatch):
+        monkeypatch.delenv("RENDER", raising=False)
+        monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+        monkeypatch.delenv("CLIENT_IP_HEADER", raising=False)
+        assert ratelimit.visitor_key(self.req({"x-forwarded-for": "5.5.5.5, 6.6.6.6"})) == "6.6.6.6"
+
+    def test_a_named_header_that_is_absent_falls_back_to_the_forwarded_address_then_the_connection(self, monkeypatch):
+        monkeypatch.delenv("RENDER", raising=False)
+        monkeypatch.setenv("TRUST_PROXY_HEADERS", "1")
+        monkeypatch.setenv("CLIENT_IP_HEADER", "x-real-ip")
+        assert ratelimit.visitor_key(self.req({"x-forwarded-for": "5.5.5.5"})) == "5.5.5.5"
+        assert ratelimit.visitor_key(self.req({})) == "10.0.0.1"
+
+    def test_the_missing_cloudflare_header_is_logged_once_not_on_every_question(self, monkeypatch, caplog):
+        monkeypatch.setenv("RENDER", "true")
+        monkeypatch.setattr(ratelimit, "_warned_no_client_header", False)
+        with caplog.at_level("WARNING", logger="udyamsetuai.ratelimit"):
+            for _ in range(5):
+                ratelimit.visitor_key(self.req({"x-forwarded-for": "1.2.3.4"}))
+        warnings = [r for r in caplog.records if "CF-Connecting-IP" in r.getMessage()]
+        assert len(warnings) == 1
+        assert "1.2.3.4" not in warnings[0].getMessage()          # an address is personal data: not in the log line
 
 
 # ---------------------------------------------------------------------------
@@ -332,7 +402,27 @@ class TestTheChatEndpoint:
         assert "tomorrow" in ask(language="en", headers={"X-Forwarded-For": "5.5.5.5"}).json()["error"]
         assert "कल" in ask(language="hi", headers={"X-Forwarded-For": "5.5.5.5"}).json()["error"]
 
+    def test_on_render_a_made_up_forwarding_header_does_not_dodge_the_limit(self, groq, monkeypatch):
+        # The live bug of 14 Nov 2026, as a test: one visitor (one Cloudflare address), a different made-up
+        # X-Forwarded-For on every question. Before the fix all 13 were allowed.
+        monkeypatch.setenv("RENDER", "true")
+        for i in range(10):
+            r = ask(headers={"CF-Connecting-IP": "203.0.113.7", "X-Forwarded-For": f"10.9.8.{i}"})
+            assert r.status_code == 200, i
+        r = ask(headers={"CF-Connecting-IP": "203.0.113.7", "X-Forwarded-For": "10.9.8.99"})
+        assert r.status_code == 429 and r.json()["details"]["scope"] == "visitor"
+        assert len(groq) == 10
+
+    def test_on_render_two_real_visitors_have_separate_allowances_whatever_they_write(self, groq, monkeypatch):
+        monkeypatch.setenv("RENDER", "true")
+        for _ in range(10):
+            assert ask(headers={"CF-Connecting-IP": "203.0.113.7"}).status_code == 200
+        assert ask(headers={"CF-Connecting-IP": "203.0.113.7"}).status_code == 429
+        # a second visitor is not affected, even if they write the first visitor's address in X-Forwarded-For
+        assert ask(headers={"CF-Connecting-IP": "198.51.100.9", "X-Forwarded-For": "203.0.113.7"}).status_code == 200
+
     def test_behind_render_each_visitor_has_their_own_allowance(self, groq, monkeypatch):
+        # the fallback path: Cloudflare sent no CF-Connecting-IP, so the last forwarded address is used
         monkeypatch.setenv("RENDER", "true")
         for _ in range(10):
             assert ask(headers={"X-Forwarded-For": "1.1.1.1"}).status_code == 200

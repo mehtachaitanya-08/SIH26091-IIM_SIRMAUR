@@ -42,21 +42,32 @@ it. The limiter also cannot tell apart people who share one network address (a c
 carrier that puts many phones behind one address): they count as one visitor and share its 10
 questions, and a host with such users should raise CHAT_LIMIT_PER_VISITOR.
 
-WHO A VISITOR IS. The network address the server sees. Behind Render, every request arrives from
-Render's own proxy, so the address is read from X-Forwarded-For, and only the LAST entry is trusted:
-a proxy appends the address it really saw at the end, while anything before it is whatever the visitor
-chose to send, so using the first entry would let anyone pick a fresh identity on every question.
-Render's documentation confirms that RENDER is always "true" on Render (checked 14 Nov 2026). It does NOT
-say which header carries the visitor's address or in what order, and no real Render request has been
-looked at: if Render's own edge adds an address after the visitor's, everybody would count as one
-visitor. HOW_TO_RUN.md tells the owner how to check this after the first deploy. Off Render the header
-is ignored (anyone could write it), unless TRUST_PROXY_HEADERS=1 is set for a host that sits behind a
-proxy of its own.
+WHO A VISITOR IS. The network address the server sees. Behind a proxy every request arrives from the
+proxy, so the visitor's address has to be read from a header, and a header is only worth trusting if
+the visitor cannot write it.
+  - On Render (RENDER is always "true" there, per Render's documentation, checked 14 Nov 2026) the header
+    is CF-Connecting-IP. Render appears to sit behind Cloudflare (its responses say `Server: cloudflare`;
+    that is an inference from one header, not Render's own statement), and Cloudflare documents that it
+    sets that header itself, replacing anything a visitor sends. That holds only if requests reach the
+    app through Cloudflare; the post-deploy check in HOW_TO_RUN.md tests it with a forged header.
+  - X-Forwarded-For is NOT trustworthy on Render. The first version of this file trusted its last entry,
+    assuming Render appends the real address there. A live test on 14 Nov 2026 disproved it: 13 chat
+    questions, each with a different made-up X-Forwarded-For, were all allowed, so a visitor could pick a
+    fresh identity on every question and dodge the per-visitor limit. (A visitor who sends no such header
+    still gets their real address in it, which is why the dodge needs a deliberate fake.) It remains only
+    the FALLBACK when CF-Connecting-IP is missing, with a warning in the log, once.
+  - Not proven: that Render forwards CF-Connecting-IP to the app. It is the one thing the fix assumes. If
+    the warning appears in the live log, or the dodge still works, that assumption is wrong. The check is
+    in HOW_TO_RUN.md.
+Off Render the headers are ignored (anyone could write them), unless TRUST_PROXY_HEADERS=1 is set for a
+host behind a proxy of its own; CLIENT_IP_HEADER then names the header that proxy sets (for example
+X-Real-IP), and without it the last X-Forwarded-For entry is used.
 
 THREADS. chat.py runs the blocking Groq call off the event loop, so note_tokens is called from worker
 threads while take is called on the loop; one lock keeps the counts consistent.
 """
 
+import logging
 import math
 import os
 import threading
@@ -64,6 +75,9 @@ import time
 from collections import deque
 
 from backend.compat import _error
+
+log = logging.getLogger("udyamsetuai.ratelimit")
+_warned_no_client_header = False    # the missing-header warning is logged once, not on every question
 
 VISITOR_LIMIT = 10
 VISITOR_WINDOW_S = 600
@@ -159,10 +173,21 @@ chat_limits = ChatLimits()
 
 def visitor_key(request):
     """The network address to count a question against (see "WHO A VISITOR IS" above)."""
-    if os.environ.get("RENDER") or os.environ.get("TRUST_PROXY_HEADERS") == "1":
+    global _warned_no_client_header
+    on_render = bool(os.environ.get("RENDER"))
+    if on_render or os.environ.get("TRUST_PROXY_HEADERS") == "1":
+        header = (os.environ.get("CLIENT_IP_HEADER") or ("cf-connecting-ip" if on_render else "")).strip().lower()
+        if header:
+            value = request.headers.get(header, "").strip()
+            if value:
+                return value[:64]          # an address is at most 45 characters; never let a visitor make long keys
+            if on_render and not _warned_no_client_header:
+                _warned_no_client_header = True
+                log.warning("No CF-Connecting-IP header on Render: falling back to X-Forwarded-For, which a visitor "
+                            "can fake, so the per-visitor chat limit can be dodged (see backend/ratelimit.py)")
         parts = [p.strip() for p in request.headers.get("x-forwarded-for", "").split(",") if p.strip()]
         if parts:
-            return parts[-1]
+            return parts[-1][:64]
     return request.client.host if request.client else "unknown"
 
 

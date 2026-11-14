@@ -114,11 +114,21 @@ Both keys are read from the **environment first**, then from `.env`, so they wor
 | `CHAT_LIMIT_PER_VISITOR` | 10 | questions one visitor may ask in the window |
 | `CHAT_WINDOW_SECONDS` | 600 | the window, in seconds |
 | `CHAT_DAILY_CAP` | 500 | questions for the whole site in any 24 hours |
+| `CLIENT_IP_HEADER` | none (Render: `CF-Connecting-IP`) | on a host behind its own proxy (with `TRUST_PROXY_HEADERS=1`): the header that proxy sets to the visitor's address, which the visitor cannot write |
 | `CHAT_TOKENS_PER_MINUTE` | 6000 | Groq tokens the whole site may use in any 60 seconds. This is a choice, three quarters of the 8,000 a minute that a code comment of 11 Nov 2026 says the team key's free tier allows; check Groq's account page and change it if the real figure differs. It only learns a question's tokens after Groq has replied, so it stops *later* questions, not ones already running: if many people press send in the same second they all get in, and one big question can cross the ceiling once. A crowd that large is still held back by the per-visitor limit, the daily cap and Groq's own slow-down reply. |
 
 **People who share one internet address count as one visitor.** A college network, or a mobile carrier that puts many phones behind one address, makes many real people look like a single visitor, and they then share the 10 questions. If that happens to your users, raise `CHAT_LIMIT_PER_VISITOR` (for example to 30).
 
-**On Render, check one thing after the first deploy.** The limiter tells visitors apart by the address in the `X-Forwarded-For` header, trusting only the last entry. Render's documentation does not say which header carries the visitor's address or in what order, and nobody has looked at a real Render request yet. So: from your phone, ask 11 chat questions in a row (the 11th should be refused with "please wait"); then, from a different phone on mobile data or another network, ask one question. If that second question is also refused, everyone on the site is being counted as one visitor: raise `CHAT_LIMIT_PER_VISITOR` and tell the team. On another host behind its own proxy, set `TRUST_PROXY_HEADERS=1`; otherwise everybody there counts as one visitor.
+**Who counts as a visitor on Render.** The limiter tells visitors apart by Cloudflare's `CF-Connecting-IP` header. Render appears to sit behind Cloudflare (its responses say `Server: cloudflare`), and Cloudflare sets that header itself, so a visitor cannot fake it, provided requests only reach the app through Cloudflare. The older `X-Forwarded-For` header is **not** safe on Render: a live test on 14 Nov 2026 sent 13 questions, each with a different made-up `X-Forwarded-For`, and none were refused. `X-Forwarded-For` is now only a fallback, with a warning in Render's log ("No CF-Connecting-IP header on Render ...") if it is ever used.
+
+**After a deploy that includes this fix, check it once on the live site.** What is not yet proven is that Render passes `CF-Connecting-IP` through to the app. Two ways to check:
+1. Look at the service's **Logs** in the Render dashboard. If the warning "No CF-Connecting-IP header on Render" appears, the header is not arriving and the limit can still be dodged: tell the team.
+2. From one phone, ask 11 chat questions in a row; the 11th should be refused with "please wait". Then, from a different phone on mobile data, ask one question: it should be answered. If the second phone is also refused, everyone is being counted as one visitor: raise `CHAT_LIMIT_PER_VISITOR` and tell the team.
+3. For the technical person: send chat questions with a different made-up `CF-Connecting-IP` header each time (and a made-up `X-Forwarded-For`). If Cloudflare overwrites the header, as it documents, the 11th is still refused. If all of them are allowed, a visitor can still pick their identity and the fix does not hold on Render. This is the one check that matters.
+
+If the header is missing, the fallback (the last `X-Forwarded-For` entry) can be faked. The alternative, counting everyone behind the proxy as one visitor, cannot be faked but would give the whole site only 10 questions per 10 minutes, so it is not the default; that is a choice for the owner.
+
+On another host behind its own proxy, set `TRUST_PROXY_HEADERS=1` and `CLIENT_IP_HEADER` to the name of the header that proxy sets and the visitor cannot write (for example `X-Real-IP`); without `CLIENT_IP_HEADER`, the last `X-Forwarded-For` entry is used, which only a proxy that appends the real address can make safe.
 
 ---
 
