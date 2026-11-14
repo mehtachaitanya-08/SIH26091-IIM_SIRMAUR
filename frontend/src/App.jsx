@@ -26,6 +26,7 @@ import {
   CATEGORY_NOT_SC
 } from './data/userDatabase';
 import { fetchHealth } from './services/api';
+import { MANDI_KEY_BADGE } from './services/mandiText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -428,13 +429,14 @@ export default function App() {
     setPendingQuestion(null);
   };
 
-  // The header's "data.gov.in connected" badge was always green; it now shows only when the
-  // server reports a data.gov.in key (teammate review, 11 Nov 2026).
-  const [mandiConnected, setMandiConnected] = useState(false);
+  // The header badge was always green ("data.gov.in connected"); it now shows only when the server
+  // reports a data.gov.in key (teammate review, 11 Nov 2026), and says only that a key was added, not
+  // "connected": with the key saved on 14 Nov 2026 data.gov.in did not answer at all.
+  const [mandiKeyAdded, setMandiKeyAdded] = useState(false);
   useEffect(() => {
     let isMounted = true;
-    fetchHealth().then((h) => { if (isMounted) setMandiConnected(h?.mandiKeyConfigured === true); })
-      .catch(() => { if (isMounted) setMandiConnected(false); });
+    fetchHealth().then((h) => { if (isMounted) setMandiKeyAdded(h?.mandiKeyConfigured === true); })
+      .catch(() => { if (isMounted) setMandiKeyAdded(false); });
     return () => { isMounted = false; };
   }, []);
 
@@ -1027,10 +1029,10 @@ export default function App() {
           {/* Right: Controls & User Profile */}
           <div className="flex items-center space-x-2 sm:space-x-2.5">
             {/* MyGov data.gov.in Live Status: only when the server really has a key */}
-            {mandiConnected && (
+            {mandiKeyAdded && (
               <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200 text-xs font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                <span className="text-[11px] font-mono-num">data.gov.in connected</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                <span className="text-[11px] font-mono-num">{MANDI_KEY_BADGE}</span>
               </div>
             )}
 

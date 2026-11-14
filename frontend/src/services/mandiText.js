@@ -16,6 +16,13 @@
  * "Checking…": every first paint used to say the server was off while it was fine (finding 4).
  */
 
+/**
+ * The header badge shown when the server has a data.gov.in key (App.jsx). It used to say "data.gov.in
+ * connected", which was false while data.gov.in did not answer: on 14 Nov 2026, with the key saved,
+ * the badge showed "connected" while every price lookup timed out. A key being added is all it knows.
+ */
+export const MANDI_KEY_BADGE = 'data.gov.in key added';
+
 const NO_CROP = 'No crop linked to this business';
 const SEE_AGMARKNET = 'See prices at agmarknet.gov.in';
 

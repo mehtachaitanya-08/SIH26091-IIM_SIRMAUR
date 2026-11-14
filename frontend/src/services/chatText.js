@@ -54,9 +54,50 @@ const NOTICES = {
   }
 };
 
+/**
+ * The notice for a question the server refused because of its rate limit (HTTP 429, 14 Nov 2026).
+ * extra = { retryAfterSeconds, scope }: scope "visitor" (too many questions from this person: wait a
+ * few minutes) or "daily" (the whole site has used today's allowance: try tomorrow). Plain words only:
+ * never a status code, a setting name or "rate limit". The question is back in the box, so it says so.
+ */
+// Over two hours is "tomorrow"; the same edge as LONG_WAIT_S in backend/ratelimit.py. The daily cap
+// slides, so its wait can be only minutes, and "tomorrow" then would be untrue (review, 14 Nov 2026).
+const LONG_WAIT_SECONDS = 7200;
+
+function rateLimitedNotices(extra) {
+  const seconds = Number(extra?.retryAfterSeconds);
+  const wait = Number.isFinite(seconds) && seconds > 0 ? seconds : 60;
+  const minutes = Math.max(1, Math.ceil(wait / 60));
+  const unit = minutes === 1 ? 'minute' : 'minutes';
+  const kept = 'Your question is saved in the box. The loan calculator still works.';
+  const keptHi = 'आपका सवाल बॉक्स में रखा है। लोन कैलकुलेटर फिर भी चलता है।';
+  if (extra?.scope === 'daily' && wait > LONG_WAIT_SECONDS) {
+    return {
+      hi: `आज के लिए सहायक की सीमा पूरी हो गई है। कृपया कल फिर कोशिश करें। ${keptHi}`,
+      en: `The assistant has reached today's limit. Please try again tomorrow. ${kept}`
+    };
+  }
+  if (extra?.scope === 'daily') {
+    return {
+      hi: `आज के लिए सहायक की सीमा अभी पूरी हो गई है। कृपया लगभग ${minutes} मिनट रुककर फिर पूछें। ${keptHi}`,
+      en: `The assistant has reached today's limit for now. Please wait about ${minutes} ${unit} and ask again. ${kept}`
+    };
+  }
+  if (extra?.scope === 'busy') {
+    return {
+      hi: `सहायक अभी व्यस्त है क्योंकि बहुत लोग पूछ रहे हैं। कृपया लगभग ${minutes} मिनट रुककर फिर पूछें। ${keptHi}`,
+      en: `The assistant is busy right now because many people are asking. Please wait about ${minutes} ${unit} and ask again. ${kept}`
+    };
+  }
+  return {
+    hi: `आपने थोड़े समय में बहुत सवाल पूछे हैं। कृपया लगभग ${minutes} मिनट रुककर फिर पूछें। ${keptHi}`,
+    en: `You asked many questions in a short time. Please wait about ${minutes} ${unit} and ask again. ${kept}`
+  };
+}
+
 /** A notice in the chosen language; before a language is chosen, Hindi with English under it. */
-export function chatNotice(key, language) {
-  const n = NOTICES[key];
+export function chatNotice(key, language, extra = null) {
+  const n = key === 'rateLimited' ? rateLimitedNotices(extra) : NOTICES[key];
   if (!n) return null;
   if (language === 'hi' || language === 'en') return n[language];
   return `${n.hi}\n${n.en}`;

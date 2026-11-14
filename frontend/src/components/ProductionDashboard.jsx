@@ -475,6 +475,13 @@ export default function ProductionDashboard({
         return;
       }
       setServerOffline(false);
+      if (res.status === 'rate_limited') {
+        // Refused by the server's limit, not answered: keep it out of the conversation and give it back in the box.
+        setChatMessages(chatMessages);
+        setCommandInput(text);
+        setChatNotice({ key: 'rateLimited', retryAfterSeconds: res.retryAfterSeconds, scope: res.scope });
+        return;
+      }
       if (res.status !== 'ok') {
         setChatNotice({ key: res.status === 'ai_key_rejected' ? 'keyRejected' : 'aiOff' });
       }
@@ -663,7 +670,7 @@ export default function ProductionDashboard({
         onLanguageChange={setChatLanguage}
         messages={chatMessages}
         busy={chatBusy}
-        notice={chatNotice ? `${noticeText(chatNotice.key, chatLanguage)}${chatNotice.detail ? ` (${chatNotice.detail})` : ''}` : null}
+        notice={chatNotice ? `${noticeText(chatNotice.key, chatLanguage, chatNotice)}${chatNotice.detail ? ` (${chatNotice.detail})` : ''}` : null}
         input={commandInput}
         onInputChange={setCommandInput}
         onSend={(text) => handleChatSend(text ?? null)}

@@ -16,7 +16,10 @@ import assert from 'node:assert/strict';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import ProductionDashboard, { ChatLauncher, MandiPanel } from '../dist-ssr/prod/ProductionDashboard.js';
-import { mandiPanelText } from '../src/services/mandiText.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { mandiPanelText, MANDI_KEY_BADGE } from '../src/services/mandiText.js';
 import { CHAT_HINT } from '../src/services/chatText.js';
 
 const user = { name: 'Asha Devi', category: 'SC', district: 'Agra', id: 'TEST-1F' };
@@ -124,6 +127,19 @@ describe('1f A: the market-price panel in plain words', () => {
     assert.ok(html.includes('Latest mandi price'));
     assert.ok(html.includes('Agmarknet, Government of India') && html.includes('Checking…'));
     for (const bad of ['DATA_GOV_IN_API_KEY', 'API Integration Status', 'NOT FOUND']) assert.ok(!html.includes(bad), bad);
+  });
+});
+
+describe('1f the header badge for a saved key', () => {
+  it('says a key was added, never "connected" (data.gov.in did not answer with the key saved on 14 Nov 2026)', () => {
+    assert.equal(MANDI_KEY_BADGE, 'data.gov.in key added');
+    assert.ok(!/connected/i.test(MANDI_KEY_BADGE));
+  });
+
+  it('the header uses that wording (it only shows once the server has answered, so it cannot be rendered here)', () => {
+    const app = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/App.jsx'), 'utf8');
+    assert.ok(app.includes('{MANDI_KEY_BADGE}'));
+    assert.ok(!/>\s*data\.gov\.in connected\s*</.test(app), 'the old "connected" text is gone from the header');
   });
 });
 

@@ -225,6 +225,11 @@ export async function sendChat(messages, language, context = null) {
     return await getJson('/api/chat', { method: 'POST', body });
   } catch (err) {
     if (err instanceof ServerOfflineError) return { status: 'server_offline', reply: null, offline: true };
+    // The server's rate limit (14 Nov 2026): HTTP 429 with how long to wait and which limit was hit.
+    // It is an answer, not a failure, so the dashboard can say so in plain words and keep the question.
+    if (err instanceof ServerError && err.status === 429) {
+      return { status: 'rate_limited', reply: null, retryAfterSeconds: err.details?.retryAfterSeconds ?? null, scope: err.details?.scope ?? 'visitor' };
+    }
     throw err;
   }
 }

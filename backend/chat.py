@@ -26,7 +26,7 @@ from pathlib import Path
 import httpx
 from fastapi import APIRouter, Request
 
-from backend import businesses, dossier_figures, feasibility, loan
+from backend import businesses, dossier_figures, feasibility, loan, ratelimit
 from backend.compat import NAMES, _body, _error, _whole_rupees
 from backend.schemas import LoanRequest
 
@@ -539,7 +539,12 @@ def _call_model(messages, tools):
                    json={"model": MODEL, "messages": messages, "tools": tools, "tool_choice": "auto",
                          "temperature": 0.2, "max_tokens": 600, "reasoning_effort": "low"})
     r.raise_for_status()
-    return r.json()["choices"][0]["message"]
+    body = r.json()
+    # What Groq says this reply cost, so the site-wide per-minute guard in backend/ratelimit.py can see
+    # the real token use (14 Nov 2026 review: counting questions alone missed that one question can
+    # make up to a dozen Groq calls). A reply without a usage figure is simply not counted.
+    ratelimit.chat_limits.note_tokens((body.get("usage") or {}).get("total_tokens"))
+    return body["choices"][0]["message"]
 
 
 def _rate_limit_wait(headers):
@@ -611,6 +616,13 @@ async def chat_endpoint(request: Request):
 
     if not _api_key():
         return {"status": "ai_offline", "reply": offline, "tool_results": [], "guard": {"replaced": False}, "model": None}
+
+    # Counted only here, after the checks above: a question that is malformed or has no key to use costs
+    # nothing and must not use up anyone's allowance (see backend/ratelimit.py, 14 Nov 2026).
+    allowed, wait, scope = ratelimit.chat_limits.take(ratelimit.visitor_key(request))
+    if not allowed:
+        log.info("chat question refused by the %s limit (wait %s s)", scope, wait)
+        return ratelimit.refusal(scope, wait, language)
 
     history = [dict(m, content=m["content"][:MAX_ASSISTANT_CHARS] + ("…" if len(m["content"]) > MAX_ASSISTANT_CHARS else ""))
                if m["role"] == "assistant" else m for m in convo[-MAX_HISTORY:]]
