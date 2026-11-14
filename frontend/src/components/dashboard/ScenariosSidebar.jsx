@@ -16,6 +16,7 @@ export default function ScenariosSidebar({
   onSelectScenario,
   onRefresh,
   onCreateSimulation,
+  onCompareScenarios,
   mode = 'mockup'
 }) {
   const renderCard = (scenario) => (
@@ -109,14 +110,25 @@ export default function ScenariosSidebar({
         </div>
       </div>
 
-      {/* Bottom Button: Create New Simulation + */}
-      <button
-        type="button"
-        onClick={onCreateSimulation}
-        className="w-full py-2.5 rounded-xl bg-[#111311] hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-sm transition-all mt-4 cursor-pointer font-sans-ui"
-      >
-        Create new simulation +
-      </button>
+      {/* Action Buttons: Compare & Create */}
+      <div className="space-y-2 mt-4">
+        {filteredScenarios.length >= 2 && onCompareScenarios && (
+          <button
+            type="button"
+            onClick={onCompareScenarios}
+            className="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs tracking-tight shadow-sm transition-all cursor-pointer font-sans-ui flex items-center justify-center gap-1.5"
+          >
+            <span>Compare Scenarios (Side-by-Side)</span>
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={onCreateSimulation}
+          className="w-full py-2.5 rounded-xl bg-[#111311] hover:bg-slate-800 text-white font-bold text-xs tracking-tight shadow-sm transition-all cursor-pointer font-sans-ui"
+        >
+          Create new simulation +
+        </button>
+      </div>
     </aside>
   );
 }

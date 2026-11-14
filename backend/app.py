@@ -12,24 +12,31 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend import businesses, chat, compat, custom_trade, dossier_figures, dpr, feasibility, loan, mandi, schemes, site
+from backend import businesses, chat, compat, custom_trade, dossier_figures, dpr, feasibility, loan, mandi, schemes, security, site
 from backend.schemas import Applicant, CashflowRequest, LoanRequest
 
 app = FastAPI(
-    title="SIH26091 NSFDC Loan API",
-    version="0.1.0",
-    description="Eligibility, loan amount and quarterly repayment schedule under NSFDC's "
-                "Micro Finance Scheme and Term Loan. Every number carries a tag: "
-                "[S#] (source), USER INPUT, CALCULATED or ASSUMED.",
+    title="UdyamSetuAI - Concessional Credit & Rural Enterprise Advisory API",
+    version="1.0.0",
+    description="Statutory credit structuring, multi-category scheme appraisal (NSFDC, NSTFDC, NBCFDC, PMEGP, "
+                "PM Vishwakarma, PM Mudra, PMFME) and institutional bankable DPR generator for rural micro-enterprises.",
 )
 
+# W3C-compliant secure CORS configuration: explicit origins with credentials
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=security.get_allowed_origins(),
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+
+@app.post("/api/privacy/purge")
+async def purge_data_endpoint(request: Request):
+    """Statutory DPDP Act 2023 Right to Erasure / Data Purge Endpoint."""
+    return security.purge_user_record()
+
 
 
 @app.exception_handler(RequestValidationError)

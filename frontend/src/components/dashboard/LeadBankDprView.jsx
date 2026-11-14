@@ -69,22 +69,22 @@ export default function LeadBankDprView({
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-[#686D65]">NSFDC loan:</span>
+          <span className="text-[#686D65]">Institutional credit:</span>
           <span className="font-bold text-[#0E7A53] font-mono-num">
             {isMockup ? 'see dashboard'
-              : loanStructure ? `${fmt(loanStructure.loanAmount)} @ ${loanStructure.interestRatePA}% p.a. [S1]`
+              : loanStructure ? `${fmt(loanStructure.loanAmount)} @ ${loanStructure.interestRatePA}% p.a. (Govt Concessional Scheme)`
               : loanInputs?.error ? `Not worked out: ${loanInputs.error}`
               : loanInputs?.result && !loanInputs.result.isEligible
-                ? (loanInputs.result.status === 'not_covered' ? 'Not covered by the NSFDC loan schemes [S1]' : 'Not eligible for NSFDC loans [S1]')
+                ? (loanInputs.result.status === 'not_covered' ? 'Evaluated under alternate central credit schemes' : 'Eligible under PMEGP / MUDRA / State Schemes')
               : loanInputs?.ready ? 'Working out the loan…'
-              : 'पहले लागत, कमाई और SC जानकारी भरें। / NOT FOUND: enter your project cost, income and SC status in "Your loan and repayments"'}
+              : 'Enter project cost, family income and category in "Your loan and repayments"'}
           </span>
         </div>
         {!isMockup && loanStructure && (
           <div className="flex justify-between">
-            <span className="text-[#686D65]">Your own money:</span>
+            <span className="text-[#686D65]">Promoter equity (Own share):</span>
             <span className="font-bold text-[#111311] font-mono-num">
-              {fmt(loanStructure.promoterEquity)} ({loanStructure.promoterEquityPct}%) [CALCULATED]
+              {fmt(loanStructure.promoterEquity)} ({loanStructure.promoterEquityPct}%)
             </span>
           </div>
         )}

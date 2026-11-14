@@ -101,8 +101,21 @@ export default function AccountPanel({ currentUser, onSaved, onSignOut, onClose 
           </form>
         )}
 
-        <div className="pt-3 border-t border-[#E9ECEF]">
+        <div className="pt-3 border-t border-[#E9ECEF] flex items-center justify-between">
           <button type="button" onClick={onSignOut} className="px-3 py-1.5 rounded-xl border border-red-200 bg-white text-red-700 text-xs font-bold hover:bg-red-50 cursor-pointer">Sign out</button>
+          <button
+            type="button"
+            onClick={() => {
+              if (window.confirm("Under DPDP Act 2023, do you want to permanently erase all locally saved profiles, scenarios, and session data?")) {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.reload();
+              }
+            }}
+            className="px-3 py-1.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 cursor-pointer shadow-sm"
+          >
+            Purge All My Data (DPDP)
+          </button>
         </div>
       </div>
     </div>

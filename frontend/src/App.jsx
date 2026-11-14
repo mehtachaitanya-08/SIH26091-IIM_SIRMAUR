@@ -17,6 +17,7 @@ import {
 import SetoDashboard from './components/SetoDashboard';
 import ProductionDashboard from './components/ProductionDashboard';
 import AccountPanel from './components/dashboard/AccountPanel';
+import PrivacyModal from './components/PrivacyModal';
 import { 
   getCurrentSession, 
   authenticateByCredentials,
@@ -717,6 +718,8 @@ export default function App() {
     }
   };
 
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+
   // Shared Auth Modal Renderer
   const renderAccountPanel = () => (isAccountOpen && currentUser ? (
     <AccountPanel
@@ -1106,6 +1109,16 @@ export default function App() {
         {/* Global Auth Modal Container */}
         {renderAuthModal()}
         {renderAccountPanel()}
+        <PrivacyModal
+          isOpen={isPrivacyOpen}
+          onClose={() => setIsPrivacyOpen(false)}
+          language={language}
+          onPurgeData={() => {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.reload();
+          }}
+        />
       </div>
     );
   }
@@ -1701,7 +1714,17 @@ export default function App() {
 
       {/* Global Authentication Modal */}
       {renderAuthModal()}
-        {renderAccountPanel()}
+      {renderAccountPanel()}
+      <PrivacyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
+        language={language}
+        onPurgeData={() => {
+          localStorage.clear();
+          sessionStorage.clear();
+          window.location.reload();
+        }}
+      />
 
     </div>
   );

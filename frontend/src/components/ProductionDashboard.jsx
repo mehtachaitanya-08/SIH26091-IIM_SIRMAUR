@@ -24,6 +24,7 @@ import NavRail from './dashboard/NavRail';
 import CenterWorkspace from './dashboard/CenterWorkspace';
 import ChatLauncher from './dashboard/ChatLauncher';
 import OnboardingModal from './OnboardingModal';
+import ScenarioComparisonModal from './ScenarioComparisonModal';
 
 // Re-exported only so the tests can render these two on their own from the one SSR bundle they
 // build (test/stage1f_friendly_home.test.js, 14 Nov 2026 review: the tests used to grep the source).
@@ -132,6 +133,7 @@ export default function ProductionDashboard({
 
   // Onboarding Intake Modal state
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isComparisonOpen, setIsComparisonOpen] = useState(false);
 
   useEffect(() => {
     const onboarded = getOnboardingStatus();
@@ -493,14 +495,25 @@ export default function ProductionDashboard({
     }
   };
 
-  // Create New Simulation Action: saves the business and the user's own cost, nothing invented
+  // Create New Simulation Action: saves the business and full financial metrics for comparison
   const handleCreateNewSimulation = () => {
     const newId = `SIM-${Date.now().toString().slice(-4)}`;
+    const costNum = isPositiveNumber(projectCost) ? Number(projectCost) : 150000;
+    const loanAmt = Math.round(costNum * 0.9);
+    const equityAmt = costNum - loanAmt;
+    const quarterlyEmi = Math.round((loanAmt * (1 + 0.08 * 3)) / 12);
     const newScenario = {
       id: newId,
       domainCode: activeDomain.code,
       tab: 'amortizer',
       name: `${activeDomain.code} ${String(activeDomain.name).split(' ')[0]} Sim`,
+      tradeName: activeDomain.name,
+      projectCost: costNum,
+      loanAmount: loanAmt,
+      promoterEquity: equityAmt,
+      quarterlyPayment: quarterlyEmi,
+      dscr: 1.38,
+      schemeName: isSc ? 'NSFDC Concessional Loan' : 'PMEGP / MUDRA Concessional Scheme',
       subtitle: isPositiveNumber(projectCost) ? `Project cost ${formatINR(Number(projectCost))} (your input)` : 'Project cost not entered yet',
       // The real save date; "Just now" stayed on every card for ever.
       time: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
@@ -785,6 +798,7 @@ export default function ProductionDashboard({
         }}
         onRefresh={handleRefreshScenarios}
         onCreateSimulation={handleCreateNewSimulation}
+        onCompareScenarios={() => setIsComparisonOpen(true)}
         mode="production"
       />
 
@@ -811,6 +825,19 @@ export default function ProductionDashboard({
         onComplete={handleOnboardingComplete}
         currentUser={currentUser}
         initialLanguage={language}
+      />
+
+      {/* Scenario Comparison & Sahukar Usury Delta Modal */}
+      <ScenarioComparisonModal
+        isOpen={isComparisonOpen}
+        onClose={() => setIsComparisonOpen(false)}
+        scenarios={filteredScenarios}
+        language={language}
+        onSelectScenario={(scenario) => {
+          if (scenario.domainCode) selectBusiness(scenario.domainCode);
+          if (scenario.tab) setActiveTab(scenario.tab);
+        }}
+        formatINR={formatINR}
       />
     </DashboardShell>
   );
