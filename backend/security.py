@@ -50,3 +50,4 @@ def purge_user_record(phone: Optional[str] = None) -> dict:
         "message": "All personal identifiers and session artifacts have been erased under DPDP Act 2023 guidelines.",
         "erased": True
     }
+

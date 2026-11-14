@@ -310,6 +310,7 @@ export default function App() {
     }
     return 'landing';
   });
+  const [landingKey, setLandingKey] = useState(0);
 
   // Strict Synchronous Reversion of GSAP DOM Modifications & Lenis Smooth Scroll
   const cleanupLandingAnimations = useCallback(() => {
@@ -359,21 +360,26 @@ export default function App() {
   }, [cleanupLandingAnimations]);
 
   const navigateToLanding = useCallback(() => {
-    cleanupLandingAnimations();
     setCurrentView('landing');
+    setLandingKey((k) => k + 1);
     if (typeof window !== 'undefined') {
       window.history.pushState(null, '', '/');
       window.scrollTo(0, 0);
     }
-  }, [cleanupLandingAnimations]);
+  }, []);
 
   useEffect(() => {
     const handleLocationChange = () => {
       const p = window.location.pathname;
       const h = window.location.hash;
       const isDash = p === '/dashboard' || p.startsWith('/dashboard') || h === '#/dashboard' || h === '#dashboard';
-      cleanupLandingAnimations();
-      setCurrentView(isDash ? 'dashboard' : 'landing');
+      if (isDash) {
+        cleanupLandingAnimations();
+        setCurrentView('dashboard');
+      } else {
+        setCurrentView('landing');
+        setLandingKey((k) => k + 1);
+      }
     };
     window.addEventListener('popstate', handleLocationChange);
     window.addEventListener('hashchange', handleLocationChange);
@@ -488,6 +494,7 @@ export default function App() {
     clearSession();
     setCurrentUser(null);
     navigateToLanding();
+    setLandingKey((k) => k + 1);
   };
 
   // Initialize Lenis Smooth Scroll + GSAP ScrollTrigger Synchronization (Landing View Only)
@@ -496,8 +503,8 @@ export default function App() {
 
     let lenis;
     let updateTicker;
-    let rafId;
-    let refreshTimer;
+    let refreshTimer1;
+    let refreshTimer2;
 
     try {
       lenis = new Lenis({
@@ -513,16 +520,19 @@ export default function App() {
 
       lenis.on('scroll', ScrollTrigger.update);
 
-      function raf(time) {
-        lenis.raf(time);
-        rafId = requestAnimationFrame(raf);
-      }
-      rafId = requestAnimationFrame(raf);
+      updateTicker = (time) => {
+        lenis.raf(time * 1000);
+      };
+      gsap.ticker.add(updateTicker);
+      gsap.ticker.lagSmoothing(0);
 
-      // Refresh ScrollTrigger after DOM & images settle
-      refreshTimer = setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 250);
+      // Staged ScrollTrigger refresh after DOM & layout settle
+      refreshTimer1 = setTimeout(() => {
+        ScrollTrigger.refresh(true);
+      }, 100);
+      refreshTimer2 = setTimeout(() => {
+        ScrollTrigger.refresh(true);
+      }, 400);
     } catch (err) {
       console.warn("Lenis initialization error:", err);
     }
@@ -685,11 +695,11 @@ export default function App() {
       if (updateTicker) {
         gsap.ticker.remove(updateTicker);
       }
-      if (rafId) {
-        cancelAnimationFrame(rafId);
+      if (refreshTimer1) {
+        clearTimeout(refreshTimer1);
       }
-      if (refreshTimer) {
-        clearTimeout(refreshTimer);
+      if (refreshTimer2) {
+        clearTimeout(refreshTimer2);
       }
       try {
         ctx.revert();
@@ -707,7 +717,7 @@ export default function App() {
       }
       lenisRef.current = null;
     };
-  }, [currentView]);
+  }, [currentView, landingKey]);
 
   const scrollToTarget = (targetId) => {
     if (lenisRef.current) {

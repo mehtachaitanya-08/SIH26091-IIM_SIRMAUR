@@ -28,3 +28,4 @@ def test_dpdp_purge_endpoint():
     data = r.json()
     assert data["status"] == "purged"
     assert data["erased"] is True
+

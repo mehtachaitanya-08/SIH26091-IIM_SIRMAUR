@@ -2,30 +2,30 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { updateUser, registerUser, getCurrentSession } from '../data/userDatabase.js';
 
 export const CATALOG_TRADES = [
-  { code: 'D01', nameEn: 'Village FMCG Retail', nameHi: 'ग्रामीण किराना एवं प्रोविजन स्टोर', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '🛒', tier: '₹1.3L – ₹5.6L' },
-  { code: 'D02', nameEn: 'Periodic Haat Mobile Trade', nameHi: 'साप्ताहिक हाट मोबाइल व्यापार', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '🚚', tier: '₹80k – ₹2.5L' },
-  { code: 'D03', nameEn: 'Rural Electronics Recharge', nameHi: 'ग्रामीण इलेक्ट्रॉनिक्स व मोबाइल सेवा', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '📱', tier: '₹1.0L – ₹3.5L' },
-  { code: 'D04', nameEn: 'Seeds Fertiliser', nameHi: 'बीज एवं उर्वरक केंद्र', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '🌱', tier: '₹2.0L – ₹8.0L' },
-  { code: 'D05', nameEn: 'Animal Feed', nameHi: 'पशु आहार एवं चारा प्रसंस्करण', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '🌾', tier: '₹1.5L – ₹5.0L' },
-  { code: 'D06', nameEn: 'Farm Hardware Drip', nameHi: 'कृषि उपकरण व ड्रिप सिंचाई', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '🔧', tier: '₹1.8L – ₹6.0L' },
-  { code: 'D07', nameEn: 'Grain Dal Milling', nameHi: 'अनाज एवं दाल प्रसंस्करण मिल', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '🥣', tier: '₹2.5L – ₹12.0L' },
-  { code: 'D08', nameEn: 'Oil Expellers', nameHi: 'सरसों एवं खाद्य तेल स्पेलर मिल', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '🛢️', tier: '₹3.0L – ₹15.0L' },
-  { code: 'D09', nameEn: 'Spice Grinding', nameHi: 'मसाला पिसाई एवं पैकेजिंग इकाई', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '🌶️', tier: '₹1.5L – ₹6.0L' },
-  { code: 'D10', nameEn: 'Horticultural Dehydration', nameHi: 'फल व सब्जी निर्जलीकरण इकाई', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '🥭', tier: '₹2.0L – ₹8.5L' },
-  { code: 'D11', nameEn: 'Commercial Bovine Dairy', nameHi: 'वाणिज्यिक गोवंशीय डेयरी इकाई', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '🐄', tier: '₹3.5L – ₹18.0L' },
-  { code: 'D12', nameEn: 'Commercial Goat Meat Husbandry', nameHi: 'वाणिज्यिक बकरी पालन इकाई', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '🐐', tier: '₹1.2L – ₹5.0L' },
-  { code: 'D13', nameEn: 'Commercial Broiler Poultry', nameHi: 'वाणिज्यिक ब्रॉयलर पोल्ट्री फार्म', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '🐔', tier: '₹2.0L – ₹10.0L' },
-  { code: 'D14', nameEn: 'Inland Freshwater Aquaculture', nameHi: 'मीठे पानी में मत्स्य पालन', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '🐟', tier: '₹2.5L – ₹12.0L' },
-  { code: 'D15', nameEn: 'Tractor Garage', nameHi: 'ट्रैक्टर एवं कृषि मशीनरी गैराज', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '🚜', tier: '₹1.5L – ₹6.5L' },
-  { code: 'D16', nameEn: 'Motor Rewinding', nameHi: 'इलेक्ट्रिक मोटर व पंप मरम्मत', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '⚡', tier: '₹1.0L – ₹4.0L' },
-  { code: 'D17', nameEn: 'Auto EV Workshop', nameHi: 'ऑटो / ई-रिक्शा वर्कशॉप व चार्जिंग', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '🔋', tier: '₹1.8L – ₹7.5L' },
-  { code: 'D18', nameEn: 'Tailoring', nameHi: 'ग्रामीण सिलाई एवं रेडीमेड गारमेंट्स', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '🧵', tier: '₹80k – ₹3.5L' },
-  { code: 'D19', nameEn: 'Carpentry', nameHi: 'काष्ठकला एवं फर्नीचर निर्माण', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '🪚', tier: '₹1.2L – ₹5.0L' },
-  { code: 'D20', nameEn: 'Metal Smithy', nameHi: 'लोहार कार्य एवं कृषि उपकरण निर्माण', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '🔨', tier: '₹1.4L – ₹5.5L' },
-  { code: 'D21', nameEn: 'Pottery', nameHi: 'पारंपरिक कुम्हारी एवं मिट्टी उत्पाद', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '🏺', tier: '₹60k – ₹2.5L' },
-  { code: 'D22', nameEn: 'Fly Ash Bricks', nameHi: 'फ्लाई ऐश ईंट निर्माण इकाई', sectorEn: 'Green & Circular', sectorHi: 'हरित व चक्रीय', icon: '🧱', tier: '₹4.0L – ₹20.0L' },
-  { code: 'D23', nameEn: 'Vermicompost', nameHi: 'जैविक केंचुआ खाद इकाई', sectorEn: 'Green & Circular', sectorHi: 'हरित व चक्रीय', icon: '🪱', tier: '₹1.0L – ₹4.5L' },
-  { code: 'D24', nameEn: 'Rural Freight Custom Hiring', nameHi: 'ग्रामीण माल ढुलाई व कस्टम हायरिंग', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '🚛', tier: '₹3.0L – ₹14.0L' },
+  { code: 'D01', nameEn: 'Village FMCG Retail', nameHi: 'ग्रामीण किराना एवं प्रोविजन स्टोर', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '', tier: '₹1.3L – ₹5.6L' },
+  { code: 'D02', nameEn: 'Periodic Haat Mobile Trade', nameHi: 'साप्ताहिक हाट मोबाइल व्यापार', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '', tier: '₹80k – ₹2.5L' },
+  { code: 'D03', nameEn: 'Rural Electronics Recharge', nameHi: 'ग्रामीण इलेक्ट्रॉनिक्स व मोबाइल सेवा', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '', tier: '₹1.0L – ₹3.5L' },
+  { code: 'D04', nameEn: 'Seeds Fertiliser', nameHi: 'बीज एवं उर्वरक केंद्र', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '', tier: '₹2.0L – ₹8.0L' },
+  { code: 'D05', nameEn: 'Animal Feed', nameHi: 'पशु आहार एवं चारा प्रसंस्करण', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '', tier: '₹1.5L – ₹5.0L' },
+  { code: 'D06', nameEn: 'Farm Hardware Drip', nameHi: 'कृषि उपकरण व ड्रिप सिंचाई', sectorEn: 'Retail & Trading', sectorHi: 'खुदरा व व्यापार', icon: '', tier: '₹1.8L – ₹6.0L' },
+  { code: 'D07', nameEn: 'Grain Dal Milling', nameHi: 'अनाज एवं दाल प्रसंस्करण मिल', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '', tier: '₹2.5L – ₹12.0L' },
+  { code: 'D08', nameEn: 'Oil Expellers', nameHi: 'सरसों एवं खाद्य तेल स्पेलर मिल', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '', tier: '₹3.0L – ₹15.0L' },
+  { code: 'D09', nameEn: 'Spice Grinding', nameHi: 'मसाला पिसाई एवं पैकेजिंग इकाई', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '', tier: '₹1.5L – ₹6.0L' },
+  { code: 'D10', nameEn: 'Horticultural Dehydration', nameHi: 'फल व सब्जी निर्जलीकरण इकाई', sectorEn: 'Agro-Processing', sectorHi: 'कृषि प्रसंस्करण', icon: '', tier: '₹2.0L – ₹8.5L' },
+  { code: 'D11', nameEn: 'Commercial Bovine Dairy', nameHi: 'वाणिज्यिक गोवंशीय डेयरी इकाई', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '', tier: '₹3.5L – ₹18.0L' },
+  { code: 'D12', nameEn: 'Commercial Goat Meat Husbandry', nameHi: 'वाणिज्यिक बकरी पालन इकाई', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '', tier: '₹1.2L – ₹5.0L' },
+  { code: 'D13', nameEn: 'Commercial Broiler Poultry', nameHi: 'वाणिज्यिक ब्रॉयलर पोल्ट्री फार्म', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '', tier: '₹2.0L – ₹10.0L' },
+  { code: 'D14', nameEn: 'Inland Freshwater Aquaculture', nameHi: 'मीठे पानी में मत्स्य पालन', sectorEn: 'Livestock & Poultry', sectorHi: 'पशुपालन व पोल्ट्री', icon: '', tier: '₹2.5L – ₹12.0L' },
+  { code: 'D15', nameEn: 'Tractor Garage', nameHi: 'ट्रैक्टर एवं कृषि मशीनरी गैराज', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '', tier: '₹1.5L – ₹6.5L' },
+  { code: 'D16', nameEn: 'Motor Rewinding', nameHi: 'इलेक्ट्रिक मोटर व पंप मरम्मत', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '', tier: '₹1.0L – ₹4.0L' },
+  { code: 'D17', nameEn: 'Auto EV Workshop', nameHi: 'ऑटो / ई-रिक्शा वर्कशॉप व चार्जिंग', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '', tier: '₹1.8L – ₹7.5L' },
+  { code: 'D18', nameEn: 'Tailoring', nameHi: 'ग्रामीण सिलाई एवं रेडीमेड गारमेंट्स', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '', tier: '₹80k – ₹3.5L' },
+  { code: 'D19', nameEn: 'Carpentry', nameHi: 'काष्ठकला एवं फर्नीचर निर्माण', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '', tier: '₹1.2L – ₹5.0L' },
+  { code: 'D20', nameEn: 'Metal Smithy', nameHi: 'लोहार कार्य एवं कृषि उपकरण निर्माण', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '', tier: '₹1.4L – ₹5.5L' },
+  { code: 'D21', nameEn: 'Pottery', nameHi: 'पारंपरिक कुम्हारी एवं मिट्टी उत्पाद', sectorEn: 'Crafts & Fabrication', sectorHi: 'शिल्प व कारीगरी', icon: '', tier: '₹60k – ₹2.5L' },
+  { code: 'D22', nameEn: 'Fly Ash Bricks', nameHi: 'फ्लाई ऐश ईंट निर्माण इकाई', sectorEn: 'Green & Circular', sectorHi: 'हरित व चक्रीय', icon: '', tier: '₹4.0L – ₹20.0L' },
+  { code: 'D23', nameEn: 'Vermicompost', nameHi: 'जैविक केंचुआ खाद इकाई', sectorEn: 'Green & Circular', sectorHi: 'हरित व चक्रीय', icon: '', tier: '₹1.0L – ₹4.5L' },
+  { code: 'D24', nameEn: 'Rural Freight Custom Hiring', nameHi: 'ग्रामीण माल ढुलाई व कस्टम हायरिंग', sectorEn: 'Machinery & Services', sectorHi: 'मशीनरी व सेवाएं', icon: '', tier: '₹3.0L – ₹14.0L' },
 ];
 
 export const CASTE_CATEGORIES = [
@@ -251,7 +251,7 @@ export default function OnboardingModal({
       customNote: 'हमारा एआई आपके विचार का विश्लेषण करके स्वतः 8-अनुसूचियों वाली वित्तीय व्यवहार्यता रिपोर्ट तैयार करेगा।',
       back: 'पीछे जाएं',
       next: 'आगे बढ़ें',
-      finish: 'प्रोफ़ाइल सहेजें एवं डैशबोर्ड शुरू करें ✨',
+      finish: 'प्रोफ़ाइल सहेजें एवं डैशबोर्ड शुरू करें',
       close: 'बंद करें'
     },
     en: {
@@ -304,7 +304,7 @@ export default function OnboardingModal({
       customNote: 'Our synthesizer will map your uncatalogued idea to nearest-neighbor archetypes and compute a complete financial feasibility dossier.',
       back: 'Back',
       next: 'Next',
-      finish: 'Save Profile & Launch Dashboard ✨',
+      finish: 'Save Profile & Launch Dashboard',
       close: 'Close'
     }
   }[lang];
@@ -452,8 +452,10 @@ export default function OnboardingModal({
         {/* Header Bar */}
         <div className="bg-[#0E7A53] text-white px-6 py-4 flex items-center justify-between border-b border-[#0B6544] flex-shrink-0">
           <div className="flex items-center space-x-3">
-            <span className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-lg font-bold">
-              🧭
+            <span className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-sm font-bold">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
             </span>
             <div>
               <h2 className="text-base sm:text-lg font-bold font-sans-ui leading-tight">
@@ -497,17 +499,6 @@ export default function OnboardingModal({
                 English
               </button>
             </div>
-
-            {onClose && (
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label={t.close}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer text-sm font-bold ml-1"
-              >
-                ✕
-              </button>
-            )}
           </div>
         </div>
 
@@ -554,7 +545,11 @@ export default function OnboardingModal({
           {step === 1 && (
             <div className="space-y-5 animate-in fade-in duration-150">
               <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 text-xs text-emerald-900 flex items-start space-x-3">
-                <span className="text-xl">👤</span>
+                <span className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-800 flex-shrink-0">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </span>
                 <div>
                   <p className="font-bold text-sm text-[#0E7A53] mb-0.5">
                     {lang === 'hi' ? 'उद्यमी पहचान एवं संपर्क विवरण' : 'Beneficiary Identification & Contact'}
@@ -605,7 +600,8 @@ export default function OnboardingModal({
                       if (errors.phone) setErrors((prev) => ({ ...prev, phone: null }));
                     }}
                     placeholder={t.phonePlaceholder}
-                    className={`w-full pl-13 pr-4 py-3 rounded-2xl border text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 transition-all ${
+                    style={{ paddingLeft: '3.75rem' }}
+                    className={`w-full pr-4 py-3 rounded-2xl border text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 transition-all ${
                       errors.phone ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
                     }`}
                   />
@@ -675,7 +671,9 @@ export default function OnboardingModal({
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <span className="text-xl">👩‍💼</span>
+                    <span className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      WE
+                    </span>
                     <div>
                       <p className="text-xs font-bold text-slate-900">{t.womanLabel}</p>
                       <p className="text-[11px] text-slate-500">{t.womanSub}</p>
@@ -697,7 +695,9 @@ export default function OnboardingModal({
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <span className="text-xl">⚒️</span>
+                    <span className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      PMV
+                    </span>
                     <div>
                       <p className="text-xs font-bold text-slate-900">{t.artisanLabel}</p>
                       <p className="text-[11px] text-slate-500">{t.artisanSub}</p>
@@ -719,7 +719,9 @@ export default function OnboardingModal({
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <span className="text-xl">♿</span>
+                    <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      PwD
+                    </span>
                     <div>
                       <p className="text-xs font-bold text-slate-900">{t.divyangLabel}</p>
                       <p className="text-[11px] text-slate-500">{t.divyangSub}</p>
@@ -753,7 +755,8 @@ export default function OnboardingModal({
                       setAnnualIncome(e.target.value);
                       if (errors.annualIncome) setErrors((prev) => ({ ...prev, annualIncome: null }));
                     }}
-                    className={`w-full pl-9 pr-4 py-2.5 rounded-2xl border text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
+                    style={{ paddingLeft: '2.5rem' }}
+                    className={`w-full pr-4 py-2.5 rounded-2xl border text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
                       errors.annualIncome ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
                     }`}
                   />
@@ -823,9 +826,11 @@ export default function OnboardingModal({
                       locationType === 'rural' ? 'border-[#0E7A53] bg-emerald-50/60' : 'border-slate-200 bg-white'
                     }`}
                   >
-                    <div className="flex items-center space-x-2">
-                      <span className="text-base">🏡</span>
-                      <span className="text-xs font-bold">{t.rural}</span>
+                    <div className="flex items-center space-x-2.5">
+                      <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[10px] flex-shrink-0">
+                        RUR
+                      </span>
+                      <span className="text-xs font-bold text-slate-900">{t.rural}</span>
                     </div>
                   </div>
                   <div
@@ -834,9 +839,11 @@ export default function OnboardingModal({
                       locationType === 'urban' ? 'border-[#0E7A53] bg-emerald-50/60' : 'border-slate-200 bg-white'
                     }`}
                   >
-                    <div className="flex items-center space-x-2">
-                      <span className="text-base">🏙️</span>
-                      <span className="text-xs font-bold">{t.urban}</span>
+                    <div className="flex items-center space-x-2.5">
+                      <span className="w-6 h-6 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center font-bold text-[10px] flex-shrink-0">
+                        URB
+                      </span>
+                      <span className="text-xs font-bold text-slate-900">{t.urban}</span>
                     </div>
                   </div>
                 </div>
@@ -879,7 +886,8 @@ export default function OnboardingModal({
                       setProjectCost(e.target.value);
                       if (errors.projectCost) setErrors((prev) => ({ ...prev, projectCost: null }));
                     }}
-                    className={`w-full pl-9 pr-4 py-2.5 rounded-2xl border text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
+                    style={{ paddingLeft: '2.5rem' }}
+                    className={`w-full pr-4 py-2.5 rounded-2xl border text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30 ${
                       errors.projectCost ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
                     }`}
                   />
@@ -905,7 +913,8 @@ export default function OnboardingModal({
                     step="5000"
                     value={promoterEquity}
                     onChange={(e) => setPromoterEquity(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 rounded-2xl border border-slate-300 text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30"
+                    style={{ paddingLeft: '2.5rem' }}
+                    className="w-full pr-4 py-2.5 rounded-2xl border border-slate-300 text-sm font-mono font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#0E7A53]/30"
                   />
                 </div>
               </div>
@@ -919,7 +928,9 @@ export default function OnboardingModal({
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <span className="text-xl">⛓️</span>
+                    <span className="w-8 h-8 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-[11px] flex-shrink-0">
+                      DEBT
+                    </span>
                     <div>
                       <p className="text-xs font-bold text-slate-900">{t.debtCheck}</p>
                       <p className="text-[11px] text-slate-500">{t.debtHeading}</p>
@@ -947,7 +958,8 @@ export default function OnboardingModal({
                           type="number"
                           value={debtPrincipal}
                           onChange={(e) => setDebtPrincipal(e.target.value)}
-                          className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold bg-white focus:outline-none"
+                          style={{ paddingLeft: '2.5rem' }}
+                          className="w-full pr-4 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold bg-white focus:outline-none"
                         />
                       </div>
                     </div>
@@ -1010,7 +1022,7 @@ export default function OnboardingModal({
                       isCustomTrade ? 'bg-white text-[#0E7A53] shadow-sm' : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    ✨ {t.customTab}
+                    {t.customTab}
                   </button>
                 </div>
               </div>
@@ -1050,17 +1062,16 @@ export default function OnboardingModal({
                           }`}
                         >
                           <div className="flex items-start justify-between mb-1.5">
-                            <span className="text-xl mr-2">{trade.icon}</span>
-                            <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">
+                            <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-200">
                               {trade.code}
+                            </span>
+                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                              {lang === 'hi' ? trade.sectorHi : trade.sectorEn}
                             </span>
                           </div>
                           <div className="flex-1">
                             <p className="font-bold text-xs text-slate-900 leading-tight mb-0.5">
                               {lang === 'hi' ? trade.nameHi : trade.nameEn}
-                            </p>
-                            <p className="text-[10px] text-slate-500 font-medium">
-                              {lang === 'hi' ? trade.sectorHi : trade.sectorEn}
                             </p>
                           </div>
                           <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px]">
@@ -1098,8 +1109,9 @@ export default function OnboardingModal({
                       <p className="text-xs text-red-600 mt-1 font-semibold">{errors.customTrade}</p>
                     )}
                   </div>
-                  <div className="p-3 bg-white/80 rounded-xl border border-emerald-100 text-[11px] text-slate-600 leading-relaxed">
-                    💡 {t.customNote}
+                  <div className="p-3 bg-white/90 rounded-xl border border-emerald-200 text-[11px] text-slate-700 leading-relaxed flex items-start space-x-2">
+                    <span className="font-bold text-[#0E7A53] uppercase text-[10px] tracking-wide mt-0.5">Note:</span>
+                    <span>{t.customNote}</span>
                   </div>
                 </div>
               )}

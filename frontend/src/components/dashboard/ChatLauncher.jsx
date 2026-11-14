@@ -70,7 +70,6 @@ export default function ChatLauncher({
               onClick={onOpen}
               className="text-left text-xs text-[#111311] cursor-pointer"
             >
-              <span aria-hidden="true">👋 </span>
               <span className="font-bold">{CHAT_HINT.hi}</span>
               <br />
               {CHAT_HINT.en}
