@@ -186,10 +186,45 @@ class TestTheHelpers:
     def test_redact_copes_with_an_empty_key(self):
         assert script.redact("fine", "") == "fine"
 
-    def test_pick_record_prefers_the_newest_date_and_the_first_on_a_tie(self):
-        got = script.pick_record([rec(1, "13/11/2026", "first"), rec(2, "13/11/2026", "second"), rec(3, "12/11/2026", "older")])
-        assert got["market"] == "first"
+    def test_pick_record_takes_the_middle_price_of_the_newest_days_markets(self):
+        """Owner's decision, 15 Nov 2026 ("Middle of five"): the first real run showed five rows sharing one arrival
+        date with prices from 6364 to 10600 (Gram), so taking the first row put one market's outlier on the site."""
+        rows = [rec(8900, "13/11/2026", "a"), rec(6364, "13/11/2026", "b"), rec(10600, "13/11/2026", "c"),
+                rec(9000, "13/11/2026", "d"), rec(7000, "13/11/2026", "e")]
+        got = script.pick_record(rows)
+        assert got["modalPrice"] == 8900
+        assert (got["marketsCount"], got["lowPrice"], got["highPrice"]) == (5, 6364, 10600)
+        assert got["market"] is None and got["arrivalDate"] == "13/11/2026"
+
+    def test_an_even_number_of_markets_gives_the_average_of_the_two_middle_prices(self):
+        got = script.pick_record([rec(2000, "13/11/2026"), rec(3001, "13/11/2026"), rec(9000, "13/11/2026"), rec(100, "13/11/2026")])
+        assert got["modalPrice"] == 2501 and got["marketsCount"] == 4     # (2000 + 3001) / 2 = 2500.5, rounded up
+
+    def test_only_the_newest_arrival_date_is_used_never_older_days_prices(self):
+        rows = [rec(100, "12/11/2026"), rec(2600, "13/11/2026"), rec(2800, "13/11/2026"), rec(9999, "11/11/2026")]
+        got = script.pick_record(rows)
+        assert got["arrivalDate"] == "13/11/2026" and got["marketsCount"] == 2
+        assert (got["lowPrice"], got["highPrice"], got["modalPrice"]) == (2600, 2800, 2700)
+
+    def test_one_market_on_the_newest_day_keeps_its_name_and_a_range_of_one(self):
+        got = script.pick_record([rec(2700, "13/11/2026", "Bindki"), rec(100, "12/11/2026", "Old")])
+        assert got["market"] == "Bindki" and got["marketsCount"] == 1
+        assert got["lowPrice"] == got["highPrice"] == got["modalPrice"] == 2700
+
+    def test_rows_with_no_usable_price_or_date_are_not_counted_as_markets(self):
+        rows = [rec(2600, "13/11/2026"), rec("", "13/11/2026"), rec(0, "13/11/2026"), rec(2800, "garbage"), rec(3000, "13/11/2026")]
+        got = script.pick_record(rows)
+        assert got["marketsCount"] == 2 and got["modalPrice"] == 2800 and got["lowPrice"] == 2600 and got["highPrice"] == 3000
+
+    def test_no_usable_row_gives_none_never_an_invented_price(self):
         assert script.pick_record([]) is None and script.pick_record([rec("x", "13/11/2026")]) is None
+
+    def test_the_saved_file_carries_the_middle_price_and_its_range(self, tmp_path):
+        rows = {"records": [rec(p, "13/11/2026", m) for p, m in [(8900, "a"), (6364, "b"), (10600, "c"), (9000, "d"), (7000, "e")]]}
+        _, _, path, _ = run(tmp_path, lambda url, params, timeout: rows)
+        e = json.loads(path.read_text(encoding="utf-8"))["entries"]["uttar pradesh|gram"]
+        assert (e["modalPrice"], e["marketsCount"], e["lowPrice"], e["highPrice"]) == (8900, 5, 6364, 10600)
+        assert e["market"] is None and e["arrivalDate"] == "13/11/2026"
 
 
 class TestTheCropListMatchesTheDashboard:

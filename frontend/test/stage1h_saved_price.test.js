@@ -55,6 +55,29 @@ describe('1h the saved price on the panel', () => {
     }
   });
 
+  it('a middle price says how many markets it is the middle of, and their range', () => {
+    const mid = { ...saved, market: null, modalPrice: 8900, marketsCount: 5, lowPrice: 6364, highPrice: 10600 };
+    const t = mandiPanelText(mid, true);
+    assert.equal(t.priceMain, '₹8,900');
+    assert.ok(t.priceNote.includes('Middle of 5 prices') && t.priceNote.includes('₹6,364') && t.priceNote.includes('₹10,600')
+      && t.priceNote.includes('13 Nov 2026'), t.priceNote);
+    assert.ok(!t.priceNote.includes('Market not named'), t.priceNote);
+    assert.equal(t.saved, true);
+    assert.ok(!/Live/.test(all(t)));
+  });
+
+  it('a middle price with equal low and high says "all", and a missing range is simply left out', () => {
+    const same = mandiPanelText({ ...saved, market: null, marketsCount: 3, lowPrice: 2700, highPrice: 2700 }, true);
+    assert.ok(same.priceNote.includes('Middle of 3 prices') && /all ₹2,700/.test(same.priceNote), same.priceNote);
+    const none = mandiPanelText({ ...saved, market: null, marketsCount: 3, lowPrice: null, highPrice: null }, true);
+    assert.ok(none.priceNote.includes('Middle of 3 prices') && !none.priceNote.includes('to ₹'), none.priceNote);
+  });
+
+  it('one market keeps its name and never says "middle of"', () => {
+    const t = mandiPanelText({ ...saved, marketsCount: 1, lowPrice: 2700, highPrice: 2700 }, true);
+    assert.ok(t.priceNote.includes('Bindki APMC') && !/Middle of/.test(t.priceNote), t.priceNote);
+  });
+
   it('does not repeat the market in the crop line, and keeps the (assumed) notes', () => {
     const t = mandiPanelText(saved, true);
     assert.equal(t.commodity, 'Wheat');

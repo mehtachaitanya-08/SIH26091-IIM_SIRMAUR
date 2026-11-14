@@ -90,7 +90,27 @@ class TestTheSnapshotReader:
         snap({WHEAT: entry()})
         got = mandi_snapshot.saved_price("Uttar Pradesh", "Wheat")
         assert got == {"modalPrice": 2700, "market": "Bindki APMC", "arrivalDate": "13/11/2026",
-                       "savedOn": "14/11/2026", "ageDays": 1}
+                       "savedOn": "14/11/2026", "ageDays": 1,
+                       "marketsCount": None, "lowPrice": None, "highPrice": None}     # an old-format entry: no range claimed
+
+    def test_a_middle_price_comes_back_with_how_many_markets_and_its_range(self, snap):
+        snap({WHEAT: {**entry(price=8900, market=None), "marketsCount": 5, "lowPrice": 6364, "highPrice": 10600}})
+        got = mandi_snapshot.saved_price("Uttar Pradesh", "Wheat")
+        assert (got["modalPrice"], got["marketsCount"], got["lowPrice"], got["highPrice"], got["market"]) == (8900, 5, 6364, 10600, None)
+
+    @pytest.mark.parametrize("bad", [
+        {"marketsCount": 0}, {"marketsCount": -2}, {"marketsCount": "5"}, {"marketsCount": True}, {"marketsCount": 5.5},
+        {"lowPrice": 9000},                       # the middle price must lie between low and high
+        {"highPrice": 8000},
+        {"lowPrice": "x", "highPrice": None}, {"lowPrice": 0}, {"highPrice": 0}])
+    def test_a_range_that_does_not_make_sense_is_dropped_but_the_price_stays(self, snap, bad):
+        good = {**entry(price=8900, market=None), "marketsCount": 5, "lowPrice": 6364, "highPrice": 10600}
+        snap({WHEAT: {**good, **bad}})
+        got = mandi_snapshot.saved_price("Uttar Pradesh", "Wheat")
+        assert got["modalPrice"] == 8900
+        assert got["lowPrice"] is None and got["highPrice"] is None
+        if "marketsCount" in bad:
+            assert got["marketsCount"] is None
 
     def test_the_fetch_date_is_the_india_date_not_the_utc_date(self, snap):
         snap({WHEAT: entry()}, fetched="2026-11-13T20:00:00+00:00")           # 01:30 on 14 Nov in India
@@ -230,6 +250,14 @@ class TestTheRouteFallsBackOnlyWhenTheLiveCallCannotBeMade:
         assert d["arrivalDate"] == "13/11/2026" and d["savedOn"] == "14/11/2026" and d["ageDays"] == 1
         assert d["liveFailure"] == "call_failed"
         assert d["apiKeyConfigured"] is True and d["records"] == [] and d["unit"] == "INR / Quintal"
+
+    def test_a_middle_price_reply_carries_the_count_and_range_for_the_panel(self, snap, key_set, live):
+        snap({WHEAT: {**entry(price=8900, market=None), "marketsCount": 5, "lowPrice": 6364, "highPrice": 10600}})
+        live["set"](RuntimeError("timed out"))
+        d = ask()
+        assert d["modalPrice"] == 8900 and d["market"] is None
+        assert (d["marketsCount"], d["lowPrice"], d["highPrice"]) == (5, 6364, 10600)
+        assert "tag" not in d and "reason" not in d
 
     def test_a_saved_reply_has_no_reason_text_no_reasoncode_and_never_the_key(self, snap, key_set, live):
         snap({WHEAT: entry()})

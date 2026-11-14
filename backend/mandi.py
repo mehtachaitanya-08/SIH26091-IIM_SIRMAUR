@@ -121,6 +121,8 @@ def _saved_reply(state, commodity, saved, configured, failure):
             "market": saved["market"], "modalPrice": saved["modalPrice"], "unit": "INR / Quintal", "records": [],
             "apiKeyConfigured": configured, "arrivalDate": saved["arrivalDate"], "savedOn": saved["savedOn"],
             "ageDays": saved["ageDays"], "liveFailure": failure,
+            # the price is the middle of this many markets' prices on the arrival date (None for an old-format entry)
+            "marketsCount": saved["marketsCount"], "lowPrice": saved["lowPrice"], "highPrice": saved["highPrice"],
             "source": "Saved copy of data.gov.in Agmarknet prices (not live)",
             "timestamp": datetime.now(timezone.utc).isoformat()}
 

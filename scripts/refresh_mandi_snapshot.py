@@ -3,8 +3,9 @@ Refresh data/mandi_snapshot.json: the saved mandi prices the live site shows whe
 
 WHY THIS FILE EXISTS (14 Nov 2026). data.gov.in refuses connections from Render, so the deployed site cannot fetch
 prices, though it works from the owner's laptop. Run this on a connection where data.gov.in answers (double-click
-refresh_prices.bat on the laptop). It asks for each crop the dashboard uses, keeps the record with the NEWEST arrival
-date of the five data.gov.in returns, and writes the file. Then commit and push data/mandi_snapshot.json and redeploy
+refresh_prices.bat on the laptop). It asks for each crop the dashboard uses, takes the rows of the NEWEST arrival
+date among the five data.gov.in returns, keeps the MIDDLE of their modal prices (with the low and high, and how many
+markets: owner's decision, 15 Nov 2026, because one market's price can be far from the rest), and writes the file. Then commit and push data/mandi_snapshot.json and redeploy
 on Render: the site reads the file from its checkout (backend/mandi_snapshot.py explains the rules).
 
 RULES. It asks the way the server does (the same address, filters, User-Agent and timeout, imported from
@@ -43,10 +44,11 @@ def redact(text, key):
 
 
 def pick_record(records):
-    """The record with the newest arrival date among those with a usable price and a readable dd/mm/yyyy date
-    (the first one on a tie), as {market, modalPrice, arrivalDate}; None when no record qualifies."""
-    best = None
-    best_date = None
+    """The MIDDLE price of the rows that share the newest arrival date (owner's decision, 15 Nov 2026: "middle of five").
+    Only rows with a usable price and a readable dd/mm/yyyy date count. Returns {market, modalPrice, arrivalDate,
+    marketsCount, lowPrice, highPrice}; an even count gives the average of the two middle prices, rounded up. The market
+    is named only when one market gave the price. None when no row qualifies."""
+    usable = []
     for r in records or []:
         if not isinstance(r, dict):
             continue
@@ -57,12 +59,18 @@ def pick_record(records):
         arrival = mandi_snapshot.parse_arrival(r.get("arrival_date"))
         if price is None or arrival is None:
             continue
-        if best is None or arrival > best_date:
-            market = r.get("market")
-            best = {"market": market if isinstance(market, str) and market.strip() else None,
-                    "modalPrice": price, "arrivalDate": r["arrival_date"].strip()}
-            best_date = arrival
-    return best
+        market = r.get("market")
+        usable.append((arrival, price, market if isinstance(market, str) and market.strip() else None,
+                       r["arrival_date"].strip()))
+    if not usable:
+        return None
+    newest = max(u[0] for u in usable)
+    day = [u for u in usable if u[0] == newest]
+    prices = sorted(u[1] for u in day)
+    n = len(prices)
+    middle = prices[n // 2] if n % 2 else (prices[n // 2 - 1] + prices[n // 2] + 1) // 2
+    return {"market": day[0][2] if n == 1 else None, "modalPrice": middle, "arrivalDate": day[0][3],
+            "marketsCount": n, "lowPrice": prices[0], "highPrice": prices[-1]}
 
 
 def _read_existing(path):
@@ -132,8 +140,9 @@ def refresh(get=None, key=None, path=None, now=None, say=print):
             continue
         entries[k] = {"state": STATE, "commodity": crop, **picked, "fetchedAt": fetched_iso}
         report["saved"].append(crop)
-        say(f"{crop}: saved Rs {picked['modalPrice']} per quintal at {picked['market'] or 'an unnamed market'}, "
-            f"arrival {picked['arrivalDate']}")
+        where = (picked["market"] or "an unnamed market") if picked["marketsCount"] == 1 else (
+            f"the middle of {picked['marketsCount']} reported prices (Rs {picked['lowPrice']} to Rs {picked['highPrice']})")
+        say(f"{crop}: saved Rs {picked['modalPrice']} per quintal, {where}, arrival {picked['arrivalDate']}")
 
     if not report["saved"]:
         say("No crop could be refreshed: nothing was written, and the old file (if there is one) is unchanged.")

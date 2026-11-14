@@ -85,7 +85,16 @@ export function mandiPanelText(mandiPriceData = null, mandiKeyConfigured = null)
     t.badge = 'Saved price · सहेजा हुआ भाव';
     t.commodity = d.commodity;                       // the market is on the price line: not repeated here
     t.priceMain = `₹${d.modalPrice.toLocaleString('en-IN')}`;
-    t.priceNote = `${d.market || 'Market not named'} · price of ${arrivalText}`;
+    // A middle price (15 Nov 2026, owner's decision) says so, with the range of the markets it is the middle of; one
+    // market, or an old-format entry with no count, names its market as before.
+    const n = Number.isInteger(d.marketsCount) ? d.marketsCount : 0;
+    const rupees = (v) => `₹${v.toLocaleString('en-IN')}`;
+    const lo = d.lowPrice, hi = d.highPrice;
+    const hasRange = typeof lo === 'number' && typeof hi === 'number' && lo > 0 && hi >= lo;
+    const range = !hasRange ? '' : lo === hi ? ` (all ${rupees(lo)})` : ` (${rupees(lo)} to ${rupees(hi)})`;
+    t.priceNote = n > 1
+      ? `Middle of ${n} prices${range} · price of ${arrivalText}`
+      : `${d.market || 'Market not named'} · price of ${arrivalText}`;
     t.sourceNote = `Saved copy${savedOnText ? ` from ${savedOnText}` : ''} · not today's price · सहेजी हुई कॉपी, आज का भाव नहीं`;
     return t;
   }

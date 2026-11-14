@@ -1,0 +1,72 @@
+{
+  "entries": {
+    "uttar pradesh|cotton": {
+      "arrivalDate": "13/11/2026",
+      "commodity": "Cotton",
+      "fetchedAt": "2026-11-14T19:02:13+00:00",
+      "highPrice": 13500,
+      "lowPrice": 7700,
+      "market": null,
+      "marketsCount": 5,
+      "modalPrice": 8700,
+      "state": "Uttar Pradesh"
+    },
+    "uttar pradesh|gram": {
+      "arrivalDate": "13/11/2026",
+      "commodity": "Gram",
+      "fetchedAt": "2026-11-14T19:02:13+00:00",
+      "highPrice": 10600,
+      "lowPrice": 7000,
+      "market": null,
+      "marketsCount": 5,
+      "modalPrice": 8000,
+      "state": "Uttar Pradesh"
+    },
+    "uttar pradesh|maize": {
+      "arrivalDate": "13/11/2026",
+      "commodity": "Maize",
+      "fetchedAt": "2026-11-14T19:02:13+00:00",
+      "highPrice": 2400,
+      "lowPrice": 2000,
+      "market": null,
+      "marketsCount": 5,
+      "modalPrice": 2250,
+      "state": "Uttar Pradesh"
+    },
+    "uttar pradesh|mustard": {
+      "arrivalDate": "13/11/2026",
+      "commodity": "Mustard",
+      "fetchedAt": "2026-11-14T19:02:13+00:00",
+      "highPrice": 8900,
+      "lowPrice": 5800,
+      "market": null,
+      "marketsCount": 5,
+      "modalPrice": 8000,
+      "state": "Uttar Pradesh"
+    },
+    "uttar pradesh|paddy": {
+      "arrivalDate": "13/11/2026",
+      "commodity": "Paddy",
+      "fetchedAt": "2026-11-14T19:02:13+00:00",
+      "highPrice": 4200,
+      "lowPrice": 1903,
+      "market": null,
+      "marketsCount": 5,
+      "modalPrice": 3450,
+      "state": "Uttar Pradesh"
+    },
+    "uttar pradesh|wheat": {
+      "arrivalDate": "13/11/2026",
+      "commodity": "Wheat",
+      "fetchedAt": "2026-11-14T19:02:13+00:00",
+      "highPrice": 2700,
+      "lowPrice": 2600,
+      "market": null,
+      "marketsCount": 5,
+      "modalPrice": 2700,
+      "state": "Uttar Pradesh"
+    }
+  },
+  "fetchedAt": "2026-11-14T19:02:13+00:00",
+  "source": "data.gov.in Agmarknet daily prices, refreshed by scripts/refresh_mandi_snapshot.py"
+}

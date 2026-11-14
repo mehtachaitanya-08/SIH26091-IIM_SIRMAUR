@@ -107,6 +107,19 @@ def _saved_on(fetched):
     return when.astimezone(IST).strftime("%d/%m/%Y")
 
 
+def _range(e, price):
+    """(marketsCount, lowPrice, highPrice) of an entry whose price is the middle of several markets (15 Nov 2026).
+    Each is None when missing or not sensible (an old-format entry has none); the entry itself is never dropped for it.
+    A range is kept only when low <= price <= high, so the panel never shows a middle outside its own range."""
+    count = e.get("marketsCount")
+    if isinstance(count, bool) or not isinstance(count, int) or not 1 <= count <= 1000:
+        count = None
+    low, high = _price(e.get("lowPrice")), _price(e.get("highPrice"))
+    if count is None or low is None or high is None or not low <= price <= high:
+        low = high = None
+    return count, low, high
+
+
 def _parse(path):
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -124,8 +137,10 @@ def _parse(path):
         if price is None or arrival is None:
             continue
         market = e.get("market")
+        count, low, high = _range(e, price)
         entries[make_key(parts[0], parts[1])] = {
             "price": price, "arrival": arrival, "arrivalDate": e["arrivalDate"].strip(),
+            "marketsCount": count, "lowPrice": low, "highPrice": high,
             "market": market if isinstance(market, str) and market.strip() else None,
             # an entry's own stamp wins: an entry the script KEPT from an older run must not look as fresh as the file
             "savedOn": _saved_on(e.get("fetchedAt")) or _saved_on(raw.get("fetchedAt"))}
@@ -165,7 +180,8 @@ def saved_price(state, commodity):
     if age < 0 or age > _setting("MANDI_MAX_AGE_DAYS", MAX_AGE_DAYS):
         return None
     return {"modalPrice": e["price"], "market": e["market"], "arrivalDate": e["arrivalDate"],
-            "savedOn": e["savedOn"], "ageDays": age}
+            "savedOn": e["savedOn"], "ageDays": age,
+            "marketsCount": e["marketsCount"], "lowPrice": e["lowPrice"], "highPrice": e["highPrice"]}
 
 
 def summary():
